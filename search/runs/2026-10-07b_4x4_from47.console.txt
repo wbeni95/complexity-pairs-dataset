@@ -1,0 +1,12 @@
+start 2026-10-06 10:53:29
+=== job A_plateau50000: exit 0
+  seed 1: best rank 47  verified True  steps 3520397312  2.934e+07 steps/s  flips 256130  plus 68911  restarts 0  improvements []  error None
+  seed 2: best rank 47  verified True  steps 3562340352  2.969e+07 steps/s  flips 249001  plus 69652  restarts 0  improvements []  error None
+  seed 3: best rank 47  verified True  steps 3551002624  2.959e+07 steps/s  flips 253432  plus 69476  restarts 0  improvements []  error None
+  seed 4: best rank 47  verified True  steps 3538550784  2.949e+07 steps/s  flips 243386  plus 69244  restarts 0  improvements []  error None
+=== job B_plateau5000: exit 0
+  seed 5: best rank 47  verified True  steps 3497590784  2.915e+07 steps/s  flips 2515254  plus 684750  restarts 0  improvements []  error None
+  seed 6: best rank 47  verified True  steps 3542286336  2.952e+07 steps/s  flips 2498329  plus 693565  restarts 0  improvements []  error None
+  seed 7: best rank 47  verified True  steps 3517513728  2.931e+07 steps/s  flips 2504149  plus 688609  restarts 0  improvements []  error None
+  seed 8: best rank 47  verified True  steps 3522166784  2.935e+07 steps/s  flips 2495290  plus 689455  restarts 0  improvements []  error None
+total wall clock 120 s  end 2026-10-06 10:55:29

@@ -17,7 +17,13 @@ matched. KMP's failure function says exactly how far P can shift, so the text po
 naive matcher is much faster than its worst case.
 
 **Verification.** V1: agreement with each other and with a `str.find` loop (oracle only) on small-alphabet and
-periodic texts with frequent overlapping matches. V2: runtimes fit n² (naive) and n (KMP) on the instances above.
+periodic texts with frequent overlapping matches. V2 counts **character comparisons exactly** on the instances
+above. A str's characters cannot be instrumented, so the harness passes the same characters as tuples of an
+instrumented character type (`CountingChar`); the implementations are unchanged and give the same answers.
+The naive matcher makes exactly (n − m + 1)·m with m = n // 2 (α = 0.998 against n², n = 200..3200), and KMP
+exactly 4n − 6 (α = 1.000 against n, n = 3000..300000). With tolerance 0.03 every declared rival is rejected:
+n (α = 1.997) and n² log n (0.928) for the naive matcher; n log n (0.910) and n² (0.500) for KMP. Details:
+`experiments/2026-10-07b_count_v2_apsp_strings.py` and `research/2026-10-07b_count_based_v2.md`.
 
 **Sources.** Knuth, Morris & Pratt, "Fast pattern matching in strings", SIAM J. Comput. 6(2), 1977.
 CLRS (3rd ed.), §32.1 and §32.4.

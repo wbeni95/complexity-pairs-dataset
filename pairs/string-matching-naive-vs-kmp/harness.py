@@ -38,11 +38,58 @@ def check(instance, output):
         start = i + 1                        # step one past the match: overlapping occurrences count
 
 
+# --- Exact character-comparison counting for V2 (measure: "reported"; RESEARCH_LOG RL-047/RL-048) ----
+# Characters of a Python str cannot be instrumented, so the scaling instance holds the same characters as
+# tuples of CountingChar. The UNCHANGED implementations touch text and pattern only through len(),
+# indexing, iteration and ==/!= between characters, so they run on these tuples as on strings, and every
+# character comparison goes through CountingChar.
+
+_comparisons = 0
+
+
+def _val(x):
+    return x.c if isinstance(x, CountingChar) else x
+
+
+class CountingChar:
+    """One character that counts every == / != comparison made on it."""
+    __slots__ = ("c",)
+
+    def __init__(self, c):
+        self.c = c
+
+    def __eq__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.c == _val(other)
+
+    def __ne__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.c != _val(other)
+
+    def __hash__(self):
+        return hash(self.c)
+
+    def __repr__(self):
+        return f"CountingChar({self.c!r})"
+
+
 def generate_scaling(n, rng):
     """Worst case for the naive matcher with m = n // 2: T = a^n, P = a^(m-1) b.
 
     Every one of the n - m + 1 alignments matches m - 1 characters before failing on the final 'b',
     so the naive matcher does (n - m + 1) m ~ n^2 / 4 comparisons; KMP stays Theta(n + m) = Theta(n).
+    Returned as tuples of CountingChar (see above); resets the comparison counter.
     """
+    global _comparisons
     m = n // 2
-    return ("a" * n, "a" * (m - 1) + "b")
+    text = tuple(CountingChar(c) for c in "a" * n)
+    pattern = tuple(CountingChar(c) for c in "a" * (m - 1) + "b")
+    _comparisons = 0
+    return (text, pattern)
+
+
+def reported_cost(output):
+    """Number of character comparisons performed since the instance was generated."""
+    return _comparisons

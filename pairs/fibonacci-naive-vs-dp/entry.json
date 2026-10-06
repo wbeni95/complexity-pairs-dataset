@@ -18,7 +18,10 @@
       "implementation": "implementations/naive.py:fib_naive",
       "harness": {
         "v1_max_n": 25,
-        "scaling": { "cost": "phi**n", "n_values": [18, 20, 22, 24, 26, 28] }
+        "scaling": {
+          "cost": "phi**n",
+          "n_values": [18, 20, 22, 24, 26, 28]
+        }
       }
     },
     {
@@ -31,17 +34,20 @@
       "correctness": "Loop invariant: after k iterations (a, b) = (F(k), F(k+1)).",
       "implementation": "implementations/dp.py:fib_dp",
       "harness": {
-        "scaling": { "cost": "n", "n_values": [10000, 30000, 100000, 300000, 1000000] }
+        "scaling": {
+          "cost": "n",
+          "n_values": [10000, 30000, 100000, 300000, 1000000]
+        }
       }
     },
     {
       "name": "fast doubling (matrix power)",
-      "idea": "Use F(2k) = F(k)(2F(k+1) - F(k)) and F(2k+1) = F(k)^2 + F(k+1)^2 while scanning the bits of n; equivalent to computing [[1,1],[1,0]]^n by repeated squaring.",
+      "idea": "Use F(2k) = F(k)(2F(k+1) - F(k)) and F(2k+1) = F(k)^2 + F(k+1)^2 while scanning the bits of n; equivalent to computing [[1, 1],[1, 0]]^n by repeated squaring.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
       "time_complexity": "Theta(log n) word operations",
       "space_complexity": "O(1) words",
-      "correctness": "The doubling identities follow from [[1,1],[1,0]]^k = [[F(k+1),F(k)],[F(k),F(k-1)]]. Invariant: after processing the top j bits of n (value k), (a, b) = (F(k), F(k+1)).",
+      "correctness": "The doubling identities follow from [[1, 1],[1, 0]]^k = [[F(k+1),F(k)],[F(k),F(k-1)]]. Invariant: after processing the top j bits of n (value k), (a, b) = (F(k), F(k+1)).",
       "implementation": "implementations/fast_doubling.py:fib_fast_doubling",
       "harness": {
         "scaling": {
@@ -74,7 +80,12 @@
   "verification": {
     "level": "V2",
     "method": "V1: all three implementations agree on n = 0..25 and selected large n, and match OEIS A000045 for n <= 25. V2: measured runtimes fitted against phi^n, n and log n respectively.",
-    "artifacts": ["implementations/naive.py", "implementations/dp.py", "implementations/fast_doubling.py", "harness.py"]
+    "artifacts": [
+      "implementations/naive.py",
+      "implementations/dp.py",
+      "implementations/fast_doubling.py",
+      "harness.py"
+    ]
   },
   "test_harness": {
     "module": "harness.py",
@@ -82,5 +93,8 @@
     "trials": 1
   },
   "caveats": "Bit-size view: with input size b = log2(n) bits the three costs are Theta(phi^(2^b)), Theta(2^b) and Theta(b). So the DP is polynomial in the value n but EXPONENTIAL in the input length; only fast doubling is polynomial in input size. The mod 2^64 makes every arithmetic step O(1); computing the exact (unbounded) F(n) costs more because F(n) has ~0.694n bits.",
-  "notes": "Canonical teaching example of T2: the naive method is wasteful, not the problem hard."
+  "notes": "Canonical teaching example of T2: the naive method is wasteful, not the problem hard. Secondary tag T3 (added 2026-10-06, RL-056): DP Theta(n) -> fast doubling Theta(log n).",
+  "secondary_tags": [
+    "T3"
+  ]
 }

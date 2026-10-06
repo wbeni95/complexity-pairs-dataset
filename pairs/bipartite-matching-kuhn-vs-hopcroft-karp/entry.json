@@ -18,7 +18,7 @@
       "implementation": "implementations/kuhn.py:matching_kuhn",
       "harness": {
         "v1_max_n": 300,
-        "scaling": { "cost": "n**3", "n_values": [39, 68, 105, 150, 203, 264, 333, 410, 495] }
+        "scaling": { "cost": "n**3", "n_values": [39, 68, 105, 150, 203, 264, 333, 410, 495], "measure": "reported", "tolerance": 0.03, "rivals": ["n**2.5"] }
       }
     },
     {
@@ -31,7 +31,7 @@
       "correctness": "Hopcroft & Karp 1973. Augmenting along vertex-disjoint shortest augmenting paths keeps the matching valid, and after a phase that uses a maximal such set, every augmenting path is strictly longer. After phase i every augmenting path has at least 2i + 1 edges. The symmetric difference with a maximum matching contains (maximum - current size) vertex-disjoint augmenting paths, so after sqrt(V) phases at most about sqrt(V)/2 augmentations remain, and every phase performs at least one. Termination when no augmenting path exists gives a maximum matching by Berge's theorem.",
       "implementation": "implementations/hopcroft_karp.py:matching_hopcroft_karp",
       "harness": {
-        "scaling": { "cost": "n**2.5", "n_values": [68, 105, 150, 203, 264, 333, 410, 495, 588, 689, 798, 915] }
+        "scaling": { "cost": "n**2.5", "n_values": [68, 105, 150, 203, 264, 333, 410, 495, 588, 689, 798, 915], "measure": "reported", "tolerance": 0.03, "rivals": ["n**2", "n**3"] }
       }
     }
   ],
@@ -64,8 +64,8 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree with each other and with an independent algebraic oracle (rank over GF(2^61 - 1) of the Edmonds matrix with random entries, in harness.py; Schwartz-Zippel bounds its error by 10^-15 per instance) on random bipartite graphs (densities 0.05-0.8, balanced and unbalanced sides), complete bipartite graphs, perfect matchings with noise, graphs with isolated vertices and members of the adversarial family, n = 0..10, 18, 20, 39, 50, 68, 100, 200, 300. V2 on the adversarial family G_k (n = V = 4k^2 + k, see harness.py): runtimes fitted against n^3 (Kuhn, k = 3..11) and n^2.5 (Hopcroft-Karp, k = 4..15). Because a timing fit with tolerance 0.25 cannot separate n^3 from n^2.5 (in experiments/2026-10-07_bipartite_matching_probe.py Kuhn also passed against n^2.5, alpha = 1.168, and Hopcroft-Karp against n^2 and n^3, alpha = 1.221 and 0.815), the claim on the family rests on exact operation counts (experiments/2026-10-07_bipartite_matching_counts.py). Hopcroft-Karp ran exactly k + 1 phases for every k = 2, 4, ..., 16; Kuhn's edge scans / (V E) were 0.1446, 0.1432, 0.1432, 0.1434, 0.1436, 0.1439, 0.1440 for k = 4..16; Hopcroft-Karp's edge scans / (E sqrt V) were 1.0501 down to 1.0144.",
-    "artifacts": ["implementations/kuhn.py", "implementations/hopcroft_karp.py", "harness.py", "../../experiments/2026-10-07_bipartite_matching_counts.py", "../../experiments/2026-10-07_bipartite_matching_probe.py"]
+    "method": "V1: both implementations agree with each other and with an independent algebraic oracle (rank over GF(2^61 - 1) of the Edmonds matrix with random entries, in harness.py; Schwartz-Zippel bounds its error by 10^-15 per instance) on random bipartite graphs (densities 0.05-0.8, balanced and unbalanced sides), complete bipartite graphs, perfect matchings with noise, graphs with isolated vertices and members of the adversarial family, n = 0..10, 18, 20, 39, 50, 68, 100, 200, 300. V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md) on the adversarial family G_k (n = V = 4k^2 + k, E = 2k^4 + k^2, see harness.py): the measured quantity is the exact number of EDGE SCANS (adjacency-list entries read) by the unchanged implementations, counted by an instrumented adjacency-list type (CountingNeighbours in harness.py, which counts indexing and iteration). These counts equal, value for value, those of the instrumented copies in experiments/2026-10-07_bipartite_matching_counts.py for every k used. Kuhn, k = 3..11: 987, 5190, 19210, 56439, 140945, 312092, 630000, 1181845, 2088999 scans (0.1431-0.1480 V E); alpha = 1.005 against n^3. Hopcroft-Karp, k = 4..15: 4572, 13602, 33313, 71227, 137782, 246812, 416027, 667493, 1028112, 1530102, 2211477, 3116527 scans (1.0153-1.0501 E sqrt V, exactly k + 1 phases); alpha = 1.004 against n^2.5. Tolerance 0.03: exact counts carry no timing noise, so the band only covers lower-order terms (on G_k the ratios scans / n^3 and scans / n^2.5 are not exactly constant, since E = 2k^4 + k^2 is only asymptotically V^2 / 8; largest |alpha - 1| here 0.005) and stays below half the distance to every rival. Rivals that must NOT fit, all rejected: Kuhn against n^2.5 (alpha = 1.207); Hopcroft-Karp against n^2 (1.255) and n^3 (0.837). The validator's log-factor diagnostic is resolved for both (Kuhn 0.941 / 1.079, Hopcroft-Karp 0.936 / 1.083). The earlier timing fit at tolerance 0.25 also passed against the wrong exponents (in experiments/2026-10-07_bipartite_matching_probe.py Kuhn against n^2.5, alpha = 1.168, and Hopcroft-Karp against n^2 and n^3, alpha = 1.221 and 0.815; RESEARCH_LOG RL-030); the exact counts remove that ambiguity. experiments/2026-10-07b_count_v2_matching.py reproduces every count above.",
+    "artifacts": ["implementations/kuhn.py", "implementations/hopcroft_karp.py", "harness.py", "../../experiments/2026-10-07_bipartite_matching_counts.py", "../../experiments/2026-10-07_bipartite_matching_probe.py", "../../experiments/2026-10-07b_count_v2_matching.py"]
   },
   "test_harness": {
     "module": "harness.py",

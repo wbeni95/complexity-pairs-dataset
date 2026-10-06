@@ -6,7 +6,11 @@ from [0, n) (duplicates almost always, for n >= 2); and distinct values of magni
 signs.
 
 generate_scaling() returns n distinct values from [-10^9, 10^9): the worst case for the all-pairs scan
-(no early exit). The sorting algorithm does Theta(n log n) work on every input.
+(no early exit). The sorting algorithm does Theta(n log n) work on every input. For V2 (measure:
+"reported", RESEARCH_LOG RL-047/RL-048) each value is wrapped in CountingKey, which counts every comparison
+the UNCHANGED implementations make between input values (==, <=, and the other four operators), and
+reported_cost() returns that count: exactly n(n-1)/2 equality tests for the all-pairs scan on these
+distinct inputs; merge-sort comparisons plus n - 1 neighbour tests for the sorting algorithm.
 
 The oracle compares len(set(values)) with n (hashing): it shares no code or idea with the two
 implementations under test.
@@ -28,9 +32,71 @@ def generate(n, rng):
     return tuple(v - 10 ** 18 for v in rng.sample(range(2 * 10 ** 18), n))
 
 
-def generate_scaling(n, rng):
-    return tuple(rng.sample(range(-10 ** 9, 10 ** 9), n))
-
-
 def check(values, output):
     return output == (len(set(values)) == len(values))
+
+
+# --- Exact comparison counting for V2 (measure: "reported") -----------------------------------------
+
+_comparisons = 0
+
+
+def _val(x):
+    return x.v if isinstance(x, CountingKey) else x
+
+
+class CountingKey:
+    """An integer value that counts every comparison made on it (in either operand position)."""
+    __slots__ = ("v",)
+
+    def __init__(self, v):
+        self.v = v
+
+    def __lt__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v < _val(other)
+
+    def __le__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v <= _val(other)
+
+    def __gt__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v > _val(other)
+
+    def __ge__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v >= _val(other)
+
+    def __eq__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v == _val(other)
+
+    def __ne__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v != _val(other)
+
+    def __hash__(self):
+        return hash(self.v)
+
+    def __repr__(self):
+        return f"CountingKey({self.v!r})"
+
+
+def generate_scaling(n, rng):
+    """n distinct values from [-10^9, 10^9), wrapped in CountingKey; resets the comparison counter."""
+    global _comparisons
+    inst = tuple(CountingKey(v) for v in rng.sample(range(-10 ** 9, 10 ** 9), n))
+    _comparisons = 0
+    return inst
+
+
+def reported_cost(output):
+    """Number of comparisons between input values performed since the instance was generated."""
+    return _comparisons

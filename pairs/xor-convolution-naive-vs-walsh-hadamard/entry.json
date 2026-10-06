@@ -1,0 +1,86 @@
+{
+  "id": "xor-convolution-naive-vs-walsh-hadamard",
+  "title": "XOR convolution: all index pairs vs the fast Walsh-Hadamard transform",
+  "problem_statement": "Given two integer vectors a and b of length N = 2^n, indexed by n-bit strings, compute the XOR (dyadic) convolution h of length N: h[k] = sum over all pairs (i, j) with i XOR j = k of a[i] * b[j], for every k in {0,1}^n. Exact integer arithmetic.",
+  "input": {
+    "parameter": "n = number of index bits; each vector has N = 2^n entries.",
+    "size_measure": "2N = 2^(n+1) integers (entries in [-9, 9] in the harness, so every intermediate value has O(n) bits and arithmetic is treated as unit cost). Costs are given in n; in the input size N they read Theta(N^2) vs Theta(N log N)."
+  },
+  "algorithms": [
+    {
+      "name": "all index pairs (naive)",
+      "idea": "Add a[i] * b[j] to h[i XOR j] for every one of the N^2 = 4^n pairs (i, j).",
+      "model": "classical-deterministic",
+      "pseudocode": "h = [0]*N; for i in 0..N-1: for j in 0..N-1: h[i ^ j] += a[i] * b[j]",
+      "time_complexity": "Theta(4^n) = Theta(N^2): exactly 4^n multiplications and 4^n additions (2 * 4^n ring operations, counted)",
+      "space_complexity": "Theta(2^n)",
+      "correctness": "Direct evaluation of the definition: every pair (i, j) is visited once and contributes to h[i XOR j].",
+      "implementation": "implementations/naive.py:xor_convolution_naive",
+      "harness": {
+        "v1_max_n": 11,
+        "scaling": {
+          "cost": "4**n",
+          "n_values": [3, 4, 5, 6, 7, 8, 9],
+          "measure": "reported",
+          "tolerance": 0.05,
+          "rivals": ["n * 2**n", "n * 4**n"]
+        }
+      }
+    },
+    {
+      "name": "fast Walsh-Hadamard transform (FWHT)",
+      "idea": "The Walsh-Hadamard matrix W[x][y] = (-1)^(x.y) diagonalises XOR convolution: W(a * b) = (Wa).(Wb) pointwise, and W W = N I. Compute Wa and Wb with the FWHT (n stages of butterflies (u, v) -> (u + v, u - v)), multiply pointwise, transform back and divide by N.",
+      "model": "classical-deterministic",
+      "pseudocode": "A = FWHT(a); B = FWHT(b); C[k] = A[k] * B[k]; h = FWHT(C); h[k] = h[k] / N (exact division). FWHT: for each bit s, for each index x with bit s clear: (v[x], v[x + 2^s]) = (v[x] + v[x + 2^s], v[x] - v[x + 2^s]).",
+      "time_complexity": "Theta(n * 2^n) = Theta(N log N): exactly 3n * 2^n additions/subtractions, 2^n multiplications and 2^n exact divisions ((3n + 2) * 2^n ring operations, counted)",
+      "space_complexity": "Theta(2^n)",
+      "correctness": "Characters chi_s(x) = (-1)^(s.x) of the group (Z_2)^n satisfy chi_s(i XOR j) = chi_s(i) chi_s(j), which gives the convolution theorem (W h)[s] = (W a)[s] (W b)[s]; W is symmetric with W W = N I, so h = W((Wa).(Wb)) / N and the division is exact over the integers. The stage factorisation W_n = prod over s of (I (x) W_1 (x) I) (Kronecker products, one 2x2 butterfly per bit) gives n * 2^(n-1) butterflies per transform (Fino & Algazi 1976 give a unified matrix treatment of such fast factorisations).",
+      "implementation": "implementations/fwht.py:xor_convolution_fwht",
+      "harness": {
+        "scaling": {
+          "cost": "n * 2**n",
+          "n_values": [4, 6, 8, 10, 12, 14],
+          "measure": "reported",
+          "tolerance": 0.05,
+          "rivals": ["2**n", "n**2 * 2**n", "4**n"]
+        }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "Theta(N^2) -> Theta(N log N) in the input length N = 2^n (Theta(4^n) -> Theta(n 2^n) in the index bits n). Both are polynomial in the input size, so this is T3, not an exponential-time pair: the 2^n comes from the input having 2^n entries. The improvement is the group-Fourier (algebraic-transform) technique on (Z_2)^n, the XOR analogue of FFT-based cyclic convolution (see polynomial-multiplication-naive-vs-ntt).",
+  "sources": [
+    {
+      "authors": "Fino, B. J.; Algazi, V. R.",
+      "year": 1976,
+      "title": "Unified Matrix Treatment of the Fast Walsh-Hadamard Transform",
+      "venue": "IEEE Transactions on Computers C-25 (no. 11), 1142-1146",
+      "doi": "10.1109/TC.1976.1674569"
+    },
+    {
+      "authors": "Bernstein, E.; Vazirani, U.",
+      "year": 1997,
+      "title": "Quantum complexity theory",
+      "venue": "SIAM Journal on Computing 26(5), 1411-1473",
+      "doi": "10.1137/S0097539796300921",
+      "note": "Cited for the quantum link in notes (the Hadamard transform H^(x)n in the Bernstein-Vazirani algorithm), not for the classical costs."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree on random vectors with entries in [-9, 9] for n = 0..8 and n = 11 (naive up to n = 11), 3 trials each, and pass an independent oracle in harness.check: the XOR convolution theorem tested character by character with popcount parities and no transform code. For n <= 8 all 2^n characters are checked, which determines h uniquely (complete check); for n = 11, 48 seeded random characters (probabilistic spot check). V2 (measure 'reported', RESEARCH_LOG RL-047 method): the measured quantity is the exact number of ring operations (+, -, *, //) performed by the unchanged implementations, counted by an instrumented integer type in the harness. Counts equal the closed forms at every measured n (experiments/2026-10-07b_xor_convolution_counts.py: naive n = 0..9, FWHT n = 0..14): naive 2 * 4^n, FWHT (3n + 2) * 2^n. Fits at tolerance 0.05: naive alpha = 1.000 against 4^n (rivals n*2^n: 1.587, n*4^n: 0.885, rejected); FWHT alpha = 0.987 against n*2^n (the 0.012 deviation is the exact lower-order term 2 * 2^n; rivals 2^n: 1.162, n^2*2^n: 0.858, 4^n: 0.581, rejected). The tolerance 0.05 is four times the FWHT's exact deviation and below every rival gap; the validator's log-factor diagnostic is resolved for the FWHT (0.917 against n log n 2^n, 1.068 against n/log n 2^n).",
+    "artifacts": [
+      "implementations/naive.py",
+      "implementations/fwht.py",
+      "harness.py",
+      "../../experiments/2026-10-07b_xor_convolution_counts.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 11],
+    "trials": 3
+  },
+  "caveats": "Costs count ring operations on integers with O(n) bits (entries bounded in the harness); with entries of B bits the operands of the FWHT grow to B + O(n) bits. Index arithmetic (XOR, loop counters) is not counted. The counts measure arithmetic, not wall-clock time; timing would not resolve the log factor (RESEARCH_LOG RL-048). Over a ring where N is not invertible (e.g. mod 2) the final division fails and h must be computed differently; this entry works over the integers.",
+  "notes": "Link to the quantum entries, stated precisely. W = 2^(n/2) H^(x)n, where H^(x)n is the n-qubit Hadamard transform used by Deutsch-Jozsa, Bernstein-Vazirani and Forrelation (staging/forrelation). The FWHT's stage factorisation is the classical counterpart of applying one Hadamard gate per qubit: a classical machine pays 2^n additions/subtractions per stage on the full vector (this is how lib/qsim.py simulates H^(x)n), while a quantum circuit applies each stage as one gate on one qubit. This is NOT a quantum speed-up for computing the transform: a quantum computer does not output the 2^n transformed amplitudes, it only lets one sample an index s with probability |amplitude_s|^2. The advantages recorded in those entries are in ORACLE QUERIES, not in computing W v. The Forrelation quantity Phi(f, g) = N^(-3/2) sum_y (Wf)[y] g[y] is computed exactly classically by one FWHT after reading all 2N values, as the first classical algorithm in staging/forrelation says. The same divide-by-bits structure gives Yates' zeta transform (see subset-sum-zeta-transform-naive-vs-yates), with the 2x2 matrix [[1,0],[1,1]] in place of [[1,1],[1,-1]]."
+}

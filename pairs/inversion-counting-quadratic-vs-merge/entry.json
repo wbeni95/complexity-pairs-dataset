@@ -19,7 +19,13 @@
       "harness": {
         "scaling": {
           "cost": "n**2",
-          "n_values": [250, 500, 750, 1000, 1500, 2000]
+          "n_values": [250, 500, 750, 1000, 1500, 2000],
+          "measure": "reported",
+          "tolerance": 0.03,
+          "rivals": [
+            "n*log(n)",
+            "n**2*log(n)"
+          ]
         }
       }
     },
@@ -35,7 +41,14 @@
       "harness": {
         "scaling": {
           "cost": "n * log(n)",
-          "n_values": [2000, 4000, 8000, 16000, 32000, 64000]
+          "n_values": [2000, 4000, 8000, 16000, 32000, 64000],
+          "measure": "reported",
+          "tolerance": 0.03,
+          "rivals": [
+            "n",
+            "n*log(n)**2",
+            "n**2"
+          ]
         }
       }
     }
@@ -70,11 +83,12 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both agree with each other and with an independent Fenwick-tree oracle on random sequences with duplicates, n = 0..500. V2: runtimes fitted against n^2 and n log n.",
+    "method": "V1: both agree with each other and with an independent Fenwick-tree oracle on random sequences with duplicates, n = 0..500. V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md): the measured quantity is the exact number of ELEMENT COMPARISONS made by the unchanged implementations, counted by an instrumented element type (CountingKey in harness.py) wrapped around the values of generate() (uniform on [0, n], the same seeded inputs the earlier timing fit used). All pairs: exactly n(n-1)/2 at n = 250, 500, 750, 1000, 1500, 2000; alpha = 1.001 against n^2. Merge-sort counting, 1 sample (the 3-sample spread was at most 0.11% of the count) at n = 2000, 4000, 8000, 16000, 32000, 64000: 19421, 42827, 93679, 203327, 438368, 941126 comparisons = n log2 n - c n with c = 1.255 to 1.267, each within the merge bounds sum of min(left, right) <= C <= sum of (left + right - 1); alpha = 1.010 against n log n, the excess coming from the -c n term. Tolerance 0.03: exact counts carry no timing noise, so the band only covers lower-order terms (largest |alpha - 1| here 0.010) and stays below half the distance to the nearest rival. Rivals that must NOT fit, all rejected: all pairs against n log n (alpha = 1.735) and n^2 log n (0.930); merge-sort counting against n (1.119), n log^2 n (0.920) and n^2 (0.560). The log factor is therefore resolved for both (validator diagnostic, RESEARCH_LOG RL-048). experiments/2026-10-07b_count_v2_inversions_lis.py reproduces every count above.",
     "artifacts": [
       "implementations/pairs_scan.py",
       "implementations/merge_count.py",
-      "harness.py"
+      "harness.py",
+      "../../experiments/2026-10-07b_count_v2_inversions_lis.py"
     ]
   },
   "test_harness": {
@@ -82,6 +96,6 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 8, 16, 33, 100, 500],
     "trials": 5
   },
-  "caveats": "The V2 fit cannot resolve the log factor; it rules out quadratic behaviour of the merge method.",
+  "caveats": "V2 counts element comparisons, not every machine operation; with exact counts the log factor IS resolved (the rivals n and n*log(n)^2 are rejected; RL-057). The earlier timing fit could not resolve it (RL-048).",
   "notes": ""
 }

@@ -34,7 +34,10 @@
       "correctness": "Kruskal 1956. Cut property: the lightest edge crossing a cut that respects the current forest belongs to some minimum spanning tree containing that forest, so every edge kept is safe. Edges inside a component would close a cycle and are skipped.",
       "implementation": "implementations/kruskal.py:mst_kruskal",
       "harness": {
-        "scaling": { "cost": "n**2 * log(n)", "n_values": [50, 100, 200, 400, 800] }
+        "scaling": {
+          "cost": "n**2 * log(n)",
+          "n_values": [50, 100, 200, 400, 800]
+        }
       }
     },
     {
@@ -47,7 +50,10 @@
       "correctness": "Prim 1957. Each round adds the lightest edge crossing the cut (tree, rest), which is safe by the cut property.",
       "implementation": "implementations/prim.py:mst_prim",
       "harness": {
-        "scaling": { "cost": "n**2", "n_values": [50, 100, 200, 400, 800] }
+        "scaling": {
+          "cost": "n**2",
+          "n_values": [50, 100, 200, 400, 800]
+        }
       }
     }
   ],
@@ -100,7 +106,12 @@
   "verification": {
     "level": "V2",
     "method": "V1: all three implementations agree for n = 1..7 (enumeration capped at n = 7, i.e. 54,264 subsets) on random weights in [1, 100] and, in some trials, in [1, 3] (many ties); Kruskal and Prim also agree at n = 20, 60 and 200. harness.check is independent of all three: Boruvka's algorithm with (w, u, v) tie-breaking, plus the bounds (sum of the n-1 lightest edges) <= answer <= (weight of the path 0-1-...-(n-1)). V2: runtimes fitted against n * C(n(n-1)/2, n-1), n^2 log n and n^2 on weights in [1, 10^9]. The enumeration can only be timed at n = 4..7 (n = 8 has 1,184,040 subsets, ~1.3 s per call); the n = 4 point is ~0.01 ms but is timed in loops, and the fit is stable. An earlier Kruskal version that sorted (w, u, v) tuples measured alpha ~1.19 because of cache effects once m exceeds ~10^5 edges; packing each edge into one integer key (same sort order) removed this.",
-    "artifacts": ["implementations/brute_force.py", "implementations/kruskal.py", "implementations/prim.py", "harness.py"]
+    "artifacts": [
+      "implementations/brute_force.py",
+      "implementations/kruskal.py",
+      "implementations/prim.py",
+      "harness.py"
+    ]
   },
   "test_harness": {
     "module": "harness.py",
@@ -108,5 +119,8 @@
     "trials": 4
   },
   "caveats": "On K_n Prim's Theta(n^2) array version is already optimal (linear in the input); Kruskal's sort makes it a log factor slower. The V2 fit for Kruskal cannot by itself resolve the log factor (log n varies only ~1.7x over the measured range), so it confirms ~n^2 growth up to logarithmic factors. Measured times include CPython memory effects that are outside the RAM model.",
-  "notes": "The enumeration's count C(n(n-1)/2, n-1) grows like (e n / 2)^(n-1) up to polynomial factors; only n^(n-2) of these subsets are spanning trees (Cayley's formula)."
+  "notes": "The enumeration's count C(n(n-1)/2, n-1) grows like (e n / 2)^(n-1) up to polynomial factors; only n^(n-2) of these subsets are spanning trees (Cayley's formula). Secondary tag T3 (added 2026-10-06, RL-056): Kruskal O(n^2 log n) -> Prim Theta(n^2) on K_n.",
+  "secondary_tags": [
+    "T3"
+  ]
 }

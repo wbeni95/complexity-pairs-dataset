@@ -21,7 +21,7 @@ class State:
     def uniform(cls, num_qubits: int) -> "State":
         """The uniform superposition H^n |0> = sum_x |x> / sqrt(2^n), written down directly.
 
-        Added 2026-10-07. Same state as State(n) followed by h_all() (tests/test_qsim.py checks this), built in
+        Added 2026-10-06. Same state as State(n) followed by h_all() (tests/test_qsim.py checks this), built in
         O(2^n) instead of O(n 2^n). Involves no oracle query.
         """
         state = cls(num_qubits)
@@ -97,7 +97,7 @@ class Oracle:
     def apply_phase_where(self, state: State, predicate) -> None:
         """TWO queries: |x> -> (-1)^[predicate(x, f(x))] |x>, for a predicate of the input and the oracle VALUE.
 
-        Added 2026-10-07 for searches over a property derived from a non-Boolean f (e.g. "f(x) < f(y)" in
+        Added 2026-10-06 for searches over a property derived from a non-Boolean f (e.g. "f(x) < f(y)" in
         minimum finding, "f(x) is in the table L" in collision finding). On a quantum computer this takes U_f to
         compute f(x) into an ancilla register, a query-free phase flip conditioned on predicate(x, f(x)), and U_f
         again to uncompute the ancilla, which must be returned to |0> for the branches to interfere. That is two

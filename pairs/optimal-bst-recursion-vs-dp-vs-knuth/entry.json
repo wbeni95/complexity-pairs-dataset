@@ -1,0 +1,167 @@
+{
+  "id": "optimal-bst-recursion-vs-dp-vs-knuth",
+  "title": "Optimal binary search tree: plain recursion vs cubic DP vs Knuth's quadratic DP",
+  "problem_statement": "Given keys k_1 < ... < k_n with non-negative integer access frequencies p_1, ..., p_n and non-negative integer gap frequencies q_0, ..., q_n (q_j counts searches for values strictly between k_j and k_(j+1), with k_0 = -infinity and k_(n+1) = +infinity), compute the minimum, over all binary search trees on k_1, ..., k_n, of sum_{m=1..n} p_m (level(k_m) + 1) + sum_{j=0..n} q_j level(gap j), where the root has level 0 and gap j is the external node (empty subtree) between k_j and k_(j+1). This is Knuth's (1971) cost: the weighted number of key comparisons over successful and unsuccessful searches. The output is that minimum as an exact integer (n = 0 gives 0).",
+  "input": {
+    "parameter": "n = number of keys.",
+    "size_measure": "2n + 1 non-negative integers (p_1..p_n, q_0..q_n). Complexities count arithmetic operations and comparisons on cost values as unit cost; all costs are at most (n + 1) times the total frequency, so they need only O(log n) more bits than the input numbers."
+  },
+  "algorithms": [
+    {
+      "name": "plain recursion",
+      "idea": "c(i, j) = w(i, j) + min over roots k of c(i, k-1) + c(k, j), evaluated top-down without memoisation, so the Theta(n^2) subproblems are solved again and again.",
+      "model": "classical-deterministic",
+      "pseudocode": "cost(i, j): if i = j return 0; return w(i, j) + min over i < k <= j of (cost(i, k-1) + cost(k, j)), with w(i, j) = q_i + sum_{m=i+1..j} (p_m + q_m); answer cost(0, n)",
+      "time_complexity": "Theta(3^n) on every input: exactly 3^n calls and (3^(n-1) - 1)/2 cost comparisons for n >= 1",
+      "space_complexity": "Theta(n) (recursion depth)",
+      "correctness": "Optimal substructure: the subtrees of an optimal tree's root k are optimal for (i, k-1) and (k, j), and the cost of a tree is w(i, j) plus the costs of its two subtrees (every node's level grows by one under the root). Count: calls K(m) = 1 + 2 sum_{t<m} K(t), K(0) = 1, so K(m) = 3 K(m-1) = 3^m; comparisons C(m) = (m-1) + 2 sum_{t<m} C(t), C(0) = 0, so C(m) = 3 C(m-1) + 1 (m >= 2), C(1) = 0, i.e. C(m) = (3^(m-1) - 1)/2. Both confirmed by exact counts for n = 0..11.",
+      "implementation": "implementations/recursion.py:obst_recursive",
+      "harness": {
+        "v1_max_n": 10,
+        "scaling": {
+          "cost": "3**n",
+          "n_values": [
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "measure": "reported",
+          "tolerance": 0.04,
+          "rivals": [
+            "2**n",
+            "4**n",
+            "4**n/n**1.5"
+          ]
+        }
+      }
+    },
+    {
+      "name": "cubic interval DP (every root)",
+      "idea": "Fill c[i][j] for increasing length j - i; every interval tries every one of its roots.",
+      "model": "classical-deterministic",
+      "pseudocode": "c[i][i] = 0; for L = 1..n, for i = 0..n-L: j = i + L; w[i][j] = w[i][j-1] + p_j + q_j; c[i][j] = w[i][j] + min over i < k <= j of (c[i][k-1] + c[k][j]); return c[0][n]",
+      "time_complexity": "Theta(n^3) on every input: n(n+1)(n+2)/6 candidate roots, (n+1)n(n-1)/6 cost comparisons",
+      "space_complexity": "Theta(n^2)",
+      "correctness": "The same recurrence evaluated bottom-up; each interval's subintervals are shorter and already filled (Knuth 1971; textbook DP, e.g. CLRS, Section 15.5 in the 3rd edition). An interval of length L makes L - 1 comparisons, and sum_{L=1..n} (n - L + 1)(L - 1) = C(n+1, 3).",
+      "implementation": "implementations/cubic_dp.py:obst_cubic",
+      "harness": {
+        "scaling": {
+          "cost": "n**3",
+          "n_values": [
+            16,
+            32,
+            64,
+            128
+          ],
+          "measure": "reported",
+          "tolerance": 0.04,
+          "rivals": [
+            "n**2",
+            "n**4"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Knuth's speed-up (monotone roots)",
+      "idea": "Same recurrence, but the root of (i, j) is searched only between r[i][j-1] and r[i+1][j], the roots chosen for the two intervals one shorter; the implementation keeps the largest minimiser in the range.",
+      "model": "classical-deterministic",
+      "pseudocode": "as the cubic DP, but for j - i >= 2 the min runs over r[i][j-1] <= k <= r[i+1][j] (r[i][i+1] = i + 1), and r[i][j] = the largest k attaining the min",
+      "time_complexity": "Theta(n^2) on every input. Upper bound: for each length L >= 2 the range widths telescope, sum_i (r[i+1][i+L] - r[i][i+L-1] + 1) = (n - L + 1) + r[n-L+1][n] - r[0][L-1] <= 2n - L; lower bound: n(n+1)/2 intervals, each doing at least one candidate. Exactly sum_{L=2..n} (r[n-L+1][n] - r[0][L-1]) <= (n-1)^2 cost comparisons, with equality on the V2 family (two heavy end keys).",
+      "space_complexity": "Theta(n^2)",
+      "correctness": "With non-negative frequencies, w(i, j) is an interval sum, so it satisfies the quadrangle inequality (with equality) and is monotone under interval inclusion; then c satisfies the quadrangle inequality and the optimal roots can be chosen monotone, r[i][j-1] <= r[i][j] <= r[i+1][j] (Knuth 1971 for optimum BSTs; Yao 1980 for the general quadrangle-inequality recurrence; statements as commonly cited, texts not re-read here). Ties (derivation, ours, consistent with the experiment): if every chosen root lies in its range, r[i][j-1] <= r[i+1][j-1] <= r[i+1][j] by induction, so no range is empty; and the quadrangle inequality of c gives c_k'(i, j) <= c_k(i, j) for ANY optimal root k' of (i, j-1) and every k < k' (symmetrically at the upper end), so the range contains an optimal root of (i, j) whatever minimiser was kept before. experiments/2026-10-07b_optimal_bst_ties.py confirms: largest, smallest, random and two deliberately inconsistent tie rules give the correct value on 6006 tie-heavy instances.",
+      "implementation": "implementations/knuth.py:obst_knuth",
+      "harness": {
+        "scaling": {
+          "cost": "n**2",
+          "n_values": [
+            32,
+            64,
+            128,
+            256,
+            512
+          ],
+          "measure": "reported",
+          "tolerance": 0.04,
+          "rivals": [
+            "n**3",
+            "n",
+            "n*log(n)",
+            "n**2*log(n)"
+          ]
+        }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "secondary_tags": [
+    "T3"
+  ],
+  "relationship": "Plain recursion over the root is exponential, Theta(3^n), because it recomputes the Theta(n^2) interval subproblems; memoising them gives the Theta(n^3) DP (the T2 step). Knuth's monotone-root restriction makes the DP's root searches telescope to Theta(n^2) in total (the T3 step). Exact comparison counts: (3^(n-1) - 1)/2, (n+1)n(n-1)/6 and at most (n-1)^2.",
+  "sources": [
+    {
+      "authors": "Knuth, D. E.",
+      "year": 1971,
+      "title": "Optimum binary search trees",
+      "venue": "Acta Informatica 1(1), 14-25",
+      "doi": "10.1007/BF00264289",
+      "note": "The cost function (successful and unsuccessful searches), the interval recurrence and the O(n^2) algorithm using monotone roots. Attribution as commonly cited; the paper's text was not re-read for this entry (publisher page not accessible)."
+    },
+    {
+      "authors": "Yao, F. F.",
+      "year": 1980,
+      "title": "Efficient dynamic programming using quadrangle inequalities",
+      "venue": "Proceedings of the 12th Annual ACM Symposium on Theory of Computing (STOC 1980), 429-435",
+      "doi": "10.1145/800141.804691",
+      "note": "Generalises Knuth's speed-up: if w satisfies the quadrangle inequality and is monotone on intervals, the recurrence c(i, j) = w(i, j) + min_k (c(i, k-1) + c(k, j)) can be solved in O(n^2). Statement as commonly cited; the text was not re-read for this entry."
+    },
+    {
+      "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
+      "year": 2009,
+      "title": "Introduction to Algorithms (3rd ed.)",
+      "venue": "MIT Press",
+      "isbn": "978-0-262-03384-8",
+      "note": "Section 15.5: optimal binary search trees and the Theta(n^3) DP; its cost counts every external node at level + 1, i.e. adds sum q_j to Knuth's cost (section number as recalled, not re-checked here)."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: the three implementations agree with each other and with an independent oracle in harness.py: for n <= 10 it enumerates every BST shape explicitly (Catalan(n) shapes) and computes the cost from the level of every key and gap, with no interval recurrence; for 10 < n <= 60 it uses a separately written memoised recursion with prefix sums (same recurrence, independent code). Battery: n = 0..10, 13, 20, 40, 70, 100 with 12 instances per n drawn from ten families, most of them full of ties (frequencies in {0, 1}, in [0, 3], all zero, all equal, gaps only, keys only), plus wide random weights, one heavy key, geometric weights and two heavy end keys; plain recursion up to n = 10. Of the 192 instances, 132 (n <= 10) are checked by the shape enumeration, 36 (n = 13..40) by the memoised recursion, and 24 (n = 70, 100) only by agreement of the two DPs; a wrong value (output + 1) is rejected on all 156 checked instances with n >= 1 (part3 of experiments/2026-10-07b_optimal_bst_ties.py). experiments/2026-10-07b_optimal_bst_ties.py adds 6006 tie-heavy instances (n = 2..14) on which Knuth's algorithm with five tie rules matches the cubic DP. V2 (measure 'reported'): the exact number of COMPARISONS of two cost values made by the unchanged implementations, counted by the harness's CountingInt number type, on the two-heavy-end-keys family (Knuth's worst case). Exact counts: recursion (3^(n-1) - 1)/2 (n = 5..11), cubic DP (n+1)n(n-1)/6 (n = 16..128), Knuth (n-1)^2 (n = 32..512); each closed form is proven (see correctness) and checked value by value in experiments/2026-10-07b_optimal_bst_counts.py. Fits at tolerance 0.04: alpha = 1.002 (3^n), 1.001 (n^3), 1.010 (n^2). Rivals rejected: recursion vs 2^n 1.587, 4^n 0.794, Catalan-like 4^n/n^1.5 0.923; cubic DP vs n^2 1.501, n^4 0.750; Knuth vs n^3 0.674, n 2.021, n log n 1.668, n^2 log n 0.914. On seven other families (random small, wide, one heavy key, geometric, all zero, gaps only, keys only) Knuth's counts lie between 0.39 n^2 and 0.61 n^2 for n = 32..512, with alpha against n^2 from 0.993 to 1.013 (same script), so the tolerance covers them too.",
+    "artifacts": [
+      "implementations/recursion.py",
+      "implementations/cubic_dp.py",
+      "implementations/knuth.py",
+      "harness.py",
+      "../../experiments/2026-10-07b_optimal_bst_counts.py",
+      "../../experiments/2026-10-07b_optimal_bst_ties.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      13,
+      20,
+      40,
+      70,
+      100
+    ],
+    "trials": 12
+  },
+  "caveats": "The Theta(n^2) of Knuth's algorithm relies on non-negative frequencies (w monotone and satisfying the quadrangle inequality). Tie-breaking among the minimisers inside Knuth's range does not matter (see the correctness note and the ties experiment), but monotonicity is NOT a property of arbitrary optimal roots: a table that takes the largest optimal root for even i and the smallest for odd i from the full optimal sets is non-monotone on 3417 of 6006 tie-heavy instances (e.g. all-zero weights, n >= 4). CLRS's cost differs from Knuth's by the constant sum_j q_j (CLRS counts an external node at level + 1), which does not change the optimal trees. Counts measure comparisons of cost values only; additions are also Theta(3^n), Theta(n^3) and Theta(n^2) (exact values read off the data in the counts experiment: (35 * 3^(n-2) - 3)/2 for the recursion, n >= 2; n(n+1)(n+2)/6 + 3n(n+1)/2 - n for the cubic DP; comparisons + 2n^2 for Knuth), and index arithmetic is not counted. The plain recursion recomputes w(i, j) by summation in every call; this does not change Theta(3^n).",
+  "notes": "Introduces the 'monotone root / quadrangle inequality' speed-up family (Knuth-Yao) to the dataset. The pattern report (research/2026-10-07_patterns.md, candidate 6) estimated Theta(3^n) for the plain recursion by analogy with matrix chain; exact call counts confirm it: 3^n calls exactly (the recursion also calls itself on empty intervals), and (3^(n-1) - 1)/2 comparisons."
+}

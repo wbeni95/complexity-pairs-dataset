@@ -1,6 +1,6 @@
 """Unit tests for lib/qsim.py (the state-vector simulator behind the T9 entries) and lib/qsearch.py.
 
-Added 2026-10-07. The simulator is the measuring instrument of every quantum query count in the dataset, so
+Added 2026-10-06. The simulator is the measuring instrument of every quantum query count in the dataset, so
 it is tested directly: unitarity (norm preservation), the Hadamard involution, the diffusion operator against
 its definition, oracle query counting, the deferred-measurement collapse, and the search subroutines against
 the closed forms of Boyer, Brassard, Hoyer & Tapp (1998).

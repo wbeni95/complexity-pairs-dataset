@@ -1,0 +1,128 @@
+{
+  "id": "two-sat-brute-force-vs-scc",
+  "title": "2-SAT: brute force over all assignments vs implication graph + strongly connected components",
+  "problem_statement": "Given a CNF formula over Boolean variables x_1..x_n whose clauses have at most 2 literals each (2-CNF), decide whether it is satisfiable and, if it is, output a satisfying assignment. Clauses are a list (repetitions allowed); an empty clause is unsatisfiable, a unit clause (a) means (a OR a). Any satisfying assignment is a correct output.",
+  "input": {
+    "parameter": "n = number of variables; m = number of clauses (each of at most 2 literals). In the V2 family W_n, m = 2n + 2.",
+    "size_measure": "Theta(n + m) numbers (2m literals of O(log n) bits each, plus n). Literals are small integers (unit-cost word operations); brute force also uses n-bit masks, one machine word for the n it can reach."
+  },
+  "algorithms": [
+    {
+      "name": "brute force over all assignments",
+      "idea": "Enumerate the 2^n assignments in a fixed order and check each one clause by clause, stopping at the first falsified clause; return the first assignment that satisfies every clause.",
+      "model": "classical-deterministic",
+      "pseudocode": "for mask in 0 .. 2^n - 1: (bit v-1 = value of x_v)\n  for clause in clauses:\n    if no literal of clause is true under mask: next mask\n  return mask as an assignment\nreturn UNSAT",
+      "time_complexity": "O(2^n * m) always; Theta(2^n * m) in the worst case (unsatisfiable formulas in which a constant fraction of the assignments pass Theta(m) clauses before failing, e.g. clauses all containing x1 followed by an unsatisfiable core). On the V2 family W_n (m = 2n + 2) exactly (n + 7) * 2^(n-1) + 2 literal evaluations = Theta(n * 2^n) = Theta(m * 2^n).",
+      "space_complexity": "Theta(n + m) (the input; O(1) extra words besides the output)",
+      "correctness": "Exhaustive: every assignment is examined until one satisfies all clauses, so the answer is correct by definition of satisfiability. Upper bound: at most 2^n assignments, each checked with at most 2m literal evaluations. Lower bound on W_n: the 2^(n-1) assignments with x1 true each evaluate one literal in each of the n - 1 clauses (x1 OR x_j) before reaching the unsatisfiable core.",
+      "implementation": "implementations/brute_force.py:two_sat_brute_force",
+      "harness": {
+        "v1_max_n": 14,
+        "scaling": {
+          "cost": "(n + 7) * 2**n",
+          "n_values": [
+            8,
+            10,
+            12,
+            14,
+            16
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "2**n",
+            "n**2 * 2**n"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Aspvall-Plass-Tarjan (implication graph + Tarjan SCC)",
+      "idea": "Each clause (a OR b) is equivalent to the implications NOT a -> b and NOT b -> a. Build this implication graph on the 2n literals (2m edges) and compute its strongly connected components with Tarjan's depth-first search (written iteratively). The formula is unsatisfiable iff some x and NOT x share a component; otherwise setting x true iff its component comes after NOT x's in topological order satisfies every clause.",
+      "model": "classical-deterministic",
+      "pseudocode": "for clause (a OR b): add edges NOT a -> b, NOT b -> a\ncomp = Tarjan SCC (iterative; components numbered in reverse topological order)\nfor each variable x: if comp[x] == comp[NOT x]: return UNSAT\nreturn x := (comp[x] < comp[NOT x]) for every x",
+      "time_complexity": "Theta(n + m) (Theta(n) on the V2 family, where m = 2n + 2)",
+      "space_complexity": "Theta(n + m)",
+      "correctness": "Aspvall, Plass & Tarjan 1979: a 2-CNF formula is satisfiable iff no variable lies in the same strongly connected component of the implication graph as its negation, and the topological-order assignment above is then satisfying. Tarjan 1972: strongly connected components in O(V + E) time by one depth-first search; here V = 2n and E = 2m.",
+      "implementation": "implementations/aspvall_plass_tarjan.py:two_sat_scc",
+      "harness": {
+        "scaling": {
+          "cost": "n",
+          "n_values": [
+            1000,
+            2000,
+            4000,
+            8000,
+            16000,
+            32000
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n * log(n)",
+            "n**2"
+          ]
+        }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "Same problem. Brute force is exponential, Theta(2^n * m) in the worst case; Aspvall-Plass-Tarjan is linear, Theta(n + m), so 2-SAT is in P. The structure used is the implication graph: a clause is a pair of implications, and satisfiability reduces to strongly connected components. Contrast: with 3 literals per clause the problem is NP-complete (notes/boundary-2sat-vs-3sat.md; pairs/3sat-brute-force-vs-schoening).",
+  "sources": [
+    {
+      "authors": "Aspvall, B.; Plass, M. F.; Tarjan, R. E.",
+      "year": 1979,
+      "title": "A linear-time algorithm for testing the truth of certain quantified boolean formulas",
+      "venue": "Information Processing Letters 8(3), 121-123",
+      "doi": "10.1016/0020-0190(79)90002-4"
+    },
+    {
+      "authors": "Tarjan, R.",
+      "year": 1972,
+      "title": "Depth-First Search and Linear Graph Algorithms",
+      "venue": "SIAM Journal on Computing 1(2), 146-160",
+      "doi": "10.1137/0201010"
+    },
+    {
+      "authors": "Even, S.; Itai, A.; Shamir, A.",
+      "year": 1976,
+      "title": "On the Complexity of Timetable and Multicommodity Flow Problems",
+      "venue": "SIAM Journal on Computing 5(4), 691-703",
+      "doi": "10.1137/0205048",
+      "note": "Recalled (not checked here against the paper's text): contains an earlier polynomial-time algorithm for 2-SAT. Bibliographic data verified via Crossref."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree on satisfiability on n = 0..8, 10, 12, 14 (brute force up to n = 14; the SCC algorithm also on n = 50, 300, 3000), 4 formulas per size (60 in total, 33 satisfiable and 27 unsatisfiable): random 2-CNF at clause/variable ratios 0.5-3, planted satisfiable formulas (with and without a long implication chain), unsatisfiable formulas built from implication paths x ~> NOT x ~> x, mixed widths with unit clauses, repeated literals, tautologies and empty clauses, and the V2 family under random renaming. The independent check() verifies every returned assignment against all clauses, and accepts UNSAT only with a proof: an empty clause, exhaustive search for n <= 12, or for larger n an explicit pair of implication paths x ~> NOT x and NOT x ~> x found by BFS (the variable is located with a separate Kosaraju SCC implementation; if none exists, the assignment Kosaraju's order gives is verified and refutes the UNSAT answer). V2 (exact counts, RESEARCH_LOG RL-047 method): the instances of the deterministic unsatisfiable family W_n (n - 1 clauses (x1 OR x_j), a 4-clause unsatisfiable core on x2, x3, and an n - 1 clause implication chain x_1 -> ... -> x_n; m = 2n + 2) are built from a harness number type CountingLit that counts every operation on input-derived values (arithmetic, comparisons, hashing, use as a list index); the implementations are unchanged. Brute force: exactly 3(n + 7) 2^n + 12 operations (6 per literal evaluation; (n + 7) 2^(n-1) + 2 literal evaluations, derived by hand and checked for every n = 3..16); fit against (n + 7) * 2**n on n = 8..16: alpha = 1.000 (tol 0.02); rivals 2**n (alpha 1.077) and n**2 * 2**n (0.862) rejected. Aspvall-Plass-Tarjan: exactly 49(n + 2) operations (28n + 28 of them in building the graph, 14 per clause, by inspection; the total read off the data for every n = 3..300 and the V2 sizes, not proven); fit against n on n = 1000..32000: alpha = 0.9995 (tol 0.02); rivals n log n (0.895) and n**2 (0.500) rejected, so the counts also resolve the log factor (RL-048). Accesses at the 2n DFS roots chosen by the outer loop use plain range() integers and are not counted; every examined edge leads to at least one counted access, so the uncounted work is O(n). See experiments/2026-10-07b_two_sat_counts.py.",
+    "artifacts": [
+      "implementations/brute_force.py",
+      "implementations/aspvall_plass_tarjan.py",
+      "harness.py",
+      "../../experiments/2026-10-07b_two_sat_counts.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      10,
+      12,
+      14,
+      50,
+      300,
+      3000
+    ],
+    "trials": 4
+  },
+  "caveats": "Brute force stops at the first falsified clause, so its Theta(2^n * m) worst case needs structured formulas: on unsatisfiable formulas whose other clauses are random, a random assignment fails a random 2-clause with probability 1/4 and the count measured in the experiment grows like 2^n, not m * 2^n. The V2 family W_n is built for this worst case; it is deterministic (generate_scaling ignores rng), and the brute-force count is invariant under renaming and negating variables because all 2^n assignments are examined. With clause lists that may repeat clauses, Theta(2^n * m) holds for every m (repeat (x1 OR x2) before the core); with distinct clauses only O(n) clauses can contain the literal x1, so the stated worst case is shown here for m = Theta(n). The fitted brute-force cost is the exact count's form (n + 7) * 2**n: at n <= 16 the lower-order term matters, and the bare n * 2**n gives alpha = 0.958, outside the 0.02 band (still far from the rival 2**n at 1.077). The SCC count excludes list accesses at the DFS roots (plain integers from range), an O(n) part. Counted operations measure Python-level work on input-derived values, not machine instructions.",
+  "notes": "2-SAT sits on the 2-SAT/3-SAT boundary recorded in notes/boundary-2sat-vs-3sat.md: allowing a third literal per clause makes the problem NP-complete (pairs/3sat-brute-force-vs-schoening). Not added: Papadimitriou's random walk (expected O(n^2) flips on satisfiable 2-CNF, one-sided error), which would give a T4 comparison and is the 2-SAT ancestor of Schoening's 3-SAT walk; it can be added later with a probabilistic V1 check."
+}

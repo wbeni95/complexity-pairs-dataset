@@ -17,7 +17,7 @@
       "correctness": "Exhaustive: each of the n - m + 1 alignments is checked character by character.",
       "implementation": "implementations/naive.py:count_naive",
       "harness": {
-        "scaling": { "cost": "n**2", "n_values": [200, 400, 800, 1600, 3200] }
+        "scaling": { "cost": "n**2", "n_values": [200, 400, 800, 1600, 3200], "measure": "reported", "tolerance": 0.03, "rivals": ["n", "n**2*log(n)"] }
       }
     },
     {
@@ -30,7 +30,7 @@
       "correctness": "Knuth, Morris & Pratt 1977: after a mismatch following q matched characters, no alignment between the current one and the one keeping the longest border of P[0..q-1] can match. After a full match, continuing from the longest border of P finds overlapping occurrences.",
       "implementation": "implementations/kmp.py:count_kmp",
       "harness": {
-        "scaling": { "cost": "n", "n_values": [3000, 10000, 30000, 100000, 300000] }
+        "scaling": { "cost": "n", "n_values": [3000, 10000, 30000, 100000, 300000], "measure": "reported", "tolerance": 0.03, "rivals": ["n*log(n)", "n**2"] }
       }
     }
   ],
@@ -55,8 +55,8 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree with each other and with an oracle that counts occurrences with str.find in a loop (a reference only) on random texts over {a, b} and {a, b, c} and periodic texts, n = 0..3, 5, 8, 13, 20, 50, 200 and 1000, with patterns that are substrings of the text, random short strings, or longer than the text; overlapping matches are frequent. V2: on the worst case T = a^n, P = a^(n//2 - 1) b, runtimes fit n^2 (naive, n = 200..3200) and n (KMP, n = 3000..300000).",
-    "artifacts": ["implementations/naive.py", "implementations/kmp.py", "harness.py"]
+    "method": "V1: both implementations agree with each other and with an oracle that counts occurrences with str.find in a loop (a reference only) on random texts over {a, b} and {a, b, c} and periodic texts, n = 0..3, 5, 8, 13, 20, 50, 200 and 1000, with patterns that are substrings of the text, random short strings, or longer than the text; overlapping matches are frequent. V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md): on the worst case T = a^n, P = a^(n//2 - 1) b, the measured quantity is the exact number of CHARACTER COMPARISONS (== and !=) of the unchanged implementations. Characters of a str cannot be instrumented, so the scaling instance holds the same characters as tuples of an instrumented character type (CountingChar in harness.py); the implementations use only len(), indexing, iteration and ==/!= on characters, and on 200 random small (text, pattern) pairs plus the scaling instances they return the same answers on tuples as on strings. Naive: exactly (n - m + 1) m with m = n // 2 at n = 200, 400, 800, 1600, 3200 (10100 ... 2561600); alpha = 0.998 against n^2. KMP: exactly 3n + 2m - 6 = 4n - 6 (failure function 3m - 6, scan 3n - m) at n = 3000, 10000, 30000, 100000, 300000 (11994 ... 1199994); alpha = 1.000 against n. Tolerance 0.03: the counts are exact closed forms, so the band only covers lower-order terms (largest |alpha - 1| here 0.002, from the + n/2 term of the naive count) and stays below half the distance to the nearest rival. Rivals that must NOT fit, all rejected: naive against n (alpha = 1.997) and n^2 log n (0.928); KMP against n log n (0.910) and n^2 (0.500). The log factor is therefore resolved for both (validator diagnostic, RESEARCH_LOG RL-048). experiments/2026-10-07b_count_v2_apsp_strings.py reproduces every count above.",
+    "artifacts": ["implementations/naive.py", "implementations/kmp.py", "harness.py", "../../experiments/2026-10-07b_count_v2_apsp_strings.py"]
   },
   "test_harness": {
     "module": "harness.py",

@@ -268,7 +268,7 @@ The three were relaunched with the same mandates, and the documentation request 
 
 ---
 
-## 2026-10-07 (overnight agents, consolidated by the maintainer)
+## 2026-10-06 (overnight agents, consolidated by the maintainer; heading date corrected, see RL-055)
 
 Four background agents worked in separate areas. Their full reports, with every number, decision log, near-miss and
 open idea, are in [research/](research/):
@@ -428,7 +428,7 @@ All 88 V2 claims, including the 11 new pairs, the 3 new T9 query-count fits and 
 
 ---
 
-## 2026-10-07 (day)
+## 2026-10-06 (morning; heading date corrected, see RL-055)
 
 ### RL-047 · DECISION and VERIFIED · Discriminating V2 (rivals) and exact-count V2 for classical entries; Strassen raised to V2
 **Decision** (follows RL-040): `harness.scaling.rivals` lists cost expressions that the same measurements must **not** fit (|α − 1| > tolerance). A V2 claim with rivals therefore *excludes* the named slower or faster alternative, not just "fits the claim".
@@ -529,3 +529,145 @@ Throughput was 1.27–2.30·10⁷ steps/s per process with 12 processes running 
 **NEAR-MISS / deviation:** with this kernel the weight cap of 4 *hurt*: all capped walks stuck at 52, while uncapped walks reached 49, 50 and 47. The Python driver (RL-036) had found the cap helpful (one capped walk reached 49). The move policies differ (plus-transition form, restarts, candidate selection), so the effect of the cap depends on the policy and should not be generalised.
 
 **IDEA:** add a dataset entry for characteristic 2, "Strassen recursion vs recursive rank-47 4×4 scheme", with V2 on exact multiplication counts. The exponent gap is small: the rival's α would be log₂7 / log₄47 = 1.0108, so the tolerance must be below 0.0108. Exact counts at powers of 4 give α = 1.000 exactly, which makes this discriminable (the method of RL-047).
+
+---
+
+## 2026-10-06 (late morning: second autonomous round, consolidated by the maintainer)
+
+Four background agents. Their detailed reports are in research/:
+- [count_based_v2](research/2026-10-07b_count_based_v2.md)
+- [new_candidates](research/2026-10-07b_new_candidates.md)
+- [search_formats](research/2026-10-07b_search_formats.md)
+- [deviations](research/2026-10-07b_deviations.md)
+
+The file-name prefix "2026-10-07b" is an identifier, not a date (RL-055). Numbers marked "agent report" were not re-run by the maintainer unless stated. Every entry was re-validated in the recorded run (RL-064).
+
+### RL-055 · CORRECTED · Wrong date on the overnight and morning work
+The maintainer labelled the overnight round and the following work "2026-10-07". Everything happened on **2026-10-06**, local time UTC+2; the ledger timestamps (UTC) and git commit dates agree.
+The two RESEARCH_LOG section headings and the event dates inside entries, lib/ and tests were corrected; earlier entries were not otherwise rewritten.
+The prefixes "2026-10-07_" and "2026-10-07b_" in file names (experiments/, research/, search/runs/) and the directory names `search/schemes/rust-2026-10-07*` are kept as **stable identifiers**. Renaming more than 100 referenced files would risk broken links. The deviation agent found the mismatch.
+
+### RL-056 · VERIFIED and CORRECTED · Deviation analysis, and the fixes made by the maintainer
+The deviation agent analysed the 5 ledger runs recorded before 09:08 local (agent report; scripts `experiments/2026-10-07b_*`, 10 files).
+**Checks that found nothing wrong:**
+- every deterministic count matches its closed form exactly (Grover, Bernstein–Vazirani, Deutsch–Jozsa, minimum-finding classical, Strassen and schoolbook);
+- all randomized means are within |z| < 2 of their exact expectations;
+- all 54 α values in the RL-021 table match the ledger;
+- index entries match the entry files.
+
+**Findings and actions:**
+
+| # | Finding (agent report) | Action |
+|---|---|---|
+| F1 | Matching: timing data fitted the other algorithm's cost too (Hopcroft–Karp against n³: α ≈ 0.82; Kuhn against n^2.5: ≈ 1.17) | **fixed** by count-based V2 with rivals (RL-057) |
+| F2 | Karatsuba: timing data also fitted n² (α 0.806–0.811) | **fixed by the maintainer** (below) |
+| F3 | Collision, BBHT variant: neither the measured means nor the exact expectations over n = 3..15 rule out 2^(n/2) (α 0.776 / 0.770) | **fixed**: the known-t variant declares 2^(n/2) as a rival and rejects it (α = 0.681). The BBHT variant is documented as pre-asymptotic in this range and gets no such rival. |
+| F4 | Chromatic inclusion–exclusion: the timing fit cannot tell n·2ⁿ from 2ⁿ (α 0.905 against 2ⁿ passes) | **open**; the entry already states it (IDEA, RL-061) |
+| F5 | Simon quantum: α 1.121 was 1.80 standard errors above the exact-E slope; n = 2 supplied 83% of the variance | **fixed**: n_values 3, 4, 6, 8, 10 with 100 instances. Recorded α = 0.970 against an exact-E slope of 0.9573 over these n. |
+| F6 | Run-to-run stability reflects timing noise only, because each run uses the same seeded instance per n | **documented** here. Instance variation is covered only by `samples`. |
+| F7 | Maximum subarray: the instance type (all-negative, all-positive, mixed) changed with n, which bent Kadane's local slopes (0.778 / 1.235) | **fixed**: `generate_scaling` always draws mixed signs |
+| F8 | Provenance: the only rival-based evidence sat in one run on a dirty tree | addressed by RL-064 (recorded run) and the follow-up run on the clean commit |
+| F9 | High-exponent timing fits have α < 1 with rising local slopes, from pre-asymptotic lower-order terms (Floyd–Warshall would need n > 703 to reach a local slope of 0.99) | Floyd–Warshall **fixed** by exact counts (exactly n³ − n, RL-057); others documented |
+| F10 | All five log n fits have α > 1 with falling slopes (untested hypothesis: cheap small-integer arithmetic) | **open** (IDEA) |
+| low | Secondary T3 tag applied unevenly | **fixed**: T3 added to Fibonacci (DP Θ(n) → fast doubling Θ(log n)) and MST (Kruskal O(n² log n) → Prim Θ(n²)) |
+
+**Maintainer's fixes, validated with `--scaling -v` (console):**
+- **Karatsuba:** a counting digit type, `CountingDigit`, propagates through the carry and borrow arithmetic. On powers of two the counts are schoolbook = n² exactly and Karatsuba = 3^(log₂(n/32))·32² exactly (e.g. 248 832 at n = 1024). Products were checked against the big-integer oracle. Both fits give α = 1.000 at tolerance 0.02, and the rivals are rejected (Karatsuba against n²: 0.792; schoolbook against n^log₂3: 1.262).
+- **Collision:** the classical birthday counts reject 2^(n/3) (α 1.505).
+- **Simon:** the classical counts reject n (α 2.957), and the quantum counts reject 2^(n/2) (α 0.473).
+- **Inversion counting:** a stale caveat ("the V2 fit cannot resolve the log factor") was corrected, since the exact counts now resolve it.
+
+### RL-057 · VERIFIED · Count-based, discriminating V2 for 8 more entries
+The agent converted sorting, element distinctness, bipartite matching, inversion counting, LIS, closest pair, APSP and string matching (agent report; re-validated in RL-064).
+- **Instrumentation:** instrumented element, weight or character types are passed in through `generate_scaling`. Implementations and V1 are unchanged, and the scaling inputs keep the same seeded draws.
+- **Scale:** 17 algorithm fits and 36 declared rivals, all rivals rejected. The tolerance is 0.03 throughout; the largest |α − 1| is 0.0140 and the smallest rival distance 0.0644.
+- **Log factor resolved in 16 of 17 fits**, against 0 of 77 under timing (RL-048). The exception is LIS subset enumeration, which counts comparisons rather than loop steps; for an exponential algorithm a log factor is not a meaningful alternative.
+- **Matching:** the counts now reject Kuhn against n^2.5 and Hopcroft–Karp against n² and n³, which RL-030 timing had accepted. The harness counts equal the earlier instrumented-copy counts value for value.
+- **Cross-version check:** all 17 count series are identical under CPython 3.12.10 and 3.14.2 (same SHA-256).
+
+Exact closed forms observed include all pairs n(n−1)/2, Bellman–Ford n²(n−1)², Floyd–Warshall n³ − n, naive matching (n−m+1)m and KMP 4n − 6.
+
+Proxies to keep in mind:
+- the closest-pair divide and conquer counts multiplications only; comparisons inside CPython's `sorted()`/`min()` differ by version (39 380 vs 39 445 at n = 1000);
+- string matching passes its scaling input as tuples of a counting character type.
+
+### RL-058 · VERIFIED · Eight new pairs at V2
+The agent and its four sub-agents added the entries below; the maintainer's recorded run is RL-064 (agent report).
+
+| Entry | Tags | V2 |
+|---|---|---|
+| xor-convolution-naive-vs-walsh-hadamard | T3 | exact ring operations 2·4ⁿ vs (3n+2)·2ⁿ |
+| subset-sum-zeta-transform-naive-vs-yates | T3 | exact additions 3ⁿ vs n·2ⁿ⁻¹ |
+| regex-matching-backtracking-vs-thompson | T2 | exact comparisons on (a?)ⁿaⁿ: (n+2)·2ⁿ⁻¹ − 1 vs n(n+1) |
+| global-min-cut-brute-vs-stoer-wagner | T2 | exact additions and comparisons |
+| optimal-bst-recursion-vs-dp-vs-knuth | T2 + T3 | exact comparisons; the recursion makes exactly 3ⁿ calls |
+| two-sat-brute-force-vs-scc | T2 | exact operation counts; the SCC count 49(n+2) is read off the data, not proven |
+| spanning-tree-count-enumeration-vs-kirchhoff | T2 | enumeration **timed** (α 0.961 / 0.995 / 0.980 over 3 runs); Bareiss exact counts |
+| nand-tree-evaluation-deterministic-vs-randomized | T4 + T3 | exact leaf reads; the randomized algorithm uses the mean of 200 seeded runs |
+
+- All declared rivals are rejected, and the log factor is resolved in every count-based fit.
+- **XOR convolution:** the entry states the quantum link precisely: W = 2^(n/2)·H^⊗n, and one transform stage corresponds to one Hadamard gate. This is not a quantum speed-up for computing the transform.
+- **NAND tree:** the randomized lower bound is stated for zero-error algorithms only (Saks–Wigderson 1986, confirmed through secondary sources). The deterministic 2ʰ bound comes from an adversary argument written in the entry, not checked against a publication.
+- **Sources dropped as unverifiable:** Snir 1985 (the guessed DOI belonged to another paper), Farhi–Goldstone–Gutmann 2008 (no Crossref title) and Yates 1937 (book).
+
+### RL-059 · VERIFIED (rediscoveries), NULL and a measured obstacle · Rust searches across formats
+Agent report. The maintainer checked that no saved scheme is below its best known rank; all 112 pass both verifiers and 200 random checks according to the agent's separate re-verification step.
+
+**Best known ranks.**
+- **Verified by the agent with both exact verifiers on published scheme files:** AlphaTensor's GF(2) factorisations (20 formats, including 4×4×4 rank 47 and 4×4×5 rank 63) and 13 Kauers–Moosbauer files (4×4×4 rank 47 and 4×4×5 rank 60 valid over GF(2) only). The downloaded files were not added to the repository.
+- **Over general rings, 4×4×4 = 48:** complex coefficients (AlphaEvolve) or rational coefficients (Dumas–Pernet–Sedoglavic), the latter not valid in characteristic 2.
+- **47 is still the best known 4×4×4 rank over GF(2)** in every source consulted. Perminov's and Kauers–Wood's lists were not checked format by format, so any future rank-46 claim needs a full literature check.
+
+**Small formats** (8 seeds each, 30–180 s per walk):
+- (2,2,3) 11, (2,2,4) 14, (2,3,3) 15, (2,3,4) 20, (2,4,4) 26, (3,3,4) 29 and (3,3,5) 36: best known reached by 8/8 seeds, the slowest after 20.8 s.
+- (3,4,4) 38: 6/8.
+- (3,4,5) 47: 1/8.
+- (4,4,5): 0/8, best 64 against 60 known.
+
+**4×4×4 statistic.** 24 new seeds × 900 s, uncapped: **0/24 reached 47 or 48** (exact 95% interval for 47: 0–0.142). Pooled with RL-054 that is 1/28 (0.001–0.183), so RL-054's 47 was a lucky walk, not the typical outcome.
+**Measured obstacle:** 19 of the 20 rank-49 endpoints have no two terms sharing a factor, so **no flip is possible** there. 18 of them have the factor-rank invariant of Strassen ⊗ Strassen. The walks that got there idled; their higher steps/s is empty scanning.
+
+**NULL:**
+- rank 46 from RL-054's rank-47 scheme: 1073 s plus 8 × 120 s, about 5.2·10¹⁰ steps in total;
+- below the best known rank for all ten formats within these budgets.
+
+**Inequivalence:** RL-054's rank-47 scheme has a factor-rank invariant different from the AlphaTensor and the Kauers–Moosbauer rank-47 files, so it is provably inequivalent to **those two**. Whether it is new among *all* published rank-47 schemes was not checked (IDEA, RL-061).
+
+**Unplanned second execution, an accidental reproducibility check.** `experiments/2026-10-07b_small_formats.py` ran a second time, 10:55–11:07 local, after the agent had written its report. It was the agent's background job; the maintainer waited for it to finish instead of killing it, so that no log was cut off mid-write.
+Consequences:
+- every small-format log in `search/runs/2026-10-07b_small_*.jsonl` contains each seed **twice** (16 lines per format);
+- the search compute exceeded the stated budget by about 12 minutes.
+
+Across all 80 walk pairs, the **best rank reached was identical** in both executions, e.g. (3,4,5) gave 48, 48, 51, 51, 49, 48, 47, 48 both times. The kernel is deterministic per seed, apart from the time budget cut-off.
+
+### RL-060 · CORRECTED · Process: an auxiliary tool broke the project environment
+Installing `cffconvert` 2.0.0 into `.venv` to validate CITATION.cff (RL-053) left jsonschema at **3.2.0** (previously 4.26.0). `tools/validate.py` then refused to run ("jsonschema is required"), because it needs Draft 2020-12.
+Two agents noticed. They worked around it with private environments (jsonschema 4.26.0) and re-ran their final validations after the fix; the shared venv was not touched by them.
+The maintainer removed `cffconvert` and restored jsonschema 4.26.0 from requirements.txt; `validate.py --static` then gave 62/62 OK. CI was unaffected, because it installs from requirements.txt.
+**Lesson:** auxiliary tools go into a separate environment, never into the project's `.venv`.
+
+### RL-061 · IDEA · Next steps from this round
+1. **Kernel:** detect dead ends (no pair of terms shares a factor) and leave them at once with a plus transition or restart, instead of idling for 50 000 steps. This changes trajectories, so `kernel_reference.py` must mirror it and the differential test must cover it.
+2. **Novelty audit of RL-054's rank-47 scheme** against all published 4×4 GF(2) rank-47 schemes (AlphaTensor's full set, the Kauers–Moosbauer flip-graph sets, later catalogues), using invariants and equivalence tests.
+3. **Remaining timing fits whose claims contain a log factor:** Fibonacci fast doubling, MST Kruskal, NTT and sparse-table RMQ. Convert them to exact counts.
+4. **Chromatic number:** count-based V2 able to reject 2ⁿ (F4).
+5. **F10:** test the small-integer arithmetic hypothesis behind the log n fits.
+
+### RL-062 · DECISION · Cost expressions may use exact closed forms
+A cost expression may be the exact closed form of the count, e.g. (n+7)·2ⁿ for 2-SAT or (n−1)³ for Kirchhoff, when it lies in the claimed Θ class. `time_complexity` must still state the Θ class, and the exact form must be stated next to it in the entry.
+**Rationale:** exact counts carry lower-order terms. Fitting the bare leading term would force wider tolerances, and that would cost the rival and log-factor checks: e.g. n·2ⁿ gives α 0.958 for the 2-SAT data, and n³ gives 1.041 for Kirchhoff. Strassen's leading form works only because its counts are exact powers on the measured n.
+
+### RL-063 · INCONCLUSIVE · Zenodo DOI for v0.1.0 not issued
+The GitHub webhook delivered the v0.1.0 release event, and Zenodo answered **202** to `released`. The 409 answers to `published` and `created` are Zenodo rejecting duplicate events for the same release.
+No Zenodo record appeared in the public API within about 65 minutes (two polling runs, four query forms). The likely cause is a metadata problem on Zenodo's side; the error is visible only in the owner's Zenodo account.
+Action: `.zenodo.json` was added, with explicit metadata and a single license (cc-by-4.0, the dataset license). It takes precedence over CITATION.cff, whose license field is a list of two. Retried with release v0.2.0.
+
+### RL-064 · VERIFIED · Recorded run over all 62 entries after the second round
+Ledger: [ledger/runs/20261006T090819Z.json](ledger/runs/20261006T090819Z.json), at base commit `805a202` with this round's work uncommitted in the tree (`git_dirty` true), on a quiet machine (no search process running).
+- **Result:** 62/62 entries pass their claimed level (pairs: 43 at V2, 4 at V1; staging: 11 at V0; synthetic: 4 at V2). V1 covered 51 entries, 3447 instances and 7323 implementation runs.
+- **V2:** 108 measurements, all passing (56 wall-clock, 52 exact reported counts), α from 0.886 to 1.164.
+- **Rivals:** 94 declared, **94 rejected**.
+- **Log-factor diagnostic:** computed for 100 fits and resolved in **40, all of them exact counts**; 0 of the timing fits resolve it, consistent with RL-048.
+- **Unit tests:** 91 OK.
+- **Citations:** 173 identifiers checked, 0 problems; 147 sources also compared on volume, issue and pages; 37 sources have no DOI or arXiv id.
+- **Index:** 47 validated pairs (up from 39), 12 entries with T6, 9 with T9, 4 synthetic.

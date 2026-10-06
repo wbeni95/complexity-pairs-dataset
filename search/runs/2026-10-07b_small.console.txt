@@ -1,0 +1,92 @@
+start 2026-10-06 10:55:33
+=== 2x2x3 (best known 11, 30 s per walk): exit 0, 30.2 s
+  seed 1: best 11  verified True  first<=best_known (step, s) (2867, 0.0)  steps 903217152  3.011e+07 steps/s  flips 229384174  plus 15232  restarts 0  error None
+  seed 2: best 11  verified True  first<=best_known (step, s) (3877, 0.0)  steps 905641984  3.019e+07 steps/s  flips 229837720  plus 15241  restarts 0  error None
+  seed 3: best 11  verified True  first<=best_known (step, s) (1991, 0.0)  steps 901971968  3.006e+07 steps/s  flips 229336254  plus 15090  restarts 0  error None
+  seed 4: best 11  verified True  first<=best_known (step, s) (10345, 0.001)  steps 903217152  3.011e+07 steps/s  flips 229594538  plus 15149  restarts 0  error None
+  seed 5: best 11  verified True  first<=best_known (step, s) (3382, 0.0)  steps 905510912  3.018e+07 steps/s  flips 229523149  plus 15302  restarts 0  error None
+  seed 6: best 11  verified True  first<=best_known (step, s) (4821, 0.0)  steps 902496256  3.008e+07 steps/s  flips 229264878  plus 15232  restarts 0  error None
+  seed 7: best 11  verified True  first<=best_known (step, s) (2209, 0.0)  steps 905838592  3.019e+07 steps/s  flips 229816124  plus 15242  restarts 0  error None
+  seed 8: best 11  verified True  first<=best_known (step, s) (3063, 0.0)  steps 903020544  3.010e+07 steps/s  flips 229777888  plus 15191  restarts 0  error None
+=== 2x2x4 (best known 14, 30 s per walk): exit 0, 30.2 s
+  seed 1: best 14  verified True  first<=best_known (step, s) (65821, 0.003)  steps 821428224  2.738e+07 steps/s  flips 241148898  plus 14265  restarts 0  error None
+  seed 2: best 14  verified True  first<=best_known (step, s) (114398, 0.005)  steps 829620224  2.765e+07 steps/s  flips 243237078  plus 14347  restarts 0  error None
+  seed 3: best 14  verified True  first<=best_known (step, s) (29586, 0.001)  steps 826408960  2.755e+07 steps/s  flips 242053169  plus 14395  restarts 0  error None
+  seed 4: best 14  verified True  first<=best_known (step, s) (46016, 0.002)  steps 839122944  2.797e+07 steps/s  flips 246043233  plus 14550  restarts 0  error None
+  seed 5: best 14  verified True  first<=best_known (step, s) (33260, 0.002)  steps 818741248  2.729e+07 steps/s  flips 241060047  plus 14260  restarts 0  error None
+  seed 6: best 14  verified True  first<=best_known (step, s) (37273, 0.002)  steps 828899328  2.763e+07 steps/s  flips 242357846  plus 14271  restarts 0  error None
+  seed 7: best 14  verified True  first<=best_known (step, s) (13751, 0.001)  steps 823590912  2.745e+07 steps/s  flips 242060790  plus 14240  restarts 0  error None
+  seed 8: best 14  verified True  first<=best_known (step, s) (12864, 0.001)  steps 840171520  2.800e+07 steps/s  flips 244640642  plus 14545  restarts 0  error None
+=== 2x3x3 (best known 15, 30 s per walk): exit 0, 30.2 s
+  seed 1: best 15  verified True  first<=best_known (step, s) (25697, 0.001)  steps 1687420928  5.625e+07 steps/s  flips 13740278  plus 31383  restarts 0  error None
+  seed 2: best 15  verified True  first<=best_known (step, s) (57670, 0.002)  steps 1676738560  5.589e+07 steps/s  flips 14092036  plus 31260  restarts 0  error None
+  seed 3: best 15  verified True  first<=best_known (step, s) (58064, 0.002)  steps 1690304512  5.634e+07 steps/s  flips 13209516  plus 31497  restarts 0  error None
+  seed 4: best 15  verified True  first<=best_known (step, s) (11632, 0.0)  steps 1666056192  5.554e+07 steps/s  flips 14301108  plus 31056  restarts 0  error None
+  seed 5: best 15  verified True  first<=best_known (step, s) (17933, 0.001)  steps 1693450240  5.645e+07 steps/s  flips 16168385  plus 31593  restarts 0  error None
+  seed 6: best 15  verified True  first<=best_known (step, s) (122309, 0.006)  steps 1695154176  5.650e+07 steps/s  flips 14654987  plus 31544  restarts 0  error None
+  seed 7: best 15  verified True  first<=best_known (step, s) (42916, 0.002)  steps 1701773312  5.673e+07 steps/s  flips 13039696  plus 31704  restarts 0  error None
+  seed 8: best 15  verified True  first<=best_known (step, s) (230590, 0.008)  steps 1696727040  5.656e+07 steps/s  flips 11866911  plus 31641  restarts 0  error None
+=== 2x3x4 (best known 20, 30 s per walk): exit 0, 30.2 s
+  seed 1: best 20  verified True  first<=best_known (step, s) (6778314, 0.253)  steps 933953536  3.113e+07 steps/s  flips 132536139  plus 17318  restarts 0  error None
+  seed 2: best 20  verified True  first<=best_known (step, s) (1054836, 0.039)  steps 928972800  3.096e+07 steps/s  flips 133508902  plus 17246  restarts 0  error None
+  seed 3: best 20  verified True  first<=best_known (step, s) (1248433, 0.061)  steps 937033728  3.123e+07 steps/s  flips 133026071  plus 17479  restarts 0  error None
+  seed 4: best 20  verified True  first<=best_known (step, s) (497825, 0.022)  steps 925958144  3.086e+07 steps/s  flips 132379408  plus 17214  restarts 0  error None
+  seed 5: best 20  verified True  first<=best_known (step, s) (4352450, 0.17)  steps 919928832  3.066e+07 steps/s  flips 133513878  plus 17092  restarts 0  error None
+  seed 6: best 20  verified True  first<=best_known (step, s) (5116936, 0.207)  steps 933888000  3.113e+07 steps/s  flips 135071819  plus 17362  restarts 0  error None
+  seed 7: best 20  verified True  first<=best_known (step, s) (1074136, 0.043)  steps 911605760  3.039e+07 steps/s  flips 134784955  plus 16938  restarts 1  error None
+  seed 8: best 20  verified True  first<=best_known (step, s) (859317, 0.033)  steps 933167104  3.110e+07 steps/s  flips 134536599  plus 17331  restarts 0  error None
+=== 2x4x4 (best known 26, 60 s per walk): exit 0, 60.2 s
+  seed 1: best 26  verified True  first<=best_known (step, s) (87181696, 3.723)  steps 2064384000  3.441e+07 steps/s  flips 146234185  plus 39334  restarts 0  error None
+  seed 2: best 26  verified True  first<=best_known (step, s) (8068601, 0.44)  steps 2075656192  3.459e+07 steps/s  flips 145288271  plus 39620  restarts 2  error None
+  seed 3: best 26  verified True  first<=best_known (step, s) (10465574, 0.621)  steps 2272460800  3.787e+07 steps/s  flips 90251676  plus 43451  restarts 1  error None
+  seed 4: best 26  verified True  first<=best_known (step, s) (21156348, 0.895)  steps 2247950336  3.747e+07 steps/s  flips 102057528  plus 43008  restarts 2  error None
+  seed 5: best 26  verified True  first<=best_known (step, s) (3417671, 0.148)  steps 2132279296  3.554e+07 steps/s  flips 129318251  plus 40604  restarts 1  error None
+  seed 6: best 26  verified True  first<=best_known (step, s) (42196047, 1.945)  steps 2066284544  3.444e+07 steps/s  flips 142369942  plus 39410  restarts 2  error None
+  seed 7: best 26  verified True  first<=best_known (step, s) (1875391, 0.067)  steps 2100297728  3.500e+07 steps/s  flips 143298854  plus 40001  restarts 0  error None
+  seed 8: best 26  verified True  first<=best_known (step, s) (19868950, 0.928)  steps 2216951808  3.695e+07 steps/s  flips 102877827  plus 42379  restarts 3  error None
+=== 3x3x4 (best known 29, 60 s per walk): exit 0, 60.2 s
+  seed 1: best 29  verified True  first<=best_known (step, s) (63200051, 2.727)  steps 1880096768  3.133e+07 steps/s  flips 130021943  plus 35931  restarts 1  error None
+  seed 2: best 29  verified True  first<=best_known (step, s) (13121755, 0.472)  steps 1917190144  3.195e+07 steps/s  flips 123130906  plus 36649  restarts 1  error None
+  seed 3: best 29  verified True  first<=best_known (step, s) (5233497, 0.178)  steps 1902772224  3.171e+07 steps/s  flips 122228802  plus 36455  restarts 0  error None
+  seed 4: best 29  verified True  first<=best_known (step, s) (24730757, 0.984)  steps 1906900992  3.178e+07 steps/s  flips 124959153  plus 36499  restarts 0  error None
+  seed 5: best 29  verified True  first<=best_known (step, s) (24437247, 0.915)  steps 1959591936  3.266e+07 steps/s  flips 118992086  plus 37521  restarts 0  error None
+  seed 6: best 29  verified True  first<=best_known (step, s) (53170269, 2.278)  steps 1939537920  3.233e+07 steps/s  flips 122625406  plus 37146  restarts 0  error None
+  seed 7: best 29  verified True  first<=best_known (step, s) (15972535, 0.662)  steps 2165178368  3.609e+07 steps/s  flips 75300393  plus 41632  restarts 0  error None
+  seed 8: best 29  verified True  first<=best_known (step, s) (119690244, 5.007)  steps 1874329600  3.124e+07 steps/s  flips 130066964  plus 35893  restarts 0  error None
+=== 3x3x5 (best known 36, 60 s per walk): exit 0, 60.2 s
+  seed 1: best 36  verified True  first<=best_known (step, s) (158111189, 9.503)  steps 1549139968  2.582e+07 steps/s  flips 153224853  plus 29847  restarts 2  error None
+  seed 2: best 36  verified True  first<=best_known (step, s) (48749465, 2.376)  steps 1568210944  2.614e+07 steps/s  flips 149971714  plus 30274  restarts 0  error None
+  seed 3: best 36  verified True  first<=best_known (step, s) (359240896, 21.12)  steps 1436286976  2.394e+07 steps/s  flips 172099946  plus 27640  restarts 0  error None
+  seed 4: best 36  verified True  first<=best_known (step, s) (72196456, 3.457)  steps 1566375936  2.611e+07 steps/s  flips 141140454  plus 30191  restarts 0  error None
+  seed 5: best 36  verified True  first<=best_known (step, s) (131224939, 7.924)  steps 1544552448  2.574e+07 steps/s  flips 146821389  plus 29762  restarts 0  error None
+  seed 6: best 36  verified True  first<=best_known (step, s) (73921370, 4.213)  steps 1507328000  2.512e+07 steps/s  flips 175636109  plus 28967  restarts 1  error None
+  seed 7: best 36  verified True  first<=best_known (step, s) (28537007, 1.533)  steps 1643380736  2.739e+07 steps/s  flips 124200767  plus 31714  restarts 1  error None
+  seed 8: best 36  verified True  first<=best_known (step, s) (217545451, 12.537)  steps 1453719552  2.423e+07 steps/s  flips 167296487  plus 27935  restarts 3  error None
+=== 3x4x4 (best known 38, 60 s per walk): exit 0, 60.2 s
+  seed 1: best 38  verified True  first<=best_known (step, s) (1193208893, 53.88)  steps 1332150272  2.220e+07 steps/s  flips 199649045  plus 25644  restarts 2  error None
+  seed 2: best 38  verified True  first<=best_known (step, s) (115173684, 5.371)  steps 1376387072  2.294e+07 steps/s  flips 204923302  plus 26373  restarts 0  error None
+  seed 3: best 38  verified True  first<=best_known (step, s) (267521007, 12.369)  steps 1521090560  2.535e+07 steps/s  flips 149714935  plus 29384  restarts 0  error None
+  seed 4: best 39  verified True  first<=best_known (step, s) None  steps 1292369920  2.154e+07 steps/s  flips 202107210  plus 24872  restarts 5  error None
+  seed 5: best 38  verified True  first<=best_known (step, s) (974824706, 45.723)  steps 1309409280  2.182e+07 steps/s  flips 186537107  plus 25248  restarts 1  error None
+  seed 6: best 38  verified True  first<=best_known (step, s) (16897255, 0.948)  steps 1394343936  2.324e+07 steps/s  flips 209392764  plus 26806  restarts 0  error None
+  seed 7: best 38  verified True  first<=best_known (step, s) (62552414, 3.514)  steps 1563820032  2.606e+07 steps/s  flips 144802249  plus 30214  restarts 0  error None
+  seed 8: best 39  verified True  first<=best_known (step, s) None  steps 1301610496  2.169e+07 steps/s  flips 201165907  plus 25015  restarts 3  error None
+=== 3x4x5 (best known 47, 180 s per walk): exit 0, 180.3 s
+  seed 1: best 48  verified True  first<=best_known (step, s) None  steps 3287875584  1.827e+07 steps/s  flips 489228825  plus 63743  restarts 6  error None
+  seed 2: best 48  verified True  first<=best_known (step, s) None  steps 3042443264  1.690e+07 steps/s  flips 568742985  plus 58871  restarts 5  error None
+  seed 3: best 51  verified True  first<=best_known (step, s) None  steps 2262171648  1.257e+07 steps/s  flips 588884519  plus 43419  restarts 9  error None
+  seed 4: best 51  verified True  first<=best_known (step, s) None  steps 2483290112  1.380e+07 steps/s  flips 553511370  plus 47857  restarts 4  error None
+  seed 5: best 49  verified True  first<=best_known (step, s) None  steps 2388262912  1.327e+07 steps/s  flips 703509676  plus 45847  restarts 3  error None
+  seed 6: best 48  verified True  first<=best_known (step, s) None  steps 3142647808  1.746e+07 steps/s  flips 590552842  plus 60742  restarts 9  error None
+  seed 7: best 47  verified True  first<=best_known (step, s) (1561530908, 97.324)  steps 3407085568  1.893e+07 steps/s  flips 454434812  plus 66083  restarts 2  error None
+  seed 8: best 48  verified True  first<=best_known (step, s) None  steps 2877292544  1.598e+07 steps/s  flips 496493085  plus 55647  restarts 10  error None
+=== 4x4x5 (best known 60, 180 s per walk): exit 0, 180.3 s
+  seed 1: best 64  verified True  first<=best_known (step, s) None  steps 2620522496  1.456e+07 steps/s  flips 412276087  plus 51152  restarts 5  error None
+  seed 2: best 64  verified True  first<=best_known (step, s) None  steps 2476146688  1.376e+07 steps/s  flips 434168429  plus 48230  restarts 12  error None
+  seed 3: best 65  verified True  first<=best_known (step, s) None  steps 2297823232  1.277e+07 steps/s  flips 523279510  plus 44685  restarts 11  error None
+  seed 4: best 66  verified True  first<=best_known (step, s) None  steps 2573008896  1.429e+07 steps/s  flips 399767857  plus 50251  restarts 43  error None
+  seed 5: best 65  verified True  first<=best_known (step, s) None  steps 2641559552  1.468e+07 steps/s  flips 387298749  plus 51556  restarts 24  error None
+  seed 6: best 64  verified True  first<=best_known (step, s) None  steps 2577203200  1.432e+07 steps/s  flips 398865793  plus 50286  restarts 5  error None
+  seed 7: best 66  verified True  first<=best_known (step, s) None  steps 2648178688  1.471e+07 steps/s  flips 378114238  plus 51724  restarts 8  error None
+  seed 8: best 66  verified True  first<=best_known (step, s) None  steps 2583953408  1.436e+07 steps/s  flips 395955874  plus 50436  restarts 11  error None
+total wall clock 722 s  end 2026-10-06 11:07:36

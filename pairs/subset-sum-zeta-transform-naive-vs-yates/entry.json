@@ -1,0 +1,78 @@
+{
+  "id": "subset-sum-zeta-transform-naive-vs-yates",
+  "title": "Zeta transform (sums over subsets): submask enumeration vs Yates' method",
+  "problem_statement": "Given a function f from the subsets of an n-element ground set to the integers, as a vector of length N = 2^n indexed by bitmasks, compute its zeta transform (sums over subsets) zeta[S] = sum of f[T] over all T subset of S, for every S. Exact integer arithmetic.",
+  "input": {
+    "parameter": "n = size of the ground set; the input vector has N = 2^n entries.",
+    "size_measure": "N = 2^n integers (entries in [-9, 9] in the harness, so all sums have O(n) bits and additions are unit cost). Costs are given in n; in the input size N they read Theta(N^(log2 3)) = Theta(N^1.585) vs Theta(N log N)."
+  },
+  "algorithms": [
+    {
+      "name": "submask enumeration (naive)",
+      "idea": "For every set S, enumerate its 2^|S| submasks with t = (t - 1) & S and add up f[t].",
+      "model": "classical-deterministic",
+      "pseudocode": "for S in 0..N-1: acc = 0; t = S; loop: acc += f[t]; if t == 0: break; t = (t - 1) & S; zeta[S] = acc",
+      "time_complexity": "Theta(3^n) = Theta(N^(log2 3)): exactly sum over S of 2^|S| = 3^n additions (counted)",
+      "space_complexity": "Theta(2^n)",
+      "correctness": "Direct evaluation of the definition. The step t -> (t - 1) & S visits every submask of S exactly once, in decreasing order. The count is sum over k of C(n, k) 2^k = 3^n by the binomial theorem.",
+      "implementation": "implementations/naive.py:zeta_naive",
+      "harness": {
+        "v1_max_n": 12,
+        "scaling": {
+          "cost": "3**n",
+          "n_values": [4, 5, 6, 7, 8, 9, 10, 11],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": ["n * 2**n", "n * 3**n", "4**n"]
+        }
+      }
+    },
+    {
+      "name": "Yates' method (fast zeta transform)",
+      "idea": "Process the n elements one at a time: for element i, add g[S without i] into g[S] for every S that contains i. After all n passes, g = zeta f.",
+      "model": "classical-deterministic",
+      "pseudocode": "g = copy(f); for i in 0..n-1: for S in 0..N-1: if S has bit i: g[S] += g[S xor 2^i]",
+      "time_complexity": "Theta(n * 2^n) = Theta(N log N): exactly n * 2^(n-1) additions (counted)",
+      "space_complexity": "Theta(2^n)",
+      "correctness": "Induction on the passes: after the passes for elements 0..i-1, g[S] is the sum of f[T] over the subsets T of S that agree with S on the elements >= i. The pass for element i adds, for S containing i, the sum over the subsets of S without i that agree with it on elements > i, which is exactly the missing half. Equivalently, the zeta matrix is the n-fold Kronecker power of [[1,0],[1,1]] and the passes apply one factor each.",
+      "implementation": "implementations/yates.py:zeta_yates",
+      "harness": {
+        "scaling": {
+          "cost": "n * 2**n",
+          "n_values": [4, 6, 8, 10, 12, 14, 16],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": ["2**n", "n**2 * 2**n", "3**n"]
+        }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "Theta(3^n) -> Theta(n 2^n) in the ground-set size n, i.e. Theta(N^1.585) -> Theta(N log N) in the input length N = 2^n. Both are polynomial in the input size, so this is T3, not an exponential pair. The fast transform is the building block of fast subset convolution (Bjorklund, Husfeldt, Kaski & Koivisto 2007), which uses ranked zeta and Moebius transforms to compute subset convolutions in O(n^2 2^n) ring operations instead of Theta(3^n).",
+  "sources": [
+    {
+      "authors": "Björklund, A.; Husfeldt, T.; Kaski, P.; Koivisto, M.",
+      "year": 2007,
+      "title": "Fourier meets Möbius: fast subset convolution",
+      "venue": "Proceedings of the 39th ACM Symposium on Theory of Computing (STOC 2007), 67-74",
+      "doi": "10.1145/1250790.1250801"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree on random set functions with values in [-9, 9] for n = 0..8, 10 and 12, 3 trials each, and pass an independent oracle in harness.check that evaluates the definition by scanning all 2^n masks T with T & ~S == 0 (no submask enumeration, no transform): every S for n <= 8 (complete), 64 seeded random S plus the full set for n = 10, 12 (spot check). V2 (measure 'reported', RESEARCH_LOG RL-047 method): the measured quantity is the exact number of additions performed by the unchanged implementations, counted by an instrumented integer type in the harness. Counts equal the closed forms at every n = 0..12 (experiments/2026-10-07b_zeta_transform_counts.py): naive 3^n, Yates n * 2^(n-1). Fits at tolerance 0.02 (the counts are exact and have no lower-order terms, so alpha = 1.000 for both): naive rivals n*2^n 1.315, n*3^n 0.886, 4^n 0.792, all rejected; Yates rivals 2^n 1.161, n^2*2^n 0.877, 3^n 0.733, all rejected. The log-factor diagnostic is resolved for Yates (0.936 against n log n 2^n).",
+    "artifacts": [
+      "implementations/naive.py",
+      "implementations/yates.py",
+      "harness.py",
+      "../../experiments/2026-10-07b_zeta_transform_counts.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12],
+    "trials": 3
+  },
+  "caveats": "Costs count additions on integers with O(n) bits (bounded entries); index arithmetic and loop control are not counted. Counts measure arithmetic, not wall-clock time; timing would not resolve the log factor (RESEARCH_LOG RL-048). The name 'Yates' method' refers to Yates (1937), a book on factorial experiments that was not checked here; the algorithm's correctness is proved in this entry, not taken from that source.",
+  "notes": "Same Kronecker-power structure as the fast Walsh-Hadamard transform (xor-convolution-naive-vs-walsh-hadamard), with the 2x2 matrix [[1,0],[1,1]] in place of [[1,1],[1,-1]]. Its inverse, the Moebius transform, uses [[1,0],[-1,1]] and also costs n 2^(n-1) operations. Subset convolution as a third pair (naive 3^n vs ranked transforms n^2 2^n) was not implemented here; the pattern report found timing could not separate those two claims at n <= 12 (rho = 1.205), but exact counts as used here would (see research/2026-10-07b_new_candidates.md, open ideas)."
+}

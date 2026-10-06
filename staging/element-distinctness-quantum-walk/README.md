@@ -16,7 +16,7 @@
 
 **Caveats.** A separation relative to an oracle, and only polynomial; it does not imply BQP != BPP. The classical lower bound counts queries; in the comparison model, classical TIME is Theta(N log N). The quantum algorithm has bounded error. The quantum lower bound of Aaronson & Shi was first proven for large ranges; the small-range case (M close to N) is due to Ambainis 2005.
 
-**Notes.** Pairs naturally with pairs/collision-problem-classical-vs-quantum: the same lower-bound technique (polynomial method) gives N^(1/3) for collision and N^(2/3) for element distinctness. The classical TIME side of the same problem (all pairs, Theta(N^2), vs sorting, O(N log N)) is recorded separately in pairs/element-distinctness-pairs-vs-sorting (added in parallel on 2026-10-07); this entry concerns query complexity.
+**Notes.** Pairs naturally with pairs/collision-problem-classical-vs-quantum: the same lower-bound technique (polynomial method) gives N^(1/3) for collision and N^(2/3) for element distinctness. The classical TIME side of the same problem (all pairs, Theta(N^2), vs sorting, O(N log N)) is recorded separately in pairs/element-distinctness-pairs-vs-sorting (added in parallel on 2026-10-06); this entry concerns query complexity.
 
 **Verification.** Cited from the literature. DOIs, titles, years, volumes, issues and pages checked against Crossref (and theoryofcomputing.org for the 2005 paper); the query bounds checked against the arXiv abstracts of Ambainis (quant-ph/0311001) and Shi (quant-ph/0112086), and the Theory of Computing abstract of Ambainis 2005. Not implemented: a quantum-walk simulation on lib/qsim.py would need a register of N^(2/3) values and is left open (see research/2026-10-07_quantum_entries.md).
 

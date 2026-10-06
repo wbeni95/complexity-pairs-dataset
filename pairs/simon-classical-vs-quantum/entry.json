@@ -21,7 +21,10 @@
           "cost": "2**(n/2)",
           "n_values": [4, 6, 8, 10, 12, 14, 16],
           "measure": "reported",
-          "samples": 40
+          "samples": 40,
+          "rivals": [
+            "n"
+          ]
         }
       }
     },
@@ -38,9 +41,12 @@
         "v1_max_n": 10,
         "scaling": {
           "cost": "n",
-          "n_values": [2, 3, 4, 6, 8, 10],
+          "n_values": [3, 4, 6, 8, 10],
           "measure": "reported",
-          "samples": 40
+          "samples": 100,
+          "rivals": [
+            "2**(n/2)"
+          ]
         }
       }
     }
@@ -73,7 +79,7 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both algorithms return s, independently checked against the promise structure of the table, for n = 1..10 (quantum, simulated exactly with lib/qsim.py using deferred measurement of the output register) and up to 16 (classical). V2 measures QUERY COUNTS reported through lib.qsim.Oracle, averaged over random instances: classical fits 2^(n/2) and quantum fits n. Quantum counts are averaged over 40 instances per n. The exact expectation E(n) (see time_complexity) has log-log slope 1.019 against n over n = 2..10, so alpha near 1 is the expected outcome. Separately, the simulator's mean query count was compared with E(n) on 1500-4000 instances per n for n = 2, 3, 4, 6, 8: all within 1.3 standard errors (RESEARCH_LOG.md, 2026-10-06). Simulation time is exponential in n and is not the claim.",
+    "method": "V1: both algorithms return s, independently checked against the promise structure of the table, for n = 1..10 (quantum, simulated exactly with lib/qsim.py using deferred measurement of the output register) and up to 16 (classical). V2 measures QUERY COUNTS reported through lib.qsim.Oracle, averaged over random instances: classical fits 2^(n/2) and quantum fits n. Quantum counts are averaged over 40 instances per n. The exact expectation E(n) (see time_complexity) has log-log slope 1.019 against n over n = 2..10, so alpha near 1 is the expected outcome. Separately, the simulator's mean query count was compared with E(n) on 1500-4000 instances per n for n = 2, 3, 4, 6, 8: all within 1.3 standard errors (RESEARCH_LOG.md, 2026-10-06). Simulation time is exponential in n and is not the claim. Revised 2026-10-06 (RL-056): quantum n_values 3, 4, 6, 8, 10 with 100 instances per n (n = 2 dropped: its geometric spread dominated the fit, deviation analysis F5); the exact expectation E(n) has log-log slope 0.9573 against n over these values. Rivals: the quantum counts must reject 2^(n/2), the classical counts must reject n.",
     "artifacts": [
       "implementations/classical.py",
       "implementations/quantum.py",

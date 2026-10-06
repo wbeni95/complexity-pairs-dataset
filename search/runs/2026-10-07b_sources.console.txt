@@ -1,0 +1,84 @@
+## DOIs (Crossref / DataCite)
+  10.1038/s41586-022-05172-4  [AlphaTensor (Fawzi et al. 2022)]  ->  ('Discovering faster matrix multiplication algorithms with reinforcement learning', 2022)
+  10.1145/3597066.3597120  [Kauers & Moosbauer, Flip Graphs for Matrix Multiplication (ISSAC 2023)]  ->  ('Flip Graphs for Matrix Multiplication', 2023)
+  10.1137/0120004  [Hopcroft & Kerr 1971]  ->  ('On Minimizing the Number of Multiplications Necessary for Matrix Multiplication', 1971)
+  10.1134/S0965542513120129  [Smirnov 2013, bilinear complexity and practical algorithms]  ->  ('The bilinear complexity and practical algorithms for matrix multiplication', 2013)
+  10.1007/BF02165411  [Strassen 1969]  ->  ('Gaussian elimination is not optimal', 1969)
+  10.1090/S0002-9904-1976-13988-2  [Laderman 1976]  ->  ('A noncommutative algorithm for multiplying 3×3 matrices using 23 multiplications', 1976)
+
+## Kauers-Moosbauer flip-graph solution files (downloaded and verified here)
+223-11-mod0: format (2, 2, 3), products in file 11 (file name says 11) | c-index (k,i): GF(2) rank 11 verify=True verify_explicit=True; over Z: True
+224-14-mod0: format (2, 2, 4), products in file 14 (file name says 14) | c-index (k,i): GF(2) rank 14 verify=True verify_explicit=True; over Z: True
+233-15-mod0: format (2, 3, 3), products in file 15 (file name says 15) | c-index (k,i): GF(2) rank 15 verify=True verify_explicit=True; over Z: True
+234-20-mod0: format (2, 3, 4), products in file 20 (file name says 20) | c-index (k,i): GF(2) rank 20 verify=True verify_explicit=True; over Z: True
+244-26-mod0: format (2, 4, 4), products in file 26 (file name says 26) | c-index (k,i): GF(2) rank 26 verify=True verify_explicit=True; over Z: True
+334-29-mod0: format (3, 3, 4), products in file 29 (file name says 29) | c-index (k,i): GF(2) rank 29 verify=True verify_explicit=True; over Z: True
+335-36-mod0: format (3, 3, 5), products in file 36 (file name says 36) | c-index (k,i): GF(2) rank 36 verify=True verify_explicit=True; over Z: True
+344-38-mod0: format (3, 4, 4), products in file 38 (file name says 38) | c-index (k,i): GF(2) rank 38 verify=True verify_explicit=True; over Z: True
+345-47-mod0: format (3, 4, 5), products in file 47 (file name says 47) | c-index (k,i): GF(2) rank 47 verify=True verify_explicit=True; over Z: True
+444-47-mod2: format (4, 4, 4), products in file 47 (file name says 47) | c-index (k,i): GF(2) rank 47 verify=True verify_explicit=True; over Z: False
+444-49-mod0: format (4, 4, 4), products in file 49 (file name says 49) | c-index (k,i): GF(2) rank 49 verify=True verify_explicit=True; over Z: True
+445-60-mod2: format (4, 4, 5), products in file 60 (file name says 60) | c-index (k,i): GF(2) rank 60 verify=True verify_explicit=True; over Z: False
+445-62-mod0: format (4, 4, 5), products in file 62 (file name says 62) | c-index (k,i): GF(2) rank 62 verify=True verify_explicit=True; over Z: True
+
+## Sedoglavic catalogue (fmm.univ-lille.fr), parsed rows
+  occurrences of 'Z/2Z' on the page: 0
+  occurrences of 'GF(2)' on the page: 0
+  occurrences of 'characteristic' on the page: 0
+  2x2x2: rank 7  (naive 8)  reference: Strassen 1969 [ DOI ]
+  2x2x3: no row of its own on the main page
+  2x2x4: no row of its own on the main page
+  2x3x3: rank 15  (naive 18)  reference: Hopcroft and Kerr 1971 [ DOI ]
+  2x3x4: rank 20  (naive 24)  reference: Hopcroft and Kerr 1971 [ DOI ]
+  2x4x4: rank 26  (naive 32)  reference: Hopcroft and Kerr 1971 [ DOI ]
+  3x3x3: rank 23  (naive 27)  reference: Laderman 1976 [ DOI ]
+  3x3x4: rank 29  (naive 36)  reference: Smirnov 2013 [ DOI ]
+  3x3x5: rank 36  (naive 45)  reference: Smirnov 2013 [ DOI ]
+  3x4x4: rank 38  (naive 48)  reference: Smirnov 2013 [ DOI ]
+  3x4x5: rank 47  (naive 60)  reference: Fawzi et ali 2022 [ DOI ]
+  4x4x4: rank 48  (naive 64)  reference: Novikov et ali (AlphaEvolve 2025) [ pdf ]
+  4x4x5: rank 61  (naive 80)  reference: Novikov et ali (AlphaEvolve 2025) [ pdf ]
+
+## Matrix Multiplication Catalog (solven.eu/matmulcatalog/catalog.json): minimum rank per field
+  (2, 2, 2): F2: rank 7 (derived, verified=True, commutative=None); Q: rank 7 (derived, verified=True, commutative=None); Z: rank 7 (Waksman 1970, verified=True, commutative=True)
+  (2, 2, 3): F2: rank 11 (unknown, verified=True, commutative=None); Q: rank 11 (unknown, verified=True, commutative=None); Z: rank 10 (Rosowski 2019, verified=True, commutative=True)
+  (2, 2, 4): F2: rank 14 (unknown, verified=True, commutative=None); Q: rank 14 (unknown, verified=True, commutative=None); Z: rank 13 (Rosowski 2019, verified=True, commutative=True)
+  (2, 3, 3): F2: rank 15 (Hopcroft-Kerr 1971 (constructive, this work), verified=True, commutative=None); Q: rank 15 (Hopcroft-Kerr 1971 (constructive, this work), verified=True, commutative=None); Z: rank 15 (Hopcroft-Kerr 1971 (constructive, this work), verified=True, commutative=None)
+  (2, 3, 4): F2: rank 20 (Hopcroft-Kerr 1971 (constructive, this work), verified=True, commutative=None); Q: rank 20 (Hopcroft-Kerr 1971 (constructive, this work), verified=True, commutative=None); Z: rank 20 (Hopcroft-Kerr 1971 (constructive, this work), verified=True, commutative=None)
+  (2, 4, 4): F2: rank 26 (Hopcroft-Kerr 1971 (constructive, this work), verified=True, commutative=None); Q: rank 26 (Hopcroft-Kerr 1971 (constructive, this work), verified=True, commutative=None); Z: rank 26 (Hopcroft-Kerr 1971 (constructive, this work), verified=True, commutative=None)
+  (3, 3, 3): F2: rank 23 (Laderman_1976, verified=True, commutative=None); Q: rank 23 (Laderman_1976, verified=True, commutative=None); Z: rank 21 (Rosowski 2019, verified=True, commutative=True)
+  (3, 3, 4): F2: rank 29 (unknown, verified=True, commutative=None); Q: rank 29 (unknown, verified=True, commutative=None); Z: rank 27 (Rosowski 2019, verified=True, commutative=True)
+  (3, 3, 5): F2: rank 36 (unknown, verified=True, commutative=None); Q: rank 36 (unknown, verified=True, commutative=None); Z: rank 33 (Rosowski 2019, verified=True, commutative=True)
+  (3, 4, 4): F2: rank 38 (Smirnov 2013, verified=True, commutative=None); Q: rank 38 (Smirnov 2013, verified=True, commutative=None); Z: rank 38 (Smirnov 2013, verified=True, commutative=None)
+  (3, 4, 5): F2: rank 47 (unknown, verified=True, commutative=None); Q: rank 47 (unknown, verified=True, commutative=None); Z: rank 47 (unknown, verified=True, commutative=None)
+  (4, 4, 4): F2: rank 47 (AlphaTensor, verified=True, commutative=None); Q: rank 48 (Dumas-Pernet-Sedoglavic 2025, verified=True, commutative=None); Z: rank 46 (Waksman 1970, verified=True, commutative=True)
+  (4, 4, 5): F2: rank 60 (Kauers-Moosbauer 2023, verified=True, commutative=None); Q: rank 61 (unknown, verified=True, commutative=None); Z: rank 61 (unknown, verified=True, commutative=None)
+
+## MMC cited-bounds.json (rank claims without factor matrices): non-commutative claims for our formats
+  (2, 2, 2): field R/Q/Z, rank 7, source Strassen 1969
+  (3, 3, 3): field R/Q/Z, rank 23, source Laderman 1976
+  (4, 4, 4): field R/Q/Z, rank 49, source DIS 2009 (Strassen 1969 base)
+  (3, 3, 3): field R/Q/Z, rank 23, source Johnson-McLoughlin 1986
+  (4 such claims among 6524 entries)
+
+## AlphaTensor published GF(2) factorizations (factorizations_f2.npz), verified here
+2,2,2: factor shapes (4, 4, 4) x rank 7 | w-index (k,i): GF(2) rank 7 verify=True verify_explicit=True
+2,2,3: factor shapes (4, 6, 6) x rank 11 | w-index (k,i): GF(2) rank 11 verify=True verify_explicit=True
+2,2,4: factor shapes (4, 8, 8) x rank 14 | w-index (k,i): GF(2) rank 14 verify=True verify_explicit=True
+2,2,5: factor shapes (4, 10, 10) x rank 18 | w-index (k,i): GF(2) rank 18 verify=True verify_explicit=True
+2,3,3: factor shapes (6, 9, 6) x rank 15 | w-index (k,i): GF(2) rank 15 verify=True verify_explicit=True
+2,3,4: factor shapes (6, 12, 8) x rank 20 | w-index (k,i): GF(2) rank 20 verify=True verify_explicit=True
+2,3,5: factor shapes (6, 15, 10) x rank 25 | w-index (k,i): GF(2) rank 25 verify=True verify_explicit=True
+2,4,4: factor shapes (8, 16, 8) x rank 26 | w-index (k,i): GF(2) rank 26 verify=True verify_explicit=True
+2,4,5: factor shapes (8, 20, 10) x rank 33 | w-index (k,i): GF(2) rank 33 verify=True verify_explicit=True
+2,5,5: factor shapes (10, 25, 10) x rank 40 | w-index (k,i): GF(2) rank 40 verify=True verify_explicit=True
+3,3,3: factor shapes (9, 9, 9) x rank 23 | w-index (k,i): GF(2) rank 23 verify=True verify_explicit=True
+3,3,4: factor shapes (9, 12, 12) x rank 29 | w-index (k,i): GF(2) rank 29 verify=True verify_explicit=True
+3,3,5: factor shapes (9, 15, 15) x rank 36 | w-index (k,i): GF(2) rank 36 verify=True verify_explicit=True
+3,4,4: factor shapes (12, 16, 12) x rank 38 | w-index (k,i): GF(2) rank 38 verify=True verify_explicit=True
+3,4,5: factor shapes (12, 20, 15) x rank 47 | w-index (k,i): GF(2) rank 47 verify=True verify_explicit=True
+3,5,5: factor shapes (15, 25, 15) x rank 58 | w-index (k,i): GF(2) rank 58 verify=True verify_explicit=True
+4,4,4: factor shapes (16, 16, 16) x rank 47 | w-index (k,i): GF(2) rank 47 verify=True verify_explicit=True
+4,4,5: factor shapes (16, 20, 20) x rank 63 | w-index (k,i): GF(2) rank 63 verify=True verify_explicit=True
+4,5,5: factor shapes (20, 25, 20) x rank 76 | w-index (k,i): GF(2) rank 76 verify=True verify_explicit=True
+5,5,5: factor shapes (25, 25, 25) x rank 96 | w-index (k,i): GF(2) rank 96 verify=True verify_explicit=True

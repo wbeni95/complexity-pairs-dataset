@@ -35,3 +35,10 @@ def _divide_and_conquer(a, lo, hi):
 
 def check(instance, output):
     return output == _divide_and_conquer(instance, 0, len(instance))
+
+
+def generate_scaling(n, rng):
+    """Always mixed signs, so that the instance type does not change with n (deviation analysis F7: the
+    V1 generator switches between all-negative, all-non-negative and mixed arrays, which bent Kadane's
+    timing curve)."""
+    return [rng.randint(-100, 100) for _ in range(n)]

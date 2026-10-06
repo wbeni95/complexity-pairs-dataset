@@ -18,6 +18,12 @@ generate_scaling() returns the adversarial family G_k, with n = V = 4k^2 + k (n 
     Theta(k E) = Theta(E sqrt(V)) time.
 experiments/2026-10-07_bipartite_matching_counts.py verifies the phase count and edge-scan counts.
 
+V2 counts edge scans (measure: "reported"; RESEARCH_LOG RL-030, RL-047, RL-048): generate_scaling() wraps
+every adjacency list of G_k in CountingNeighbours, a tuple subclass that counts each entry read by indexing
+(adj[u][i]) or by iteration (for v in adj[u]); len() is not counted. The UNCHANGED implementations read
+adjacency entries only in those two ways, so reported_cost() is the number of adjacency-list entries scanned
+(Hopcroft-Karp: BFS and DFS together), the same quantity the instrumented copies in the experiment count.
+
 The oracle is algebraic and independent of augmenting paths: the rank, over GF(p) with p = 2^61 - 1, of the
 n_left x n_right Edmonds matrix with an independent uniformly random entry for each edge (0 elsewhere). The
 rank of the matrix of indeterminates equals the maximum matching size (a k x k minor is a non-zero
@@ -84,11 +90,42 @@ def generate(n, rng):
         for _ in range(n_left))
 
 
+# --- Exact edge-scan counting for V2 (measure: "reported") ------------------------------------------
+
+_scans = 0
+
+
+class CountingNeighbours(tuple):
+    """An adjacency list (tuple) that counts every entry read by indexing or iteration."""
+    __slots__ = ()
+
+    def __getitem__(self, i):
+        global _scans
+        _scans += 1
+        return tuple.__getitem__(self, i)
+
+    def __iter__(self):
+        global _scans
+        for v in tuple.__iter__(self):
+            _scans += 1
+            yield v
+
+
 def generate_scaling(n, rng):
+    """G_k for n = 4k^2 + k, with counting adjacency lists; resets the edge-scan counter."""
+    global _scans
     k = adversarial_k(n)
     if k is None:
         raise ValueError(f"n = {n} is not of the form 4k^2 + k")
-    return adversarial(k)
+    n_left, n_right, adj = adversarial(k)
+    inst = (n_left, n_right, tuple(CountingNeighbours(nb) for nb in adj))
+    _scans = 0
+    return inst
+
+
+def reported_cost(output):
+    """Number of adjacency-list entries scanned since the instance was generated."""
+    return _scans
 
 
 def _edmonds_rank(n_left, n_right, adj, rng):

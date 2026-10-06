@@ -1,0 +1,22 @@
+{
+  "title": "Complexity Pairs Dataset: verified pairs of algorithms with different asymptotic cost",
+  "upload_type": "dataset",
+  "description": "<p>An open, machine-readable dataset of complexity pairs: computational problems for which two or more provably correct algorithms of different asymptotic cost are recorded.</p><p>Every entry carries an explicit verification level that is enforced by the included validator. V1 means the implementations agree with each other and with an independent oracle. V2 means the measured growth, from wall-clock time or exact operation counts, fits the claimed cost and rejects declared rival costs.</p><p>Results, refutations, corrections and null results are documented in a research log (RESEARCH_LOG.md), with machine-recorded evidence for every validation run (ledger/runs/). Data and documentation are licensed CC BY 4.0; code (validator, tools, search kernel, implementations) is licensed Apache-2.0.</p>",
+  "creators": [
+    {"name": "Weisz, Benjamin"}
+  ],
+  "license": "cc-by-4.0",
+  "keywords": [
+    "computational complexity",
+    "algorithms",
+    "dataset",
+    "benchmark",
+    "reproducibility",
+    "verification",
+    "quantum query complexity",
+    "matrix multiplication"
+  ],
+  "related_identifiers": [
+    {"identifier": "https://github.com/wbeni95/complexity-pairs-dataset", "relation": "isSupplementTo", "scheme": "url"}
+  ]
+}

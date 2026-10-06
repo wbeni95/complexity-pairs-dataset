@@ -1,0 +1,108 @@
+{
+ "format": [
+  2,
+  2,
+  3
+ ],
+ "field": "GF(2)",
+ "rank": 11,
+ "convention": "T<n,m,p> = sum a_ij (x) b_jk (x) c_ki over GF(2); alpha bit i*m+j, beta bit j*p+k, gamma bit k*n+i (gamma[k][i] = coefficient of the product in C[i][k])",
+ "status": "matches best known",
+ "best_known_rank": 11,
+ "provenance": {
+  "kernel": "search/kernel/flipwalk.rs",
+  "kernel_sha256": "6f306293bfae0105d74ec0b8f324a2d64abd3652a8a12049189d8a6e206ad644",
+  "seed": 3,
+  "stats": {
+   "steps": 901971968.0,
+   "seconds": 30.001,
+   "flips": 229336254.0,
+   "rejected_weight": 0.0,
+   "plus": 15090.0,
+   "restarts": 0.0
+  },
+  "improvements": [
+   [
+    11,
+    1991,
+    0.0
+   ]
+  ],
+  "environment": {
+   "python": "3.14.2",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "cpus": 16,
+   "kernel_sha256": "6f306293bfae0105d74ec0b8f324a2d64abd3652a8a12049189d8a6e206ad644"
+  }
+ },
+ "terms": [
+  [
+   1,
+   9,
+   17
+  ],
+  [
+   1,
+   18,
+   4
+  ],
+  [
+   3,
+   16,
+   63
+  ],
+  [
+   3,
+   24,
+   3
+  ],
+  [
+   4,
+   6,
+   8
+  ],
+  [
+   8,
+   48,
+   48
+  ],
+  [
+   10,
+   45,
+   16
+  ],
+  [
+   11,
+   9,
+   42
+  ],
+  [
+   11,
+   29,
+   56
+  ],
+  [
+   15,
+   1,
+   2
+  ],
+  [
+   15,
+   4,
+   40
+  ]
+ ],
+ "products": [
+  "(A11)*(B11+B21) -> C11 C13",
+  "(A11)*(B12+B22) -> C12",
+  "(A11+A12)*(B22) -> C11 C12 C13 C21 C22 C23",
+  "(A11+A12)*(B21+B22) -> C11 C21",
+  "(A21)*(B12+B13) -> C22",
+  "(A22)*(B22+B23) -> C13 C23",
+  "(A12+A22)*(B11+B13+B21+B23) -> C13",
+  "(A11+A12+A22)*(B11+B21) -> C21 C22 C23",
+  "(A11+A12+A22)*(B11+B13+B21+B22) -> C13 C22 C23",
+  "(A11+A12+A21+A22)*(B11) -> C21",
+  "(A11+A12+A21+A22)*(B13) -> C22 C23"
+ ]
+}

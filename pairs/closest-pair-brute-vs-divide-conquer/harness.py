@@ -3,6 +3,16 @@
 generate mixes three kinds: coordinates in [0, 10^6) (generic position), coordinates in [0, sqrt(n) + 2)
 (many duplicate points, distance 0, collinear points), and all points on one vertical line (every point
 falls in the dividing strip). generate_scaling uses coordinates in [0, 10^9).
+
+V2 counts multiplications (measure: "reported"; RESEARCH_LOG RL-047/RL-048): generate_scaling() wraps every
+coordinate in CountingInt, whose differences, products and sums stay CountingInt, and counts every
+multiplication of such values, a squaring `** 2` counted as one. reported_cost() returns that count. The
+UNCHANGED brute force squares dx and dy for every pair: exactly n(n-1). Divide and conquer multiplies in
+its base cases (2 per pair), in the strip filter (one squaring per point per internal node) and in the strip
+scan (dy^2 per examined pair, plus dx^2 for the pairs it does not stop at). Comparisons are NOT part of
+the reported cost: the initial sorted() and the min() calls compare inside CPython's C code, and their
+comparison counts differ between Python 3.12.10 and 3.14.2 (experiments/2026-10-07b_count_v2_cross_version.py);
+multiplications all happen in the implementations' own Python code and are identical under both. They are tallied separately in _comparisons for experiments only.
 """
 
 
@@ -17,8 +27,96 @@ def generate(n, rng):
     return tuple((x, rng.randrange(10 ** 6)) for _ in range(n))
 
 
+# --- Exact multiplication counting for V2 (measure: "reported") -------------------------------------
+
+_mults = 0
+_comparisons = 0     # informational only (not reported; see the module docstring)
+
+
+def _val(x):
+    return x.v if isinstance(x, CountingInt) else x
+
+
+class CountingInt:
+    """An integer coordinate (or a value derived from coordinates) that counts multiplications."""
+    __slots__ = ("v",)
+
+    def __init__(self, v):
+        self.v = v
+
+    def __mul__(self, other):
+        global _mults
+        _mults += 1
+        return CountingInt(self.v * _val(other))
+
+    __rmul__ = __mul__
+
+    def __pow__(self, exponent):
+        global _mults
+        if exponent != 2:
+            raise ValueError("CountingInt only counts squarings")
+        _mults += 1
+        return CountingInt(self.v * self.v)
+
+    def __add__(self, other):
+        return CountingInt(self.v + _val(other))
+
+    __radd__ = __add__
+
+    def __sub__(self, other):
+        return CountingInt(self.v - _val(other))
+
+    def __rsub__(self, other):
+        return CountingInt(_val(other) - self.v)
+
+    def __lt__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v < _val(other)
+
+    def __le__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v <= _val(other)
+
+    def __gt__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v > _val(other)
+
+    def __ge__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v >= _val(other)
+
+    def __eq__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v == _val(other)
+
+    def __ne__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v != _val(other)
+
+    def __hash__(self):
+        return hash(self.v)
+
+    def __repr__(self):
+        return f"CountingInt({self.v!r})"
+
+
 def generate_scaling(n, rng):
-    return tuple((rng.randrange(10 ** 9), rng.randrange(10 ** 9)) for _ in range(n))
+    """Coordinates in [0, 10^9), wrapped in CountingInt; resets the counters."""
+    global _mults, _comparisons
+    inst = tuple((CountingInt(rng.randrange(10 ** 9)), CountingInt(rng.randrange(10 ** 9))) for _ in range(n))
+    _mults = _comparisons = 0
+    return inst
+
+
+def reported_cost(output):
+    """Number of multiplications (squarings included) performed since the instance was generated."""
+    return _mults
 
 
 def check(points, output):

@@ -18,7 +18,7 @@
       "implementation": "implementations/bellman_ford.py:apsp_bellman_ford",
       "harness": {
         "v1_max_n": 30,
-        "scaling": { "cost": "n**2 * (n-1)**2", "n_values": [8, 10, 13, 16, 20, 25, 32, 40] }
+        "scaling": { "cost": "n**2 * (n-1)**2", "n_values": [8, 10, 13, 16, 20, 25, 32, 40], "measure": "reported", "tolerance": 0.03, "rivals": ["n**3"] }
       }
     },
     {
@@ -32,7 +32,7 @@
       "implementation": "implementations/floyd_warshall.py:apsp_floyd_warshall",
       "harness": {
         "v1_max_n": 60,
-        "scaling": { "cost": "n**3", "n_values": [32, 48, 64, 96, 128, 160, 200] }
+        "scaling": { "cost": "n**3", "n_values": [32, 48, 64, 96, 128, 160, 200], "measure": "reported", "tolerance": 0.03, "rivals": ["n**2 * (n-1)**2"] }
       }
     }
   ],
@@ -86,8 +86,8 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree with each other and with an independent oracle (Dijkstra with a binary heap from every source, in harness.py) on random digraphs with edge density 0.1, 0.3, 0.6 or 1.0 and weights in [0, 20] (zero-weight edges, ties and unreachable pairs occur), n = 0..6, 8, 10, 15, 20, 30 (Bellman-Ford up to n = 30) and n = 45, 60 (Floyd-Warshall). V2: on complete digraphs with weights in [1, 1000], runtimes fitted against n^2 (n-1)^2 (Bellman-Ford x n, n = 8..40) and n^3 (Floyd-Warshall, n = 32..200). Both do the same work on every input of a given n and m, so random complete digraphs are worst-case inputs.",
-    "artifacts": ["implementations/bellman_ford.py", "implementations/floyd_warshall.py", "harness.py", "../../experiments/2026-10-07_apsp_timing_probe.py", "../../experiments/2026-10-07_apsp_bellman_ford_early_exit.py"]
+    "method": "V1: both implementations agree with each other and with an independent oracle (Dijkstra with a binary heap from every source, in harness.py) on random digraphs with edge density 0.1, 0.3, 0.6 or 1.0 and weights in [0, 20] (zero-weight edges, ties and unreachable pairs occur), n = 0..6, 8, 10, 15, 20, 30 (Bellman-Ford up to n = 30) and n = 45, 60 (Floyd-Warshall). V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md): on complete digraphs with weights in [1, 1000] (both algorithms do the same work on every input of a given n and m, so these are worst-case inputs), the measured quantity is the exact number of RELAXATION STEPS of the unchanged implementations, counted as additions by an instrumented weight type (CountingWeight in harness.py; one addition per relaxation step). Bellman-Ford x n: exactly n^2 (n-1)^2 at n = 8, 10, 13, 16, 20, 25, 32, 40 (3136 ... 2433600); alpha = 1.000 against n^2 (n-1)^2. Floyd-Warshall: exactly n^3 - n at n = 32, 48, 64, 96, 128, 160, 200 (32736 ... 7999800); the n steps with i = j = k add the implementation's own diagonal zeros and are not visible to the weight type; alpha = 1.000 against n^3. With the counting weights both implementations return the same distances as with plain integers (checked at n = 5, 12, 20). Tolerance 0.03: the counts are exact closed forms, so the band only covers lower-order terms (largest |alpha - 1| here 0.0002) and stays far below the distance to the rivals. Rivals that must NOT fit, both rejected: Bellman-Ford x n against n^3 (alpha = 1.377) and Floyd-Warshall against n^2 (n-1)^2 (0.745). The log-factor diagnostic is also resolved (Bellman-Ford 0.921 / 1.094, Floyd-Warshall 0.929 / 1.083). For comparison, the earlier timing fits gave alpha = 0.972 (Bellman-Ford) and 0.918 (Floyd-Warshall, local slopes rising from 0.90 to 0.97 because of lower-order loop overhead) in experiments/2026-10-07_apsp_timing_probe.py, round 2. experiments/2026-10-07b_count_v2_apsp_strings.py reproduces every count above.",
+    "artifacts": ["implementations/bellman_ford.py", "implementations/floyd_warshall.py", "harness.py", "../../experiments/2026-10-07_apsp_timing_probe.py", "../../experiments/2026-10-07_apsp_bellman_ford_early_exit.py", "../../experiments/2026-10-07b_count_v2_apsp_strings.py"]
   },
   "test_harness": {
     "module": "harness.py",

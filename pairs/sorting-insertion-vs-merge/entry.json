@@ -19,7 +19,14 @@
       "harness": {
         "scaling": {
           "cost": "n**2",
-          "n_values": [100, 200, 400, 800, 1600, 3200]
+          "n_values": [250, 500, 1000, 2000, 4000],
+          "measure": "reported",
+          "samples": 3,
+          "tolerance": 0.03,
+          "rivals": [
+            "n*log(n)",
+            "n**2*log(n)"
+          ]
         }
       }
     },
@@ -35,7 +42,14 @@
       "harness": {
         "scaling": {
           "cost": "n*log(n)",
-          "n_values": [1000, 2000, 4000, 8000, 16000, 32000, 64000]
+          "n_values": [1000, 2000, 4000, 8000, 16000, 32000, 64000],
+          "measure": "reported",
+          "tolerance": 0.03,
+          "rivals": [
+            "n",
+            "n*log(n)**2",
+            "n**2"
+          ]
         }
       }
     }
@@ -69,11 +83,12 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree with each other and with Python's built-in sorted() (used only as the oracle) on random lists from [-n, n], n = 0..5, 8, 16, 50, 100, 500 and 2000; the validator also checks that neither mutates its input. V2: on uniformly random lists, runtimes fit n^2 (insertion sort, average case, n = 100..3200) and n log n (merge sort, n = 1000..64000). At the default tolerance 0.25 a fit against n alone would also pass for merge sort (the log factor changes the slope by only ~0.1 over this range), so V2 confirms near-linear growth rather than isolating the log factor.",
+    "method": "V1: both implementations agree with each other and with Python's built-in sorted() (used only as the oracle) on random lists from [-n, n], n = 0..5, 8, 16, 50, 100, 500 and 2000; the validator also checks that neither mutates its input. V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md): the measured quantity is the exact number of KEY COMPARISONS made by the unchanged implementations, counted by an instrumented key type (CountingKey in harness.py) wrapped around the values of generate() (uniform on [-n, n], the same seeded random inputs the earlier timing fit used, i.e. insertion sort's average case). The instrumentation agrees with a closed form computed from the input alone (insertion sort makes sum over i of g_i + [g_i < i] comparisons, g_i = number of earlier elements larger than a_i) at n = 50, 100, 250, 500. Insertion sort, mean of 3 seeded samples at n = 250, 500, 1000, 2000, 4000: 15574.67, 63461.67, 250154.67, 999716.33, 3990076 comparisons (0.997 to 1.015 times n^2/4); alpha = 0.999 against n^2. Merge sort, 1 sample (the 3-sample spread was below 0.1% of the count at every n) at n = 1000, 2000, 4000, 8000, 16000, 32000, 64000: 8701, 19408, 42854, 93621, 203198, 438577, 941409 comparisons = n log2 n - c n with c = 1.25 to 1.27; alpha = 1.011 against n log n, the excess coming from the -c n term. Tolerance 0.03 for both: the counts carry no timing noise, so the band only has to cover lower-order terms (largest |alpha - 1| here 0.011) while staying below half the distance to the nearest rival. Rivals that must NOT fit, all rejected: insertion sort against n log n (alpha = 1.743) and n^2 log n (0.931); merge sort against n (1.126), n log^2 n (0.918) and n^2 (0.563). The log factor is therefore resolved for both algorithms (validator diagnostic, RESEARCH_LOG RL-048), which the earlier timing fit at tolerance 0.25 could not do (it would also have passed merge sort against n). Element moves are not counted; experiments/2026-10-07b_count_v2_sorting.py reproduces every number above.",
     "artifacts": [
       "implementations/insertion_sort.py",
       "implementations/merge_sort.py",
-      "harness.py"
+      "harness.py",
+      "../../experiments/2026-10-07b_count_v2_sorting.py"
     ]
   },
   "test_harness": {

@@ -1,4 +1,4 @@
-"""Quantum search subroutines on top of lib/qsim.py, for query-model (T9) entries. Added 2026-10-07.
+"""Quantum search subroutines on top of lib/qsim.py, for query-model (T9) entries. Added 2026-10-06.
 
 Both searches look for a marked x in {0, ..., N-1}, N = 2^n. The caller supplies two callables:
 

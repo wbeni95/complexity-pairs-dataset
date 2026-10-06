@@ -1,0 +1,131 @@
+{
+ "format": [
+  2,
+  2,
+  4
+ ],
+ "field": "GF(2)",
+ "rank": 14,
+ "convention": "T<n,m,p> = sum a_ij (x) b_jk (x) c_ki over GF(2); alpha bit i*m+j, beta bit j*p+k, gamma bit k*n+i (gamma[k][i] = coefficient of the product in C[i][k])",
+ "status": "matches best known",
+ "best_known_rank": 14,
+ "provenance": {
+  "kernel": "search/kernel/flipwalk.rs",
+  "kernel_sha256": "6f306293bfae0105d74ec0b8f324a2d64abd3652a8a12049189d8a6e206ad644",
+  "seed": 6,
+  "stats": {
+   "steps": 828899328.0,
+   "seconds": 30.001,
+   "flips": 242357846.0,
+   "rejected_weight": 0.0,
+   "plus": 14271.0,
+   "restarts": 0.0
+  },
+  "improvements": [
+   [
+    15,
+    10692,
+    0.001
+   ],
+   [
+    14,
+    37273,
+    0.002
+   ]
+  ],
+  "environment": {
+   "python": "3.14.2",
+   "platform": "Windows-11-10.0.26200-SP0",
+   "cpus": 16,
+   "kernel_sha256": "6f306293bfae0105d74ec0b8f324a2d64abd3652a8a12049189d8a6e206ad644"
+  }
+ },
+ "terms": [
+  [
+   2,
+   187,
+   4
+  ],
+  [
+   2,
+   204,
+   21
+  ],
+  [
+   3,
+   7,
+   48
+  ],
+  [
+   3,
+   11,
+   207
+  ],
+  [
+   4,
+   3,
+   252
+  ],
+  [
+   4,
+   10,
+   15
+  ],
+  [
+   5,
+   136,
+   84
+  ],
+  [
+   5,
+   221,
+   5
+  ],
+  [
+   7,
+   139,
+   222
+  ],
+  [
+   7,
+   215,
+   37
+  ],
+  [
+   8,
+   48,
+   8
+  ],
+  [
+   8,
+   144,
+   42
+  ],
+  [
+   15,
+   128,
+   138
+  ],
+  [
+   15,
+   208,
+   32
+  ]
+ ],
+ "products": [
+  "(A12)*(B11+B12+B14+B21+B22+B24) -> C12",
+  "(A12)*(B13+B14+B23+B24) -> C11 C12 C13",
+  "(A11+A12)*(B11+B12+B13) -> C13 C23",
+  "(A11+A12)*(B11+B12+B14) -> C11 C12 C14 C21 C22 C24",
+  "(A21)*(B11+B12) -> C12 C13 C14 C22 C23 C24",
+  "(A21)*(B12+B14) -> C11 C12 C21 C22",
+  "(A11+A21)*(B14+B24) -> C12 C13 C14",
+  "(A11+A21)*(B11+B13+B14+B21+B23+B24) -> C11 C12",
+  "(A11+A12+A21)*(B11+B12+B14+B24) -> C12 C13 C14 C21 C22 C24",
+  "(A11+A12+A21)*(B11+B12+B13+B21+B23+B24) -> C11 C12 C23",
+  "(A22)*(B21+B22) -> C22",
+  "(A22)*(B21+B24) -> C21 C22 C23",
+  "(A11+A12+A21+A22)*(B24) -> C21 C22 C24",
+  "(A11+A12+A21+A22)*(B21+B23+B24) -> C23"
+ ]
+}

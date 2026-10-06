@@ -19,7 +19,12 @@
       "harness": {
         "scaling": {
           "cost": "n**2",
-          "n_values": [64, 128, 256, 512, 1024]
+          "n_values": [64, 128, 256, 512, 1024],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**log2(3)"
+          ]
         }
       }
     },
@@ -35,7 +40,12 @@
       "harness": {
         "scaling": {
           "cost": "n**log2(3)",
-          "n_values": [128, 256, 512, 1024, 2048, 4096]
+          "n_values": [64, 128, 256, 512, 1024, 2048],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**2"
+          ]
         }
       }
     }
@@ -83,7 +93,7 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree on random digit lists (including carry/borrow stress inputs: 2^(15n) - 1, and mixes of 0 and 2^15-1 digits) for n = 0..8 and sizes around and above the 32-digit cutoff (31, 32, 33, 47, 64, 65, 100, 129, 300, so odd splits are exercised), and match an independent oracle: Python's built-in integer product, used only in harness.check. V2: runtimes fitted against n^2 and n^log2(3). Measured log-log slopes were ~2.02 (schoolbook) and ~1.63 (Karatsuba). Default tolerance.",
+    "method": "V1: both implementations agree on random, carry-stress and maximal-digit inputs and match an independent big-integer oracle (Python's built-in product, used only in harness.check). V2 (since 2026-10-06, RESEARCH_LOG RL-056): the measured quantity is the exact number of DIGIT MULTIPLICATIONS performed by the unchanged implementations, counted by an int-like digit type (CountingDigit in harness.py) that propagates through the carry and borrow arithmetic. On n = 64..2048 (powers of two, so no padding occurs): schoolbook = n^2 exactly; Karatsuba (cutoff 32) = 3^(log2(n/32)) * 32^2 exactly (e.g. 248832 at n = 1024). Both fits give alpha = 1.000 at tolerance 0.02, and each algorithm's rival is rejected: Karatsuba's counts against n^2 give alpha = log2(3)/2 = 0.792, schoolbook's against n^log2(3) give 2/log2(3) = 1.262. The earlier timing fit could not reject n^2 for Karatsuba (deviation analysis F2, research/2026-10-07b_deviations.md). Additions are not counted.",
     "artifacts": [
       "implementations/schoolbook.py",
       "implementations/karatsuba.py",
@@ -95,6 +105,6 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 31, 32, 33, 47, 64, 65, 100, 129, 300],
     "trials": 5
   },
-  "caveats": "The V2 fit uses |alpha - 1| <= 0.25 on a log-cost scale. That is enough to reject a quadratic curve for Karatsuba only narrowly (2 / 1.585 ~ 1.26), so the separately reported slopes (~2.02 vs ~1.63) are the clearer evidence. The two algorithms cross over at a few dozen digits in this pure-Python setting; the cutoff is a tuning choice. Fast algorithms after Karatsuba (Schoenhage-Strassen, Harvey-van der Hoeven) are stated in bit complexity on a multitape Turing machine, not in word operations.",
+  "caveats": "Exact counts of digit multiplications, not of all digit operations. The cutoff (32 digits) changes constants only. Fast algorithms after Karatsuba (Schoenhage-Strassen, Harvey-van der Hoeven) are stated in bit complexity on a multitape Turing machine, not in word operations.",
   "notes": "Python's own int multiplication itself switches from schoolbook to Karatsuba above a size threshold, which is why the implementations here work on explicit digit lists instead. O(n log n) is conjectured to be optimal for integer multiplication, but no matching unconditional lower bound is known."
 }

@@ -20,7 +20,13 @@
         "v1_max_n": 14,
         "scaling": {
           "cost": "2**n * n",
-          "n_values": [10, 11, 12, 13, 14, 15, 16]
+          "n_values": [12, 13, 14, 15, 16, 17, 18],
+          "measure": "reported",
+          "tolerance": 0.03,
+          "rivals": [
+            "2**n",
+            "2**n * n**2"
+          ]
         }
       }
     },
@@ -37,7 +43,13 @@
         "v1_max_n": 1500,
         "scaling": {
           "cost": "n**2",
-          "n_values": [100, 200, 400, 800, 1600]
+          "n_values": [100, 200, 400, 800, 1600],
+          "measure": "reported",
+          "tolerance": 0.03,
+          "rivals": [
+            "n*log(n)",
+            "n**2*log(n)"
+          ]
         }
       }
     },
@@ -53,7 +65,14 @@
       "harness": {
         "scaling": {
           "cost": "n*log(n)",
-          "n_values": [1000, 3000, 10000, 30000, 100000]
+          "n_values": [10000, 30000, 100000, 300000],
+          "measure": "reported",
+          "tolerance": 0.03,
+          "rivals": [
+            "n",
+            "n*log(n)**2",
+            "n**2"
+          ]
         }
       }
     }
@@ -105,12 +124,13 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: all three implementations agree with each other and with an independent oracle (in harness.py): the LIS length equals the LCS length of a and sorted(set(a)), computed by the textbook LCS table, for n <= 400. Inputs are random lists with many ties (so strictness matters) plus sorted, reversed and constant lists, n = 0..14 (subset enumeration up to n = 14), 30, 100, 400 and 1500 (quadratic DP up to n = 1500; at n = 1500 only the DP and patience sorting are compared). V2 uses strictly increasing lists with random gaps, the worst case for patience sorting; the other two do the same work on every input of length n. Runtimes fit 2^n n (n = 10..16), n^2 (n = 100..1600) and n log n (n = 1000..100000). At the default tolerance 0.25 a fit against n alone would also pass for patience sorting, so V2 confirms near-linear growth rather than isolating the log factor.",
+    "method": "V1: all three implementations agree with each other and with an independent oracle (in harness.py): the LIS length equals the LCS length of a and sorted(set(a)), computed by the textbook LCS table, for n <= 400. Inputs are random lists with many ties (so strictness matters) plus sorted, reversed and constant lists, n = 0..14 (subset enumeration up to n = 14), 30, 100, 400 and 1500 (quadratic DP up to n = 1500; at n = 1500 only the DP and patience sorting are compared). V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md) uses strictly increasing lists with random gaps, the worst case for patience sorting, and measures the exact number of ELEMENT COMPARISONS made by the unchanged implementations, counted by an instrumented element type (CountingKey in harness.py). Every count equals a closed form in n: subset enumeration n 2^(n-1) - 2^n + 1 (20481 ... 2097153 at n = 12..18; this counts comparisons, not the 2^n n loop steps, which are integer operations the harness cannot see), alpha = 1.014 against 2^n n; quadratic DP n(n-1)/2 (4950 ... 1279200 at n = 100, 200, 400, 800, 1600), alpha = 1.002 against n^2; patience sorting sum_{j=2..n} floor(log2 j) = n log2 n - c n with c = 1.92 to 1.96 (113631, 387248, 1468946, 4875732 at n = 10000, 30000, 100000, 300000), alpha = 1.012 against n log n. The n ranges were moved up (from n = 10..16 and 1000..100000 used for timing) so that the leading term dominates: on the old ranges the same closed forms give alpha = 1.019 (subset enumeration) and 1.018 (patience sorting). Tolerance 0.03: exact counts carry no timing noise, so the band only covers lower-order terms (largest |alpha - 1| here 0.014) and stays below half the distance to the nearest rival. Rivals that must NOT fit, all rejected: subset enumeration against 2^n (alpha = 1.113) and 2^n n^2 (0.931); quadratic DP against n log n (1.713) and n^2 log n (0.923); patience sorting against n (1.105), n log^2 n (0.933) and n^2 (0.553). The validator's log-factor diagnostic is resolved for the DP and for patience sorting; for the subset enumeration it is not (alpha = 0.982 against 2^n n log n), which does not affect its claim against 2^n and 2^n n^2. experiments/2026-10-07b_count_v2_inversions_lis.py reproduces every count above.",
     "artifacts": [
       "implementations/subset_enumeration.py",
       "implementations/quadratic_dp.py",
       "implementations/patience.py",
-      "harness.py"
+      "harness.py",
+      "../../experiments/2026-10-07b_count_v2_inversions_lis.py"
     ]
   },
   "test_harness": {

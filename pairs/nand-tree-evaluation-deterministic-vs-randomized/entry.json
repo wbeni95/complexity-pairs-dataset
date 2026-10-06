@@ -1,0 +1,94 @@
+{
+  "id": "nand-tree-evaluation-deterministic-vs-randomized",
+  "title": "NAND-tree evaluation: deterministic 2^h leaf reads vs randomized ((1+sqrt 33)/4)^h expected",
+  "problem_statement": "Given query access to the N = 2^h leaf bits of a complete binary tree of height h whose internal nodes compute NAND(x, y) = NOT(x AND y), compute the value of the root. Cost = number of leaf reads (queries), worst case over inputs; for a randomized algorithm, the worst case over inputs of the expected number of reads. Algorithms must always be correct (zero error).",
+  "input": {
+    "parameter": "n = h = height of the tree; N = 2^h leaves.",
+    "size_measure": "Query model: the cost is the number of leaf reads. The harness materialises the N leaf bits so that reads can be counted. In the input size N, the costs read N vs Theta(N^0.7537)."
+  },
+  "algorithms": [
+    {
+      "name": "deterministic left-first evaluation",
+      "idea": "Evaluate the left subtree first; if it is 0 the node is 1 and the right subtree is skipped, otherwise the node is NOT(right).",
+      "model": "classical-deterministic",
+      "pseudocode": "eval(node): if leaf: read it; if eval(left) == 0: return 1; return 1 - eval(right)",
+      "time_complexity": "2^h = N leaf reads in the worst case (exactly 2^h on inputs where every node of value 1 has its 0-child on the right), which is optimal for deterministic algorithms (lower_bounds)",
+      "space_complexity": "O(h)",
+      "correctness": "NAND(0, y) = 1 and NAND(1, y) = NOT y, so short-circuiting on a 0 left child is exact. Worst case: a value-0 node needs both children (both are 1), and a value-1 node whose left child is 1 needs its right child too, so on the right-zero reluctant input every leaf is read (D(h) = 2 D(h-1)). Optimality (adversary argument, sketched here, not checked against a published proof): answer every leaf query with 1 while its sibling subtree is unfinished, which leaves the parent undetermined since NAND(1, y) = NOT y; when the last leaf of a node's two subtrees is queried, choose the answer that gives that node whichever value the adversary wants for it as a 'virtual leaf' one level up. By induction every node is determined only when its last leaf is read, so any deterministic algorithm reads all 2^h leaves.",
+      "implementation": "implementations/left_first.py:nand_tree_left_first",
+      "harness": {
+        "v1_max_n": 12,
+        "scaling": {
+          "cost": "2**n",
+          "n_values": [4, 6, 8, 10, 12, 14, 16],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": ["((1 + sqrt(33)) / 4)**n", "n * 2**n"]
+        }
+      }
+    },
+    {
+      "name": "randomized random-order evaluation",
+      "idea": "At every node, evaluate the two subtrees in a uniformly random order and short-circuit as above (Snir's directional algorithm, shown optimal by Saks and Wigderson 1986). Always correct; only the number of reads is random.",
+      "model": "classical-randomized",
+      "pseudocode": "eval(node): if leaf: read it; (a, b) = children in random order; if eval(a) == 0: return 1; return 1 - eval(b)",
+      "time_complexity": "Theta(((1 + sqrt(33))/4)^h) = Theta(N^0.7537) expected leaf reads in the worst case (((1 + sqrt 33)/4 ~ 1.6861; log2 of it ~ 0.7537)",
+      "space_complexity": "O(h)",
+      "correctness": "Same short-circuit rule as the deterministic algorithm, so the answer is always correct (zero error). Expected cost (derived here): on 'reluctant' inputs (value-0 nodes have two 1-children, value-1 nodes exactly one 0-child) R0(h) = 2 R1(h-1) and R1(h) = R0(h-1) + R1(h-1)/2, R0(0) = R1(0) = 1, since a value-1 node reads its 0-child first with probability 1/2. The matrix [[0, 2], [1, 1/2]] has eigenvalues (1 +- sqrt 33)/4, so R(h) = Theta(((1 + sqrt 33)/4)^h). Reluctant inputs are the worst case for this algorithm: by induction over h, a value-1 node with two 0-children costs only R0(h-1), less than R0(h-1) + R1(h-1)/2, and subtrees are independent. Saks & Wigderson 1986 prove that this is optimal for zero-error randomized algorithms (lower_bounds).",
+      "implementation": "implementations/random_order.py:nand_tree_random_order",
+      "harness": {
+        "scaling": {
+          "cost": "((1 + sqrt(33)) / 4)**n",
+          "n_values": [4, 6, 8, 10, 12, 14, 16],
+          "measure": "reported",
+          "samples": 200,
+          "tolerance": 0.05,
+          "rivals": ["2**n", "1.5**n", "n * ((1 + sqrt(33)) / 4)**n"]
+        }
+      }
+    }
+  ],
+  "pair_type": "T4",
+  "secondary_tags": ["T3"],
+  "lower_bounds": [
+    {
+      "model": "classical-deterministic",
+      "bound": "2^h = N leaf reads in the worst case",
+      "setting": "query (decision-tree) model, unconditional",
+      "source": "Adversary argument sketched in this entry (deterministic algorithm, correctness field); not checked against a published proof"
+    },
+    {
+      "model": "classical-randomized",
+      "bound": "Omega(((1 + sqrt(33))/4)^h) = Omega(N^0.7537) expected leaf reads in the worst case, for ZERO-ERROR (Las Vegas) randomized algorithms; matched by the randomized algorithm here",
+      "setting": "query (decision-tree) model, unconditional. Bounded-error (Monte Carlo) algorithms are not covered by this statement here.",
+      "source": "Saks & Wigderson 1986 (statement as summarised by secondary sources found by web search, e.g. the Boolean Zoo page 'Iterated nand' and arXiv:1506.06399; the paper's text was not read)"
+    }
+  ],
+  "relationship": "Randomisation lowers the exponent: N leaf reads for every deterministic algorithm vs Theta(N^0.7537) expected reads for the best zero-error randomized algorithm, both proven optimal in their models (lower_bounds). Primary T4 (randomized vs deterministic, same problem, same query model); secondary T3 because, in the input size N, the improvement is polynomial to a smaller polynomial (RESEARCH_LOG RL-042 proposal, adopted here).",
+  "sources": [
+    {
+      "authors": "Saks, M.; Wigderson, A.",
+      "year": 1986,
+      "title": "Probabilistic Boolean decision trees and the complexity of evaluating game trees",
+      "venue": "27th Annual Symposium on Foundations of Computer Science (FOCS 1986), 29-38",
+      "doi": "10.1109/SFCS.1986.44"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both algorithms agree with an independent oracle (harness.check: full bottom-up evaluation of every node, level by level) on random leaf vectors and on reluctant inputs with random sides and random root values, h = 0..12 and 14, 16 (left-first up to 12), 4 trials each. The randomized algorithm is zero-error, so its answers are deterministic facts, not probabilistic; the validator seeds its coins. V2 (measure 'reported'): the cost is the exact number of leaf reads, counted by an instrumented leaf sequence in the harness while the implementations run unchanged, on the right-zero reluctant input with root value 1 (worst case for both). Left-first: exactly 2^h reads (h = 0..16 checked), alpha = 1.000 against 2^h at tolerance 0.02 (rivals lambda^h and h 2^h rejected). Randomized: mean of 200 seeded runs per h; alpha = 0.995 against lambda^h, lambda = (1 + sqrt 33)/4 (rivals 2^h 0.750, 1.5^h, h lambda^h rejected). Tolerance 0.05 for the randomized fit is justified in experiments/2026-10-07b_nand_tree_counts.py: the EXACT expectations (recurrence) give alpha = 0.998 on these h (the lower-order eigenvalue (1 - sqrt 33)/4 ~ -1.186 contributes 0.002), and over 40 alternative seed sets the 200-sample fit has alpha mean 0.997, sd 0.005, range 0.989-1.008. The validator-seeded sample means lie within 2.0 standard errors of the exact expectations at every h. The rival 2^h is 0.25 away.",
+    "artifacts": [
+      "implementations/left_first.py",
+      "implementations/random_order.py",
+      "harness.py",
+      "../../experiments/2026-10-07b_nand_tree_counts.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 16],
+    "trials": 4
+  },
+  "caveats": "The randomized V2 fit uses sample means (200 per h), so its alpha is a statistical estimate; it is reproducible because the validator seeds every run. Uniformly random leaves are much easier than reluctant inputs for both algorithms, so V2 uses the worst-case family. The randomized lower bound quoted is for zero-error algorithms (as summarised from Saks & Wigderson 1986 by secondary sources); this entry makes no claim about bounded-error algorithms. The deterministic lower bound rests on the adversary sketch given here.",
+  "notes": "Quantum algorithms evaluate NAND trees with about sqrt(N) queries (Farhi, Goldstone & Gutmann 2008 and follow-up work); that line is not recorded here because the source could not be checked by title (Crossref stores no title for doi:10.4086/toc.2008.v004a008). A T9 extension would need a verified quantum algorithm and the classical randomized lower bound above."
+}

@@ -26,8 +26,13 @@ Exact counts ([experiment](../../experiments/2026-10-07_bipartite_matching_count
 
 **Verification.** V1: both agree with each other and with an independent algebraic oracle: the rank of the
 Edmonds matrix with random entries mod 2⁶¹ − 1, which equals the matching size except with probability
-< 10⁻¹⁵. V2: on G_k, runtimes fit n³ (Kuhn) and n^2.5 (Hopcroft–Karp), n = V. A timing fit alone cannot
-separate exponents 3 and 2.5 at tolerance 0.25. The exact counts above carry that part of the claim.
+< 10⁻¹⁵. V2: on G_k, the harness counts **edge scans exactly** with an instrumented adjacency-list type
+(`CountingNeighbours`); the implementations are unchanged, and the counts equal those of the instrumented
+copies in the experiment above. As functions of n = V, Kuhn's scans fit n³ (α = 1.005, k = 3..11) and
+Hopcroft–Karp's fit n^2.5 (α = 1.004, k = 4..15). With tolerance 0.03 the counts reject the rivals that the
+timing fit could not reject at tolerance 0.25 (RL-030): Kuhn against n^2.5 (α = 1.207), Hopcroft–Karp against n²
+(1.255) and n³ (0.837). Details: `experiments/2026-10-07b_count_v2_matching.py` and
+`research/2026-10-07b_count_based_v2.md`.
 
 **Sources.** Hopcroft & Karp, SIAM J. Comput. 2(4), 1973. Berge, PNAS 43(9), 1957. Kuhn, Naval Res.
 Logist. Q. 2, 1955.
