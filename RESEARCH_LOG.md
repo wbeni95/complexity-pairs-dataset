@@ -416,3 +416,8 @@ Ledger: [ledger/runs/20261006T025704Z.json](ledger/runs/20261006T025704Z.json), 
 - **Unit tests:** 84 OK.
 - **Citations:** 157 identifiers checked, 0 problems; 131 sources also compared on volume, issue and pages; 35 sources have no DOI or arXiv id.
 - **Index:** 39 validated pairs (up from 28), 12 entries with T6, 9 with T9, 4 synthetic (T7).
+
+### RL-045 · VERIFIED · Recorded run on the committed overnight state
+Ledger: [ledger/runs/20261006T030338Z.json](ledger/runs/20261006T030338Z.json), made at commit `7511ea9` with a clean tree.
+- **Result:** 54/54 entries pass their claimed level. All 88 V2 measurements pass, with α from 0.886 to 1.164.
+- **Stability against RL-044:** all 14 query-count series are **identical** value for value. The largest change in a timing α is 0.015 (matrix-chain plain recursion).
