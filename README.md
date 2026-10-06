@@ -200,7 +200,7 @@ If you use the dataset or its tools, please cite it. GitHub's "Cite this reposit
   title        = {Complexity Pairs Dataset: verified pairs of algorithms with different asymptotic cost},
   year         = {2026},
   howpublished = {\url{https://github.com/wbeni95/complexity-pairs-dataset}},
-  note         = {Version 0.1.0}
+  note         = {Version 0.2.0}
 }
 ```
 
