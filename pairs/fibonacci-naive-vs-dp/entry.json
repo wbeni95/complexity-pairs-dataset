@@ -1,0 +1,86 @@
+{
+  "id": "fibonacci-naive-vs-dp",
+  "title": "Fibonacci numbers: naive recursion vs dynamic programming vs fast doubling",
+  "problem_statement": "Given a non-negative integer n, compute F(n) mod 2^64, where F(0) = 0, F(1) = 1, F(k) = F(k-1) + F(k-2).",
+  "input": {
+    "parameter": "n, the index (a value, not a length).",
+    "size_measure": "Complexities below are stated in the VALUE n. In binary the input occupies b = ceil(log2(n+1)) bits; see caveats for the bit-size view."
+  },
+  "algorithms": [
+    {
+      "name": "naive recursion",
+      "idea": "Evaluate the defining recurrence directly. Subproblems are recomputed, so the call tree has F(n+1) leaves.",
+      "model": "classical-deterministic",
+      "pseudocode": "fib(n): if n < 2 return n; return fib(n-1) + fib(n-2)",
+      "time_complexity": "Theta(phi^n), phi = (1+sqrt(5))/2 ~ 1.618",
+      "space_complexity": "Theta(n) (recursion depth)",
+      "correctness": "Direct transcription of the definition. The number of calls C(n) satisfies C(n) = C(n-1) + C(n-2) + 1, so C(n) = 2F(n+1) - 1 = Theta(phi^n).",
+      "implementation": "implementations/naive.py:fib_naive",
+      "harness": {
+        "v1_max_n": 25,
+        "scaling": { "cost": "phi**n", "n_values": [18, 20, 22, 24, 26, 28] }
+      }
+    },
+    {
+      "name": "bottom-up dynamic programming",
+      "idea": "Compute F(0), F(1), ..., F(n) in order, keeping only the last two values. Each subproblem is solved once.",
+      "model": "classical-deterministic",
+      "pseudocode": "a, b = 0, 1; repeat n times: a, b = b, a + b; return a",
+      "time_complexity": "Theta(n) word operations",
+      "space_complexity": "O(1) words",
+      "correctness": "Loop invariant: after k iterations (a, b) = (F(k), F(k+1)).",
+      "implementation": "implementations/dp.py:fib_dp",
+      "harness": {
+        "scaling": { "cost": "n", "n_values": [10000, 30000, 100000, 300000, 1000000] }
+      }
+    },
+    {
+      "name": "fast doubling (matrix power)",
+      "idea": "Use F(2k) = F(k)(2F(k+1) - F(k)) and F(2k+1) = F(k)^2 + F(k+1)^2 while scanning the bits of n; equivalent to computing [[1,1],[1,0]]^n by repeated squaring.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(log n) word operations",
+      "space_complexity": "O(1) words",
+      "correctness": "The doubling identities follow from [[1,1],[1,0]]^k = [[F(k+1),F(k)],[F(k),F(k-1)]]. Invariant: after processing the top j bits of n (value k), (a, b) = (F(k), F(k+1)).",
+      "implementation": "implementations/fast_doubling.py:fib_fast_doubling",
+      "harness": {
+        "scaling": {
+          "cost": "log(n)",
+          "n_values": [256, 65536, 4294967296, 18446744073709551616, 340282366920938463463374607431768211456]
+        }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "Naive recursion is exponential, Theta(phi^n). Memoising the recurrence (DP) gives Theta(n); exploiting the matrix structure gives Theta(log n). The waste in the naive method is pure recomputation of overlapping subproblems.",
+  "sources": [
+    {
+      "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
+      "year": 2009,
+      "title": "Introduction to Algorithms (3rd ed.)",
+      "venue": "MIT Press",
+      "isbn": "978-0-262-03384-8",
+      "note": "Problem 31-3 (Fibonacci numbers) and chapter 15 (dynamic programming)."
+    },
+    {
+      "authors": "Knuth, D. E.",
+      "year": 1997,
+      "title": "The Art of Computer Programming, Vol. 1: Fundamental Algorithms (3rd ed.)",
+      "venue": "Addison-Wesley",
+      "isbn": "978-0-201-89683-1",
+      "note": "Section 1.2.8 (Fibonacci numbers), including the matrix identity."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: all three implementations agree on n = 0..25 and selected large n, and match OEIS A000045 for n <= 25. V2: measured runtimes fitted against phi^n, n and log n respectively.",
+    "artifacts": ["implementations/naive.py", "implementations/dp.py", "implementations/fast_doubling.py", "harness.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 100, 1000, 12345, 100000],
+    "trials": 1
+  },
+  "caveats": "Bit-size view: with input size b = log2(n) bits the three costs are Theta(phi^(2^b)), Theta(2^b) and Theta(b). So the DP is polynomial in the value n but EXPONENTIAL in the input length; only fast doubling is polynomial in input size. The mod 2^64 makes every arithmetic step O(1); computing the exact (unbounded) F(n) costs more because F(n) has ~0.694n bits.",
+  "notes": "Canonical teaching example of T2: the naive method is wasteful, not the problem hard."
+}

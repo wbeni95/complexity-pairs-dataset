@@ -1,0 +1,75 @@
+{
+  "id": "matrix-multiplication-naive-vs-strassen",
+  "title": "Matrix multiplication: schoolbook vs Strassen",
+  "problem_statement": "Given two n x n matrices A and B over the integers, compute C = AB.",
+  "input": {
+    "parameter": "n = matrix dimension.",
+    "size_measure": "2n^2 entries (small integers in the harness, so arithmetic is unit cost)."
+  },
+  "algorithms": [
+    {
+      "name": "schoolbook",
+      "idea": "C[i][j] = sum_k A[i][k] B[k][j].",
+      "model": "classical-deterministic",
+      "pseudocode": "for i, j: C[i][j] = sum over k of A[i][k] * B[k][j]",
+      "time_complexity": "Theta(n^3)",
+      "space_complexity": "Theta(n^2)",
+      "correctness": "Definition of the matrix product.",
+      "implementation": "implementations/naive.py:matmul_naive"
+    },
+    {
+      "name": "Strassen",
+      "idea": "Split each matrix into 2 x 2 blocks; seven block products (instead of eight) plus additions suffice. Recurse.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation (M1..M7 as in Strassen 1969)",
+      "time_complexity": "Theta(n^(log2 7)) ~ Theta(n^2.807)",
+      "space_complexity": "Theta(n^2)",
+      "correctness": "Strassen 1969: the seven products combine to the four blocks of C by direct algebraic identity, valid over any ring. T(n) = 7T(n/2) + Theta(n^2) gives Theta(n^log2(7)).",
+      "implementation": "implementations/strassen.py:matmul_strassen"
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "Both polynomial; Strassen lowers the exponent from 3 to log2(7) ~ 2.807. The line continues: Coppersmith-Winograd (omega < 2.376) ... Alman et al. 2024 (omega < 2.371339). AlphaTensor (2022) found low-rank schemes for small fixed sizes, e.g. rank 47 for 4 x 4 over GF(2), which gives omega <= log4(47) ~ 2.774 in characteristic 2.",
+  "sources": [
+    {
+      "authors": "Strassen, V.",
+      "year": 1969,
+      "title": "Gaussian elimination is not optimal",
+      "venue": "Numerische Mathematik 13, 354-356",
+      "doi": "10.1007/BF02165411"
+    },
+    {
+      "authors": "Coppersmith, D.; Winograd, S.",
+      "year": 1990,
+      "title": "Matrix multiplication via arithmetic progressions",
+      "venue": "Journal of Symbolic Computation 9(3), 251-280",
+      "doi": "10.1016/S0747-7171(08)80013-2"
+    },
+    {
+      "authors": "Alman, J.; Duan, R.; Vassilevska Williams, V.; Xu, Y.; Xu, Z.; Zhou, R.",
+      "year": 2024,
+      "title": "More Asymmetry Yields Faster Matrix Multiplication",
+      "venue": "SODA 2025",
+      "arxiv": "2404.16349"
+    },
+    {
+      "authors": "Fawzi, A.; Balog, M.; Huang, A.; et al.",
+      "year": 2022,
+      "title": "Discovering faster matrix multiplication algorithms with reinforcement learning",
+      "venue": "Nature 610, 47-53",
+      "doi": "10.1038/s41586-022-05172-4"
+    }
+  ],
+  "verification": {
+    "level": "V1",
+    "method": "Both implementations agree on random integer matrices for n = 0..10 and n = 17, 31, 40, 64 (above the recursion cutoff of 16), and pass an independent Freivalds-style check A(Bx) = Cx. Not raised to V2: the exponent gap (3 vs 2.807) is smaller than what pure-Python timing over feasible n (<= 256) resolves reliably; measured per-doubling ratios were ~7.3 (Strassen) vs ~7.8 (schoolbook).",
+    "artifacts": ["implementations/naive.py", "implementations/strassen.py", "harness.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 31, 40, 64],
+    "trials": 2
+  },
+  "caveats": "The 'galactic' algorithms with omega < 2.38 have constants too large to be practical. Strassen is numerically less stable than schoolbook over floating point (not an issue over the integers).",
+  "notes": "AlphaTensor improvements are for fixed small block sizes; only when such a scheme is applied recursively does it become an asymptotic (T3) statement."
+}

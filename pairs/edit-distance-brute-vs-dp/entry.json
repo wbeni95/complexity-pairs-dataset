@@ -1,0 +1,100 @@
+{
+  "id": "edit-distance-brute-vs-dp",
+  "title": "Edit (Levenshtein) distance: plain recursion vs Wagner-Fischer DP",
+  "problem_statement": "Given strings a and b, compute the minimum number of single-character insertions, deletions and substitutions that transform a into b.",
+  "input": {
+    "parameter": "n = length of each string (|a| = |b| = n in the harness; the DP bound is Theta(|a| |b|) in general).",
+    "size_measure": "2n characters over a fixed alphabet."
+  },
+  "algorithms": [
+    {
+      "name": "plain recursion",
+      "idea": "Branch on the three possible edits at the first position of each suffix, without remembering results. Identical suffix pairs are recomputed exponentially often.",
+      "model": "classical-deterministic",
+      "pseudocode": "d(i, j) = min(d(i+1, j) + 1, d(i, j+1) + 1, d(i+1, j+1) + [a_i != b_j]), with base cases at the string ends",
+      "time_complexity": "Theta(D(n, n)) = Theta((3 + 2 sqrt 2)^n / sqrt(n)) ~ Theta(5.83^n / sqrt(n)), D = Delannoy numbers",
+      "space_complexity": "Theta(n) recursion depth",
+      "correctness": "Exhaustive over all alignments: every edit script corresponds to a path in the recursion tree.",
+      "implementation": "implementations/brute_force.py:edit_distance_brute",
+      "harness": {
+        "v1_max_n": 7,
+        "scaling": {
+          "cost": "(3 + 2*sqrt(2))**n / sqrt(n)",
+          "n_values": [5, 6, 7, 8, 9]
+        }
+      }
+    },
+    {
+      "name": "Wagner-Fischer dynamic programming",
+      "idea": "Tabulate d(i, j) for all prefix pairs; each cell depends on three neighbours. Keep two rows.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(n^2) (Theta(|a| |b|) in general)",
+      "space_complexity": "Theta(n)",
+      "correctness": "Wagner & Fischer 1974: the recurrence is the Bellman equation of the alignment problem.",
+      "implementation": "implementations/wagner_fischer.py:edit_distance_dp",
+      "harness": {
+        "scaling": {
+          "cost": "n**2",
+          "n_values": [100, 200, 300, 400, 600, 800]
+        }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "The recursion is exponential only because it recomputes overlapping subproblems; there are just (n+1)^2 distinct ones. Tabulating them gives Theta(n^2).",
+  "sources": [
+    {
+      "authors": "Wagner, R. A.; Fischer, M. J.",
+      "year": 1974,
+      "title": "The string-to-string correction problem",
+      "venue": "Journal of the ACM 21(1), 168-173",
+      "doi": "10.1145/321796.321811"
+    },
+    {
+      "authors": "Levenshtein, V. I.",
+      "year": 1966,
+      "title": "Binary codes capable of correcting deletions, insertions, and reversals",
+      "venue": "Soviet Physics Doklady 10(8), 707-710"
+    },
+    {
+      "authors": "Masek, W. J.; Paterson, M. S.",
+      "year": 1980,
+      "title": "A faster algorithm computing string edit distances",
+      "venue": "Journal of Computer and System Sciences 20(1), 18-31",
+      "doi": "10.1016/0022-0000(80)90002-1",
+      "note": "O(n^2 / log n) via the Four Russians technique."
+    },
+    {
+      "authors": "Backurs, A.; Indyk, P.",
+      "year": 2015,
+      "title": "Edit Distance Cannot Be Computed in Strongly Subquadratic Time (unless SETH is false)",
+      "venue": "STOC 2015",
+      "arxiv": "1412.0348"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both agree on random DNA-alphabet string pairs, n = 0..7 for the recursion, and satisfy simple independent bounds. V2: runtimes fitted against (3+2 sqrt 2)^n / sqrt(n) and n^2.",
+    "artifacts": [
+      "implementations/brute_force.py",
+      "implementations/wagner_fischer.py",
+      "harness.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 20, 100],
+    "trials": 5
+  },
+  "caveats": "The recursion analysed here always branches three ways; skipping to d(i+1, j+1) on a character match is a valid optimisation that makes the cost input-dependent. Conditional lower bound: no O(n^(2-eps)) algorithm unless SETH fails (Backurs-Indyk), so the DP is essentially optimal up to log factors.",
+  "notes": "Pair with lcs-brute-vs-dp: same DP template, different scoring.",
+  "lower_bounds": [
+    {
+      "model": "classical-deterministic",
+      "bound": "no O(n^(2-eps)) algorithm for any eps > 0",
+      "setting": "conditional on the Strong Exponential Time Hypothesis (SETH)",
+      "source": "Backurs & Indyk 2015"
+    }
+  ]
+}

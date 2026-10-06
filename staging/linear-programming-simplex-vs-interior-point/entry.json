@@ -1,0 +1,85 @@
+{
+  "id": "linear-programming-simplex-vs-interior-point",
+  "title": "Linear programming: simplex vs ellipsoid / interior-point methods",
+  "problem_statement": "Given A in Q^(m x n), b in Q^m, c in Q^n, maximise c^T x subject to Ax <= b, x >= 0 (or report infeasible / unbounded).",
+  "input": {
+    "parameter": "n variables, m constraints; L = total bit length of (A, b, c).",
+    "size_measure": "L bits."
+  },
+  "algorithms": [
+    {
+      "name": "simplex method (Dantzig's pivot rule)",
+      "idea": "Walk along edges of the feasible polytope from vertex to vertex, never decreasing the objective.",
+      "model": "classical-deterministic",
+      "pseudocode": "standard tableau simplex",
+      "time_complexity": "exponential in the worst case: 2^n - 1 pivots on the Klee-Minty cube",
+      "space_complexity": "O(mn) numbers",
+      "correctness": "Dantzig 1951; termination with anti-cycling rules (e.g. Bland's rule).",
+      "implementation": null
+    },
+    {
+      "name": "ellipsoid method",
+      "idea": "Maintain an ellipsoid containing the optimum region; cut it in half with a violated constraint and replace it by a smaller enclosing ellipsoid.",
+      "model": "classical-deterministic",
+      "pseudocode": "Khachiyan 1979",
+      "time_complexity": "polynomial in n and L: O(n^2 L) iterations of O(n^2) arithmetic operations",
+      "space_complexity": "O(n^2) numbers of O(L) bits",
+      "correctness": "Khachiyan 1979.",
+      "implementation": null
+    },
+    {
+      "name": "interior-point method (Karmarkar)",
+      "idea": "Move through the interior of the polytope along projective-scaled steepest-descent directions.",
+      "model": "classical-deterministic",
+      "pseudocode": "Karmarkar 1984",
+      "time_complexity": "O(n^3.5 L) arithmetic operations",
+      "space_complexity": "O(mn) numbers",
+      "correctness": "Karmarkar 1984.",
+      "implementation": null
+    }
+  ],
+  "pair_type": "T1",
+  "secondary_tags": ["T6"],
+  "relationship": "Simplex (with the classical pivot rules) is exponential in the worst case; ellipsoid and interior-point methods are polynomial in the input bit length L.",
+  "sources": [
+    {
+      "authors": "Dantzig, G. B.",
+      "year": 1951,
+      "title": "Maximization of a linear function of variables subject to linear inequalities",
+      "venue": "Activity Analysis of Production and Allocation (T. C. Koopmans, ed.), Wiley, 339-347"
+    },
+    {
+      "authors": "Klee, V.; Minty, G. J.",
+      "year": 1972,
+      "title": "How good is the simplex algorithm?",
+      "venue": "Inequalities III (O. Shisha, ed.), Academic Press, 159-175"
+    },
+    {
+      "authors": "Khachiyan, L. G.",
+      "year": 1979,
+      "title": "A polynomial algorithm in linear programming",
+      "venue": "Doklady Akademii Nauk SSSR 244(5), 1093-1096 (English: Soviet Mathematics Doklady 20, 191-194)"
+    },
+    {
+      "authors": "Karmarkar, N.",
+      "year": 1984,
+      "title": "A new polynomial-time algorithm for linear programming",
+      "venue": "Combinatorica 4(4), 373-395",
+      "doi": "10.1007/BF02579150"
+    },
+    {
+      "authors": "Spielman, D. A.; Teng, S.-H.",
+      "year": 2004,
+      "title": "Smoothed analysis of algorithms: Why the simplex algorithm usually takes polynomial time",
+      "venue": "Journal of the ACM 51(3), 385-463",
+      "doi": "10.1145/990308.990310"
+    }
+  ],
+  "verification": {
+    "level": "V0",
+    "method": "Cited from the literature; not yet independently implemented.",
+    "artifacts": []
+  },
+  "caveats": "Ellipsoid and interior-point methods are WEAKLY polynomial (polynomial in L, not only in n and m). Whether LP has a STRONGLY polynomial algorithm is open (Smale's 9th problem), hence secondary tag T6. Whether some simplex pivot rule is polynomial is also open. In practice simplex is fast; smoothed analysis (Spielman-Teng) explains part of this.",
+  "notes": "Path to V1: implement simplex (Bland's rule) and a basic interior-point method with exact rational arithmetic; verify agreement on random LPs and on Klee-Minty cubes."
+}

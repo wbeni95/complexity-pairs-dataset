@@ -1,0 +1,87 @@
+{
+  "id": "inversion-counting-quadratic-vs-merge",
+  "title": "Counting inversions: all pairs vs merge sort",
+  "problem_statement": "Given a sequence a_1..a_n, count the pairs i < j with a_i > a_j.",
+  "input": {
+    "parameter": "n = sequence length.",
+    "size_measure": "n machine words."
+  },
+  "algorithms": [
+    {
+      "name": "all pairs",
+      "idea": "Compare every pair of positions.",
+      "model": "classical-deterministic",
+      "pseudocode": "count pairs i < j with a_i > a_j",
+      "time_complexity": "Theta(n^2)",
+      "space_complexity": "O(1)",
+      "correctness": "Exhaustive.",
+      "implementation": "implementations/pairs_scan.py:inversions_quadratic",
+      "harness": {
+        "scaling": {
+          "cost": "n**2",
+          "n_values": [250, 500, 750, 1000, 1500, 2000]
+        }
+      }
+    },
+    {
+      "name": "merge-sort counting",
+      "idea": "Sort recursively and count cross inversions while merging: a right-half element placed before the remaining left-half elements is inverted with each of them.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(n log n)",
+      "space_complexity": "Theta(n)",
+      "correctness": "Every inversion lies within the left half, within the right half, or across; cross inversions are counted exactly once during the merge (CLRS Problem 2-4).",
+      "implementation": "implementations/merge_count.py:inversions_merge",
+      "harness": {
+        "scaling": {
+          "cost": "n * log(n)",
+          "n_values": [2000, 4000, 8000, 16000, 32000, 64000]
+        }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "Theta(n^2) -> Theta(n log n) by divide and conquer. Faster algorithms exist in the word-RAM model (O(n sqrt(log n)), Chan & Pătraşcu 2010).",
+  "sources": [
+    {
+      "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
+      "year": 2009,
+      "title": "Introduction to Algorithms (3rd ed.)",
+      "venue": "MIT Press",
+      "isbn": "978-0-262-03384-8",
+      "note": "Problem 2-4 (Inversions)."
+    },
+    {
+      "authors": "Knuth, D. E.",
+      "year": 1998,
+      "title": "The Art of Computer Programming, Vol. 3: Sorting and Searching (2nd ed.)",
+      "venue": "Addison-Wesley",
+      "isbn": "978-0-201-89685-5",
+      "note": "Section 5.1.1 (inversions)."
+    },
+    {
+      "authors": "Chan, T. M.; Pătraşcu, M.",
+      "year": 2010,
+      "title": "Counting Inversions, Offline Orthogonal Range Counting, and Related Problems",
+      "venue": "SODA 2010",
+      "doi": "10.1137/1.9781611973075.15",
+      "note": "O(n sqrt(log n)) in the word RAM."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both agree with each other and with an independent Fenwick-tree oracle on random sequences with duplicates, n = 0..500. V2: runtimes fitted against n^2 and n log n.",
+    "artifacts": [
+      "implementations/pairs_scan.py",
+      "implementations/merge_count.py",
+      "harness.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 8, 16, 33, 100, 500],
+    "trials": 5
+  },
+  "caveats": "The V2 fit cannot resolve the log factor; it rules out quadratic behaviour of the merge method.",
+  "notes": ""
+}

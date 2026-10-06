@@ -1,0 +1,123 @@
+{
+  "id": "longest-increasing-subsequence",
+  "title": "Longest increasing subsequence: subset enumeration vs quadratic DP vs patience sorting",
+  "problem_statement": "Given a list a[0..n-1] of n integers, compute the length of the longest strictly increasing subsequence: the largest k for which there are indices i_1 < ... < i_k with a[i_1] < ... < a[i_k] (0 for the empty list).",
+  "input": {
+    "parameter": "n = number of elements.",
+    "size_measure": "n integers of bounded size; each comparison is O(1)."
+  },
+  "algorithms": [
+    {
+      "name": "subset enumeration",
+      "idea": "Enumerate all 2^n subsets of indices as bitmasks, test each for being strictly increasing with one scan over the n positions, and keep the largest size.",
+      "model": "classical-deterministic",
+      "pseudocode": "best = 0; for mask in 0..2^n-1: scan i = 0..n-1, for the i in mask check a[i] > previous chosen value; if increasing: best = max(best, popcount(mask)); return best",
+      "time_complexity": "Theta(2^n n) on every input (each of the 2^n masks is scanned over all n positions, with no early exit)",
+      "space_complexity": "O(1) words",
+      "correctness": "Exhaustive: every subsequence corresponds to exactly one index subset.",
+      "implementation": "implementations/subset_enumeration.py:lis_subsets",
+      "harness": {
+        "v1_max_n": 14,
+        "scaling": {
+          "cost": "2**n * n",
+          "n_values": [10, 11, 12, 13, 14, 15, 16]
+        }
+      }
+    },
+    {
+      "name": "quadratic dynamic programming",
+      "idea": "L[i] = length of the longest strictly increasing subsequence ending at position i = 1 + max L[j] over j < i with a[j] < a[i]; the answer is max L.",
+      "model": "classical-deterministic",
+      "pseudocode": "for i in 0..n-1: L[i] = 1 + max({L[j] : j < i, a[j] < a[i]} or {0}); return max(L or {0})",
+      "time_complexity": "Theta(n^2) on every input: n(n-1)/2 comparisons",
+      "space_complexity": "Theta(n)",
+      "correctness": "An increasing subsequence ending at i is either a[i] alone or an increasing subsequence ending at some j < i with a[j] < a[i], extended by a[i]; optimal substructure gives the recurrence (CLRS Exercise 15.4-5).",
+      "implementation": "implementations/quadratic_dp.py:lis_quadratic",
+      "harness": {
+        "v1_max_n": 1500,
+        "scaling": {
+          "cost": "n**2",
+          "n_values": [100, 200, 400, 800, 1600]
+        }
+      }
+    },
+    {
+      "name": "patience sorting with binary search",
+      "idea": "Maintain tails[k] = the smallest possible last element of a strictly increasing subsequence of length k + 1 seen so far. tails is strictly increasing, so each new element replaces the first entry >= it (found by binary search) or is appended; the answer is len(tails).",
+      "model": "classical-deterministic",
+      "pseudocode": "tails = []; for x in a: k = first index with tails[k] >= x (binary search); if k = len(tails): append x else tails[k] = x; return len(tails)",
+      "time_complexity": "O(n log L) <= O(n log n), L = the answer; Theta(n log n) in the worst case, e.g. on increasing input (L = n), which is the V2 scaling input",
+      "space_complexity": "Theta(L) <= Theta(n)",
+      "correctness": "Invariant: after reading a prefix, tails[k] is the minimum last element over all strictly increasing subsequences of length k + 1 in that prefix, and tails is strictly increasing; placing x at the first entry >= x preserves this. This is the first row of Schensted's insertion (Schensted 1961); its length is the LIS length.",
+      "implementation": "implementations/patience.py:lis_patience",
+      "harness": {
+        "scaling": {
+          "cost": "n*log(n)",
+          "n_values": [1000, 3000, 10000, 30000, 100000]
+        }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "secondary_tags": [
+    "T3"
+  ],
+  "relationship": "Enumerating all 2^n subsequences is exponential. The DP over 'best subsequence ending at i' needs only Theta(n^2) (the T2 step). Keeping only the minimal tail for each length, which is a sorted array, replaces the linear inner scan with a binary search: O(n log n) (the T3 step).",
+  "sources": [
+    {
+      "authors": "Schensted, C.",
+      "year": 1961,
+      "title": "Longest increasing and decreasing subsequences",
+      "venue": "Canadian Journal of Mathematics 13, 179-191",
+      "doi": "10.4153/CJM-1961-015-3",
+      "note": "Insertion into a Young tableau; the length of the first row equals the length of the longest increasing subsequence."
+    },
+    {
+      "authors": "Fredman, M. L.",
+      "year": 1975,
+      "title": "On computing the length of longest increasing subsequences",
+      "venue": "Discrete Mathematics 11(1), 29-35",
+      "doi": "10.1016/0012-365X(75)90103-X",
+      "note": "The O(n log n) algorithm and its comparison complexity."
+    },
+    {
+      "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
+      "year": 2009,
+      "title": "Introduction to Algorithms (3rd ed.)",
+      "venue": "MIT Press",
+      "isbn": "978-0-262-03384-8",
+      "note": "Exercises 15.4-5 (O(n^2) algorithm) and 15.4-6 (O(n log n) algorithm)."
+    },
+    {
+      "authors": "Logan, B. F.; Shepp, L. A.",
+      "year": 1977,
+      "title": "A variational problem for random Young tableaux",
+      "venue": "Advances in Mathematics 26(2), 206-222",
+      "doi": "10.1016/0001-8708(77)90030-5"
+    },
+    {
+      "authors": "Vershik, A. M.; Kerov, S. V.",
+      "year": 1977,
+      "title": "Asymptotics of the Plancherel measure of the symmetric group and the limiting form of Young tableaux",
+      "venue": "Doklady Akademii Nauk SSSR (1977); English translation in Soviet Mathematics Doklady",
+      "note": "No DOI; venue details not machine-verified."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: all three implementations agree with each other and with an independent oracle (in harness.py): the LIS length equals the LCS length of a and sorted(set(a)), computed by the textbook LCS table, for n <= 400. Inputs are random lists with many ties (so strictness matters) plus sorted, reversed and constant lists, n = 0..14 (subset enumeration up to n = 14), 30, 100, 400 and 1500 (quadratic DP up to n = 1500; at n = 1500 only the DP and patience sorting are compared). V2 uses strictly increasing lists with random gaps, the worst case for patience sorting; the other two do the same work on every input of length n. Runtimes fit 2^n n (n = 10..16), n^2 (n = 100..1600) and n log n (n = 1000..100000). At the default tolerance 0.25 a fit against n alone would also pass for patience sorting, so V2 confirms near-linear growth rather than isolating the log factor.",
+    "artifacts": [
+      "implementations/subset_enumeration.py",
+      "implementations/quadratic_dp.py",
+      "implementations/patience.py",
+      "harness.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 30, 100, 400, 1500],
+    "trials": 5
+  },
+  "caveats": "Patience sorting costs Theta(n log L) for answer L. On increasing input (used for V2) that is Theta(n log n). On uniformly random permutations L / sqrt(n) -> 2 (Logan & Shepp 1977; Vershik & Kerov 1977), and log L ~ (1/2) log n is still Theta(log n). Fredman (1975) analyses the comparison complexity of computing the LIS length; we record no lower bound from it because the paper's exact statement has not been checked here. The subset enumeration deliberately has no early exit, so its Theta(2^n n) holds on every input.",
+  "notes": "The quadratic DP is the standard textbook dynamic program; the O(n log n) method is often called patience sorting, after the card game. LIS is also LCS(a, sorted(set(a))), the reduction used by the V1 oracle; see lcs-brute-vs-dp."
+}

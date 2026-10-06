@@ -1,0 +1,77 @@
+{
+  "id": "graph-isomorphism",
+  "title": "Graph isomorphism: moderately exponential vs quasi-polynomial",
+  "problem_statement": "Given two graphs on n vertices, decide whether they are isomorphic.",
+  "input": {
+    "parameter": "n = number of vertices.",
+    "size_measure": "O(n^2) bits (adjacency matrices)."
+  },
+  "algorithms": [
+    {
+      "name": "brute force over permutations",
+      "idea": "Try all n! vertex bijections.",
+      "model": "classical-deterministic",
+      "pseudocode": "for each permutation pi: if pi maps E1 onto E2: yes",
+      "time_complexity": "O(n! n^2)",
+      "space_complexity": "O(n^2)",
+      "correctness": "Exhaustive.",
+      "implementation": null
+    },
+    {
+      "name": "Babai-Luks canonical labeling",
+      "idea": "Group-theoretic divide-and-conquer combined with Zemlyachenko's degree-reduction trick.",
+      "model": "classical-deterministic",
+      "pseudocode": "Babai & Luks 1983",
+      "time_complexity": "exp(O(sqrt(n log n)))",
+      "space_complexity": "exp(O(sqrt(n log n)))",
+      "correctness": "Babai & Luks 1983.",
+      "implementation": null
+    },
+    {
+      "name": "Babai's quasi-polynomial algorithm",
+      "idea": "Luks's group-theoretic framework plus new combinatorial partitioning (local certificates, Split-or-Johnson).",
+      "model": "classical-deterministic",
+      "pseudocode": "Babai 2016",
+      "time_complexity": "exp((log n)^O(1)) (quasi-polynomial)",
+      "space_complexity": "quasi-polynomial",
+      "correctness": "Babai 2016; see caveats for the 2017 correction.",
+      "implementation": null
+    }
+  ],
+  "pair_type": "T6",
+  "relationship": "n! -> exp(sqrt(n log n)) -> quasi-polynomial exp(polylog n). A polynomial-time algorithm is open. Polynomial algorithms exist for restricted classes, e.g. bounded degree (Luks 1982).",
+  "sources": [
+    {
+      "authors": "Luks, E. M.",
+      "year": 1982,
+      "title": "Isomorphism of graphs of bounded valence can be tested in polynomial time",
+      "venue": "Journal of Computer and System Sciences 25(1), 42-65",
+      "doi": "10.1016/0022-0000(82)90009-5"
+    },
+    {
+      "authors": "Babai, L.; Luks, E. M.",
+      "year": 1983,
+      "title": "Canonical labeling of graphs",
+      "venue": "STOC 1983, 171-183",
+      "doi": "10.1145/800061.808746"
+    },
+    {
+      "authors": "Babai, L.",
+      "year": 2016,
+      "title": "Graph isomorphism in quasipolynomial time",
+      "venue": "STOC 2016",
+      "doi": "10.1145/2897518.2897542",
+      "arxiv": "1512.03547"
+    }
+  ],
+  "verification": {
+    "level": "V0",
+    "method": "Cited from the literature.",
+    "artifacts": []
+  },
+  "caveats": "In January 2017 Harald Helfgott found an error in the analysis of Babai's algorithm. Babai repaired it within days, restoring the quasi-polynomial bound. GI is not known to be NP-complete (that would collapse the polynomial hierarchy to its second level). No efficient quantum algorithm is known either: the relevant hidden subgroup problem over the symmetric group resists Fourier sampling.",
+  "notes": "Interesting for the quantum question because quantum computers are NOT known to help here, unlike factoring.",
+  "secondary_tags": [
+    "T8"
+  ]
+}

@@ -1,0 +1,1169 @@
+{
+  "schema": "schema/entry.schema.json",
+  "counts": {
+    "entries": 36,
+    "validated_pairs": 28,
+    "open_problems_T6": 9,
+    "proven_quantum_advantage_T9": 4,
+    "synthetic_T7": 0,
+    "with_quantum_algorithm": 6,
+    "by_level": {
+      "V0": 8,
+      "V1": 3,
+      "V2": 25,
+      "V3": 0
+    },
+    "by_type": {
+      "T1": 2,
+      "T2": 11,
+      "T3": 10,
+      "T4": 1,
+      "T5": 1,
+      "T6": 8,
+      "T7": 0,
+      "T8": 0,
+      "T9": 3
+    }
+  },
+  "entries": [
+    {
+      "id": "primality-trial-vs-aks",
+      "title": "Primality testing: trial division vs AKS",
+      "path": "pairs/primality-trial-vs-aks",
+      "location": "pairs",
+      "pair_type": "T1",
+      "secondary_tags": [],
+      "level": "V1",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "trial division",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(sqrt(N)) = Theta(2^(n/2)) divisions in the worst case (N prime)",
+          "implemented": true
+        },
+        {
+          "name": "AKS",
+          "model": "classical-deterministic",
+          "time_complexity": "Õ(n^(21/2)) as proven in AKS 2004 (Õ(n^(15/2)) using Fouvry's theorem); Õ(n^6) for the Lenstra-Pomerance variant",
+          "implemented": true
+        }
+      ],
+      "sources": 2
+    },
+    {
+      "id": "assignment-brute-vs-hungarian",
+      "title": "Assignment problem: permutation enumeration vs the Hungarian method",
+      "path": "pairs/assignment-brute-vs-hungarian",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "permutation enumeration",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n * n!) (n! permutations, Theta(n) to cost each)",
+          "implemented": true
+        },
+        {
+          "name": "Hungarian method (shortest augmenting paths with potentials)",
+          "model": "classical-deterministic",
+          "time_complexity": "O(n^3) worst case (at most n search steps of Theta(n) per inserted row); Theta(n^3) on the column-dominant family used for timing",
+          "implemented": true
+        }
+      ],
+      "sources": 6
+    },
+    {
+      "id": "determinant-cofactor-vs-gaussian",
+      "title": "Determinant over GF(p): cofactor expansion vs Gaussian elimination",
+      "path": "pairs/determinant-cofactor-vs-gaussian",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "Laplace (cofactor) expansion",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n!) field operations (n!/k! recursion nodes with k columns left, Theta(k^2) work each; n! * sum_k k^2/k! = Theta(n!))",
+          "implemented": true
+        },
+        {
+          "name": "Gaussian elimination mod p",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^3) field operations on non-singular input (~n^3/3 multiply-subtracts); O(n^3) always (it can stop early on a singular matrix)",
+          "implemented": true
+        }
+      ],
+      "sources": 4
+    },
+    {
+      "id": "edit-distance-brute-vs-dp",
+      "title": "Edit (Levenshtein) distance: plain recursion vs Wagner-Fischer DP",
+      "path": "pairs/edit-distance-brute-vs-dp",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [
+        {
+          "model": "classical-deterministic",
+          "bound": "no O(n^(2-eps)) algorithm for any eps > 0",
+          "setting": "conditional on the Strong Exponential Time Hypothesis (SETH)",
+          "source": "Backurs & Indyk 2015"
+        }
+      ],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "plain recursion",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(D(n, n)) = Theta((3 + 2 sqrt 2)^n / sqrt(n)) ~ Theta(5.83^n / sqrt(n)), D = Delannoy numbers",
+          "implemented": true
+        },
+        {
+          "name": "Wagner-Fischer dynamic programming",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2) (Theta(|a| |b|) in general)",
+          "implemented": true
+        }
+      ],
+      "sources": 4
+    },
+    {
+      "id": "fibonacci-naive-vs-dp",
+      "title": "Fibonacci numbers: naive recursion vs dynamic programming vs fast doubling",
+      "path": "pairs/fibonacci-naive-vs-dp",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "naive recursion",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(phi^n), phi = (1+sqrt(5))/2 ~ 1.618",
+          "implemented": true
+        },
+        {
+          "name": "bottom-up dynamic programming",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n) word operations",
+          "implemented": true
+        },
+        {
+          "name": "fast doubling (matrix power)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(log n) word operations",
+          "implemented": true
+        }
+      ],
+      "sources": 2
+    },
+    {
+      "id": "gcd-trial-vs-euclid",
+      "title": "Greatest common divisor: trial divisors vs Euclid's algorithm",
+      "path": "pairs/gcd-trial-vs-euclid",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "trial divisors",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(2^n) iterations in the worst case: exactly min(a, b) - gcd(a, b) + 1 iterations of one or two divisions, i.e. up to 2^n - 2 on coprime n-bit inputs (>= 2^(n-2) on the coprime Fibonacci pairs used for V2). In bit operations, Theta(2^n) times the cost of an n-bit division.",
+          "implemented": true
+        },
+        {
+          "name": "Euclid's algorithm",
+          "model": "classical-deterministic",
+          "time_complexity": "O(n) division steps: at most log_phi(min(a, b)) + O(1) <= 1.44 n + O(1) (Lame 1844), attained by consecutive Fibonacci numbers. O(n^2) bit operations with schoolbook division: a step with quotient q on numbers of at most n bits costs O(n (1 + log q)), and the log q sum to at most n; Theta(n^2) on consecutive Fibonacci numbers, where each of the Theta(n) steps divides Theta(n)-bit numbers.",
+          "implemented": true
+        }
+      ],
+      "sources": 2
+    },
+    {
+      "id": "lcs-brute-vs-dp",
+      "title": "Longest common subsequence: subsequence enumeration vs dynamic programming",
+      "path": "pairs/lcs-brute-vs-dp",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [
+        {
+          "model": "classical-deterministic",
+          "bound": "no O(n^(2-eps)) algorithm for any eps > 0",
+          "setting": "conditional on the Strong Exponential Time Hypothesis (SETH)",
+          "source": "Abboud, Backurs & Vassilevska Williams 2015"
+        }
+      ],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "subsequence enumeration",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(2^n n)",
+          "implemented": true
+        },
+        {
+          "name": "dynamic programming",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2) (Theta(|a| |b|) in general)",
+          "implemented": true
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "longest-increasing-subsequence",
+      "title": "Longest increasing subsequence: subset enumeration vs quadratic DP vs patience sorting",
+      "path": "pairs/longest-increasing-subsequence",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [
+        "T3"
+      ],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "subset enumeration",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(2^n n) on every input (each of the 2^n masks is scanned over all n positions, with no early exit)",
+          "implemented": true
+        },
+        {
+          "name": "quadratic dynamic programming",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2) on every input: n(n-1)/2 comparisons",
+          "implemented": true
+        },
+        {
+          "name": "patience sorting with binary search",
+          "model": "classical-deterministic",
+          "time_complexity": "O(n log L) <= O(n log n), L = the answer; Theta(n log n) in the worst case, e.g. on increasing input (L = n), which is the V2 scaling input",
+          "implemented": true
+        }
+      ],
+      "sources": 5
+    },
+    {
+      "id": "matrix-chain-recursion-vs-dp",
+      "title": "Matrix-chain ordering: plain recursion vs dynamic programming",
+      "path": "pairs/matrix-chain-recursion-vs-dp",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "plain recursion",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(3^n)",
+          "implemented": true
+        },
+        {
+          "name": "bottom-up dynamic programming",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^3)",
+          "implemented": true
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "minimum-spanning-tree-brute-vs-kruskal",
+      "title": "Minimum spanning tree: edge-subset enumeration vs Kruskal (and Prim)",
+      "path": "pairs/minimum-spanning-tree-brute-vs-kruskal",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "enumeration of all (n-1)-edge subsets",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n * C(n(n-1)/2, n-1)) = 2^Theta(n log n) (C(m, n-1) subsets, Theta(n) each to build, search and weigh)",
+          "implemented": true
+        },
+        {
+          "name": "Kruskal with union-find",
+          "model": "classical-deterministic",
+          "time_complexity": "O(m log m) = O(n^2 log n) on K_n (comparison sort of the m edges; the union-find work is O(m alpha(n)))",
+          "implemented": true
+        },
+        {
+          "name": "Prim, array version",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2) on K_n (n-1 rounds, two Theta(n) scans each), linear in the input size",
+          "implemented": true
+        }
+      ],
+      "sources": 6
+    },
+    {
+      "id": "modular-exponentiation-repeated-vs-square-multiply",
+      "title": "Modular exponentiation: repeated multiplication vs square-and-multiply",
+      "path": "pairs/modular-exponentiation-repeated-vs-square-multiply",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [
+        {
+          "model": "classical-deterministic",
+          "bound": "at least ceil(log2 e) >= n - 1 multiplications (each multiplication at most doubles the largest exponent computed so far)",
+          "setting": "addition-chain (multiplication-only) model: each step multiplies two powers of a computed earlier",
+          "source": "Knuth TAOCP Vol. 2 (1997), 4.6.3"
+        }
+      ],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "repeated multiplication",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(e) = Theta(2^n) multiplications mod m (exactly e of them, and e >= 2^(n-1))",
+          "implemented": true
+        },
+        {
+          "name": "left-to-right square-and-multiply (binary method)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n) multiplications mod m: n squarings plus one multiplication per 1-bit of e (at most n), and Theta(n) work to read the bits of e",
+          "implemented": true
+        }
+      ],
+      "sources": 1
+    },
+    {
+      "id": "shortest-path-enumeration-vs-dijkstra",
+      "title": "Single-pair shortest path: simple-path enumeration vs Dijkstra",
+      "path": "pairs/shortest-path-enumeration-vs-dijkstra",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "simple-path enumeration",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n (n-2)!) on the complete digraph (~ e (n-2)! simple s-t paths, n neighbour checks per search node)",
+          "implemented": true
+        },
+        {
+          "name": "Dijkstra (array version)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2) with an array (optimal for dense input); O(m + n log n) with Fibonacci heaps",
+          "implemented": true
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "closest-pair-brute-vs-divide-conquer",
+      "title": "Closest pair of points: brute force vs divide and conquer",
+      "path": "pairs/closest-pair-brute-vs-divide-conquer",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "all pairs",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2) (exactly n(n-1)/2 distance evaluations on every input)",
+          "implemented": true
+        },
+        {
+          "name": "Shamos-Hoey divide and conquer",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n log n) on every input (initial sort plus T(n) = 2T(n/2) + Theta(n): linear merge, strip filter and strip scan per level)",
+          "implemented": true
+        }
+      ],
+      "sources": 5
+    },
+    {
+      "id": "integer-multiplication-schoolbook-vs-karatsuba",
+      "title": "Integer multiplication: schoolbook vs Karatsuba",
+      "path": "pairs/integer-multiplication-schoolbook-vs-karatsuba",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "schoolbook (long) multiplication",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2) digit operations (exactly n^2 multiply-adds on every input)",
+          "implemented": true
+        },
+        {
+          "name": "Karatsuba",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^log2(3)) ~ Theta(n^1.585) digit operations",
+          "implemented": true
+        }
+      ],
+      "sources": 5
+    },
+    {
+      "id": "inversion-counting-quadratic-vs-merge",
+      "title": "Counting inversions: all pairs vs merge sort",
+      "path": "pairs/inversion-counting-quadratic-vs-merge",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "all pairs",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2)",
+          "implemented": true
+        },
+        {
+          "name": "merge-sort counting",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n log n)",
+          "implemented": true
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "matrix-multiplication-naive-vs-strassen",
+      "title": "Matrix multiplication: schoolbook vs Strassen",
+      "path": "pairs/matrix-multiplication-naive-vs-strassen",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V1",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "schoolbook",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^3)",
+          "implemented": true
+        },
+        {
+          "name": "Strassen",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^(log2 7)) ~ Theta(n^2.807)",
+          "implemented": true
+        }
+      ],
+      "sources": 4
+    },
+    {
+      "id": "maximum-subarray",
+      "title": "Maximum subarray sum: brute force vs running sums vs Kadane's scan",
+      "path": "pairs/maximum-subarray",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "brute force (sum every subarray)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^3) on every input: the innermost loop runs n(n+1)(n+2)/6 times",
+          "implemented": true
+        },
+        {
+          "name": "running sums",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2) on every input: n(n+1)/2 inner steps",
+          "implemented": true
+        },
+        {
+          "name": "Kadane's algorithm (linear scan)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n)",
+          "implemented": true
+        }
+      ],
+      "sources": 2
+    },
+    {
+      "id": "polynomial-multiplication-naive-vs-ntt",
+      "title": "Polynomial multiplication over Z_p: schoolbook vs number-theoretic transform (FFT)",
+      "path": "pairs/polynomial-multiplication-naive-vs-ntt",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "schoolbook convolution",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2)",
+          "implemented": true
+        },
+        {
+          "name": "number-theoretic transform (Cooley-Tukey over Z_p)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n log n)",
+          "implemented": true
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "sorting-insertion-vs-merge",
+      "title": "Comparison sorting: insertion sort vs merge sort",
+      "path": "pairs/sorting-insertion-vs-merge",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [
+        {
+          "model": "classical-randomized",
+          "bound": "Omega(n log n) comparisons: at least log2(n!) = n log2 n - O(n) in the worst case, and also on average over a uniformly random input order, hence in expectation for any randomized comparison sort",
+          "setting": "comparison model (elements are accessed only through pairwise comparisons)",
+          "source": "Knuth TAOCP Vol. 3 (1998), 5.3.1 (decision-tree argument, worst and average case); the randomized case follows from the average case by Yao's minimax principle"
+        }
+      ],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "insertion sort",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n + I) where I is the number of inversions: Theta(n^2) in the worst case (reversed input, I = n(n-1)/2) and on average over uniformly random inputs (E[I] ~ n^2/4, the case measured for V2); Theta(n) on sorted input",
+          "implemented": true
+        },
+        {
+          "name": "merge sort",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n log n) on every input: T(n) = 2 T(n/2) + Theta(n)",
+          "implemented": true
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "string-matching-naive-vs-kmp",
+      "title": "Exact string matching: naive scan vs Knuth-Morris-Pratt",
+      "path": "pairs/string-matching-naive-vs-kmp",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "naive matching",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n m) character comparisons in the worst case (at most (n - m + 1) m, attained e.g. by T = a^n, P = a^(m-1) b); Theta(n^2) for the m = n // 2 instances used in V2",
+          "implemented": true
+        },
+        {
+          "name": "Knuth-Morris-Pratt",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n + m) on every input: at most 2n comparisons in the scan and 2m to build the failure table (amortised: each comparison either advances the text position or shrinks the matched length); Theta(n) when m = Theta(n)",
+          "implemented": true
+        }
+      ],
+      "sources": 2
+    },
+    {
+      "id": "three-sum-cubic-vs-quadratic",
+      "title": "3SUM: all triples vs sorting with two pointers",
+      "path": "pairs/three-sum-cubic-vs-quadratic",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [
+        {
+          "model": "classical-deterministic",
+          "bound": "no O(n^(2-eps)) algorithm for any eps > 0",
+          "setting": "conjectured (the 3SUM conjecture, basis of 3SUM-hardness; Gajentaan & Overmars 1995)",
+          "source": "Gajentaan & Overmars 1995"
+        }
+      ],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "all triples",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^3) worst case",
+          "implemented": true
+        },
+        {
+          "name": "sort + two pointers",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2)",
+          "implemented": true
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "primality-miller-rabin-vs-aks",
+      "title": "Primality testing: Miller-Rabin (randomized) vs AKS (deterministic)",
+      "path": "pairs/primality-miller-rabin-vs-aks",
+      "location": "pairs",
+      "pair_type": "T4",
+      "secondary_tags": [],
+      "level": "V1",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "Miller-Rabin",
+          "model": "classical-randomized",
+          "time_complexity": "O(k n^3) bit operations for k rounds with schoolbook multiplication (Õ(k n^2) with fast multiplication)",
+          "implemented": true
+        },
+        {
+          "name": "AKS",
+          "model": "classical-deterministic",
+          "time_complexity": "Õ(n^(21/2)) as proven in AKS 2004; Õ(n^6) for the Lenstra-Pomerance variant",
+          "implemented": true
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "knapsack-01-brute-vs-dp",
+      "title": "0/1 knapsack: subset enumeration vs meet in the middle vs pseudo-polynomial DP",
+      "path": "pairs/knapsack-01-brute-vs-dp",
+      "location": "pairs",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T8"
+      ],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "subset enumeration",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(2^n n)",
+          "implemented": true
+        },
+        {
+          "name": "meet in the middle (Horowitz-Sahni)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(2^(n/2) n)",
+          "implemented": true
+        },
+        {
+          "name": "capacity DP (Bellman)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n W): pseudo-polynomial (polynomial in the VALUE W, exponential in its bit length)",
+          "implemented": true
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "permanent-naive-vs-ryser",
+      "title": "Permanent: sum over permutations vs Ryser's formula",
+      "path": "pairs/permanent-naive-vs-ryser",
+      "location": "pairs",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T8"
+      ],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "sum over all permutations",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n * n!) arithmetic operations",
+          "implemented": true
+        },
+        {
+          "name": "Ryser's formula with Gray-code ordering",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n 2^n) arithmetic operations",
+          "implemented": true
+        }
+      ],
+      "sources": 5
+    },
+    {
+      "id": "tsp-brute-vs-held-karp",
+      "title": "Travelling salesman: permutation enumeration vs Held-Karp DP",
+      "path": "pairs/tsp-brute-vs-held-karp",
+      "location": "pairs",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T8"
+      ],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "permutation enumeration",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n!) ((n-1)! tours, Theta(n) each)",
+          "implemented": true
+        },
+        {
+          "name": "Held-Karp dynamic programming",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2 2^n)",
+          "implemented": true
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "bernstein-vazirani-classical-vs-quantum",
+      "title": "Bernstein-Vazirani: n classical queries vs 1 quantum query",
+      "path": "pairs/bernstein-vazirani-classical-vs-quantum",
+      "location": "pairs",
+      "pair_type": "T9",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [
+        {
+          "model": "classical-randomized",
+          "bound": "Omega(n) queries (n - O(1) for bounded error)",
+          "setting": "query (oracle) model, unconditional",
+          "source": "Information-theoretic: each classical query returns one bit and s is a uniformly random n-bit string; see Bernstein & Vazirani 1997"
+        }
+      ],
+      "has_quantum_algorithm": true,
+      "algorithms": [
+        {
+          "name": "classical: query the unit vectors",
+          "model": "classical-deterministic",
+          "time_complexity": "n queries (optimal classically, even for randomized algorithms)",
+          "implemented": true
+        },
+        {
+          "name": "Bernstein-Vazirani quantum algorithm",
+          "model": "quantum",
+          "time_complexity": "1 query (O(n) gates besides the oracle)",
+          "implemented": true
+        }
+      ],
+      "sources": 1
+    },
+    {
+      "id": "grover-search-classical-vs-quantum",
+      "title": "Unstructured search: Theta(N) classical queries vs Theta(sqrt N) quantum queries (Grover)",
+      "path": "pairs/grover-search-classical-vs-quantum",
+      "location": "pairs",
+      "pair_type": "T9",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [
+        {
+          "model": "classical-randomized",
+          "bound": "Omega(N) = Omega(2^n) queries",
+          "setting": "query (oracle) model, unconditional",
+          "source": "Standard adversary/averaging argument; see Bennett, Bernstein, Brassard & Vazirani 1997"
+        },
+        {
+          "model": "quantum",
+          "bound": "Omega(sqrt(N)) = Omega(2^(n/2)) queries (Grover is optimal)",
+          "setting": "query (oracle) model, unconditional",
+          "source": "Bennett, Bernstein, Brassard & Vazirani 1997"
+        }
+      ],
+      "has_quantum_algorithm": true,
+      "algorithms": [
+        {
+          "name": "classical random-order search",
+          "model": "classical-randomized",
+          "time_complexity": "(N + 1) / 2 queries expected = Theta(2^n)",
+          "implemented": true
+        },
+        {
+          "name": "Grover's algorithm",
+          "model": "quantum",
+          "time_complexity": "(pi/4) sqrt(N) + O(1) queries = Theta(2^(n/2))",
+          "implemented": true
+        }
+      ],
+      "sources": 2
+    },
+    {
+      "id": "simon-classical-vs-quantum",
+      "title": "Simon's problem: Theta(2^(n/2)) classical queries vs O(n) quantum queries",
+      "path": "pairs/simon-classical-vs-quantum",
+      "location": "pairs",
+      "pair_type": "T9",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [
+        {
+          "model": "classical-randomized",
+          "bound": "Omega(2^(n/2)) queries for bounded error",
+          "setting": "query (oracle) model, unconditional",
+          "source": "Simon 1997"
+        }
+      ],
+      "has_quantum_algorithm": true,
+      "algorithms": [
+        {
+          "name": "classical collision search",
+          "model": "classical-randomized",
+          "time_complexity": "Theta(2^(n/2)) queries expected (birthday bound)",
+          "implemented": true
+        },
+        {
+          "name": "Simon's quantum algorithm",
+          "model": "quantum",
+          "time_complexity": "O(n) queries: the expected number of rounds is E(n) = sum_{j=1}^{n-1} 1/(1 - 2^(-j)) = n - 1 + sum_{j=1}^{n-1} 1/(2^j - 1) < n + 0.6067 (the limit constant is the Erdős-Borwein constant 1.60669...); plus O(n^3) classical post-processing",
+          "implemented": true
+        }
+      ],
+      "sources": 2
+    },
+    {
+      "id": "linear-programming-simplex-vs-interior-point",
+      "title": "Linear programming: simplex vs ellipsoid / interior-point methods",
+      "path": "staging/linear-programming-simplex-vs-interior-point",
+      "location": "staging",
+      "pair_type": "T1",
+      "secondary_tags": [
+        "T6"
+      ],
+      "level": "V0",
+      "validated": false,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "simplex method (Dantzig's pivot rule)",
+          "model": "classical-deterministic",
+          "time_complexity": "exponential in the worst case: 2^n - 1 pivots on the Klee-Minty cube",
+          "implemented": false
+        },
+        {
+          "name": "ellipsoid method",
+          "model": "classical-deterministic",
+          "time_complexity": "polynomial in n and L: O(n^2 L) iterations of O(n^2) arithmetic operations",
+          "implemented": false
+        },
+        {
+          "name": "interior-point method (Karmarkar)",
+          "model": "classical-deterministic",
+          "time_complexity": "O(n^3.5 L) arithmetic operations",
+          "implemented": false
+        }
+      ],
+      "sources": 5
+    },
+    {
+      "id": "max-flow-edmonds-karp-vs-almost-linear",
+      "title": "Maximum flow: Edmonds-Karp vs push-relabel vs almost-linear time",
+      "path": "staging/max-flow-edmonds-karp-vs-almost-linear",
+      "location": "staging",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V0",
+      "validated": false,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "Edmonds-Karp",
+          "model": "classical-deterministic",
+          "time_complexity": "O(n m^2)",
+          "implemented": false
+        },
+        {
+          "name": "push-relabel (Goldberg-Tarjan)",
+          "model": "classical-deterministic",
+          "time_complexity": "O(n m log(n^2 / m)) with dynamic trees",
+          "implemented": false
+        },
+        {
+          "name": "almost-linear-time max flow (Chen et al.)",
+          "model": "classical-randomized",
+          "time_complexity": "m^(1+o(1))",
+          "implemented": false
+        }
+      ],
+      "sources": 4
+    },
+    {
+      "id": "recommendation-systems-dequantization",
+      "title": "Recommendation systems: Kerenidis-Prakash quantum algorithm vs Tang's dequantization",
+      "path": "staging/recommendation-systems-dequantization",
+      "location": "staging",
+      "pair_type": "T5",
+      "secondary_tags": [],
+      "level": "V0",
+      "validated": false,
+      "lower_bounds": [],
+      "has_quantum_algorithm": true,
+      "algorithms": [
+        {
+          "name": "Kerenidis-Prakash quantum recommendation algorithm",
+          "model": "quantum",
+          "time_complexity": "poly(k) polylog(mn) (for constant accuracy), given QRAM access",
+          "implemented": false
+        },
+        {
+          "name": "Tang's quantum-inspired classical algorithm",
+          "model": "classical-randomized",
+          "time_complexity": "poly(k, 1/eps) polylog(mn), given sample-and-query access (a high-degree polynomial in the original analysis)",
+          "implemented": false
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "boolean-satisfiability",
+      "title": "3-SAT: brute force vs Schöning vs PPSZ",
+      "path": "staging/boolean-satisfiability",
+      "location": "staging",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T8"
+      ],
+      "level": "V0",
+      "validated": false,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "brute force",
+          "model": "classical-deterministic",
+          "time_complexity": "O(2^n m)",
+          "implemented": false
+        },
+        {
+          "name": "Schöning's random walk",
+          "model": "classical-randomized",
+          "time_complexity": "O((4/3)^n poly(n)) expected",
+          "implemented": false
+        },
+        {
+          "name": "PPSZ / biased-PPSZ",
+          "model": "classical-randomized",
+          "time_complexity": "O(1.308^n) (PPSZ; Hertli 2014 in general); O(1.307^n) (biased-PPSZ, Hansen et al. 2019)",
+          "implemented": false
+        }
+      ],
+      "sources": 5
+    },
+    {
+      "id": "discrete-logarithm",
+      "title": "Discrete logarithm: generic and index-calculus algorithms vs Shor's quantum algorithm",
+      "path": "staging/discrete-logarithm",
+      "location": "staging",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T9"
+      ],
+      "level": "V0",
+      "validated": false,
+      "lower_bounds": [
+        {
+          "model": "classical-randomized",
+          "bound": "Omega(sqrt(p)) group operations",
+          "setting": "generic group model",
+          "source": "Shoup 1997"
+        }
+      ],
+      "has_quantum_algorithm": true,
+      "algorithms": [
+        {
+          "name": "baby-step giant-step",
+          "model": "classical-deterministic",
+          "time_complexity": "O(sqrt(p)) = O(2^(n/2)) group operations",
+          "implemented": false
+        },
+        {
+          "name": "Pollard rho for logarithms",
+          "model": "classical-randomized",
+          "time_complexity": "O(sqrt(p)) group operations (heuristic), O(1) memory",
+          "implemented": false
+        },
+        {
+          "name": "number field sieve for discrete logs in GF(q)",
+          "model": "classical-randomized",
+          "time_complexity": "L_q[1/3, (64/9)^(1/3)]: sub-exponential (heuristic); applies to finite fields, NOT to generic groups such as elliptic curves",
+          "implemented": false
+        },
+        {
+          "name": "Shor's algorithm",
+          "model": "quantum",
+          "time_complexity": "polynomial in n (O(n^3) gates with schoolbook arithmetic)",
+          "implemented": false
+        }
+      ],
+      "sources": 5
+    },
+    {
+      "id": "graph-isomorphism",
+      "title": "Graph isomorphism: moderately exponential vs quasi-polynomial",
+      "path": "staging/graph-isomorphism",
+      "location": "staging",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T8"
+      ],
+      "level": "V0",
+      "validated": false,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "brute force over permutations",
+          "model": "classical-deterministic",
+          "time_complexity": "O(n! n^2)",
+          "implemented": false
+        },
+        {
+          "name": "Babai-Luks canonical labeling",
+          "model": "classical-deterministic",
+          "time_complexity": "exp(O(sqrt(n log n)))",
+          "implemented": false
+        },
+        {
+          "name": "Babai's quasi-polynomial algorithm",
+          "model": "classical-deterministic",
+          "time_complexity": "exp((log n)^O(1)) (quasi-polynomial)",
+          "implemented": false
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "integer-factoring",
+      "title": "Integer factoring: classical algorithms vs Shor's quantum algorithm",
+      "path": "staging/integer-factoring",
+      "location": "staging",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T8"
+      ],
+      "level": "V0",
+      "validated": false,
+      "lower_bounds": [],
+      "has_quantum_algorithm": true,
+      "algorithms": [
+        {
+          "name": "trial division",
+          "model": "classical-deterministic",
+          "time_complexity": "O(2^(n/2))",
+          "implemented": false
+        },
+        {
+          "name": "Pollard rho",
+          "model": "classical-randomized",
+          "time_complexity": "O(N^(1/4)) = O(2^(n/4)) heuristically (birthday bound on the smallest prime factor)",
+          "implemented": false
+        },
+        {
+          "name": "general number field sieve (GNFS)",
+          "model": "classical-randomized",
+          "time_complexity": "exp(((64/9)^(1/3) + o(1)) (ln N)^(1/3) (ln ln N)^(2/3)), i.e. L_N[1/3, 1.923]: sub-exponential (heuristic)",
+          "implemented": false
+        },
+        {
+          "name": "Shor's algorithm",
+          "model": "quantum",
+          "time_complexity": "O(n^3) quantum gates with schoolbook modular arithmetic (O(n^2 log n log log n) with fast multiplication)",
+          "implemented": false
+        }
+      ],
+      "sources": 4
+    },
+    {
+      "id": "polynomial-identity-testing",
+      "title": "Polynomial identity testing: randomized polynomial vs deterministic (open)",
+      "path": "staging/polynomial-identity-testing",
+      "location": "staging",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T4"
+      ],
+      "level": "V0",
+      "validated": false,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "expand into monomials",
+          "model": "classical-deterministic",
+          "time_complexity": "exponential in s in general (a size-s circuit can have 2^Omega(s) monomials, e.g. prod_i (x_i + 1))",
+          "implemented": false
+        },
+        {
+          "name": "Schwartz-Zippel random evaluation",
+          "model": "classical-randomized",
+          "time_complexity": "poly(s) (over Z, evaluate modulo a random prime to keep numbers small)",
+          "implemented": false
+        }
+      ],
+      "sources": 4
+    }
+  ]
+}

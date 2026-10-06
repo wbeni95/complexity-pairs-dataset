@@ -1,0 +1,65 @@
+{
+  "id": "primality-trial-vs-aks",
+  "title": "Primality testing: trial division vs AKS",
+  "problem_statement": "Given an integer N >= 0, decide whether N is prime.",
+  "input": {
+    "parameter": "n = bit length of N.",
+    "size_measure": "n bits (the standard binary encoding of N)."
+  },
+  "algorithms": [
+    {
+      "name": "trial division",
+      "idea": "Try every odd divisor d with d^2 <= N.",
+      "model": "classical-deterministic",
+      "pseudocode": "if N < 2: no; if N even: N == 2; for d = 3, 5, 7, ... while d*d <= N: if d | N: no; yes",
+      "time_complexity": "Theta(sqrt(N)) = Theta(2^(n/2)) divisions in the worst case (N prime)",
+      "space_complexity": "O(n) bits",
+      "correctness": "A composite N has a divisor d with 1 < d <= sqrt(N).",
+      "implementation": "implementations/trial_division.py:is_prime_trial",
+      "harness": {
+        "scaling": { "cost": "2**(n/2)", "n_values": [26, 28, 30, 32, 34, 36, 38, 40] }
+      }
+    },
+    {
+      "name": "AKS",
+      "idea": "N is prime iff (X + a)^N = X^N + a mod (X^r - 1, N) for a small r and few a, after ruling out perfect powers and small factors. Working modulo X^r - 1 keeps polynomials of degree < r = O(n^5).",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation (the six steps of AKS 2004, Section 4)",
+      "time_complexity": "Õ(n^(21/2)) as proven in AKS 2004 (Õ(n^(15/2)) using Fouvry's theorem); Õ(n^6) for the Lenstra-Pomerance variant",
+      "space_complexity": "Õ(n^6) bits in the original analysis (r coefficients of n bits each, r = O(n^5))",
+      "correctness": "Agrawal, Kayal, Saxena 2004, Theorem 4.1 (the algorithm returns PRIME iff N is prime).",
+      "implementation": "implementations/aks.py:is_prime_aks",
+      "harness": { "v1_max_n": 16 }
+    }
+  ],
+  "pair_type": "T1",
+  "relationship": "Trial division is exponential in the input size n (2^(n/2)); AKS is polynomial in n. Same problem, same deterministic model: the first unconditional deterministic polynomial-time primality test.",
+  "sources": [
+    {
+      "authors": "Agrawal, M.; Kayal, N.; Saxena, N.",
+      "year": 2004,
+      "title": "PRIMES is in P",
+      "venue": "Annals of Mathematics 160(2), 781-793",
+      "doi": "10.4007/annals.2004.160.781"
+    },
+    {
+      "authors": "Lenstra, H. W., Jr.; Pomerance, C.",
+      "year": 2019,
+      "title": "Primality testing with Gaussian periods",
+      "venue": "Journal of the European Mathematical Society 21(4), 1229-1269",
+      "doi": "10.4171/JEMS/861"
+    }
+  ],
+  "verification": {
+    "level": "V1",
+    "method": "Both implementations agree with each other and with a sieve-of-Eratosthenes oracle on random n-bit integers (half of them primes), n = 0..20 (AKS up to 16 bits, where step 5 is genuinely exercised: N > r). Trial division's 2^(n/2) scaling is measured; AKS scaling is not (its polynomial only dominates far beyond what pure Python can time), so the pair stays at V1.",
+    "artifacts": ["implementations/trial_division.py", "implementations/aks.py", "harness.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+    "trials": 6
+  },
+  "caveats": "AKS matters for theory. In practice primality is tested with Miller-Rabin/BPSW (probabilistic) or ECPP (certificate-producing). 'Exponential' for trial division refers to the bit length n. Trial division is polynomial in the value N, which is exponentially larger than the input.",
+  "notes": "See primality-miller-rabin-vs-aks for the randomized-vs-deterministic (T4) view of the same problem."
+}

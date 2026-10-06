@@ -1,0 +1,98 @@
+{
+  "id": "assignment-brute-vs-hungarian",
+  "title": "Assignment problem: permutation enumeration vs the Hungarian method",
+  "problem_statement": "Given an n x n matrix C of integers, compute the minimum of sum_i C[i][pi(i)] over all permutations pi of {0, ..., n-1}, i.e. the cost of a minimum-cost perfect matching in the complete bipartite graph K_{n,n} (rows = workers, columns = jobs). For n = 0 the answer is 0.",
+  "input": {
+    "parameter": "n = number of rows (= number of columns).",
+    "size_measure": "n^2 matrix entries (small integers in the harness, so arithmetic is unit cost)."
+  },
+  "algorithms": [
+    {
+      "name": "permutation enumeration",
+      "idea": "Evaluate the cost of every one of the n! assignments and keep the cheapest.",
+      "model": "classical-deterministic",
+      "pseudocode": "for each permutation p of 0..n-1: best = min(best, sum_i C[i][p[i]])",
+      "time_complexity": "Theta(n * n!) (n! permutations, Theta(n) to cost each)",
+      "space_complexity": "Theta(n)",
+      "correctness": "Exhaustive: every perfect matching of K_{n,n} is a permutation.",
+      "implementation": "implementations/brute_force.py:assignment_brute",
+      "harness": {
+        "v1_max_n": 8,
+        "scaling": { "cost": "n * factorial(n)", "n_values": [6, 7, 8, 9] }
+      }
+    },
+    {
+      "name": "Hungarian method (shortest augmenting paths with potentials)",
+      "idea": "Insert rows one at a time. For each new row, run an array-based Dijkstra over the columns on reduced costs C[i][j] - u[i] - v[j] >= 0 to find a cheapest augmenting path to a free column, augment, and update the potentials so reduced costs stay non-negative and are zero on matched pairs.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "O(n^3) worst case (at most n search steps of Theta(n) per inserted row); Theta(n^3) on the column-dominant family used for timing",
+      "space_complexity": "Theta(n) besides the input",
+      "correctness": "Kuhn 1955 and Munkres 1957 (primal-dual method; Kuhn's original version runs in O(n^4)). The O(n^3) shortest-augmenting-path form with potentials is due to Edmonds & Karp 1972 (and independently Tomizawa 1971). Invariants: (u, v) is dual feasible (all reduced costs >= 0) and every matched pair is tight. So each partial matching is optimal for the rows inserted so far, and after n rows LP duality certifies the perfect matching as optimal.",
+      "implementation": "implementations/hungarian.py:assignment_hungarian",
+      "harness": {
+        "scaling": { "cost": "n**3", "n_values": [30, 50, 75, 100, 150, 200] }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "Factorial -> cubic: Theta(n * n!) vs O(n^3). The waste in enumeration is ignoring the linear-programming structure: the assignment LP has integral optimal vertices (Birkhoff-von Neumann), so dual potentials certify optimality and guide a polynomial search. For integer costs bounded by N, cost scaling gives O(n^2.5 log(nN)) (Gabow & Tarjan 1989), a further T3 step on dense inputs.",
+  "sources": [
+    {
+      "authors": "Kuhn, H. W.",
+      "year": 1955,
+      "title": "The Hungarian method for the assignment problem",
+      "venue": "Naval Research Logistics Quarterly 2, 83-97",
+      "doi": "10.1002/nav.3800020109"
+    },
+    {
+      "authors": "Munkres, J.",
+      "year": 1957,
+      "title": "Algorithms for the assignment and transportation problems",
+      "venue": "Journal of the Society for Industrial and Applied Mathematics 5(1), 32-38",
+      "doi": "10.1137/0105003"
+    },
+    {
+      "authors": "Edmonds, J.; Karp, R. M.",
+      "year": 1972,
+      "title": "Theoretical improvements in algorithmic efficiency for network flow problems",
+      "venue": "Journal of the ACM 19(2), 248-264",
+      "doi": "10.1145/321694.321699",
+      "note": "Shortest augmenting paths with node potentials; O(n^3) for the assignment problem."
+    },
+    {
+      "authors": "Tomizawa, N.",
+      "year": 1971,
+      "title": "On some techniques useful for solution of transportation network problems",
+      "venue": "Networks 1(2), 173-194",
+      "doi": "10.1002/net.3230010206",
+      "note": "Independently introduced the potentials that keep reduced costs non-negative for Dijkstra."
+    },
+    {
+      "authors": "Jonker, R.; Volgenant, A.",
+      "year": 1987,
+      "title": "A shortest augmenting path algorithm for dense and sparse linear assignment problems",
+      "venue": "Computing 38, 325-340",
+      "doi": "10.1007/BF02278710"
+    },
+    {
+      "authors": "Gabow, H. N.; Tarjan, R. E.",
+      "year": 1989,
+      "title": "Faster scaling algorithms for network problems",
+      "venue": "SIAM Journal on Computing 18(5), 1013-1036",
+      "doi": "10.1137/0218069"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree on n = 0..8 (enumeration capped at n = 8) over three instance kinds: uniform costs in [0, 99], costs in [-3, 3] (many ties and negative entries), and the column-dominant worst-case family. For n <= 12 harness.check compares against an independent exact O(n 2^n) DP over column subsets; for n = 30 and 100 (Hungarian only) it checks the row-minimum and column-minimum lower bounds and the identity-assignment upper bound. V2: enumeration fitted against n * n!; the Hungarian method fitted against n^3 on worst-case instances from generate_scaling (C[i][j] = 1000 j + noise in [0, 999]). On uniformly random matrices its search stops early and the measured growth is visibly below n^3, which is why the worst-case family is used for timing.",
+    "artifacts": ["implementations/brute_force.py", "implementations/hungarian.py", "harness.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 30, 100],
+    "trials": 5
+  },
+  "caveats": "The O(n^3) bound counts arithmetic and comparisons on integers as unit cost. It is a worst-case bound; on typical random matrices the implementation is faster. The maximisation version reduces to this one by negating costs.",
+  "notes": "Rectangular (n x m) versions and sparse graphs are handled by the same shortest-augmenting-path framework (Jonker & Volgenant 1987)."
+}

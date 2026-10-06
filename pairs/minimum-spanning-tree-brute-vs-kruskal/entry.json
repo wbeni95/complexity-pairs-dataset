@@ -1,0 +1,112 @@
+{
+  "id": "minimum-spanning-tree-brute-vs-kruskal",
+  "title": "Minimum spanning tree: edge-subset enumeration vs Kruskal (and Prim)",
+  "problem_statement": "Given the complete undirected graph K_n on n >= 1 vertices with positive integer edge weights (a symmetric n x n weight matrix), compute the total weight of a minimum spanning tree. For n = 1 the answer is 0.",
+  "input": {
+    "parameter": "n = number of vertices.",
+    "size_measure": "m = n(n-1)/2 edge weights (Theta(n^2) input), integers below 10^9 in the harness, so arithmetic and comparisons are unit cost."
+  },
+  "algorithms": [
+    {
+      "name": "enumeration of all (n-1)-edge subsets",
+      "idea": "Every spanning tree has exactly n-1 edges. Try each of the C(n(n-1)/2, n-1) subsets of n-1 edges; it is a spanning tree iff it connects all n vertices (one depth-first search). Keep the lightest.",
+      "model": "classical-deterministic",
+      "pseudocode": "for each (n-1)-subset T of the edges: if T is connected: best = min(best, weight(T))",
+      "time_complexity": "Theta(n * C(n(n-1)/2, n-1)) = 2^Theta(n log n) (C(m, n-1) subsets, Theta(n) each to build, search and weigh)",
+      "space_complexity": "Theta(n^2) (the edge list)",
+      "correctness": "Exhaustive. A graph with n vertices and n-1 edges is a tree iff it is connected, so the connected subsets are exactly the spanning trees.",
+      "implementation": "implementations/brute_force.py:mst_brute",
+      "harness": {
+        "v1_max_n": 7,
+        "scaling": {
+          "cost": "n * factorial(n*(n-1)/2) / (factorial(n-1) * factorial(n*(n-1)/2 - n + 1))",
+          "n_values": [4, 5, 6, 7]
+        }
+      }
+    },
+    {
+      "name": "Kruskal with union-find",
+      "idea": "Sort the edges by weight and scan them, keeping each edge that joins two different components (tracked by union-find with union by size and path halving).",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "O(m log m) = O(n^2 log n) on K_n (comparison sort of the m edges; the union-find work is O(m alpha(n)))",
+      "space_complexity": "Theta(n^2) (the sorted edge list)",
+      "correctness": "Kruskal 1956. Cut property: the lightest edge crossing a cut that respects the current forest belongs to some minimum spanning tree containing that forest, so every edge kept is safe. Edges inside a component would close a cycle and are skipped.",
+      "implementation": "implementations/kruskal.py:mst_kruskal",
+      "harness": {
+        "scaling": { "cost": "n**2 * log(n)", "n_values": [50, 100, 200, 400, 800] }
+      }
+    },
+    {
+      "name": "Prim, array version",
+      "idea": "Grow one tree from vertex 0. Keep for every outside vertex the cheapest edge to the tree; each round adds the closest outside vertex and updates the others by scanning its row.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(n^2) on K_n (n-1 rounds, two Theta(n) scans each), linear in the input size",
+      "space_complexity": "Theta(n)",
+      "correctness": "Prim 1957. Each round adds the lightest edge crossing the cut (tree, rest), which is safe by the cut property.",
+      "implementation": "implementations/prim.py:mst_prim",
+      "harness": {
+        "scaling": { "cost": "n**2", "n_values": [50, 100, 200, 400, 800] }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "Super-exponential -> polynomial: Theta(n * C(n(n-1)/2, n-1)) = 2^Theta(n log n) vs O(n^2 log n) (Kruskal) and Theta(n^2) (Prim, linear in the input on dense graphs). The cut property makes greedy choices safe, so no search is needed. Even enumerating only the spanning trees would not help: K_n has n^(n-2) of them (Cayley's formula). On sparse graphs the line continues with Chazelle 2000 (O(m alpha(m, n)), deterministic) and Karger-Klein-Tarjan 1995 (expected O(m), randomized).",
+  "sources": [
+    {
+      "authors": "Boruvka, O.",
+      "year": 1926,
+      "title": "O jistém problému minimálním",
+      "venue": "Práce Moravské přírodovědecké společnosti 3, 37-58",
+      "note": "No DOI. The first MST algorithm; used here as the independent oracle in harness.check."
+    },
+    {
+      "authors": "Cayley, A.",
+      "year": 1889,
+      "title": "A theorem on trees",
+      "venue": "Quarterly Journal of Pure and Applied Mathematics 23, 376-378",
+      "note": "No DOI. K_n has n^(n-2) spanning trees."
+    },
+    {
+      "authors": "Kruskal, J. B.",
+      "year": 1956,
+      "title": "On the shortest spanning subtree of a graph and the traveling salesman problem",
+      "venue": "Proceedings of the American Mathematical Society 7(1), 48-50",
+      "doi": "10.1090/S0002-9939-1956-0078686-7"
+    },
+    {
+      "authors": "Prim, R. C.",
+      "year": 1957,
+      "title": "Shortest connection networks and some generalizations",
+      "venue": "Bell System Technical Journal 36(6), 1389-1401",
+      "doi": "10.1002/j.1538-7305.1957.tb01515.x"
+    },
+    {
+      "authors": "Karger, D. R.; Klein, P. N.; Tarjan, R. E.",
+      "year": 1995,
+      "title": "A randomized linear-time algorithm to find minimum spanning trees",
+      "venue": "Journal of the ACM 42(2), 321-328",
+      "doi": "10.1145/201019.201022"
+    },
+    {
+      "authors": "Chazelle, B.",
+      "year": 2000,
+      "title": "A minimum spanning tree algorithm with inverse-Ackermann type complexity",
+      "venue": "Journal of the ACM 47(6), 1028-1047",
+      "doi": "10.1145/355541.355562"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: all three implementations agree for n = 1..7 (enumeration capped at n = 7, i.e. 54,264 subsets) on random weights in [1, 100] and, in some trials, in [1, 3] (many ties); Kruskal and Prim also agree at n = 20, 60 and 200. harness.check is independent of all three: Boruvka's algorithm with (w, u, v) tie-breaking, plus the bounds (sum of the n-1 lightest edges) <= answer <= (weight of the path 0-1-...-(n-1)). V2: runtimes fitted against n * C(n(n-1)/2, n-1), n^2 log n and n^2 on weights in [1, 10^9]. The enumeration can only be timed at n = 4..7 (n = 8 has 1,184,040 subsets, ~1.3 s per call); the n = 4 point is ~0.01 ms but is timed in loops, and the fit is stable. An earlier Kruskal version that sorted (w, u, v) tuples measured alpha ~1.19 because of cache effects once m exceeds ~10^5 edges; packing each edge into one integer key (same sort order) removed this.",
+    "artifacts": ["implementations/brute_force.py", "implementations/kruskal.py", "implementations/prim.py", "harness.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [1, 2, 3, 4, 5, 6, 7, 20, 60, 200],
+    "trials": 4
+  },
+  "caveats": "On K_n Prim's Theta(n^2) array version is already optimal (linear in the input); Kruskal's sort makes it a log factor slower. The V2 fit for Kruskal cannot by itself resolve the log factor (log n varies only ~1.7x over the measured range), so it confirms ~n^2 growth up to logarithmic factors. Measured times include CPython memory effects that are outside the RAM model.",
+  "notes": "The enumeration's count C(n(n-1)/2, n-1) grows like (e n / 2)^(n-1) up to polynomial factors; only n^(n-2) of these subsets are spanning trees (Cayley's formula)."
+}

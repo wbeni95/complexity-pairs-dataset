@@ -1,0 +1,107 @@
+{
+  "id": "knapsack-01-brute-vs-dp",
+  "title": "0/1 knapsack: subset enumeration vs meet in the middle vs pseudo-polynomial DP",
+  "problem_statement": "Given n items with positive integer weights w_i and values v_i and an integer capacity W, compute the maximum total value of a subset whose total weight is at most W.",
+  "input": {
+    "parameter": "n = number of items.",
+    "size_measure": "Theta(n log(max value) + n log(max weight) + log W) bits. W is a number, so the input contains only log W bits for it."
+  },
+  "algorithms": [
+    {
+      "name": "subset enumeration",
+      "idea": "Evaluate all 2^n subsets.",
+      "model": "classical-deterministic",
+      "pseudocode": "for each subset S: if w(S) <= W: best = max(best, v(S))",
+      "time_complexity": "Theta(2^n n)",
+      "space_complexity": "Theta(n)",
+      "correctness": "Exhaustive.",
+      "implementation": "implementations/brute_force.py:knapsack_brute",
+      "harness": {
+        "v1_max_n": 14,
+        "scaling": {
+          "cost": "2**n * n",
+          "n_values": [10, 11, 12, 13, 14, 15, 16]
+        }
+      }
+    },
+    {
+      "name": "meet in the middle (Horowitz-Sahni)",
+      "idea": "Split the items into halves, enumerate the 2^(n/2) subsets of each, sort one half by weight with a running maximum of value, and binary-search the best partner for every subset of the other half.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(2^(n/2) n)",
+      "space_complexity": "Theta(2^(n/2))",
+      "correctness": "Every subset is a union of a left subset and a right subset; for a fixed left subset the best right partner is the most valuable one of weight <= W - w(left), which the prefix maximum over the weight-sorted list returns (Horowitz & Sahni 1974).",
+      "implementation": "implementations/meet_in_the_middle.py:knapsack_mitm",
+      "harness": {
+        "scaling": {
+          "cost": "2**(n/2) * n",
+          "n_values": [16, 20, 24, 28, 32, 36]
+        }
+      }
+    },
+    {
+      "name": "capacity DP (Bellman)",
+      "idea": "best[c] = max value achievable with capacity c, updated item by item in decreasing c so each item is used at most once.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(n W): pseudo-polynomial (polynomial in the VALUE W, exponential in its bit length)",
+      "space_complexity": "Theta(W)",
+      "correctness": "Standard DP; optimal substructure over (item prefix, capacity).",
+      "implementation": "implementations/dp.py:knapsack_dp",
+      "harness": {
+        "scaling": {
+          "cost": "n**2",
+          "n_values": [50, 100, 150, 200, 300, 400]
+        }
+      }
+    }
+  ],
+  "pair_type": "T6",
+  "secondary_tags": [
+    "T8"
+  ],
+  "relationship": "Enumeration Theta(2^n n) -> meet in the middle Theta(2^(n/2) n): a verified exponential-to-better-exponential improvement (T8). The DP Theta(nW) beats both whenever W << 2^(n/2), but it is NOT polynomial in the input size: adding one bit to W adds one bit to the input yet doubles the DP's running time. No algorithm polynomial in the input size is known; 0/1 knapsack is NP-hard (Karp 1972), so one would imply P = NP.",
+  "sources": [
+    {
+      "authors": "Karp, R. M.",
+      "year": 1972,
+      "title": "Reducibility among combinatorial problems",
+      "venue": "Complexity of Computer Computations, Plenum Press, 85-103",
+      "doi": "10.1007/978-1-4684-2001-2_9"
+    },
+    {
+      "authors": "Horowitz, E.; Sahni, S.",
+      "year": 1974,
+      "title": "Computing partitions with applications to the knapsack problem",
+      "venue": "Journal of the ACM 21(2), 277-292",
+      "doi": "10.1145/321812.321823",
+      "note": "Meet-in-the-middle O(2^(n/2) n): an exponential-to-better-exponential improvement."
+    },
+    {
+      "authors": "Ibarra, O. H.; Kim, C. E.",
+      "year": 1975,
+      "title": "Fast approximation algorithms for the knapsack and sum of subset problems",
+      "venue": "Journal of the ACM 22(4), 463-468",
+      "doi": "10.1145/321906.321909",
+      "note": "FPTAS: (1 - eps)-approximation in time polynomial in n and 1/eps."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: all three agree on random instances (weights 1..20, values 1..30, capacity = half the total weight; enumeration up to n = 14, the others up to n = 24) and respect an independent greedy lower bound. V2: runtimes fitted against 2^n n, 2^(n/2) n and n^2. The DP's n^2 is specific to this harness: weights are bounded, so W = Theta(n) and Theta(nW) = Theta(n^2). The fit says nothing about large W, which is the pseudo-polynomial case.",
+    "artifacts": [
+      "implementations/brute_force.py",
+      "implementations/meet_in_the_middle.py",
+      "implementations/dp.py",
+      "harness.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 14, 18, 24],
+    "trials": 5
+  },
+  "caveats": "Cautionary entry (START_HERE section 4): pseudo-polynomial is not polynomial. Primary T6 because a polynomial algorithm in the input size is open (and implies P = NP); secondary T8 for enumeration -> meet in the middle. The DP is recorded for its teaching value, not as a pair.",
+  "notes": "Good teaching case for the input-size definition in START_HERE section 1."
+}

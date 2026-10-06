@@ -1,0 +1,69 @@
+{
+  "id": "bernstein-vazirani-classical-vs-quantum",
+  "title": "Bernstein-Vazirani: n classical queries vs 1 quantum query",
+  "problem_statement": "Given oracle access to f(x) = s.x mod 2 (inner product over GF(2)) for a hidden n-bit string s, find s.",
+  "input": {
+    "parameter": "n = number of input bits of f.",
+    "size_measure": "Query model: cost is the number of oracle calls. The harness materialises the 2^n-entry truth table only so that the oracle can be simulated."
+  },
+  "algorithms": [
+    {
+      "name": "classical: query the unit vectors",
+      "idea": "f(e_i) is the i-th bit of s.",
+      "model": "classical-deterministic",
+      "pseudocode": "for i in 0..n-1: s_i = f(e_i)",
+      "time_complexity": "n queries (optimal classically, even for randomized algorithms)",
+      "space_complexity": "O(n)",
+      "correctness": "f(e_i) = s_i by definition.",
+      "implementation": "implementations/classical.py:bv_classical",
+      "harness": {
+        "scaling": { "cost": "n", "n_values": [2, 4, 8, 12, 16], "measure": "reported" }
+      }
+    },
+    {
+      "name": "Bernstein-Vazirani quantum algorithm",
+      "idea": "Hadamard transform, one phase-oracle query, Hadamard transform. The resulting state is exactly |s>.",
+      "model": "quantum",
+      "pseudocode": "H^n |0>; apply |x> -> (-1)^f(x) |x>; H^n; measure",
+      "time_complexity": "1 query (O(n) gates besides the oracle)",
+      "space_complexity": "n qubits",
+      "correctness": "H^n sum_x (-1)^(s.x) |x> / sqrt(2^n) = |s> (Bernstein & Vazirani 1997). Deterministic: succeeds with probability 1.",
+      "implementation": "implementations/quantum.py:bv_quantum",
+      "harness": {
+        "v1_max_n": 10,
+        "scaling": { "cost": "1", "n_values": [1, 2, 4, 6, 8, 10], "measure": "reported", "tolerance": 0.01 }
+      }
+    }
+  ],
+  "pair_type": "T9",
+  "lower_bounds": [
+    {
+      "model": "classical-randomized",
+      "bound": "Omega(n) queries (n - O(1) for bounded error)",
+      "setting": "query (oracle) model, unconditional",
+      "source": "Information-theoretic: each classical query returns one bit and s is a uniformly random n-bit string; see Bernstein & Vazirani 1997"
+    }
+  ],
+  "relationship": "Proven separation in the query model: n classical queries vs 1 quantum query. It is only a linear (polynomial) gap. The recursive version of the problem (Bernstein & Vazirani 1997) gives a superpolynomial separation, and Simon's problem an exponential one (see simon-classical-vs-quantum).",
+  "sources": [
+    {
+      "authors": "Bernstein, E.; Vazirani, U.",
+      "year": 1997,
+      "title": "Quantum complexity theory",
+      "venue": "SIAM Journal on Computing 26(5), 1411-1473",
+      "doi": "10.1137/S0097539796300921"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both algorithms return s, which an independent check confirms against the full truth table, for n = 0..10 (quantum, simulated exactly with lib/qsim.py) and up to 16 (classical). V2 measures QUERY COUNTS reported through lib.qsim.Oracle: classical fits n exactly, and quantum is constant (1 query) for every n. Simulation time is exponential in n and is not the claim.",
+    "artifacts": ["implementations/classical.py", "implementations/quantum.py", "harness.py", "../../lib/qsim.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 8, 10, 16],
+    "trials": 4
+  },
+  "caveats": "A separation relative to an oracle. It does not prove that quantum computers are more powerful for any explicit, efficiently computable function, and it does not imply BQP != BPP.",
+  "notes": "Smallest example of a proven quantum query advantage; a building block of the recursive Fourier sampling separation."
+}

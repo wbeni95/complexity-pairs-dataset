@@ -1,0 +1,76 @@
+{
+  "id": "shortest-path-enumeration-vs-dijkstra",
+  "title": "Single-pair shortest path: simple-path enumeration vs Dijkstra",
+  "problem_statement": "Given a directed graph with non-negative edge weights and vertices s, t, compute the minimum total weight of an s-t path. The harness uses complete digraphs given as n x n weight matrices, s = 0, t = n - 1.",
+  "input": {
+    "parameter": "n = number of vertices.",
+    "size_measure": "n^2 matrix entries (dense graph)."
+  },
+  "algorithms": [
+    {
+      "name": "simple-path enumeration",
+      "idea": "Depth-first search over every simple path from s, recording the cheapest one that reaches t.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(n (n-2)!) on the complete digraph (~ e (n-2)! simple s-t paths, n neighbour checks per search node)",
+      "space_complexity": "Theta(n)",
+      "correctness": "With non-negative weights some shortest walk is a simple path, and all simple paths are enumerated.",
+      "implementation": "implementations/enumeration.py:shortest_path_enumerate",
+      "harness": {
+        "v1_max_n": 8,
+        "scaling": { "cost": "n * factorial(n - 2)", "n_values": [8, 9, 10, 11] }
+      }
+    },
+    {
+      "name": "Dijkstra (array version)",
+      "idea": "Repeatedly settle the unsettled vertex with the smallest tentative distance and relax its out-edges.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(n^2) with an array (optimal for dense input); O(m + n log n) with Fibonacci heaps",
+      "space_complexity": "Theta(n)",
+      "correctness": "Dijkstra 1959: with non-negative weights, the minimum tentative distance is final when a vertex is settled.",
+      "implementation": "implementations/dijkstra.py:shortest_path_dijkstra",
+      "harness": {
+        "scaling": { "cost": "n**2", "n_values": [200, 300, 400, 600, 800] }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "Enumeration is factorial (super-exponential) on dense graphs; Dijkstra's greedy settling order yields Theta(n^2).",
+  "sources": [
+    {
+      "authors": "Dijkstra, E. W.",
+      "year": 1959,
+      "title": "A note on two problems in connexion with graphs",
+      "venue": "Numerische Mathematik 1, 269-271",
+      "doi": "10.1007/BF01386390"
+    },
+    {
+      "authors": "Fredman, M. L.; Tarjan, R. E.",
+      "year": 1987,
+      "title": "Fibonacci heaps and their uses in improved network optimization algorithms",
+      "venue": "Journal of the ACM 34(3), 596-615",
+      "doi": "10.1145/28869.28874"
+    },
+    {
+      "authors": "Duan, R.; Mao, J.; Mao, X.; Shu, X.; Yin, L.",
+      "year": 2025,
+      "title": "Breaking the Sorting Barrier for Directed Single-Source Shortest Paths",
+      "venue": "STOC 2025",
+      "arxiv": "2504.17033",
+      "note": "O(m log^(2/3) n) deterministic SSSP, beating Dijkstra on sparse graphs."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both agree on random complete digraphs with weights in [1, 100] (n <= 8 for enumeration). V2: runtimes fitted against n (n-2)! and n^2.",
+    "artifacts": ["implementations/enumeration.py", "implementations/dijkstra.py", "harness.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [1, 2, 3, 4, 5, 6, 7, 8, 50],
+    "trials": 5
+  },
+  "caveats": "Enumeration cost is graph-dependent; the factorial bound is for complete graphs. Negative weights would require Bellman-Ford (O(nm)).",
+  "notes": "Further T3 entries: array Dijkstra Theta(n^2) -> Fibonacci-heap Dijkstra O(m + n log n) -> Duan et al. 2025 O(m log^(2/3) n) on sparse graphs."
+}

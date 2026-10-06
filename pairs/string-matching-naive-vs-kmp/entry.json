@@ -1,0 +1,68 @@
+{
+  "id": "string-matching-naive-vs-kmp",
+  "title": "Exact string matching: naive scan vs Knuth-Morris-Pratt",
+  "problem_statement": "Given a text T of length n and a non-empty pattern P of length m, count the positions i (0 <= i <= n - m) with T[i..i+m-1] = P; overlapping occurrences all count.",
+  "input": {
+    "parameter": "n = length of the text T. The pattern length m >= 1 is a second parameter: arbitrary in V1, m = n // 2 in the V2 scaling generator.",
+    "size_measure": "n + m characters over a fixed alphabet. The scaling generator uses T = a^n and P = a^(m-1) b with m = n // 2, so m = Theta(n), the input has Theta(n) characters, and the naive worst case (n - m + 1) m ~ n^2 / 4 is Theta(n^2) as a function of n."
+  },
+  "algorithms": [
+    {
+      "name": "naive matching",
+      "idea": "Try every alignment i of P against T and compare characters left to right until a mismatch or a full match.",
+      "model": "classical-deterministic",
+      "pseudocode": "count = 0; for i in 0..n-m: j = 0; while j < m and T[i+j] = P[j]: j = j + 1; if j = m: count = count + 1; return count",
+      "time_complexity": "Theta(n m) character comparisons in the worst case (at most (n - m + 1) m, attained e.g. by T = a^n, P = a^(m-1) b); Theta(n^2) for the m = n // 2 instances used in V2",
+      "space_complexity": "O(1) extra",
+      "correctness": "Exhaustive: each of the n - m + 1 alignments is checked character by character.",
+      "implementation": "implementations/naive.py:count_naive",
+      "harness": {
+        "scaling": { "cost": "n**2", "n_values": [200, 400, 800, 1600, 3200] }
+      }
+    },
+    {
+      "name": "Knuth-Morris-Pratt",
+      "idea": "Precompute the failure function (longest proper border of every prefix of P). On a mismatch, shift the pattern so that the longest border of the matched part stays aligned, so no text character is ever compared again after it has been matched.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(n + m) on every input: at most 2n comparisons in the scan and 2m to build the failure table (amortised: each comparison either advances the text position or shrinks the matched length); Theta(n) when m = Theta(n)",
+      "space_complexity": "Theta(m) for the failure table",
+      "correctness": "Knuth, Morris & Pratt 1977: after a mismatch following q matched characters, no alignment between the current one and the one keeping the longest border of P[0..q-1] can match. After a full match, continuing from the longest border of P finds overlapping occurrences.",
+      "implementation": "implementations/kmp.py:count_kmp",
+      "harness": {
+        "scaling": { "cost": "n", "n_values": [3000, 10000, 30000, 100000, 300000] }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "The naive matcher re-reads up to m - 1 text characters after every mismatch, giving Theta(nm) in the worst case. KMP never moves backwards in the text, giving Theta(n + m). With m = Theta(n) this is Theta(n^2) versus Theta(n).",
+  "sources": [
+    {
+      "authors": "Knuth, D. E.; Morris, J. H., Jr.; Pratt, V. R.",
+      "year": 1977,
+      "title": "Fast pattern matching in strings",
+      "venue": "SIAM Journal on Computing 6(2), 323-350",
+      "doi": "10.1137/0206024"
+    },
+    {
+      "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
+      "year": 2009,
+      "title": "Introduction to Algorithms (3rd ed.)",
+      "venue": "MIT Press",
+      "isbn": "978-0-262-03384-8",
+      "note": "Section 32.1 (the naive string-matching algorithm) and 32.4 (the Knuth-Morris-Pratt algorithm)."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree with each other and with an oracle that counts occurrences with str.find in a loop (a reference only) on random texts over {a, b} and {a, b, c} and periodic texts, n = 0..3, 5, 8, 13, 20, 50, 200 and 1000, with patterns that are substrings of the text, random short strings, or longer than the text; overlapping matches are frequent. V2: on the worst case T = a^n, P = a^(n//2 - 1) b, runtimes fit n^2 (naive, n = 200..3200) and n (KMP, n = 3000..300000).",
+    "artifacts": ["implementations/naive.py", "implementations/kmp.py", "harness.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 5, 8, 13, 20, 50, 200, 1000],
+    "trials": 8
+  },
+  "caveats": "The naive bound is a worst case. On uniformly random text over an alphabet of size sigma >= 2 the naive matcher averages O(n) comparisons, since an alignment survives j comparisons with probability sigma^(-j). The V2 instances are chosen to be its worst case. Stating the costs as functions of n alone relies on m = n // 2 in the scaling generator; in general the comparison is Theta(nm) versus Theta(n + m). KMP is optimal up to a constant factor for m <= n: on T = a^n with P = a, changing any unread text character would change the count, so every algorithm must read all n text characters.",
+  "notes": "Related linear-time matchers: Boyer-Moore (sublinear on average), Rabin-Karp (randomized, expected linear), and the Z-algorithm."
+}

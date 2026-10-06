@@ -1,0 +1,50 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Validator self-tests (must reject wrong claims)
+        run: python -m unittest discover -s tests -v
+      - name: Schema, folder rules, V1 correctness runs
+        run: python tools/validate.py
+      - name: index.json and README table are up to date
+        run: python tools/build_index.py --check
+
+  scaling:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Re-measure every V2 scaling claim
+        run: python tools/validate.py --scaling -v
+
+  sources:
+    needs: validate
+    runs-on: ubuntu-latest
+    # External APIs (Crossref, DataCite, arXiv) can be flaky: report, don't block.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Resolve every DOI / arXiv id and compare titles
+        run: python tools/check_sources.py

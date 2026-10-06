@@ -1,0 +1,31 @@
+# --- Secrets / private material: must never enter this public repo ---------
+.env
+.env.*
+*.pem
+*.key
+*.ppk
+id_rsa*
+id_ed25519*
+*credentials*
+*secret*
+*RUNBOOK*
+*.private.*
+private/
+.aws/
+
+# --- Python ----------------------------------------------------------------
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# --- Local run output (export validated entries via PR, not raw results) ---
+results/
+*.log
+
+# --- Editors / OS ----------------------------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

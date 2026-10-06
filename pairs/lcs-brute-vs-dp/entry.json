@@ -1,0 +1,94 @@
+{
+  "id": "lcs-brute-vs-dp",
+  "title": "Longest common subsequence: subsequence enumeration vs dynamic programming",
+  "problem_statement": "Given strings a and b, compute the length of the longest string that is a subsequence of both.",
+  "input": {
+    "parameter": "n = length of each string (|a| = |b| = n in the harness).",
+    "size_measure": "2n characters over a fixed alphabet."
+  },
+  "algorithms": [
+    {
+      "name": "subsequence enumeration",
+      "idea": "Enumerate all 2^n subsequences of a and test each against b with one greedy scan.",
+      "model": "classical-deterministic",
+      "pseudocode": "for each subset S of positions of a: if a[S] is a subsequence of b: best = max(best, |S|)",
+      "time_complexity": "Theta(2^n n)",
+      "space_complexity": "Theta(n)",
+      "correctness": "Exhaustive; the greedy leftmost-match scan decides the subsequence relation exactly.",
+      "implementation": "implementations/brute_force.py:lcs_brute",
+      "harness": {
+        "v1_max_n": 12,
+        "scaling": {
+          "cost": "2**n * n",
+          "n_values": [10, 11, 12, 13, 14, 15, 16]
+        }
+      }
+    },
+    {
+      "name": "dynamic programming",
+      "idea": "L(i, j) = L(i-1, j-1) + 1 if a_i = b_j, else max(L(i-1, j), L(i, j-1)); fill the table row by row.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(n^2) (Theta(|a| |b|) in general)",
+      "space_complexity": "Theta(n)",
+      "correctness": "Optimal substructure of LCS (CLRS Theorem 15.1).",
+      "implementation": "implementations/dp.py:lcs_dp",
+      "harness": {
+        "scaling": {
+          "cost": "n**2",
+          "n_values": [100, 200, 300, 400, 600, 800]
+        }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "Exponential enumeration of candidate subsequences is replaced by a quadratic table of prefix-pair subproblems.",
+  "sources": [
+    {
+      "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
+      "year": 2009,
+      "title": "Introduction to Algorithms (3rd ed.)",
+      "venue": "MIT Press",
+      "isbn": "978-0-262-03384-8",
+      "note": "Section 15.4, Longest common subsequence."
+    },
+    {
+      "authors": "Wagner, R. A.; Fischer, M. J.",
+      "year": 1974,
+      "title": "The string-to-string correction problem",
+      "venue": "Journal of the ACM 21(1), 168-173",
+      "doi": "10.1145/321796.321811"
+    },
+    {
+      "authors": "Abboud, A.; Backurs, A.; Vassilevska Williams, V.",
+      "year": 2015,
+      "title": "Quadratic-Time Hardness of LCS and other Sequence Similarity Measures",
+      "venue": "FOCS 2015",
+      "arxiv": "1501.07053"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both agree on random DNA-alphabet string pairs (n <= 12 for enumeration). V2: runtimes fitted against 2^n n and n^2.",
+    "artifacts": [
+      "implementations/brute_force.py",
+      "implementations/dp.py",
+      "harness.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 50],
+    "trials": 5
+  },
+  "caveats": "Conditional lower bound: no O(n^(2-eps)) algorithm unless SETH fails (Abboud-Backurs-Vassilevska Williams).",
+  "notes": "",
+  "lower_bounds": [
+    {
+      "model": "classical-deterministic",
+      "bound": "no O(n^(2-eps)) algorithm for any eps > 0",
+      "setting": "conditional on the Strong Exponential Time Hypothesis (SETH)",
+      "source": "Abboud, Backurs & Vassilevska Williams 2015"
+    }
+  ]
+}

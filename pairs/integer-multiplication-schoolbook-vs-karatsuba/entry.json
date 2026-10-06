@@ -1,0 +1,100 @@
+{
+  "id": "integer-multiplication-schoolbook-vs-karatsuba",
+  "title": "Integer multiplication: schoolbook vs Karatsuba",
+  "problem_statement": "Given two non-negative integers a and b, each written with exactly n digits in base B = 2^15 as little-endian digit lists (index 0 = least significant digit), compute the product a*b as a little-endian list of exactly 2n base-B digits (high-order digits may be zero).",
+  "input": {
+    "parameter": "n = number of base-2^15 digits of each factor.",
+    "size_measure": "2n digits (30n bits). Costs count single-word digit operations: every intermediate value stays below 2^31, so each digit operation is O(1). Since n digits = 15n bits, the exponents are the same in bit complexity."
+  },
+  "algorithms": [
+    {
+      "name": "schoolbook (long) multiplication",
+      "idea": "Multiply a by each digit of b and add the shifted partial products, propagating carries row by row.",
+      "model": "classical-deterministic",
+      "pseudocode": "res = [0]*(2n); for i: carry = 0; for j: t = res[i+j] + a[i]*b[j] + carry; res[i+j] = t mod B; carry = t div B; res[i+n] = carry",
+      "time_complexity": "Theta(n^2) digit operations (exactly n^2 multiply-adds on every input)",
+      "space_complexity": "Theta(n)",
+      "correctness": "Distributivity: a*b = sum_i a_i B^i b. Invariant: after row i, res holds (a_0 + ... + a_i B^i) * b. Each t = res + a_i b_j + carry is at most B^2 - 1, so every stored digit is < B and every carry is < B.",
+      "implementation": "implementations/schoolbook.py:multiply_schoolbook",
+      "harness": {
+        "scaling": {
+          "cost": "n**2",
+          "n_values": [64, 128, 256, 512, 1024]
+        }
+      }
+    },
+    {
+      "name": "Karatsuba",
+      "idea": "Split each factor into a low and a high half. Three half-size products (low*low, high*high, and |x1-x0|*|y1-y0|) suffice instead of four, because x0*y1 + x1*y0 = x0*y0 + x1*y1 - (x1-x0)(y1-y0). Recurse; below 32 digits use schoolbook.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(n^log2(3)) ~ Theta(n^1.585) digit operations",
+      "space_complexity": "Theta(n)",
+      "correctness": "Karatsuba & Ofman 1962. The identity above holds over the integers, so the recombined result equals x*y. The subtractive form (Knuth, TAOCP Vol. 2, 4.3.3) keeps all three sub-products the same size, giving T(n) = 3 T(ceil(n/2)) + Theta(n) = Theta(n^log2(3)) by the master theorem. The 32-digit base-case cutoff changes constant factors only.",
+      "implementation": "implementations/karatsuba.py:multiply_karatsuba",
+      "harness": {
+        "scaling": {
+          "cost": "n**log2(3)",
+          "n_values": [128, 256, 512, 1024, 2048, 4096]
+        }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "Both polynomial. Karatsuba lowers the exponent from 2 to log2(3) ~ 1.585. It was the first sub-quadratic multiplication algorithm. The line continues with Toom-Cook (n^(1+eps) for any fixed eps > 0; Knuth TAOCP Vol. 2, 4.3.3), Schoenhage-Strassen 1971 (O(n log n log log n)) and Fuerer 2007, and ends at Harvey-van der Hoeven 2021 (O(n log n) bit operations on a multitape Turing machine).",
+  "sources": [
+    {
+      "authors": "Karatsuba, A.; Ofman, Yu.",
+      "year": 1962,
+      "title": "Multiplication of many-digital numbers by automatic computers",
+      "venue": "Doklady Akademii Nauk SSSR 145, 293-294",
+      "note": "No DOI. English translation in Soviet Physics Doklady 7 (1963), 595-596."
+    },
+    {
+      "authors": "Knuth, D. E.",
+      "year": 1997,
+      "title": "The Art of Computer Programming, Vol. 2: Seminumerical Algorithms (3rd ed.)",
+      "venue": "Addison-Wesley",
+      "isbn": "978-0-201-89684-8",
+      "note": "Section 4.3.3 (how fast can we multiply?), including the subtractive form of Karatsuba's identity used here."
+    },
+    {
+      "authors": "Schoenhage, A.; Strassen, V.",
+      "year": 1971,
+      "title": "Schnelle Multiplikation grosser Zahlen",
+      "venue": "Computing 7, 281-292",
+      "doi": "10.1007/BF02242355"
+    },
+    {
+      "authors": "Fuerer, M.",
+      "year": 2009,
+      "title": "Faster integer multiplication",
+      "venue": "SIAM Journal on Computing 39(3), 979-1005",
+      "doi": "10.1137/070711761",
+      "note": "Conference version STOC 2007."
+    },
+    {
+      "authors": "Harvey, D.; van der Hoeven, J.",
+      "year": 2021,
+      "title": "Integer multiplication in time O(n log n)",
+      "venue": "Annals of Mathematics 193(2), 563-617",
+      "doi": "10.4007/annals.2021.193.2.4"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree on random digit lists (including carry/borrow stress inputs: 2^(15n) - 1, and mixes of 0 and 2^15-1 digits) for n = 0..8 and sizes around and above the 32-digit cutoff (31, 32, 33, 47, 64, 65, 100, 129, 300, so odd splits are exercised), and match an independent oracle: Python's built-in integer product, used only in harness.check. V2: runtimes fitted against n^2 and n^log2(3). Measured log-log slopes were ~2.02 (schoolbook) and ~1.63 (Karatsuba). Default tolerance.",
+    "artifacts": [
+      "implementations/schoolbook.py",
+      "implementations/karatsuba.py",
+      "harness.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 31, 32, 33, 47, 64, 65, 100, 129, 300],
+    "trials": 5
+  },
+  "caveats": "The V2 fit uses |alpha - 1| <= 0.25 on a log-cost scale. That is enough to reject a quadratic curve for Karatsuba only narrowly (2 / 1.585 ~ 1.26), so the separately reported slopes (~2.02 vs ~1.63) are the clearer evidence. The two algorithms cross over at a few dozen digits in this pure-Python setting; the cutoff is a tuning choice. Fast algorithms after Karatsuba (Schoenhage-Strassen, Harvey-van der Hoeven) are stated in bit complexity on a multitape Turing machine, not in word operations.",
+  "notes": "Python's own int multiplication itself switches from schoolbook to Karatsuba above a size threshold, which is why the implementations here work on explicit digit lists instead. O(n log n) is conjectured to be optimal for integer multiplication, but no matching unconditional lower bound is known."
+}

@@ -1,0 +1,80 @@
+{
+  "id": "max-flow-edmonds-karp-vs-almost-linear",
+  "title": "Maximum flow: Edmonds-Karp vs push-relabel vs almost-linear time",
+  "problem_statement": "Given a directed graph with integer edge capacities, a source s and a sink t, compute the value of a maximum s-t flow.",
+  "input": {
+    "parameter": "n vertices, m edges (capacities polynomially bounded integers for the almost-linear bound).",
+    "size_measure": "Theta(m log U) bits, U = largest capacity."
+  },
+  "algorithms": [
+    {
+      "name": "Edmonds-Karp",
+      "idea": "Ford-Fulkerson with shortest (BFS) augmenting paths.",
+      "model": "classical-deterministic",
+      "pseudocode": "while a BFS augmenting path exists in the residual graph: push the bottleneck along it",
+      "time_complexity": "O(n m^2)",
+      "space_complexity": "O(m)",
+      "correctness": "Max-flow min-cut theorem (Ford-Fulkerson 1956); O(nm) augmentations (Edmonds-Karp 1972).",
+      "implementation": null
+    },
+    {
+      "name": "push-relabel (Goldberg-Tarjan)",
+      "idea": "Maintain a preflow and vertex heights; push excess downhill, relabel when stuck.",
+      "model": "classical-deterministic",
+      "pseudocode": "Goldberg-Tarjan 1988",
+      "time_complexity": "O(n m log(n^2 / m)) with dynamic trees",
+      "space_complexity": "O(m)",
+      "correctness": "Goldberg & Tarjan 1988.",
+      "implementation": null
+    },
+    {
+      "name": "almost-linear-time max flow (Chen et al.)",
+      "idea": "Interior-point method on min-cost flow, each step solved by a dynamic data structure for approximate min-ratio cycles.",
+      "model": "classical-randomized",
+      "pseudocode": "Chen, Kyng, Liu, Peng, Probst Gutenberg, Sachdeva 2022",
+      "time_complexity": "m^(1+o(1))",
+      "space_complexity": "m^(1+o(1))",
+      "correctness": "Chen et al. 2022 (randomized; a deterministic version followed in later work).",
+      "implementation": null
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "All polynomial; O(n m^2) -> O(n m log(n^2/m)) -> m^(1+o(1)).",
+  "sources": [
+    {
+      "authors": "Ford, L. R.; Fulkerson, D. R.",
+      "year": 1956,
+      "title": "Maximal flow through a network",
+      "venue": "Canadian Journal of Mathematics 8, 399-404",
+      "doi": "10.4153/CJM-1956-045-5"
+    },
+    {
+      "authors": "Edmonds, J.; Karp, R. M.",
+      "year": 1972,
+      "title": "Theoretical improvements in algorithmic efficiency for network flow problems",
+      "venue": "Journal of the ACM 19(2), 248-264",
+      "doi": "10.1145/321694.321699"
+    },
+    {
+      "authors": "Goldberg, A. V.; Tarjan, R. E.",
+      "year": 1988,
+      "title": "A new approach to the maximum-flow problem",
+      "venue": "Journal of the ACM 35(4), 921-940",
+      "doi": "10.1145/48014.61051"
+    },
+    {
+      "authors": "Chen, L.; Kyng, R.; Liu, Y. P.; Peng, R.; Probst Gutenberg, M.; Sachdeva, S.",
+      "year": 2022,
+      "title": "Maximum Flow and Minimum-Cost Flow in Almost-Linear Time",
+      "venue": "FOCS 2022",
+      "arxiv": "2203.00671"
+    }
+  ],
+  "verification": {
+    "level": "V0",
+    "method": "Cited from the literature; not yet independently implemented.",
+    "artifacts": []
+  },
+  "caveats": "The almost-linear algorithm is far from practical; its m^(o(1)) factor hides large terms. The m^(1+o(1)) bound assumes polynomially bounded integer capacities.",
+  "notes": "Path to V1: implement Edmonds-Karp and push-relabel (FIFO, O(n^3)) as a T3 pair with V2 scaling; keep the almost-linear algorithm as cited."
+}

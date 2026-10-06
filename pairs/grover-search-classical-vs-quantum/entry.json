@@ -1,0 +1,82 @@
+{
+  "id": "grover-search-classical-vs-quantum",
+  "title": "Unstructured search: Theta(N) classical queries vs Theta(sqrt N) quantum queries (Grover)",
+  "problem_statement": "Given oracle access to f: {0, ..., N-1} -> {0, 1}, N = 2^n, with exactly one x such that f(x) = 1, find that x.",
+  "input": {
+    "parameter": "n = number of input bits; N = 2^n.",
+    "size_measure": "Query model: cost is the number of oracle calls. The harness materialises the N-entry table only so that the oracle can be simulated."
+  },
+  "algorithms": [
+    {
+      "name": "classical random-order search",
+      "idea": "Query positions in a uniformly random order until the marked one appears.",
+      "model": "classical-randomized",
+      "pseudocode": "for x in random permutation of 0..N-1: if f(x) = 1: return x",
+      "time_complexity": "(N + 1) / 2 queries expected = Theta(2^n)",
+      "space_complexity": "O(N) for the permutation (O(n) with a pseudo-random permutation)",
+      "correctness": "Exhaustive over a permutation of the domain.",
+      "implementation": "implementations/classical.py:search_classical",
+      "harness": {
+        "scaling": { "cost": "2**n", "n_values": [2, 4, 6, 8, 10, 12, 14], "measure": "reported", "samples": 40 }
+      }
+    },
+    {
+      "name": "Grover's algorithm",
+      "idea": "Start in the uniform superposition and repeat (phase-flip the marked state; reflect about the mean) about (pi/4) sqrt(N) times; each repetition rotates the state by a fixed angle toward the marked state.",
+      "model": "quantum",
+      "pseudocode": "see implementation",
+      "time_complexity": "(pi/4) sqrt(N) + O(1) queries = Theta(2^(n/2))",
+      "space_complexity": "n qubits",
+      "correctness": "Grover 1996. After k iterations the success probability is sin^2((2k+1) theta) with sin(theta) = 1/sqrt(N), which is 1 - O(1/N) for k = floor(pi/4 sqrt(N)). The final classical check makes the output always correct, at the cost of an expected O(1) extra queries.",
+      "implementation": "implementations/grover.py:search_grover",
+      "harness": {
+        "v1_max_n": 10,
+        "scaling": { "cost": "2**(n/2)", "n_values": [2, 4, 6, 8, 10, 12], "measure": "reported", "samples": 5 }
+      }
+    }
+  ],
+  "pair_type": "T9",
+  "lower_bounds": [
+    {
+      "model": "classical-randomized",
+      "bound": "Omega(N) = Omega(2^n) queries",
+      "setting": "query (oracle) model, unconditional",
+      "source": "Standard adversary/averaging argument; see Bennett, Bernstein, Brassard & Vazirani 1997"
+    },
+    {
+      "model": "quantum",
+      "bound": "Omega(sqrt(N)) = Omega(2^(n/2)) queries (Grover is optimal)",
+      "setting": "query (oracle) model, unconditional",
+      "source": "Bennett, Bernstein, Brassard & Vazirani 1997"
+    }
+  ],
+  "relationship": "Proven, tight quadratic separation in the query model: Theta(N) classically, Theta(sqrt N) quantumly. The quantum lower bound shows that a black-box quantum computer cannot solve NP-complete problems by brute-force search in polynomial time: generic quantum search buys a square root, not an exponential.",
+  "sources": [
+    {
+      "authors": "Grover, L. K.",
+      "year": 1996,
+      "title": "A fast quantum mechanical algorithm for database search",
+      "venue": "STOC 1996, 212-219",
+      "doi": "10.1145/237814.237866"
+    },
+    {
+      "authors": "Bennett, C. H.; Bernstein, E.; Brassard, G.; Vazirani, U.",
+      "year": 1997,
+      "title": "Strengths and weaknesses of quantum computing",
+      "venue": "SIAM Journal on Computing 26(5), 1510-1523",
+      "doi": "10.1137/S0097539796300933"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both algorithms return the marked element (independently checked against the table) for n = 1..10 (Grover simulated exactly with lib/qsim.py) and up to 14 (classical). V2 measures QUERY COUNTS reported through lib.qsim.Oracle, averaged over random instances: classical fits 2^n and Grover fits 2^(n/2). Simulation time is exponential in n and is not the claim.",
+    "artifacts": ["implementations/classical.py", "implementations/grover.py", "harness.py", "../../lib/qsim.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [1, 2, 3, 4, 5, 6, 8, 10, 14],
+    "trials": 4
+  },
+  "caveats": "A separation relative to an oracle; it does not imply BQP != BPP. The diffusion step is simulated as 'reflect about the mean' (2|u><u| - I), which equals H^n (2|0><0| - I) H^n and uses no oracle query. For tiny N (n = 1) one attempt succeeds only with probability 1/2, so the expected query count is above the asymptotic formula there.",
+  "notes": "Relevant to the classical-vs-quantum question in both directions: a proven quantum advantage, and a proven LIMIT on it (only quadratic for unstructured search)."
+}

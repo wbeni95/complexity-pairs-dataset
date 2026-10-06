@@ -1,0 +1,66 @@
+{
+  "id": "recommendation-systems-dequantization",
+  "title": "Recommendation systems: Kerenidis-Prakash quantum algorithm vs Tang's dequantization",
+  "problem_statement": "Given an m x n preference matrix with a good rank-k approximation, stored in a data structure supporting the needed sampling access, output a sample from (approximately) the row of a low-rank approximation corresponding to a given user, i.e. a recommendation.",
+  "input": {
+    "parameter": "m users, n products, target rank k, accuracy eps.",
+    "size_measure": "The matrix (mn entries) is preprocessed into a data structure; complexities count queries/time AFTER preprocessing."
+  },
+  "algorithms": [
+    {
+      "name": "Kerenidis-Prakash quantum recommendation algorithm",
+      "idea": "Quantum singular value estimation on a QRAM-stored matrix, projecting the user's row onto the top singular space, then measuring.",
+      "model": "quantum",
+      "pseudocode": "Kerenidis & Prakash 2017",
+      "time_complexity": "poly(k) polylog(mn) (for constant accuracy), given QRAM access",
+      "space_complexity": "QRAM data structure of size Õ(mn)",
+      "correctness": "Kerenidis & Prakash 2017.",
+      "implementation": null
+    },
+    {
+      "name": "Tang's quantum-inspired classical algorithm",
+      "idea": "Length-squared (l2-norm) sampling from the same kind of data structure simulates the quantum state preparation classically, enabling sampling-based low-rank approximation.",
+      "model": "classical-randomized",
+      "pseudocode": "Tang 2019",
+      "time_complexity": "poly(k, 1/eps) polylog(mn), given sample-and-query access (a high-degree polynomial in the original analysis)",
+      "space_complexity": "Data structure of size Õ(mn)",
+      "correctness": "Tang 2019; generalised framework in Chia et al. 2022.",
+      "implementation": null
+    }
+  ],
+  "pair_type": "T5",
+  "relationship": "The claimed exponential quantum speedup disappears: with comparable input access (sample-and-query vs QRAM), a classical algorithm also runs in time polylogarithmic in mn. At most a polynomial quantum advantage remains.",
+  "sources": [
+    {
+      "authors": "Kerenidis, I.; Prakash, A.",
+      "year": 2017,
+      "title": "Quantum Recommendation Systems",
+      "venue": "ITCS 2017, LIPIcs 67, 49:1-49:21",
+      "doi": "10.4230/LIPIcs.ITCS.2017.49",
+      "arxiv": "1603.08675"
+    },
+    {
+      "authors": "Tang, E.",
+      "year": 2019,
+      "title": "A quantum-inspired classical algorithm for recommendation systems",
+      "venue": "STOC 2019",
+      "doi": "10.1145/3313276.3316310",
+      "arxiv": "1807.04271"
+    },
+    {
+      "authors": "Chia, N.-H.; Gilyén, A.; Li, T.; Lin, H.-H.; Tang, E.; Wang, C.",
+      "year": 2022,
+      "title": "Sampling-based Sublinear Low-rank Matrix Arithmetic Framework for Dequantizing Quantum Machine Learning",
+      "venue": "Journal of the ACM 69(5)",
+      "doi": "10.1145/3549524",
+      "arxiv": "1910.06151"
+    }
+  ],
+  "verification": {
+    "level": "V0",
+    "method": "Cited from the literature.",
+    "artifacts": []
+  },
+  "caveats": "The comparison depends entirely on the input model: both algorithms assume a preprocessed data structure. Without it, reading the matrix already costs Theta(mn).",
+  "notes": "Key evidence for the classical-vs-quantum question: a case where a claimed exponential quantum advantage was dequantized. Contrast with integer-factoring and discrete-logarithm (no dequantization known)."
+}

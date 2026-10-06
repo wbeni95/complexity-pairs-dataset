@@ -1,0 +1,71 @@
+{
+  "id": "polynomial-identity-testing",
+  "title": "Polynomial identity testing: randomized polynomial vs deterministic (open)",
+  "problem_statement": "Given an arithmetic circuit C computing a polynomial over a field F (or the integers), decide whether the polynomial is identically zero.",
+  "input": {
+    "parameter": "s = circuit size (number of gates); the degree d <= 2^s.",
+    "size_measure": "O(s log s) bits plus constants."
+  },
+  "algorithms": [
+    {
+      "name": "expand into monomials",
+      "idea": "Symbolically expand the circuit into a sum of monomials and check that all coefficients vanish.",
+      "model": "classical-deterministic",
+      "pseudocode": "multiply out every gate",
+      "time_complexity": "exponential in s in general (a size-s circuit can have 2^Omega(s) monomials, e.g. prod_i (x_i + 1))",
+      "space_complexity": "exponential",
+      "correctness": "Trivial.",
+      "implementation": null
+    },
+    {
+      "name": "Schwartz-Zippel random evaluation",
+      "idea": "Evaluate C at a random point from S^n for a finite set S; a nonzero polynomial of degree d vanishes there with probability <= d/|S|.",
+      "model": "classical-randomized",
+      "pseudocode": "pick r uniformly from S^n with |S| >= 2d; accept 'zero' iff C(r) = 0 (repeat to reduce error)",
+      "time_complexity": "poly(s) (over Z, evaluate modulo a random prime to keep numbers small)",
+      "space_complexity": "poly(s)",
+      "correctness": "Schwartz-Zippel-DeMillo-Lipton lemma; one-sided error.",
+      "implementation": null
+    }
+  ],
+  "pair_type": "T6",
+  "secondary_tags": ["T4"],
+  "relationship": "Randomized polynomial time (coRP) is known; a deterministic polynomial algorithm is OPEN. Kabanets and Impagliazzo showed that derandomizing PIT would imply circuit lower bounds that are themselves long-standing open problems.",
+  "sources": [
+    {
+      "authors": "DeMillo, R. A.; Lipton, R. J.",
+      "year": 1978,
+      "title": "A probabilistic remark on algebraic program testing",
+      "venue": "Information Processing Letters 7(4), 193-195",
+      "doi": "10.1016/0020-0190(78)90067-4"
+    },
+    {
+      "authors": "Zippel, R.",
+      "year": 1979,
+      "title": "Probabilistic algorithms for sparse polynomials",
+      "venue": "EUROSAM '79, LNCS 72, 216-226",
+      "doi": "10.1007/3-540-09519-5_73"
+    },
+    {
+      "authors": "Schwartz, J. T.",
+      "year": 1980,
+      "title": "Fast probabilistic algorithms for verification of polynomial identities",
+      "venue": "Journal of the ACM 27(4), 701-717",
+      "doi": "10.1145/322217.322225"
+    },
+    {
+      "authors": "Kabanets, V.; Impagliazzo, R.",
+      "year": 2004,
+      "title": "Derandomizing polynomial identity tests means proving circuit lower bounds",
+      "venue": "Computational Complexity 13, 1-46",
+      "doi": "10.1007/s00037-004-0182-6"
+    }
+  ],
+  "verification": {
+    "level": "V0",
+    "method": "Cited from the literature.",
+    "artifacts": []
+  },
+  "caveats": "Deterministic polynomial-time PIT is known for many restricted circuit classes (e.g. read-once formulas, bounded-depth special cases). AKS primality is a derandomization of one specific identity test, (X + a)^N = X^N + a.",
+  "notes": "The canonical example where randomness is known to help and nobody can remove it. Compare primality-miller-rabin-vs-aks, where the derandomization succeeded."
+}

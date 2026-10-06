@@ -1,0 +1,75 @@
+{
+  "id": "polynomial-multiplication-naive-vs-ntt",
+  "title": "Polynomial multiplication over Z_p: schoolbook vs number-theoretic transform (FFT)",
+  "problem_statement": "Given two polynomials A and B with n coefficients each in Z_p (p = 998244353), compute the 2n - 1 coefficients of A * B mod p.",
+  "input": {
+    "parameter": "n = number of coefficients of each polynomial.",
+    "size_measure": "2n elements of Z_p (30-bit words; arithmetic is unit cost)."
+  },
+  "algorithms": [
+    {
+      "name": "schoolbook convolution",
+      "idea": "C[i + j] += A[i] * B[j] for all pairs (i, j).",
+      "model": "classical-deterministic",
+      "pseudocode": "for i, j: C[i+j] = (C[i+j] + A[i] B[j]) mod p",
+      "time_complexity": "Theta(n^2)",
+      "space_complexity": "Theta(n)",
+      "correctness": "Definition of the polynomial product.",
+      "implementation": "implementations/naive.py:polymul_naive",
+      "harness": {
+        "scaling": { "cost": "n**2", "n_values": [100, 200, 300, 400, 600, 800] }
+      }
+    },
+    {
+      "name": "number-theoretic transform (Cooley-Tukey over Z_p)",
+      "idea": "Evaluate A and B at the 2^k-th roots of unity in Z_p with a radix-2 FFT, multiply pointwise, and interpolate with the inverse transform.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(n log n)",
+      "space_complexity": "Theta(n)",
+      "correctness": "The DFT over Z_p diagonalises cyclic convolution. p - 1 = 119 * 2^23, so primitive 2^k-th roots of unity exist for k <= 23 (sizes up to 2^23), and padding to size >= 2n - 1 makes cyclic convolution equal to the ordinary product (Cooley & Tukey 1965 for the FFT recursion).",
+      "implementation": "implementations/ntt.py:polymul_ntt",
+      "harness": {
+        "scaling": { "cost": "n * log(n)", "n_values": [512, 1024, 2048, 4096, 8192, 16384] }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "Theta(n^2) -> Theta(n log n). The same transform underlies the Schönhage-Strassen and Harvey-van der Hoeven integer multiplication algorithms.",
+  "sources": [
+    {
+      "authors": "Cooley, J. W.; Tukey, J. W.",
+      "year": 1965,
+      "title": "An algorithm for the machine calculation of complex Fourier series",
+      "venue": "Mathematics of Computation 19(90), 297-301",
+      "doi": "10.1090/S0025-5718-1965-0178586-1"
+    },
+    {
+      "authors": "Schönhage, A.; Strassen, V.",
+      "year": 1971,
+      "title": "Schnelle Multiplikation großer Zahlen",
+      "venue": "Computing 7, 281-292",
+      "doi": "10.1007/BF02242355"
+    },
+    {
+      "authors": "Heideman, M. T.; Johnson, D. H.; Burrus, C. S.",
+      "year": 1984,
+      "title": "Gauss and the history of the fast Fourier transform",
+      "venue": "IEEE ASSP Magazine 1(4), 14-21",
+      "doi": "10.1109/MASSP.1984.1162257",
+      "note": "The FFT idea goes back to Gauss (c. 1805)."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both agree on random polynomials, n = 0..257 (including sizes just above powers of two, which force padding), and pass an independent check A(x) B(x) = C(x) mod p at three fixed points. V2: runtimes fitted against n^2 and n log n (n a power of two for the NTT, so padding is exactly 2n).",
+    "artifacts": ["implementations/naive.py", "implementations/ntt.py", "harness.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 7, 8, 9, 16, 17, 33, 100, 257],
+    "trials": 3
+  },
+  "caveats": "A log factor is not resolved by the V2 fit: an O(n) algorithm would also pass against n log n. The fit does rule out quadratic behaviour.",
+  "notes": "Compare integer-multiplication-schoolbook-vs-karatsuba (n^2 -> n^1.585) and matrix-multiplication-naive-vs-strassen (n^3 -> n^2.807)."
+}

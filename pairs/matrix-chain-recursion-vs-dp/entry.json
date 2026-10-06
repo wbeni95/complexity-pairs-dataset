@@ -1,0 +1,76 @@
+{
+  "id": "matrix-chain-recursion-vs-dp",
+  "title": "Matrix-chain ordering: plain recursion vs dynamic programming",
+  "problem_statement": "Given dimensions p_0, ..., p_n of a chain of n matrices (matrix i is p_(i-1) x p_i), compute the minimum number of scalar multiplications needed to evaluate the product, over all parenthesisations.",
+  "input": {
+    "parameter": "n = number of matrices.",
+    "size_measure": "n + 1 integers."
+  },
+  "algorithms": [
+    {
+      "name": "plain recursion",
+      "idea": "Try every top-level split point k and recurse on both halves, without memoisation.",
+      "model": "classical-deterministic",
+      "pseudocode": "cost(i, j) = 0 if i = j else min over k of cost(i, k) + cost(k+1, j) + p_(i-1) p_k p_j",
+      "time_complexity": "Theta(3^n)",
+      "space_complexity": "Theta(n)",
+      "correctness": "Optimal substructure (CLRS 15.2). Running time: T(n) = sum_k (T(k) + T(n-k)) + Theta(n) gives T(n) - T(n-1) = 2 T(n-1) + Theta(1), so T(n) = Theta(3^n). CLRS proves the weaker Omega(2^n).",
+      "implementation": "implementations/recursion.py:matrix_chain_recursive",
+      "harness": {
+        "v1_max_n": 10,
+        "scaling": { "cost": "3**n", "n_values": [7, 8, 9, 10, 11, 12] }
+      }
+    },
+    {
+      "name": "bottom-up dynamic programming",
+      "idea": "Fill m[i][j] for increasing chain length; each of the Theta(n^2) cells takes a min over O(n) split points.",
+      "model": "classical-deterministic",
+      "pseudocode": "CLRS MATRIX-CHAIN-ORDER",
+      "time_complexity": "Theta(n^3)",
+      "space_complexity": "Theta(n^2)",
+      "correctness": "CLRS Section 15.2.",
+      "implementation": "implementations/dp.py:matrix_chain_dp",
+      "harness": {
+        "scaling": { "cost": "n**3", "n_values": [25, 50, 75, 100, 150] }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "Plain recursion is Theta(3^n) (full enumeration of parenthesisations would be Catalan, ~4^n / n^1.5); memoising the Theta(n^2) subchains gives Theta(n^3). Hu and Shing later reached O(n log n), a further T3 improvement.",
+  "sources": [
+    {
+      "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
+      "year": 2009,
+      "title": "Introduction to Algorithms (3rd ed.)",
+      "venue": "MIT Press",
+      "isbn": "978-0-262-03384-8",
+      "note": "Section 15.2 (matrix-chain multiplication) and 15.3 (RECURSIVE-MATRIX-CHAIN)."
+    },
+    {
+      "authors": "Hu, T. C.; Shing, M. T.",
+      "year": 1982,
+      "title": "Computation of Matrix Chain Products. Part I",
+      "venue": "SIAM Journal on Computing 11(2), 362-373",
+      "doi": "10.1137/0211028"
+    },
+    {
+      "authors": "Hu, T. C.; Shing, M. T.",
+      "year": 1984,
+      "title": "Computation of Matrix Chain Products. Part II",
+      "venue": "SIAM Journal on Computing 13(2), 228-251",
+      "doi": "10.1137/0213017"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both agree on random chains with dimensions in [1, 50] (n <= 10 for recursion) and respect an independent upper bound. V2: runtimes fitted against 3^n and n^3.",
+    "artifacts": ["implementations/recursion.py", "implementations/dp.py", "harness.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 30],
+    "trials": 5
+  },
+  "caveats": "Dimensions are small integers, so arithmetic is unit cost.",
+  "notes": "Candidate T3 follow-up: implement Hu-Shing O(n log n) and pair it with the O(n^3) DP."
+}

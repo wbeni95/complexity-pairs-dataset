@@ -1,0 +1,108 @@
+{
+  "id": "discrete-logarithm",
+  "title": "Discrete logarithm: generic and index-calculus algorithms vs Shor's quantum algorithm",
+  "problem_statement": "Given a cyclic group G of prime order p with generator g, and h in G, find x with g^x = h. (For the index-calculus bound: G = the multiplicative group of the prime field GF(q).)",
+  "input": {
+    "parameter": "n = bit length of the group order.",
+    "size_measure": "O(n) bits per group element."
+  },
+  "algorithms": [
+    {
+      "name": "baby-step giant-step",
+      "idea": "Write x = i m + j with m ~ sqrt(p); tabulate g^j, then step through h g^(-im) until a match.",
+      "model": "classical-deterministic",
+      "pseudocode": "Shanks 1971",
+      "time_complexity": "O(sqrt(p)) = O(2^(n/2)) group operations",
+      "space_complexity": "O(sqrt(p)) group elements",
+      "correctness": "Shanks 1971.",
+      "implementation": null
+    },
+    {
+      "name": "Pollard rho for logarithms",
+      "idea": "Pseudo-random walk in G tracking exponents; a collision yields a linear relation for x.",
+      "model": "classical-randomized",
+      "pseudocode": "Pollard 1978",
+      "time_complexity": "O(sqrt(p)) group operations (heuristic), O(1) memory",
+      "space_complexity": "O(1) group elements",
+      "correctness": "Pollard 1978.",
+      "implementation": null
+    },
+    {
+      "name": "number field sieve for discrete logs in GF(q)",
+      "idea": "Index calculus: collect smooth relations, solve a linear system for logs of a factor base.",
+      "model": "classical-randomized",
+      "pseudocode": "Gordon 1993",
+      "time_complexity": "L_q[1/3, (64/9)^(1/3)]: sub-exponential (heuristic); applies to finite fields, NOT to generic groups such as elliptic curves",
+      "space_complexity": "L_q[1/3, ...]",
+      "correctness": "Heuristic running time.",
+      "implementation": null
+    },
+    {
+      "name": "Shor's algorithm",
+      "idea": "Quantum Fourier transform over Z_p x Z_p finds the hidden period of (a, b) -> g^a h^(-b).",
+      "model": "quantum",
+      "pseudocode": "Shor 1997",
+      "time_complexity": "polynomial in n (O(n^3) gates with schoolbook arithmetic)",
+      "space_complexity": "O(n) qubits",
+      "correctness": "Shor 1997.",
+      "implementation": null
+    }
+  ],
+  "pair_type": "T6",
+  "relationship": "In the generic group model a classical algorithm provably needs Omega(sqrt(p)) group operations (Shoup 1997), while Shor's algorithm uses polynomially many. In concrete groups such as GF(q)* classical sub-exponential algorithms exist; for elliptic-curve groups nothing better than generic O(sqrt(p)) is known classically.",
+  "sources": [
+    {
+      "authors": "Shanks, D.",
+      "year": 1971,
+      "title": "Class number, a theory of factorization, and genera",
+      "venue": "Proceedings of Symposia in Pure Mathematics 20, AMS, 415-440",
+      "doi": "10.1090/pspum/020/0316385"
+    },
+    {
+      "authors": "Pollard, J. M.",
+      "year": 1978,
+      "title": "Monte Carlo methods for index computation (mod p)",
+      "venue": "Mathematics of Computation 32(143), 918-924",
+      "doi": "10.1090/S0025-5718-1978-0491431-9"
+    },
+    {
+      "authors": "Gordon, D. M.",
+      "year": 1993,
+      "title": "Discrete logarithms in GF(p) using the number field sieve",
+      "venue": "SIAM Journal on Discrete Mathematics 6(1), 124-138",
+      "doi": "10.1137/0406010"
+    },
+    {
+      "authors": "Shoup, V.",
+      "year": 1997,
+      "title": "Lower bounds for discrete logarithms and related problems",
+      "venue": "EUROCRYPT '97, LNCS 1233, 256-266",
+      "doi": "10.1007/3-540-69053-0_18"
+    },
+    {
+      "authors": "Shor, P. W.",
+      "year": 1997,
+      "title": "Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms on a Quantum Computer",
+      "venue": "SIAM Journal on Computing 26(5), 1484-1509",
+      "doi": "10.1137/S0097539795293172"
+    }
+  ],
+  "verification": {
+    "level": "V0",
+    "method": "Cited from the literature.",
+    "artifacts": []
+  },
+  "caveats": "Shoup's lower bound holds only for GENERIC algorithms (which use the group as a black box); it says nothing about algorithms that exploit the representation. Not targeted operationally (START_HERE section 10).",
+  "notes": "Notable for the classical-vs-quantum question: in the black-box (generic group) model the classical/quantum gap is PROVEN (Omega(sqrt p) vs poly), unlike in the plain Turing-machine setting, where it is only conjectured.",
+  "secondary_tags": [
+    "T9"
+  ],
+  "lower_bounds": [
+    {
+      "model": "classical-randomized",
+      "bound": "Omega(sqrt(p)) group operations",
+      "setting": "generic group model",
+      "source": "Shoup 1997"
+    }
+  ]
+}

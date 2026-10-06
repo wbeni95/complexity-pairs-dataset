@@ -1,0 +1,265 @@
+===============================================================================
+ COMPLEXITY PAIRS DATASET  —  START_HERE  (agent + contributor bootstrap)
+===============================================================================
+ Status: v0 charter / kickoff
+ Audience: an AI agent starting work, and human contributors on GitHub
+ License: free for personal/educational/non-commercial research use; commercial use
+          requires a paid license (data CC BY-NC 4.0, code PolyForm Noncommercial 1.0.0;
+          see COMMERCIAL.md)
+-------------------------------------------------------------------------------
+
+0. READ THIS FIRST
+-------------------------------------------------------------------------------
+This project builds an open, machine-readable, VERIFIED dataset of "complexity
+pairs": computational problems for which we record two (or more) algorithms of
+DIFFERENT asymptotic cost — e.g. an exponential-time method and a
+polynomial-time method for the SAME problem.
+
+Near-term goal (the real deliverable):
+  - Collect every well-known pair from the literature.
+  - Add our own generated pairs.
+  - Verify them to a stated level.
+  - Publish as training/benchmark data for algorithm-discovery systems
+    (the AlphaTensor / AlphaDev / FunSearch family) and for anyone else.
+
+Stretch goal (the moonshot, stated honestly in section 6):
+  - Given a problem for which only a high-complexity algorithm is known,
+    discover a lower-complexity one.
+  - This is NOT guaranteed to be possible for any given problem. The dataset
+    is valuable on its own terms regardless of whether the moonshot ever pays.
+
+This is a research / open-data project. It is NOT a tool for breaking
+cryptography, and it does not claim to resolve P vs NP.
+
+
+1. WHAT A "PAIR" IS  (the one definition that must not be gotten wrong)
+-------------------------------------------------------------------------------
+A pair is a property of a PROBLEM, not of a single number or expression.
+
+A problem is a task defined for ALL input sizes n (a family), e.g.
+"is an n-bit integer prime?", "sort n items", "shortest path in a graph of
+n nodes". Complexity is how the cost GROWS as n grows.
+
+Formally, one pair entry =
+    - a problem P with an explicit input-size parameter n,
+    - algorithm A_slow solving P with time complexity C_slow(n),
+    - algorithm A_fast solving P with time complexity C_fast(n),
+    - C_fast asymptotically better than C_slow,
+    - both PROVABLY correct on P.
+
+WHAT IS NOT A PAIR (reject these):
+    - A constant written two ways: "4 = 2^2 = 1+1+1+1". A number has no
+      complexity. Using the exponent symbol "^" is NOT exponential complexity;
+      2^2 is a SHORTER way to write 4, not a costlier one.
+    - A single input instance (one graph, one number) with no family over n.
+    - A purely cosmetic rewrite with the same cost.
+    - "Exponential" in this project ALWAYS means "cost scales like 2^n (or
+      worse) in input size n", never "a formula that contains a power".
+
+PAIR TYPE TAGS (every entry must carry exactly one primary tag):
+    T1  exp -> poly, SAME problem.           (crown jewels; rare)
+    T2  naive-exp -> poly.                    (naive method was wasteful:
+                                               memoization / DP / better idea)
+    T3  poly -> faster poly.                  (improvement pairs)
+    T4  randomized <-> deterministic.         (same complexity class, different model)
+    T5  quantum -> classical (dequantization).
+    T6  OPEN / UNPAIRED.                       (only high-cost known; the target
+                                               class, e.g. integer factoring)
+    T7  SYNTHETIC / BLOATED.                   (a cheap algorithm deliberately
+                                               rewritten as a wasteful one;
+                                               LOW signal — see section 5)
+    T8  SUPER-POLY -> FASTER SUPER-POLY.      (e.g. TSP n! -> n^2 2^n; added 2026-10)
+    T9  PROVEN QUANTUM ADVANTAGE (query /     (quantum algorithm + cited classical
+        oracle / black-box model).             lower bound; added 2026-10)
+
+    Rule: if polynomial time is open, T6 is primary and the improvement goes
+    in secondary_tags. "Validated pairs" = V1+ in /pairs/ with any of
+    T1-T5, T8, T9 (primary or secondary).
+
+
+2. ENTRY SCHEMA  (one folder per pair)
+-------------------------------------------------------------------------------
+Each pair lives in /pairs/<id>/ and contains entry.json + README.md and, where
+possible, runnable implementations. entry.json fields:
+
+    id                  stable slug, e.g. "primality-trial-vs-aks"
+    title               human title
+    problem_statement   what is computed, unambiguously
+    input               what n is, and how input size is measured
+    algorithms[]        list, each:
+                          name
+                          idea                (1-3 sentences)
+                          pseudocode          (or path to implementation)
+                          time_complexity     (e.g. "O(2^(n/2))", "O(n^6 log n)")
+                          space_complexity
+                          correctness         (proof sketch or citation)
+                          implementation      (path, or null)
+    pair_type           one of T1..T7
+    relationship        which algo improves which, and in what measure
+    sources[]           citations: author, year, title, link/DOI
+    verification        { level: V0..V3, method, artifacts[] }
+    caveats             (e.g. "pseudo-polynomial, not poly in input size")
+    notes
+
+Keep entry.json machine-readable. README.md is the human-friendly mirror.
+
+
+3. VERIFICATION LEVELS  (what "validated" means — do not inflate)
+-------------------------------------------------------------------------------
+    V0  CLAIMED        cited from a source, not independently checked.
+    V1  CORRECT        both algorithms implemented; they agree with each other
+                       and with a reference oracle on a test battery.
+    V2  SCALING        empirical runtime measured across growing n; the measured
+                       growth matches the claimed asymptotics (log-log slope).
+    V3  PROVEN         a complexity proof is cited or linked; ideally a
+                       machine-checked proof.
+
+A pair counts as "validated" for the dataset only at V1 or higher AND with a
+complexity basis (a citation at minimum). V0 entries live in a staging area.
+The headline "number of validated pairs" counts V1+ only.
+
+
+4. SEED LIST  (bootstrap backlog — ingest these first, with tags)
+-------------------------------------------------------------------------------
+T1 (exp -> poly, same problem):
+    - Primality testing: trial division O(2^(n/2) bits) -> AKS, polynomial.
+    - Linear programming: simplex (exponential worst case, Klee-Minty) ->
+      ellipsoid (Khachiyan 1979) / interior-point (Karmarkar 1984), polynomial.
+
+T2 (naive-exp -> poly):
+    - Fibonacci: naive recursion O(phi^n) -> DP O(n) / matrix power O(log n).
+    - Shortest path: naive path enumeration -> Dijkstra / Bellman-Ford.
+    - Edit distance, longest common subsequence: brute force -> DP.
+    - Matrix-chain ordering, many DP problems.
+
+T3 (poly -> faster poly):
+    - Matrix multiplication: O(n^3) -> Strassen O(n^2.807) -> ... -> ~O(n^2.37);
+      AlphaTensor found improvements for specific sizes.
+    - Max flow: Edmonds-Karp O(VE^2) -> push-relabel -> almost-linear
+      m^{1+o(1)} (Chen et al. 2022).
+    - Sorting networks / small-case sorting (AlphaDev).
+
+T4 (randomized <-> deterministic):
+    - Primality: Miller-Rabin (randomized poly) vs AKS (deterministic poly).
+    - Note polynomial identity testing: randomized poly (Schwartz-Zippel);
+      deterministic poly is OPEN -> also log under T6.
+
+T5 (quantum -> classical dequantization):
+    - Recommendation systems: quantum (Kerenidis-Prakash) -> classical
+      (Ewin Tang 2018), via length-squared sampling.
+
+T6 (OPEN / unpaired — the target class):
+    - Integer factoring: best classical sub-exponential (GNFS); poly on a
+      quantum computer (Shor). No classical poly algorithm known.
+    - Discrete logarithm: same situation.
+    - Graph isomorphism: quasi-polynomial (Babai 2016); poly is open.
+    - Polynomial identity testing: deterministic poly open.
+    - Any NP-hard problem (SAT, TSP, ...): poly believed not to exist (P vs NP).
+
+Cautionary entries (nuance, tag carefully):
+    - 0/1 Knapsack: NP-hard, but pseudo-polynomial DP O(nW). Record the caveat:
+      pseudo-poly is NOT polynomial in input SIZE. Good teaching case.
+    - 2-SAT (poly) vs 3-SAT (NP-complete): a structural boundary, not a
+      same-problem pair; store as a boundary note, not a T1.
+
+
+5. GENERATING OUR OWN PAIRS  (method + the honesty warning)
+-------------------------------------------------------------------------------
+The right frame is SUPEROPTIMIZATION / PROGRAM SYNTHESIS: fix a problem, search
+the space of programs for a correct one of lower cost, verify it. AlphaDev is
+exactly this for sorting.
+
+Pipeline:
+    1. Pick a problem with an explicit n and a CHEAP EXACT verifier
+       (correctness is easy to check even when finding is hard).
+    2. Define the program/operation space (a small DSL or instruction set).
+    3. Search (evolutionary / LLM-proposed like FunSearch / RL like AlphaTensor).
+    4. Verify every candidate: correctness (V1) + measured scaling (V2).
+    5. If it beats the known algorithm, it is a new, real T2/T3 pair.
+
+HONESTY WARNING — do not poison the dataset:
+    Taking a cheap algorithm and rewriting it in a deliberately wasteful,
+    exponential form is FREE and produces T7 "bloated" pairs. A model trained
+    only on T7 learns to "un-bloat the obvious", which does NOT transfer to
+    genuinely hard problems. Therefore:
+      - T7 entries are allowed but MUST be tagged T7 and stored separately.
+      - T7 does not count toward the "validated pairs" headline.
+      - Signal for the moonshot comes from T1/T2/T3 discovered by real search,
+        not from bloat.
+
+
+6. THE MOONSHOT  (end goal, stated without hype)
+-------------------------------------------------------------------------------
+Dream: present an unknown high-complexity problem; the system proposes a
+lower-complexity algorithm, verified.
+
+Honest limits (these are not pessimism, they are facts):
+    - A search can only FIND a faster algorithm if one EXISTS. For genuinely
+      hard problems none may exist, and no amount of searching conjures one.
+    - A null result never proves impossibility: "found nothing" looks the same
+      whether the door is hidden or there is no door.
+    - A general machine that converts any exponential algorithm into a
+      polynomial one cannot exist (it would decide undecidable questions and
+      settle P vs NP). A neural net is still an algorithm and does not escape
+      this; its only honest role is PROPOSER feeding an exact VERIFIER.
+    - An approximately-correct proposal is not an algorithm; only exactly
+      correct, verified programs enter the dataset.
+
+Therefore the dataset is the deliverable. The moonshot is a stretch, pursued
+by scoped search on verifiable problems, with no promises. If it ever cracks a
+genuinely open problem, that is a bonus, not the plan.
+
+
+7. REPO STRUCTURE  (proposed)
+-------------------------------------------------------------------------------
+    /README.md               project overview (public face)
+    /START_HERE.txt          this file
+    /schema/entry.schema.json
+    /pairs/<id>/entry.json
+    /pairs/<id>/README.md
+    /pairs/<id>/implementations/...
+    /tools/validate.py       checks an entry against the schema + runs V1/V2
+    /tools/ingest/           scripts to turn the seed list into entries
+    /index.json              registry of all pairs + their verification level
+    /CONTRIBUTING.md
+    /LICENSE (data)  /LICENSE-CODE (tools)
+
+
+8. CONTRIBUTION WORKFLOW
+-------------------------------------------------------------------------------
+    add/edit a /pairs/<id>/ -> run /tools/validate.py locally -> open a PR.
+    CI re-runs the validator. A pair merges at V1+ with at least one source.
+    Reviewers check: is it a real pair (section 1)? correct tag? honest level?
+
+
+9. IMMEDIATE AGENT BACKLOG  (do these in order)
+-------------------------------------------------------------------------------
+    [1] Write /schema/entry.schema.json from section 2.
+    [2] Build /tools/validate.py: schema check + run implementations against a
+        test battery (V1) + a simple scaling harness (V2).
+    [3] Ingest the section-4 seed list as entry.json stubs at V0, then raise
+        each to V1 where an implementation is feasible.
+    [4] Build /index.json and a generator for the public README table.
+    [5] Only after 1-4: stand up a scoped superoptimization search (start with
+        small-n sorting, AlphaDev-style) and feed verified wins back as T3.
+
+
+10. SCOPE / NON-GOALS
+-------------------------------------------------------------------------------
+    - Not a cryptanalysis tool; factoring etc. are catalogued as OPEN (T6),
+      not targeted operationally.
+    - No claim to solve P vs NP.
+    - No cosmetic rewrites, no single-instance "pairs", no number-notation tricks.
+    - Keep this repo fully separate from any private workspace. Nothing
+      private, proprietary, or key-bearing ever enters a public commit.
+
+11. DECISIONS LOG
+-------------------------------------------------------------------------------
+    2026-10  License: non-commercial free, commercial paid (COMMERCIAL.md).
+    2026-10  Added T8 and T9; optional lower_bounds[] field; V2 may measure
+             reported operation counts (oracle queries) instead of time.
+    2026-10  Constant-factor / fixed-size results (AlphaDev) are out of scope
+             as entries; kept as methodology notes in /notes/.
+    2026-10  Folders: pairs/ = V1+, staging/ = V0, synthetic/ = T7, enforced
+             by tools/validate.py.
+===============================================================================

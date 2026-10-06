@@ -1,0 +1,69 @@
+{
+  "id": "gcd-trial-vs-euclid",
+  "title": "Greatest common divisor: trial divisors vs Euclid's algorithm",
+  "problem_statement": "Given non-negative integers a and b, compute gcd(a, b), the largest integer dividing both (with gcd(a, 0) = a and gcd(0, 0) = 0).",
+  "input": {
+    "parameter": "n = bit length of max(a, b); both inputs are < 2^n.",
+    "size_measure": "2n bits at most (standard binary encoding of a and b)."
+  },
+  "algorithms": [
+    {
+      "name": "trial divisors",
+      "idea": "Try d = min(a, b), min(a, b) - 1, ... and return the first d that divides both a and b.",
+      "model": "classical-deterministic",
+      "pseudocode": "if a = 0 or b = 0: return a + b; d = min(a, b); while d does not divide both a and b: d = d - 1; return d",
+      "time_complexity": "Theta(2^n) iterations in the worst case: exactly min(a, b) - gcd(a, b) + 1 iterations of one or two divisions, i.e. up to 2^n - 2 on coprime n-bit inputs (>= 2^(n-2) on the coprime Fibonacci pairs used for V2). In bit operations, Theta(2^n) times the cost of an n-bit division.",
+      "space_complexity": "O(n) bits",
+      "correctness": "Every common divisor is at most min(a, b) (for a, b > 0), and d = 1 always divides both, so the first d found scanning downwards is the greatest common divisor.",
+      "implementation": "implementations/trial.py:gcd_trial",
+      "harness": {
+        "v1_max_n": 16,
+        "scaling": { "cost": "2**n", "n_values": [14, 16, 18, 20, 22] }
+      }
+    },
+    {
+      "name": "Euclid's algorithm",
+      "idea": "Replace (a, b) by (b, a mod b) until b = 0; the common divisors never change.",
+      "model": "classical-deterministic",
+      "pseudocode": "while b != 0: (a, b) = (b, a mod b); return a",
+      "time_complexity": "O(n) division steps: at most log_phi(min(a, b)) + O(1) <= 1.44 n + O(1) (Lame 1844), attained by consecutive Fibonacci numbers. O(n^2) bit operations with schoolbook division: a step with quotient q on numbers of at most n bits costs O(n (1 + log q)), and the log q sum to at most n; Theta(n^2) on consecutive Fibonacci numbers, where each of the Theta(n) steps divides Theta(n)-bit numbers.",
+      "space_complexity": "O(n) bits",
+      "correctness": "gcd(a, b) = gcd(b, a mod b) because a mod b = a - qb, so both pairs have the same common divisors; the second argument strictly decreases, and gcd(a, 0) = a.",
+      "implementation": "implementations/euclid.py:gcd_euclid",
+      "harness": {
+        "scaling": { "cost": "n**2", "n_values": [4000, 8000, 16000, 32000, 64000] }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "Trial divisors are linear in the VALUE min(a, b), hence exponential, Theta(2^n), in the bit length n. Euclid needs only O(n) division steps (Lame) and O(n^2) bit operations: polynomial in the input size.",
+  "sources": [
+    {
+      "authors": "Knuth, D. E.",
+      "year": 1997,
+      "title": "The Art of Computer Programming, Vol. 2: Seminumerical Algorithms (3rd ed.)",
+      "venue": "Addison-Wesley",
+      "isbn": "978-0-201-89684-8",
+      "note": "Section 4.5.2 (the greatest common divisor) and 4.5.3 (analysis of Euclid's algorithm, including Lame's theorem)."
+    },
+    {
+      "authors": "Lamé, G.",
+      "year": 1844,
+      "title": "Note sur la limite du nombre des divisions dans la recherche du plus grand commun diviseur entre deux nombres entiers",
+      "venue": "Comptes Rendus de l'Académie des Sciences (Paris) 19, 867-870",
+      "note": "The number of division steps is at most five times the number of decimal digits of the smaller input; consecutive Fibonacci numbers are the worst case."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree with each other and with math.gcd (used only as the oracle) on random pairs with max(a, b) of bit length n = 0..16, 32, 64, 256, 1024 and 4096 (trial divisors up to n = 16), including pairs with a large common factor and pairs with a zero. V2 uses consecutive Fibonacci numbers, the largest pair below 2^n: they are coprime (worst case for trial divisors) and Lame's worst case for Euclid. Trial divisors fit 2^n at n = 14..22. Euclid is timed at n = 4000..64000 bits against n^2, its bit complexity: at this size every division step on CPython's multi-digit integers costs Theta(n). The O(n) step count itself is not timed: at word size (n <= 64) wall-clock time is dominated by interpreter overhead and CPython's 30-bit digit boundaries (a trial fit against n gave alpha ~1.34), so it does not isolate the step count.",
+    "artifacts": ["implementations/trial.py", "implementations/euclid.py", "harness.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 32, 64, 256, 1024, 4096],
+    "trials": 6
+  },
+  "caveats": "Bit-size view: trial divisors are polynomial (linear) in the VALUE of the inputs and exponential only in their length. Euclid's O(n^2) bit cost assumes schoolbook division; subquadratic half-gcd algorithms (Knuth-Schonhage) reach O(M(n) log n). V2 times Euclid on numbers with thousands of bits, so it checks the bit-operation bound, not the O(n) division-step bound.",
+  "notes": "Euclid's algorithm (Elements, Book VII, c. 300 B.C.) is among the oldest nontrivial algorithms still in use; Lame's 1844 bound is often cited as one of the earliest worst-case analyses of an algorithm."
+}

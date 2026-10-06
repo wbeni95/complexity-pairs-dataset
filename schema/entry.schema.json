@@ -1,0 +1,361 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/complexity-pairs-dataset/schema/entry.schema.json",
+  "title": "Complexity pair entry",
+  "description": "One entry of the complexity-pairs dataset. See START_HERE.txt sections 1-3 for the meaning of every field.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "problem_statement",
+    "input",
+    "algorithms",
+    "pair_type",
+    "relationship",
+    "sources",
+    "verification",
+    "caveats",
+    "notes"
+  ],
+  "properties": {
+    "id": {
+      "description": "Stable slug; must equal the entry's folder name.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 3
+    },
+    "problem_statement": {
+      "description": "What is computed, unambiguously, for ALL input sizes n.",
+      "type": "string",
+      "minLength": 10
+    },
+    "input": {
+      "description": "What n is, and how input size is measured.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "parameter",
+        "size_measure"
+      ],
+      "properties": {
+        "parameter": {
+          "type": "string",
+          "description": "Meaning of n."
+        },
+        "size_measure": {
+          "type": "string",
+          "description": "How the input size relates to n (e.g. 'n bits', 'n vertices, Theta(n^2) matrix entries')."
+        }
+      }
+    },
+    "algorithms": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/algorithm"
+      }
+    },
+    "pair_type": {
+      "$ref": "#/$defs/pair_type"
+    },
+    "secondary_tags": {
+      "description": "Optional extra tags; the primary tag is pair_type and must not be repeated here.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/pair_type"
+      }
+    },
+    "relationship": {
+      "description": "Which algorithm improves which, and in what measure.",
+      "type": "string",
+      "minLength": 10
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "level",
+        "method",
+        "artifacts"
+      ],
+      "properties": {
+        "level": {
+          "enum": [
+            "V0",
+            "V1",
+            "V2",
+            "V3"
+          ]
+        },
+        "method": {
+          "type": "string"
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "proofs": {
+          "description": "Citations of complexity proofs (required for V3). Indexes into sources[] or free-text references.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "test_harness": {
+      "description": "Required for V1+. A Python module (path relative to the entry folder) exposing generate(n, rng) and optionally check(instance, output), equal(a, b), generate_scaling(n, rng), reported_cost(output).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "module",
+        "v1_sizes"
+      ],
+      "properties": {
+        "module": {
+          "type": "string"
+        },
+        "v1_sizes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "trials": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 3
+        }
+      }
+    },
+    "caveats": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "lower_bounds": {
+      "description": "Known lower bounds for the problem. Required (with a classical model) for T9.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/lower_bound"
+      }
+    }
+  },
+  "$defs": {
+    "pair_type": {
+      "description": "T1 exp->poly; T2 naive-exp->poly; T3 poly->faster poly; T4 randomized<->deterministic; T5 quantum->classical (dequantization); T6 open/unpaired; T7 synthetic/bloated; T8 super-poly->faster super-poly; T9 proven quantum advantage in a query/oracle/black-box model.",
+      "enum": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "T9"
+      ]
+    },
+    "algorithm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "idea",
+        "model",
+        "pseudocode",
+        "time_complexity",
+        "space_complexity",
+        "correctness",
+        "implementation"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "idea": {
+          "type": "string",
+          "description": "1-3 sentences."
+        },
+        "model": {
+          "description": "Computational model. Lets the dataset be queried for classical-vs-quantum questions.",
+          "enum": [
+            "classical-deterministic",
+            "classical-randomized",
+            "quantum"
+          ]
+        },
+        "pseudocode": {
+          "type": "string",
+          "description": "Pseudocode, or 'see implementation'."
+        },
+        "time_complexity": {
+          "type": "string",
+          "description": "In terms of n as defined in input.parameter."
+        },
+        "space_complexity": {
+          "type": "string"
+        },
+        "correctness": {
+          "type": "string",
+          "description": "Proof sketch or citation."
+        },
+        "implementation": {
+          "description": "'relative/path.py:function_name' (relative to the entry folder), or null.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[^:]+\\.py:[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "harness": {
+          "description": "How the validator exercises this implementation.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "v1_max_n": {
+              "description": "Largest n this implementation is run on during V1 (keeps slow algorithms tractable).",
+              "type": "integer",
+              "minimum": 0
+            },
+            "scaling": {
+              "$ref": "#/$defs/scaling"
+            }
+          }
+        }
+      }
+    },
+    "scaling": {
+      "description": "V2 check: fit log(measured) = alpha * log(cost(n)) + c over n_values and require |alpha - 1| <= tolerance. measured is wall-clock time (measure='time') or an operation count the implementation reports (measure='reported', e.g. oracle queries; needs harness.reported_cost). A constant cost expression is checked as max/min of the measured values <= 1 + tolerance.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cost",
+        "n_values"
+      ],
+      "properties": {
+        "cost": {
+          "description": "Claimed cost as an arithmetic expression in n. Allowed: + - * / **, numbers, n, e, pi, phi, log, log2, sqrt, exp, factorial.",
+          "type": "string"
+        },
+        "n_values": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "tolerance": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "default": 0.25
+        },
+        "measure": {
+          "enum": [
+            "time",
+            "reported"
+          ],
+          "default": "time"
+        },
+        "samples": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1,
+          "description": "Instances averaged per n (use > 1 for randomized algorithms)."
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authors",
+        "year",
+        "title"
+      ],
+      "properties": {
+        "authors": {
+          "type": "string"
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 1800,
+          "maximum": 2100
+        },
+        "title": {
+          "type": "string"
+        },
+        "venue": {
+          "type": "string"
+        },
+        "doi": {
+          "type": "string",
+          "pattern": "^10\\.\\d{4,9}/\\S+$"
+        },
+        "arxiv": {
+          "type": "string",
+          "pattern": "^(\\d{4}\\.\\d{4,5}|[a-z\\-]+(\\.[A-Z]{2})?/\\d{7})$"
+        },
+        "isbn": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "lower_bound": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model",
+        "bound",
+        "setting",
+        "source"
+      ],
+      "properties": {
+        "model": {
+          "enum": [
+            "classical-deterministic",
+            "classical-randomized",
+            "quantum"
+          ],
+          "description": "A bound for classical-randomized also holds for classical-deterministic."
+        },
+        "bound": {
+          "type": "string",
+          "description": "e.g. 'Omega(2^(n/2)) queries'"
+        },
+        "setting": {
+          "type": "string",
+          "description": "e.g. 'unconditional', 'query (oracle) model', 'generic group model', 'conditional on SETH'"
+        },
+        "source": {
+          "type": "string",
+          "description": "Citation (author year) of the proof."
+        }
+      }
+    }
+  }
+}

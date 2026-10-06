@@ -1,0 +1,4 @@
+# Keep LF everywhere: generated files (index.json, READMEs) are compared byte-for-byte in CI.
+* text=auto eol=lf
+*.png binary
+*.pdf binary

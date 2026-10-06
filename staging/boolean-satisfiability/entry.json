@@ -1,0 +1,90 @@
+{
+  "id": "boolean-satisfiability",
+  "title": "3-SAT: brute force vs Schöning vs PPSZ",
+  "problem_statement": "Given a Boolean formula in conjunctive normal form with at most 3 literals per clause, decide whether some assignment satisfies it.",
+  "input": {
+    "parameter": "n = number of variables (m clauses).",
+    "size_measure": "O(m log n) bits."
+  },
+  "algorithms": [
+    {
+      "name": "brute force",
+      "idea": "Try all 2^n assignments.",
+      "model": "classical-deterministic",
+      "pseudocode": "for each assignment a: if a satisfies F: yes",
+      "time_complexity": "O(2^n m)",
+      "space_complexity": "O(n + m)",
+      "correctness": "Exhaustive.",
+      "implementation": null
+    },
+    {
+      "name": "Schöning's random walk",
+      "idea": "Random initial assignment; repeatedly flip a random variable of an unsatisfied clause; restart after 3n steps.",
+      "model": "classical-randomized",
+      "pseudocode": "Schöning 1999",
+      "time_complexity": "O((4/3)^n poly(n)) expected",
+      "space_complexity": "poly(n)",
+      "correctness": "Schöning 1999 (one-sided error).",
+      "implementation": null
+    },
+    {
+      "name": "PPSZ / biased-PPSZ",
+      "idea": "Random variable order; set each variable by bounded-width resolution if forced, else randomly.",
+      "model": "classical-randomized",
+      "pseudocode": "Paturi, Pudlák, Saks, Zane 2005",
+      "time_complexity": "O(1.308^n) (PPSZ; Hertli 2014 in general); O(1.307^n) (biased-PPSZ, Hansen et al. 2019)",
+      "space_complexity": "poly(n)",
+      "correctness": "Paturi et al. 2005; Hertli 2014; Hansen, Kaplan, Zamir, Zwick 2019.",
+      "implementation": null
+    }
+  ],
+  "pair_type": "T6",
+  "relationship": "2^n -> (4/3)^n -> 1.307^n: exponential to better exponential. 3-SAT is NP-complete (Cook 1971), so a polynomial algorithm would prove P = NP. The Exponential Time Hypothesis conjectures that some base > 1 is unavoidable.",
+  "sources": [
+    {
+      "authors": "Cook, S. A.",
+      "year": 1971,
+      "title": "The complexity of theorem-proving procedures",
+      "venue": "STOC 1971, 151-158",
+      "doi": "10.1145/800157.805047"
+    },
+    {
+      "authors": "Schöning, U.",
+      "year": 1999,
+      "title": "A probabilistic algorithm for k-SAT and constraint satisfaction problems",
+      "venue": "FOCS 1999, 410-414",
+      "doi": "10.1109/SFFCS.1999.814612"
+    },
+    {
+      "authors": "Paturi, R.; Pudlák, P.; Saks, M. E.; Zane, F.",
+      "year": 2005,
+      "title": "An improved exponential-time algorithm for k-SAT",
+      "venue": "Journal of the ACM 52(3), 337-364",
+      "doi": "10.1145/1066100.1066101"
+    },
+    {
+      "authors": "Hertli, T.",
+      "year": 2014,
+      "title": "3-SAT Faster and Simpler - Unique-SAT Bounds for PPSZ Hold in General",
+      "venue": "SIAM Journal on Computing 43(2), 718-729",
+      "doi": "10.1137/120868177"
+    },
+    {
+      "authors": "Hansen, T. D.; Kaplan, H.; Zamir, O.; Zwick, U.",
+      "year": 2019,
+      "title": "Faster k-SAT algorithms using biased-PPSZ",
+      "venue": "STOC 2019",
+      "doi": "10.1145/3313276.3316359"
+    }
+  ],
+  "verification": {
+    "level": "V0",
+    "method": "Cited from the literature.",
+    "artifacts": []
+  },
+  "caveats": "2-SAT is solvable in linear time; see notes/boundary-2sat-vs-3sat.md. That is a boundary between problems, not a same-problem pair.",
+  "notes": "Path to V1: brute force vs Schöning (randomized, so V1 needs the satisfiable/unsatisfiable answers to agree with high probability over planted and random instances).",
+  "secondary_tags": [
+    "T8"
+  ]
+}

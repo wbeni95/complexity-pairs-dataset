@@ -1,0 +1,86 @@
+{
+  "id": "determinant-cofactor-vs-gaussian",
+  "title": "Determinant over GF(p): cofactor expansion vs Gaussian elimination",
+  "problem_statement": "Given an n x n matrix A with entries in the prime field GF(p), p = 2^31 - 1 (entries given as integers in [0, p)), compute det(A) mod p, returned as an integer in [0, p). The determinant of the 0 x 0 matrix is 1.",
+  "input": {
+    "parameter": "n = matrix dimension.",
+    "size_measure": "n^2 field elements of 31 bits each. p is fixed, so every field operation (add, multiply, and inversion by O(log p) = O(1) multiplications) is unit cost."
+  },
+  "algorithms": [
+    {
+      "name": "Laplace (cofactor) expansion",
+      "idea": "Expand along the first row: det(A) = sum_j (-1)^j A[0][j] det(minor(0, j)), recursively, without reusing any minor.",
+      "model": "classical-deterministic",
+      "pseudocode": "expand(r, cols): if r == n return 1; return sum over k-th c in cols of (-1)^k A[r][c] * expand(r+1, cols - {c})",
+      "time_complexity": "Theta(n!) field operations (n!/k! recursion nodes with k columns left, Theta(k^2) work each; n! * sum_k k^2/k! = Theta(n!))",
+      "space_complexity": "Theta(n^2) (recursion depth n, a column list of length <= n per level)",
+      "correctness": "Laplace's expansion theorem, valid over any commutative ring. Expanding fully is equivalent to the Leibniz formula det(A) = sum over permutations s of sgn(s) prod_i A[i][s(i)].",
+      "implementation": "implementations/cofactor.py:det_cofactor",
+      "harness": {
+        "v1_max_n": 8,
+        "scaling": { "cost": "factorial(n)", "n_values": [6, 7, 8, 9] }
+      }
+    },
+    {
+      "name": "Gaussian elimination mod p",
+      "idea": "Reduce A to upper-triangular form with row swaps (each negates the determinant) and row operations row_r -= f * row_c (which preserve it); the determinant is the signed product of the pivots. A column with no non-zero pivot candidate means det = 0.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(n^3) field operations on non-singular input (~n^3/3 multiply-subtracts); O(n^3) always (it can stop early on a singular matrix)",
+      "space_complexity": "Theta(n^2) (a working copy of A)",
+      "correctness": "det is multiplicative and alternating in the rows: adding a multiple of one row to another leaves it unchanged, swapping two rows negates it, and the determinant of a triangular matrix is the product of its diagonal. GF(p) is a field, so every non-zero pivot is invertible (Fermat: x^(p-2) = x^(-1)).",
+      "implementation": "implementations/gaussian.py:det_gaussian",
+      "harness": {
+        "scaling": { "cost": "n**3", "n_values": [32, 48, 64, 96, 128, 192] }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "Factorial -> cubic: Theta(n!) vs Theta(n^3) field operations. The expansion ignores that det is invariant under row operations; elimination exploits it. With fast matrix multiplication, det can be computed in O(n^omega) (Bunch & Hopcroft 1974, via LUP decomposition), omega < 2.372, a further T3 step.",
+  "sources": [
+    {
+      "authors": "Bareiss, E. H.",
+      "year": 1968,
+      "title": "Sylvester's identity and multistep integer-preserving Gaussian elimination",
+      "venue": "Mathematics of Computation 22(103), 565-578",
+      "doi": "10.1090/S0025-5718-1968-0226829-0",
+      "note": "Fraction-free elimination: O(n^3) arithmetic operations on integers of polynomially bounded size, for determinants over Z."
+    },
+    {
+      "authors": "Bunch, J. R.; Hopcroft, J. E.",
+      "year": 1974,
+      "title": "Triangular factorization and inversion by fast matrix multiplication",
+      "venue": "Mathematics of Computation 28(125), 231-236",
+      "doi": "10.1090/S0025-5718-1974-0331751-8",
+      "note": "LUP decomposition, hence the determinant, in the time of matrix multiplication."
+    },
+    {
+      "authors": "Strassen, V.",
+      "year": 1969,
+      "title": "Gaussian elimination is not optimal",
+      "venue": "Numerische Mathematik 13, 354-356",
+      "doi": "10.1007/BF02165411",
+      "note": "Also shows that the determinant can be computed in O(n^log2(7))."
+    },
+    {
+      "authors": "Valiant, L. G.",
+      "year": 1979,
+      "title": "The complexity of computing the permanent",
+      "venue": "Theoretical Computer Science 8(2), 189-201",
+      "doi": "10.1016/0304-3975(79)90044-6",
+      "note": "Cited for the contrast with the permanent (see notes)."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree for n = 0..8 (cofactor expansion capped at n = 8), and both match the determinant known by construction: the harness builds A as a row-permuted L*U with unit lower triangular L, so det(A) = sign(permutation) * prod(diag U) mod p, independent of both implementations. Instances include zero entries (zero pivots, row swaps) and singular matrices (a zero on U's diagonal); n = 12 and 30 are checked for Gaussian elimination only. V2: runtimes fitted against n! and n^3, on uniformly random matrices (non-singular with probability ~1 - 1/p) for the timing.",
+    "artifacts": ["implementations/cofactor.py", "implementations/gaussian.py", "harness.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 30],
+    "trials": 6
+  },
+  "caveats": "Working over GF(p) with p fixed makes every arithmetic step unit cost. Over the integers, elimination with exact rationals or Bareiss's fraction-free variant remains polynomial in bit complexity, but the operation counts above then involve integers of O(n log(n M)) bits for entries bounded by M. Gaussian elimination over floating point is a different (numerical) problem and is not what is measured here.",
+  "notes": "Contrast with permanent-naive-vs-ryser: the permanent is the same sum over permutations with the signs removed, yet computing it is #P-complete (Valiant 1979) and the best known exact algorithms are exponential (Ryser, Theta(n 2^n)). The signs are what make det invariant under row operations, which is what elimination exploits."
+}

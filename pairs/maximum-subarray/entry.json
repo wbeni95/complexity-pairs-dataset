@@ -1,0 +1,84 @@
+{
+  "id": "maximum-subarray",
+  "title": "Maximum subarray sum: brute force vs running sums vs Kadane's scan",
+  "problem_statement": "Given a list a[0..n-1] of n >= 1 integers (negative values allowed), compute the maximum of a[i] + a[i+1] + ... + a[j] over all 0 <= i <= j < n, i.e. the largest sum of a non-empty contiguous subarray.",
+  "input": {
+    "parameter": "n = number of elements (n >= 1).",
+    "size_measure": "n integers of bounded size (the harness draws them from [-100, 100]); arithmetic on them is O(1)."
+  },
+  "algorithms": [
+    {
+      "name": "brute force (sum every subarray)",
+      "idea": "For every pair i <= j, add up a[i..j] from scratch and keep the largest sum.",
+      "model": "classical-deterministic",
+      "pseudocode": "best = a[0]; for i in 0..n-1: for j in i..n-1: s = a[i] + ... + a[j] (a loop); best = max(best, s)",
+      "time_complexity": "Theta(n^3) on every input: the innermost loop runs n(n+1)(n+2)/6 times",
+      "space_complexity": "O(1) words",
+      "correctness": "Exhaustive over all n(n+1)/2 non-empty contiguous subarrays.",
+      "implementation": "implementations/brute_force.py:max_subarray_brute",
+      "harness": {
+        "v1_max_n": 60,
+        "scaling": { "cost": "n**3", "n_values": [50, 100, 150, 200, 300, 400] }
+      }
+    },
+    {
+      "name": "running sums",
+      "idea": "For each start i, extend the subarray one element at a time; the sum of a[i..j] is the sum of a[i..j-1] plus a[j].",
+      "model": "classical-deterministic",
+      "pseudocode": "best = a[0]; for i in 0..n-1: s = 0; for j in i..n-1: s = s + a[j]; best = max(best, s)",
+      "time_complexity": "Theta(n^2) on every input: n(n+1)/2 inner steps",
+      "space_complexity": "O(1) words",
+      "correctness": "Still exhaustive over all subarrays; only the way each sum is obtained changes.",
+      "implementation": "implementations/running_sum.py:max_subarray_quadratic",
+      "harness": {
+        "v1_max_n": 200,
+        "scaling": { "cost": "n**2", "n_values": [100, 200, 400, 800, 1600, 3200] }
+      }
+    },
+    {
+      "name": "Kadane's algorithm (linear scan)",
+      "idea": "Scan left to right keeping the best sum of a subarray ending at the current position: it is either the current element alone or the previous best extended by it.",
+      "model": "classical-deterministic",
+      "pseudocode": "best = cur = a[0]; for j in 1..n-1: cur = a[j] if cur < 0 else cur + a[j]; best = max(best, cur)",
+      "time_complexity": "Theta(n)",
+      "space_complexity": "O(1) words",
+      "correctness": "Invariant after reading a[0..j]: cur is the best sum of a non-empty subarray ending at j, and best is the best sum of any non-empty subarray of a[0..j]. A subarray ending at j is a[j] alone or extends one ending at j - 1, and the best extension uses the best such one (Bentley 1984; CLRS Exercise 4.1-5).",
+      "implementation": "implementations/kadane.py:max_subarray_kadane",
+      "harness": {
+        "scaling": { "cost": "n", "n_values": [3000, 10000, 30000, 100000, 300000, 1000000] }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "Three polynomial algorithms in a chain: reusing the previous sum turns Theta(n^3) into Theta(n^2), and keeping only the best subarray ending at each position turns Theta(n^2) into Theta(n). Each step is a strict asymptotic improvement for the same problem.",
+  "sources": [
+    {
+      "authors": "Bentley, J.",
+      "year": 1984,
+      "title": "Programming pearls: algorithm design techniques",
+      "venue": "Communications of the ACM 27(9), 865-873",
+      "doi": "10.1145/358234.381162",
+      "note": "Presents the cubic, quadratic, divide-and-conquer Theta(n log n) and linear (credited to J. Kadane) algorithms for this problem."
+    },
+    {
+      "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
+      "year": 2009,
+      "title": "Introduction to Algorithms (3rd ed.)",
+      "venue": "MIT Press",
+      "isbn": "978-0-262-03384-8",
+      "note": "Section 4.1 (the maximum-subarray problem, divide and conquer) and Exercise 4.1-5 (the linear-time scan)."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: all three implementations agree with each other and with an independent oracle, the CLRS 4.1 divide-and-conquer algorithm (in harness.py), on random lists from [-100, 100] (some all-negative, some all-non-negative), n = 1..10, 15, 20, 40, 60, 200 and 1000 (brute force up to n = 60, running sums up to n = 200). V2: runtimes fit n^3 (n = 50..400), n^2 (n = 100..3200) and n (n = 3000..1000000). All three do the same amount of work on every input of a given length, so random inputs are worst-case inputs.",
+    "artifacts": ["implementations/brute_force.py", "implementations/running_sum.py", "implementations/kadane.py", "harness.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 40, 60, 200, 1000],
+    "trials": 5
+  },
+  "caveats": "The problem requires a non-empty subarray; the variant that allows the empty subarray (answer max(0, ...)) differs only on all-negative inputs. Kadane's scan is optimal up to a constant factor, since a correct algorithm must read every element: changing an unread element to a large value changes the answer.",
+  "notes": "The divide-and-conquer Theta(n log n) algorithm (CLRS 4.1, also in Bentley's column) sits between the quadratic and linear algorithms; it is used here as the independent V1 oracle rather than as a fourth recorded algorithm. Bentley attributes the problem to U. Grenander's work on pattern matching in digitized images."
+}

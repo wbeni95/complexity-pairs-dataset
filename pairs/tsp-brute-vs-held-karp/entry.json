@@ -1,0 +1,89 @@
+{
+  "id": "tsp-brute-vs-held-karp",
+  "title": "Travelling salesman: permutation enumeration vs Held-Karp DP",
+  "problem_statement": "Given an n x n matrix of non-negative integer distances, compute the minimum total length of a tour that visits every city exactly once and returns to the start.",
+  "input": {
+    "parameter": "n = number of cities.",
+    "size_measure": "n^2 matrix entries."
+  },
+  "algorithms": [
+    {
+      "name": "permutation enumeration",
+      "idea": "Fix city 0 as the start and evaluate all (n-1)! orders of the remaining cities.",
+      "model": "classical-deterministic",
+      "pseudocode": "for each permutation p of 1..n-1: best = min(best, length(0, p, 0))",
+      "time_complexity": "Theta(n!) ((n-1)! tours, Theta(n) each)",
+      "space_complexity": "Theta(n)",
+      "correctness": "Exhaustive over all tours.",
+      "implementation": "implementations/brute_force.py:tsp_brute",
+      "harness": {
+        "v1_max_n": 8,
+        "scaling": {
+          "cost": "factorial(n)",
+          "n_values": [7, 8, 9, 10]
+        }
+      }
+    },
+    {
+      "name": "Held-Karp dynamic programming",
+      "idea": "best[S][j] = shortest path from city 0 through exactly the set S, ending at j. Combine over subsets of increasing size.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(n^2 2^n)",
+      "space_complexity": "Theta(n 2^n)",
+      "correctness": "Held & Karp 1962; Bellman 1962: optimal substructure over (visited set, last city).",
+      "implementation": "implementations/held_karp.py:tsp_held_karp",
+      "harness": {
+        "scaling": {
+          "cost": "n**2 * 2**n",
+          "n_values": [8, 9, 10, 11, 12, 13, 14]
+        }
+      }
+    }
+  ],
+  "pair_type": "T6",
+  "relationship": "Factorial -> single exponential: n! vs n^2 2^n. A real, large improvement that still stays exponential. No polynomial algorithm is known; TSP is NP-hard, so one would imply P = NP. Held-Karp's 2^n base has not been improved for general (asymmetric, unbounded-weight) TSP in over 60 years.",
+  "sources": [
+    {
+      "authors": "Held, M.; Karp, R. M.",
+      "year": 1962,
+      "title": "A dynamic programming approach to sequencing problems",
+      "venue": "Journal of the Society for Industrial and Applied Mathematics 10(1), 196-210",
+      "doi": "10.1137/0110015"
+    },
+    {
+      "authors": "Bellman, R.",
+      "year": 1962,
+      "title": "Dynamic programming treatment of the travelling salesman problem",
+      "venue": "Journal of the ACM 9(1), 61-63",
+      "doi": "10.1145/321105.321111"
+    },
+    {
+      "authors": "Karp, R. M.",
+      "year": 1972,
+      "title": "Reducibility among combinatorial problems",
+      "venue": "Complexity of Computer Computations, Plenum Press, 85-103",
+      "doi": "10.1007/978-1-4684-2001-2_9",
+      "note": "NP-completeness of Hamiltonian cycle, hence NP-hardness of TSP."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both agree on random asymmetric distance matrices (weights 1..100, n <= 8 for enumeration) and respect independent bounds. V2: runtimes fitted against n! and n^2 2^n.",
+    "artifacts": [
+      "implementations/brute_force.py",
+      "implementations/held_karp.py",
+      "harness.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [1, 2, 3, 4, 5, 6, 7, 8, 11],
+    "trials": 5
+  },
+  "caveats": "Primary T6 because polynomial time is open (NP-hard); secondary T8 for the verified factorial -> single-exponential improvement.",
+  "notes": "Shows that dramatic speedups (factorial -> 2^n) can exist while the polynomial barrier is untouched.",
+  "secondary_tags": [
+    "T8"
+  ]
+}
