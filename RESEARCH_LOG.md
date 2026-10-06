@@ -220,3 +220,11 @@ proofs), and it cannot resolve log factors or exponent gaps smaller than the tol
 Ledger file: [ledger/runs/20261006T005747Z.json](ledger/runs/20261006T005747Z.json), made at commit `d8ddc584a963a550bc6c8fa08be90deca53e3193` with a clean tree.
 - **Result:** 36/36 entries pass their claimed level. All 55 V2 measurements pass, with α from 0.924 to 1.128. V1 ran on 28 entries: 1830 instances, 3714 implementation runs.
 - **Stability against RL-021** (same code and machine, minutes apart): the largest change in a time-based α was 0.028 (fast doubling 1.100 → 1.128; inversion counting, all pairs, 1.043 → 1.015). All 5 query-count fits were **identical**, which confirms the reproducibility fix of RL-014.
+
+### RL-023 · VERIFIED · All claims also pass in an independent environment (CI)
+GitHub Actions run 37397178645 (push of `29202a0`; runner `ubuntu-latest`; Python 3.12 via actions/setup-python) completed with every job successful:
+- `validate`: unit tests, schema and folder rules, V1;
+- `scaling`: every V2 claim re-measured;
+- `sources`: every DOI / arXiv id.
+
+This is the first time all V2 fits were reproduced on a different OS and Python version from the maintainer's machine (Windows, CPython 3.14.2). Provenance: external (GitHub Actions). The per-job logs are kept by GitHub, not in this repository.

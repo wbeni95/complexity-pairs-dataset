@@ -119,6 +119,7 @@ Every result is recorded, including refutations, corrections and inconclusive te
 
 ```bash
 pip install -r requirements.txt
+python tools/check_all.py                # everything below in one go (--record, --sources, --quick)
 python tools/validate.py                 # schema, folder rules, V1 correctness runs
 python tools/validate.py --scaling -v    # also re-measure every V2 scaling claim
 python tools/validate.py --probe         # report entries that pass a higher level than claimed
