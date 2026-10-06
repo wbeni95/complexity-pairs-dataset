@@ -421,3 +421,7 @@ Ledger: [ledger/runs/20261006T025704Z.json](ledger/runs/20261006T025704Z.json), 
 Ledger: [ledger/runs/20261006T030338Z.json](ledger/runs/20261006T030338Z.json), made at commit `7511ea9` with a clean tree.
 - **Result:** 54/54 entries pass their claimed level. All 88 V2 measurements pass, with α from 0.886 to 1.164.
 - **Stability against RL-044:** all 14 query-count series are **identical** value for value. The largest change in a timing α is 0.015 (matrix-chain plain recursion).
+
+### RL-046 · VERIFIED · The overnight state also passes CI (independent environment)
+GitHub Actions runs 37407158461 (`7511ea9`) and 37407344397 (`834b66f`) succeeded in every job (validate, scaling, sources) on `ubuntu-latest` with Python 3.12.
+All 88 V2 claims, including the 11 new pairs, the 3 new T9 query-count fits and the 4 synthetic entries, were therefore reproduced on a second OS and Python version. Provenance: external (GitHub Actions).
