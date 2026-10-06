@@ -789,3 +789,12 @@ Ledger: [ledger/runs/20261006T105123Z.json](ledger/runs/20261006T105123Z.json), 
 - **Result:** 62/62 entries pass. All 108 V2 measurements pass, and 113 of 113 rivals are rejected.
 - **Stability against RL-075:** all 59 exact-count series are identical; the largest change in a timing α is 0.014.
 - **CI:** GitHub Actions run 37452518800 on `10e7896` succeeded in validate, scaling and sources (`ubuntu-latest`, Python 3.12). The Kruskal counts differ across Python versions (RL-069), but the verdicts are the same under Python 3.12.
+
+### RL-077 · DECISION · Contacting the authors of the published rank-47 collections (prepared; the owner sends)
+Only the authors of the known collections can say whether the rank-47 class of RL-071 is new: Kauers and Moosbauer report more than 100 000 schemes, but have published 23 distinct ones. With the owner's approval, an e-mail to Manuel Kauers (JKU Linz) and Jakob Moosbauer (now University of Warwick) was drafted. Their addresses were taken from their own papers (arXiv:2212.01175; arXiv:2502.04514).
+For it, `experiments/2026-10-06c_export_exp.py` exports two schemes in their `.exp` text format:
+- the class representative, `search/schemes/rust-2026-10-06c/4x4x4_rank47_seed618.exp`;
+- RL-054's scheme, `search/schemes/rust-2026-10-07/4x4x4_rank47_seed8.exp`, for checking the RL-070 certificate.
+Both round-trip exactly through the audit's parser and pass both verifiers.
+The class's factor-rank profile (sorted rank triple → number of terms) is 111:1, 112:3, 113:9, 123:12, 133:9, 222:6, 223:6, 333:1. RL-054's profile is 111:2, 112:4, 113:6, 122:5, 123:16, 133:4, 222:5, 223:1, 233:2, 333:2.
+The e-mail claims no novelty. It asks whether the scheme is in their collection, and it apologises for the crawl load of RL-073. Any reply will be logged.
