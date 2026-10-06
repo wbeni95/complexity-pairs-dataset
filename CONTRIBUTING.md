@@ -101,13 +101,7 @@ supersede them with new ones.
 
 ## License of contributions
 
-The project is free for non-commercial use and licensed commercially to fund the research (see
-[COMMERCIAL.md](COMMERCIAL.md)). By submitting a contribution, you agree that:
-
-- it is your own work, or you have the right to submit it;
-- it is licensed to everyone under the repository's licenses (CC BY-NC 4.0 for data, PolyForm Noncommercial 1.0.0
-  for code); and
-- you grant the maintainer a perpetual, worldwide, non-exclusive, royalty-free right to also license it under other
-  terms, including commercial licenses.
-
-You keep your copyright. Add `Signed-off-by: Your Name <email>` to your commits to confirm these terms.
+Contributions are accepted under the repository's licenses ("inbound = outbound"): code under the Apache License 2.0
+(see its section 5), and data and documentation under CC BY 4.0. By submitting a contribution you confirm that it is
+your own work, or that you have the right to submit it under these licenses. You may add
+`Signed-off-by: Your Name <email>` (Developer Certificate of Origin) to your commits.

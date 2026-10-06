@@ -3,9 +3,8 @@
 ===============================================================================
  Status: v0 charter / kickoff
  Audience: an AI agent starting work, and human contributors on GitHub
- License: free for personal/educational/non-commercial research use; commercial use
-          requires a paid license (data CC BY-NC 4.0, code PolyForm Noncommercial 1.0.0;
-          see COMMERCIAL.md)
+ License: open, free for any use with attribution: code Apache-2.0 (LICENSE),
+          data and documentation CC BY 4.0 (LICENSE-DATA); see NOTICE, CITATION.cff
 -------------------------------------------------------------------------------
 
 0. READ THIS FIRST
@@ -222,7 +221,7 @@ genuinely open problem, that is a bonus, not the plan.
     /tools/ingest/           scripts to turn the seed list into entries
     /index.json              registry of all pairs + their verification level
     /CONTRIBUTING.md
-    /LICENSE (data)  /LICENSE-CODE (tools)
+    /LICENSE (code, Apache-2.0)  /LICENSE-DATA (data, CC BY 4.0)  /NOTICE  /CITATION.cff
 
 
 8. CONTRIBUTION WORKFLOW
@@ -262,4 +261,6 @@ genuinely open problem, that is a bonus, not the plan.
              as entries; kept as methodology notes in /notes/.
     2026-10  Folders: pairs/ = V1+, staging/ = V0, synthetic/ = T7, enforced
              by tools/validate.py.
+    2026-10  License changed to open: code Apache-2.0, data CC BY 4.0
+             (supersedes the non-commercial license; RESEARCH_LOG RL-053).
 ===============================================================================

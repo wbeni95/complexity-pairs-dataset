@@ -182,10 +182,28 @@ This is not a cryptanalysis tool. Factoring and discrete logarithm are catalogue
 we do not target them operationally. We make no claim about P vs NP. We reject cosmetic rewrites and
 number-notation tricks.
 
+## How to cite
+
+If you use the dataset or its tools, please cite it. GitHub's "Cite this repository" button uses [CITATION.cff](CITATION.cff).
+
+```bibtex
+@misc{weisz2026complexitypairs,
+  author       = {Weisz, Benjamin},
+  title        = {Complexity Pairs Dataset: verified pairs of algorithms with different asymptotic cost},
+  year         = {2026},
+  howpublished = {\url{https://github.com/wbeni95/complexity-pairs-dataset}},
+  note         = {Version 0.1.0}
+}
+```
+
 ## License
 
-Free for **personal, educational and non-commercial research use**. **Commercial use requires a paid license**,
-and the fees fund the research. See [COMMERCIAL.md](COMMERCIAL.md).
+Everything is free to use, including commercially, with attribution.
 
-- Data (entries, READMEs, notes, index, the compilation): [CC BY-NC 4.0](LICENSE)
-- Code (tools, lib, harnesses, implementations, tests): [PolyForm Noncommercial 1.0.0](LICENSE-CODE)
+- **Code** (`tools/`, `lib/`, `search/`, `generators/`, `tests/`, `experiments/`, every `harness.py` and `implementations/`):
+  [Apache License 2.0](LICENSE).
+- **Data and documentation** (entries, entry READMEs, `index.json`, `RESEARCH_LOG.md`, `ledger/`, `research/`, `notes/`,
+  `search/schemes/`): [CC BY 4.0](LICENSE-DATA).
+
+See [NOTICE](NOTICE). Collaboration, independent re-verification and corrections are very welcome. Open an issue,
+or contact [@wbeni95](https://github.com/wbeni95).

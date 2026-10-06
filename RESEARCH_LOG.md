@@ -495,3 +495,11 @@ After the fix, 200 plus transitions raise a 2×2 scheme from rank 8 to 23 and it
 
 **Speed (console, one core, before the fix):** 4×4 walks ran at 2.1·10⁷ steps/s (3.6·10⁶ successful flips/s), against about 2.4·10⁵ flips/s for the Python driver of RL-036 (1.6M flips in 6.6 s). That is at least 15× per core in flips, before using the 16 logical cores.
 The move policies of the two drivers differ, so this comparison is approximate. Plus transitions happen at most once per 50 000-step plateau, so the fix does not materially change throughput; post-fix numbers come from the next recorded runs.
+
+### RL-053 · DECISION · License changed to fully open: code Apache-2.0, data CC BY 4.0 (by the user)
+This supersedes RL-009. The repository is no longer non-commercial: code is under the Apache License 2.0 (`LICENSE`), and data and documentation are under CC BY 4.0 (`LICENSE-DATA`). See `NOTICE`.
+`COMMERCIAL.md` and the PolyForm Noncommercial text were removed. The commercial-relicensing clause in CONTRIBUTING was replaced by "inbound = outbound" under the same licenses.
+Added `CITATION.cff` (author Benjamin Weisz; type dataset; validated with cffconvert against CFF schema 1.2.0) and a "How to cite" section with BibTeX in the README. The official license texts were downloaded from apache.org and creativecommons.org.
+**Rationale:** the user prioritises reliability and reputation, with positive effects on their other projects, over license income. Openness maximises reuse, independent re-verification and citation.
+CC BY 4.0 is the license researchers expect for data, and it explicitly asks for attribution when material is shared. The licenses themselves do not compel academic citation. Citations come from scholarly norms and from making citing easy: a DOI per release (Zenodo, planned at public release), CITATION.cff, and a dataset paper or preprint (planned).
+The change was made while the repository is private with no external contributors. Once a version is published under Apache 2.0, that grant cannot be withdrawn.

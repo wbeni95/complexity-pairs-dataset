@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this dataset or its verification tools, please cite it as below."
+type: dataset
+title: "Complexity Pairs Dataset: verified pairs of algorithms with different asymptotic cost"
+authors:
+  - family-names: Weisz
+    given-names: Benjamin
+repository-code: "https://github.com/wbeni95/complexity-pairs-dataset"
+license:
+  - Apache-2.0
+  - CC-BY-4.0
+version: "0.1.0"
+keywords:
+  - computational complexity
+  - algorithms
+  - dataset
+  - benchmark
+  - reproducibility
+  - verification
+  - quantum query complexity
+  - matrix multiplication
+abstract: >-
+  An open, machine-readable dataset of complexity pairs: computational problems for which two or more
+  provably correct algorithms of different asymptotic cost are recorded. Every entry carries an explicit
+  verification level that is enforced by the included validator: V1 for implementations that agree with
+  each other and an independent oracle, and V2 for measured growth (wall-clock time or exact operation
+  counts) that fits the claimed cost and rejects declared rival costs. Results, refutations, corrections
+  and null results are documented in a research log, with machine-recorded evidence for every validation run.
