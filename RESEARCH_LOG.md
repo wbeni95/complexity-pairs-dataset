@@ -681,3 +681,11 @@ Ledger: [ledger/runs/20261006T091245Z.json](ledger/runs/20261006T091245Z.json), 
 Release v0.2.0 (2026-10-06 09:15:40 UTC) produced Zenodo record 23184029 two seconds later. Version DOI: **10.5281/zenodo.23184029**; concept DOI, for all versions: **10.5281/zenodo.23184028**.
 Both DOIs resolve, via DataCite (title checked) and doi.org (HTTP 302 to Zenodo). They were added to CITATION.cff (`doi`, `identifiers`) and to the README (badge, BibTeX `doi`).
 v0.1.0 never produced a record (RL-063), while v0.2.0, the first release with `.zenodo.json`, did so at once. This is consistent with the metadata hypothesis (a list of two licenses in CITATION.cff), but not proven, because the v0.1.0 error is visible only in the owner's Zenodo account.
+
+### RL-067 · VERIFIED · CI green on every commit of the second round
+GitHub Actions (`ubuntu-latest`, Python 3.12) succeeded in validate, scaling and sources for all four commits:
+- `aedbdc6`: second-round state, run 37441375674;
+- `038b9e3`: recorded run RL-065, run 37441721503;
+- `cd28ddc`: citation version 0.2.0, run 37441727738;
+- `a232962`: Zenodo DOI, run 37441885450.
+So the 47 validated pairs, the 94 rival rejections and the exact-count V2 fits also reproduce on a second OS and Python version. Provenance: external (GitHub Actions).
