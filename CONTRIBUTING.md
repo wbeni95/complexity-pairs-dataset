@@ -65,7 +65,7 @@ supersede them with new ones.
 
 - **Long runs go in the background, with a time budget.** Validation with `--scaling`, recorded runs, searches and long
   experiments are started detached, with an explicit budget (e.g. `--max-seconds`), and signal completion. Nobody sits
-  watching them, and the maintainer stays available while they run. Timing-sensitive runs (V2, `--record`) must not
+  watching them, so whoever started them, a person or an AI assistant, stays free for other work. Timing-sensitive runs (V2, `--record`) must not
   overlap with CPU-heavy jobs.
 - **Compiled kernels (C/C++) are allowed only if they build in seconds.** They must come as small single-file programs
   without heavy dependencies and run as separate processes; no shared memory with Python. They must also be treated

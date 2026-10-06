@@ -148,6 +148,19 @@ Every result is recorded, including refutations, corrections and inconclusive te
   the git state and every measured value.
 - [experiments/](experiments/) holds the deterministic scripts behind ad-hoc checks cited in the log.
 
+## How this project is made
+
+This project is directed by Benjamin Weisz. He sets its goals, makes or delegates its decisions, decides on
+publication and on contact with other researchers, and is responsible for its content. Nearly all of the code,
+entries, analyses and documentation were written by an AI system (Claude, by Anthropic) working under his direction,
+partly through autonomous AI agents that it started for bounded tasks. Commits made with AI involvement carry a
+`Co-Authored-By: Claude …` line.
+
+The results do not rest on trusting the AI. Claims are checked by machine wherever possible: the validator, the unit
+tests, the recorded runs in [ledger/runs/](ledger/runs/) and the citation checks against Crossref, DataCite and arXiv.
+Numbers that were not re-checked are labelled *agent report*. The research log records every error, the AI's included.
+In the log, *the owner* is Benjamin Weisz, *the maintainer* is the AI assistant and *agents* are AI sub-agents (RL-078).
+
 ## Quick start
 
 ```bash

@@ -28,6 +28,19 @@ alternatives that were rejected and why, so that later work can reuse or revisit
 - **agent report:** stated by a delegated agent and not independently re-run by the maintainer, unless the entry says so.
 - **external:** a public API response (Crossref, DataCite, arXiv).
 
+## Roles
+
+- **owner:** Benjamin Weisz. He directs the project, makes or delegates its decisions, decides on publication and on
+  contact with other researchers, and is responsible for the content.
+- **maintainer:** the AI assistant (Claude, by Anthropic) that does the day-to-day work under the owner's direction:
+  code, entries, runs, analyses, consolidating agent reports and writing this log. Errors attributed to "the
+  maintainer" in this log are the AI's. "The maintainer's machine" is the owner's computer, on which all local runs
+  were made.
+- **agent** (also *delegated agent*, *research agent*): an autonomous AI sub-agent that the maintainer starts for a
+  bounded task. Its numbers are labelled *agent report* unless they were re-run.
+
+This section was added in RL-078. Earlier entries use these words with these meanings and are not reworded.
+
 Environment for all 2026-10-06 entries: Windows 11 Pro 10.0.26200, AMD64 (AMD Family 26 Model 68),
 CPython 3.14.2, jsonschema 4.26.0.
 
@@ -798,3 +811,19 @@ For it, `experiments/2026-10-06c_export_exp.py` exports two schemes in their `.e
 Both round-trip exactly through the audit's parser and pass both verifiers.
 The class's factor-rank profile (sorted rank triple → number of terms) is 111:1, 112:3, 113:9, 123:12, 133:9, 222:6, 223:6, 333:1. RL-054's profile is 111:2, 112:4, 113:6, 122:5, 123:16, 133:4, 222:5, 223:1, 233:2, 333:2.
 The e-mail claims no novelty. It asks whether the scheme is in their collection, and it apologises for the crawl load of RL-073. Any reply will be logged.
+
+### RL-078 · DECISION · Disclosure of AI assistance
+**Finding.** Until now the repository showed the AI's part only indirectly. Every commit carries a `Co-Authored-By: Claude …` line, and the reports in research/ name their author as a "delegated research agent (Claude)". The README, CITATION.cff, .zenodo.json and NOTICE did not mention it.
+In this log, "the maintainer" (27 uses before this entry) always meant the AI assistant, but a reader would naturally take it to mean the owner. Examples are the errors attributed to the maintainer in RL-016, RL-052 and RL-073, which were the AI's.
+
+**Decision (owner).** The AI's role is stated explicitly:
+- **README:** a new section, "How this project is made".
+- **This log:** a Roles section in the header defines owner, maintainer and agent. Earlier entries are not reworded.
+- **CITATION.cff** (abstract) and **.zenodo.json** (description): one paragraph each. The Zenodo record of v0.2.0 keeps its old description; .zenodo.json takes effect at the next release.
+- **CONTRIBUTING.md:** one sentence that used "the maintainer" in this sense was reworded.
+- **START_HERE.txt:** a line in the decisions log.
+
+**Unchanged.** Benjamin Weisz remains the only listed author. Authorship carries responsibility for the content, which the owner holds; this matches common policy, for example arXiv's, that AI tools are disclosed but not listed as authors.
+**Rationale:** the project's value rests on transparency. An AI role that readers can only infer from commit metadata is not transparent, and errors must be attributable to whoever made them.
+
+**The RL-077 e-mail** was sent by the owner on 2026-10-06, before this disclosure. It does not mention the AI assistance; the audit report it links to names its author as a delegated research agent (Claude). Any reply will be logged.

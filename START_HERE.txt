@@ -263,4 +263,6 @@ genuinely open problem, that is a bonus, not the plan.
              by tools/validate.py.
     2026-10  License changed to open: code Apache-2.0, data CC BY 4.0
              (supersedes the non-commercial license; RESEARCH_LOG RL-053).
+    2026-10  AI assistance disclosed: README "How this project is made",
+             roles in the research log, CITATION.cff, .zenodo.json (RL-078).
 ===============================================================================
