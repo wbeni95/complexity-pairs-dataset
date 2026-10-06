@@ -14,6 +14,3 @@ Allowing a third literal per clause moves the problem from linear time to NP-com
   quantified boolean formulas*, Information Processing Letters 8(3), 121–123.
   [doi:10.1016/0020-0190(79)90002-4](https://doi.org/10.1016/0020-0190(79)90002-4)
 - 3-SAT NP-complete: Cook (1971); Karp (1972).
-
-Related boundaries worth recording later: 2-colouring (P) vs 3-colouring (NP-complete); bipartite vs general
-perfect matching (both in P, different algorithms); shortest path (P) vs longest simple path (NP-hard).

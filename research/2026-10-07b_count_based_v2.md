@@ -343,23 +343,4 @@ Script: `experiments/2026-10-07b_count_v2_apsp_strings.py`.
 
 ## 4. Open ideas
 
-- **Convert the four remaining timing fits whose claims contain a log factor.** Found by scanning all
-  `pairs/*/entry.json`; not touched here:
-  - `fibonacci-naive-vs-dp` (fast doubling, log n);
-  - `minimum-spanning-tree-brute-vs-kruskal` (n² log n);
-  - `polynomial-multiplication-naive-vs-ntt` (n log n);
-  - `range-minimum-queries-naive-vs-sparse-table` (n log n).
-
-  NTT can count modular multiplications with a `CountingInt`, if its implementation does arithmetic through
-  Python operators; this was not checked.
-- **Insertion sort worst case.** Reversed input gives exactly n(n−1)/2 comparisons, a deterministic alternative
-  to the average case. It would need its own instance family, and `generate_scaling` is shared by both
-  algorithms.
-- **A version-independent comparison count for closest pair.** Count only comparisons whose operands are
-  products, i.e. squared distances or gaps. That would exclude the sort's coordinate comparisons; it is untested.
-- **Ledger stability.** A recorded run (`--record`) by the maintainer would make the 17 count series part of the
-  ledger. Since they are exact and version-independent, future runs should reproduce them value for value,
-  which `experiments/2026-10-07b_ledger_stability.py` could check.
-- **Exactness across the dataset.** Exact counts plus closed forms (10 of the 17 fits here have one) would let
-  the validator check *equality* with the closed form instead of a slope. That would be a stronger V2, but it
-  needs a schema change (not proposed here).
+*Forward-looking content is not published (RL-086).*

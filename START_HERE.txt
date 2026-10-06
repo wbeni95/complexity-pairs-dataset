@@ -118,7 +118,7 @@ complexity basis (a citation at minimum). V0 entries live in a staging area.
 The headline "number of validated pairs" counts V1+ only.
 
 
-4. SEED LIST  (bootstrap backlog — ingest these first, with tags)
+4. SEED LIST  (the bootstrap seed problems, with tags)
 -------------------------------------------------------------------------------
 T1 (exp -> poly, same problem):
     - Primality testing: trial division O(2^(n/2) bits) -> AKS, polynomial.
@@ -140,8 +140,8 @@ T3 (poly -> faster poly):
 
 T4 (randomized <-> deterministic):
     - Primality: Miller-Rabin (randomized poly) vs AKS (deterministic poly).
-    - Note polynomial identity testing: randomized poly (Schwartz-Zippel);
-      deterministic poly is OPEN -> also log under T6.
+    - Polynomial identity testing: randomized poly (Schwartz-Zippel);
+      deterministic poly is OPEN (also listed under T6).
 
 T5 (quantum -> classical dequantization):
     - Recommendation systems: quantum (Kerenidis-Prakash) -> classical
@@ -155,11 +155,11 @@ T6 (OPEN / unpaired — the target class):
     - Polynomial identity testing: deterministic poly open.
     - Any NP-hard problem (SAT, TSP, ...): poly believed not to exist (P vs NP).
 
-Cautionary entries (nuance, tag carefully):
-    - 0/1 Knapsack: NP-hard, but pseudo-polynomial DP O(nW). Record the caveat:
-      pseudo-poly is NOT polynomial in input SIZE. Good teaching case.
+Cautionary entries:
+    - 0/1 Knapsack: NP-hard, but pseudo-polynomial DP O(nW); pseudo-poly is
+      NOT polynomial in input SIZE.
     - 2-SAT (poly) vs 3-SAT (NP-complete): a structural boundary, not a
-      same-problem pair; store as a boundary note, not a T1.
+      same-problem pair; kept as a boundary note, not a T1.
 
 
 5. GENERATING OUR OWN PAIRS  (method + the honesty warning)
@@ -209,7 +209,7 @@ by scoped search on verifiable problems, with no promises. If it ever cracks a
 genuinely open problem, that is a bonus, not the plan.
 
 
-7. REPO STRUCTURE  (proposed)
+7. REPO STRUCTURE
 -------------------------------------------------------------------------------
     /README.md               project overview (public face)
     /START_HERE.txt          this file
@@ -218,7 +218,6 @@ genuinely open problem, that is a bonus, not the plan.
     /pairs/<id>/README.md
     /pairs/<id>/implementations/...
     /tools/validate.py       checks an entry against the schema + runs V1/V2
-    /tools/ingest/           scripts to turn the seed list into entries
     /index.json              registry of all pairs + their verification level
     /CONTRIBUTING.md
     /LICENSE (code, Apache-2.0)  /LICENSE-DATA (data, CC BY 4.0)  /NOTICE  /CITATION.cff
@@ -231,16 +230,9 @@ genuinely open problem, that is a bonus, not the plan.
     Reviewers check: is it a real pair (section 1)? correct tag? honest level?
 
 
-9. IMMEDIATE AGENT BACKLOG  (do these in order)
+9. IMMEDIATE AGENT BACKLOG
 -------------------------------------------------------------------------------
-    [1] Write /schema/entry.schema.json from section 2.
-    [2] Build /tools/validate.py: schema check + run implementations against a
-        test battery (V1) + a simple scaling harness (V2).
-    [3] Ingest the section-4 seed list as entry.json stubs at V0, then raise
-        each to V1 where an implementation is feasible.
-    [4] Build /index.json and a generator for the public README table.
-    [5] Only after 1-4: stand up a scoped superoptimization search (start with
-        small-n sorting, AlphaDev-style) and feed verified wins back as T3.
+    (Not published; RL-086.)
 
 
 10. SCOPE / NON-GOALS

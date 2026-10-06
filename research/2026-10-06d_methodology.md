@@ -51,11 +51,6 @@ Status words: **theorem** (proven, cited), **conjecture**, **observation** (my c
    polymorphisms classifies all 276 Boolean relations of arity ≤ 3 identically to the independent syntactic
    definitions (0 mismatches). The predicted polynomial algorithm agrees with brute force on **900 of 900** random
    instances (150 per class), and affine counting 2^(n−rank) matches on 150 of 150 [exp: csp_predictor].
-6. **Recommendations, ranked** (section 6): (1) an exact "shape" diagnostic for exact-count V2 (doubling-sequence
-   Berlekamp–Massey, recurrence guessing for exponential counts); (2) stop expecting log factors from timing at
-   tolerance 0.25; (3) machine-checkable polynomial-method certificates for T9 entries; (4) CSP-predictor-driven
-   candidates (Horn-SAT, XOR-SAT, #XOR-SAT); (5) exact Q_E by SDP in a separate venv; (6) LLM proposers only behind
-   exact verifiers.
 
 ---
 
@@ -68,14 +63,14 @@ guiding signal.** The verifier decides; the proposer (enumeration, stochastic se
 |---|---|---|---|---|
 | **Superoptimisation**: exhaustive search, Massalin 1987, doi:10.1145/36206.36194 [DOI OK]; stochastic search (STOKE), Schkufza, Sharma, Aiken 2013, doi:10.1145/2451116.2451150 [DOI OK] | The shortest or fastest loop-free instruction sequence for a fixed function on fixed-width inputs | Anything asymptotic: inputs are bounded, so the cost is O(1) | Exhaustive testing or an SMT equivalence check over all inputs of the fixed width | Constant-factor results only; out of scope as pairs (notes/constant-factor-alphadev.md) |
 | **AlphaDev** (RL over assembly), Mankowitz et al. 2023, doi:10.1038/s41586-023-06004-9 [DOI OK] | Shorter sort3–sort5 routines, merged into libc++ (*content recalled*; already in the project's note) | Asymptotic gains | The 0-1 principle plus exhaustive input checks | Same as above |
-| **Bilinear-scheme search for matrix multiplication**: AlphaTensor (RL), Fawzi et al. 2022, doi:10.1038/s41586-022-05172-4 [DOI OK]; flip graphs, Kauers & Moosbauer 2023, doi:10.1145/3597066.3597120 [DOI OK]; SAT and local search, Heule, Kauers, Seidl 2021, "New ways to multiply 3×3-matrices", doi:10.1016/j.jsc.2020.10.003 [DOI OK] | A rank-r scheme for a k×k format. Recursion turns it into an *asymptotic* exponent log_k r (Strassen's mechanism). **The only search family here whose finite outputs amplify into new asymptotic pairs.** | A better ω unless r < k^(current exponent); for 3×3 that means r ≤ 21 (research/2026-10-07_patterns.md §4) | Exact check of the Brent equations over the ring (the project's two verifiers) | Already running (`search/`); RL-054/070/071 |
-| **LLM-guided program search**: FunSearch, Romera-Paredes et al. 2024, doi:10.1038/s41586-023-06924-6 [DOI OK]; AlphaEvolve, Novikov et al. 2025, arXiv:2506.13131 [arXiv OK] | Programs that *construct* objects (cap sets, packings, schemes) or heuristics, scored by an evaluator (*content recalled*) | Proofs of asymptotic cost; a heuristic that scores well on test instances is not an algorithm with a proven bound | An exact evaluator on every candidate, plus a separate proof for any asymptotic claim | A proposer for `search/`-style spaces; never a source of verified pairs by itself |
+| **Bilinear-scheme search for matrix multiplication**: AlphaTensor (RL), Fawzi et al. 2022, doi:10.1038/s41586-022-05172-4 [DOI OK]; flip graphs, Kauers & Moosbauer 2023, doi:10.1145/3597066.3597120 [DOI OK]; SAT and local search, Heule, Kauers, Seidl 2021, "New ways to multiply 3×3-matrices", doi:10.1016/j.jsc.2020.10.003 [DOI OK] | A rank-r scheme for a k×k format. Recursion turns it into an *asymptotic* exponent log_k r (Strassen's mechanism). **The only search family here whose finite outputs amplify into new asymptotic pairs.** | A better ω unless r < k^(current exponent); for 3×3 that means r ≤ 21 (research/2026-10-07_patterns.md, `2026-10-07_mm_thresholds.py` in its "What was run" table) | Exact check of the Brent equations over the ring (the project's two verifiers) | Run here (`search/`); RL-054/070/071 |
+| **LLM-guided program search**: FunSearch, Romera-Paredes et al. 2024, doi:10.1038/s41586-023-06924-6 [DOI OK]; AlphaEvolve, Novikov et al. 2025, arXiv:2506.13131 [arXiv OK] | Programs that *construct* objects (cap sets, packings, schemes) or heuristics, scored by an evaluator (*content recalled*) | Proofs of asymptotic cost; a heuristic that scores well on test instances is not an algorithm with a proven bound | An exact evaluator on every candidate, plus a separate proof for any asymptotic claim | Never a source of verified pairs by itself |
 | **Program synthesis**: Gulwani, Polozov, Singh 2017, doi:10.1561/2500000010 [DOI OK]; syntax-guided synthesis, Alur et al. 2013, doi:10.1109/FMCAD.2013.6679385 [DOI OK] | Programs meeting a specification, from examples or a logical spec, in a fixed grammar | Programs much larger than the grammar's reach; cost guarantees unless the cost is in the spec | Specification check (SMT or exhaustive) | Small DSL searches with an exact verifier (START_HERE §5) |
 | **Symbolic regression**: Schmidt & Lipson 2009, doi:10.1126/science.1165893; AI Feynman, Udrescu & Tegmark 2020, doi:10.1126/sciadv.aay2631; SINDy, Brunton, Proctor, Kutz 2016, doi:10.1073/pnas.1517384113 [all DOI OK] | A closed-form expression fitting data | Certainty: in general it is NP-hard (Virgolin & Pissis 2022, arXiv:2207.01018 [arXiv OK]), and on finite ranges different forms fit equally well (section 3 here) | Held-out data at most; no proof | Weak for costs; exact counts plus recurrence guessing (below) are strictly better |
 | **Integer relations / minimal polynomials**: LLL 1982, doi:10.1007/BF01457454; PSLQ, Ferguson, Bailey, Arno 1999, doi:10.1090/S0025-5718-99-00995-3; Kannan, Lenstra, Lovász 1988, doi:10.1090/S0025-5718-1988-0917831-4; the BBP formula found this way, Bailey, Borwein, Plouffe 1997, doi:10.1090/S0025-5718-97-00856-9 [all DOI OK] | Small integer relations among high-precision numbers: minimal polynomials of constants, formulas for constants | A relation when the precision is too low for the coefficient size (an information bound); proofs | Higher precision, then an exact algebraic proof (e.g. divisibility of a known annihilating polynomial) | **Run here** on growth constants ([exp: formula_recognition], section 5.1) |
 | **Sequence and recurrence guessing**: Berlekamp–Massey, Massey 1969, doi:10.1109/TIT.1969.1054260; holonomic sequences, Stanley 1980, doi:10.1016/S0195-6698(80)80051-5; GFUN, Salvy & Zimmermann 1994, doi:10.1145/178365.178368; Kauers & Paule 2011, *The Concrete Tetrahedron*, doi:10.1007/978-3-7091-0445-3 [all DOI OK] | A linear recurrence (constant or polynomial coefficients) fitting the terms, hence asymptotics λⁿ nᶿ and fast evaluation | Sequences outside the class (e.g. no small recurrence found for the MST enumeration count, section 5.1); a proof that the guess holds for all n | Overdetermined systems plus held-out terms. A proof comes from structure: diagonals of rational functions are D-finite (Lipshitz 1989, doi:10.1016/0021-8693(89)90222-6 [DOI OK; content recalled]), or from the program's call structure | **Run here** on 14 count sequences |
 | **Ramanujan Machine**: Raayoni et al. 2021, doi:10.1038/s41586-021-03229-4 [DOI OK] | Conjectured continued-fraction formulas for constants | Proofs | Numerical agreement to many digits, then a proof | Not directly applicable |
-| **Automated conjecturing**: Graffiti, Fajtlowicz 1988, doi:10.1016/0012-365X(88)90199-9; ML-guided intuition, Davies et al. 2021, doi:10.1038/s41586-021-04086-x; RL counterexample search, Wagner 2021, arXiv:2104.14516 [all OK] | Conjectured inequalities and relations between invariants; counterexamples | Proofs (a counterexample *is* a proof of falsity) | A human or machine proof; for counterexamples, an exact check | The 4-bit measure tables (section 5.3) are the raw material for such conjectures on query measures |
+| **Automated conjecturing**: Graffiti, Fajtlowicz 1988, doi:10.1016/0012-365X(88)90199-9; ML-guided intuition, Davies et al. 2021, doi:10.1038/s41586-021-04086-x; RL counterexample search, Wagner 2021, arXiv:2104.14516 [all OK] | Conjectured inequalities and relations between invariants; counterexamples | Proofs (a counterexample *is* a proof of falsity) | A human or machine proof; for counterexamples, an exact check | — |
 
 **Take-away (observation, consistent with all rows):** no method in this table produces a verified asymptotic
 algorithm on its own. New pairs come either from bilinear amplification (Strassen-type) or from a proof. For the
@@ -95,7 +90,7 @@ project, the methods' value is (a) proposing candidates, (b) recognising and che
 | Total unimodularity | A TU constraint matrix with integral right-hand side makes the LP integral (Hoffman–Kruskal [recalled]); TU is recognisable in polynomial time via Seymour's decomposition (Seymour 1980, doi:10.1016/0095-8956(80)90075-1 [DOI OK; content recalled]) | **Yes, small cases**: brute-force all square subdeterminants (`exactalg.det_bareiss`). Explains bipartite matching/assignment vs general matching. Not run. |
 | Bounded treewidth | MSO-definable properties are decidable in linear time on graphs of bounded treewidth (Courcelle 1990, doi:10.1016/0890-5401(90)90043-H); tree decompositions of width k in linear time for fixed k (Bodlaender 1996, doi:10.1137/S0097539793251219); Arnborg & Proskurowski 1989, doi:10.1016/0166-218X(89)90031-0 [all DOI OK; content recalled] | In principle, but the constants are astronomical; useful as a *reason* why NP-hard entries become polynomial on restricted families |
 | Boolean CSP dichotomy | Schaefer 1978, doi:10.1145/800133.804350: six tractable classes, all else NP-complete (theorem). Algebraic form via polymorphisms: Jeavons, Cohen, Gyssens 1997, doi:10.1145/263867.263489; Jeavons 1998, doi:10.1016/S0304-3975(97)00230-2 [all DOI OK] | **Yes, implemented and run** (section 5.4) |
-| General finite-domain CSP dichotomy | Conjectured by Feder & Vardi 1998, doi:10.1137/S0097539794266766; proven independently by Bulatov 2017, doi:10.1109/FOCS.2017.37, and Zhuk 2017/2020, doi:10.1109/FOCS.2017.38, doi:10.1145/3402029 (theorem). Tractable iff there is a weak near-unanimity polymorphism, equivalently a Siggers polymorphism (Siggers 2010, doi:10.1007/s00012-010-0082-3) [all DOI OK; content recalled]. Special case: H-colouring is in P iff H is bipartite (else NP-complete), Hell & Nešetřil 1990, doi:10.1016/0095-8956(90)90132-J [DOI OK] | **Decidable for a fixed finite template** (search for a 4-ary Siggers polymorphism); exponential in the domain size, feasible for domains of size ≤ 3 with a constraint solver. Not run (next step) |
+| General finite-domain CSP dichotomy | Conjectured by Feder & Vardi 1998, doi:10.1137/S0097539794266766; proven independently by Bulatov 2017, doi:10.1109/FOCS.2017.37, and Zhuk 2017/2020, doi:10.1109/FOCS.2017.38, doi:10.1145/3402029 (theorem). Tractable iff there is a weak near-unanimity polymorphism, equivalently a Siggers polymorphism (Siggers 2010, doi:10.1007/s00012-010-0082-3) [all DOI OK; content recalled]. Special case: H-colouring is in P iff H is bipartite (else NP-complete), Hell & Nešetřil 1990, doi:10.1016/0095-8956(90)90132-J [DOI OK] | **Decidable for a fixed finite template** (search for a 4-ary Siggers polymorphism); exponential in the domain size, feasible for domains of size ≤ 3 with a constraint solver. Not run |
 | Counting dichotomies | Boolean #CSP is in FP iff affine, else #P-complete (Creignou & Hermann 1996, doi:10.1006/inco.1996.0016); general #CSP dichotomy (Bulatov 2013, doi:10.1145/2528400) is decidable (Dyer & Richerby 2013, doi:10.1137/100811258) [all DOI OK; content recalled] | **Boolean case implemented** (affine test plus counting, section 5.4) |
 | Planar matchings vs the permanent | The permanent is #P-complete (Valiant 1979, doi:10.1016/0304-3975(79)90044-6); planar perfect matchings are countable in polynomial time via Pfaffians (Kasteleyn 1961, doi:10.1016/0031-8914(61)90063-5; Temperley & Fisher 1961, doi:10.1080/14786436108243366); holographic algorithms generalise this (Valiant 2008, doi:10.1137/070682575; Cai & Lu 2011, doi:10.1016/j.jcss.2010.06.005) [all DOI OK; content recalled] | Only by the explicit "matchgate signature" test of holographic algorithms; a research project, not a quick predictor |
 
@@ -107,12 +102,6 @@ project, the methods' value is (a) proposing candidates, (b) recognising and che
 | Ladner 1975, doi:10.1145/321864.321877 [DOI OK] | Theorem: if P ≠ NP, NP-intermediate problems exist | Dichotomies are special, not automatic |
 | ETH / SETH (Impagliazzo & Paturi 2001, doi:10.1006/jcss.2000.1727; Impagliazzo, Paturi, Zane 2001, doi:10.1006/jcss.2001.1774) [DOI OK] | Conjectures | No 2^o(n) algorithm for 3-SAT (ETH); no (2−ε)ⁿ for CNF-SAT (SETH). Bounds how far T8 improvements can go |
 | Fine-grained: 3SUM (Gajentaan & Overmars 1995, doi:10.1016/0925-7721(95)00022-2); APSP and triangle equivalences (Vassilevska Williams & Williams 2018, doi:10.1145/3186893); edit distance under SETH (Backurs & Indyk 2018, doi:10.1137/15M1053128); OV via 2-CSP (Williams 2005, doi:10.1016/j.tcs.2005.09.023) [all DOI OK] | Conditional lower bounds (conjectures plus proven reductions) | The project's 3SUM, APSP and edit-distance entries sit **exactly at** the conjectured barriers: a strongly subquadratic edit-distance or 3SUM algorithm, or a truly subcubic APSP algorithm, would refute a named conjecture. Their "fast" sides are believed optimal up to n^o(1) |
-
-**Which of these can become a mechanical predictor for candidate pairs (proposal):**
-(1) Schaefer and Boolean #CSP: done, exact, instant. (2) H-colouring bipartiteness: trivial. (3) Finite-domain CSP via
-Siggers-polymorphism search: decidable, feasible for tiny templates. (4) Matroid exchange axiom and TU on small
-instances: exhaustive tests. (5) Reductions to 3SUM/APSP/OV/SAT: not mechanisable in general; they need a human
-reduction, but a *tag* ("at a SETH/3SUM/APSP barrier") can be added per entry from the literature.
 
 ---
 
@@ -176,14 +165,14 @@ doi:10.1098/rspa.2008.0189) [DOI OK]; low entanglement (Vidal 2003, doi:10.1103/
 2003, doi:10.1098/rspa.2002.1097) [DOI OK]; tensor networks of low treewidth (Markov & Shi 2008,
 doi:10.1137/050644756 [DOI OK]). **Use for the project:** a claimed quantum speedup whose circuit falls in one of these
 classes is not a speedup. These are the quantum analogue of the "structure implies a fast algorithm" theories of
-section 2 and could become a checklist field for quantum entries.
+section 2.
 
 ### 4.4 How this serves the project (proposal)
 
 - The owner's thesis ("quantum ≠ classical capability") is **proven in the query model** and is exactly what T9
   records. The polynomial method makes the quantum *lower* bounds (optimality of Grover, of minimum finding) checkable
   by machine for small N, with exact rational certificates (section 5.3). The *classical* lower bounds of T9 entries
-  are combinatorial and, for total functions, can be cross-checked by exact D, bs and C computations.
+  are combinatorial.
 - Exponential T9 separations require promises (theorem: total functions allow only polynomial gaps). This explains
   why every exponential T9 entry (Simon, Deutsch–Jozsa exact, Bernstein–Vazirani) is a promise problem.
 
@@ -291,7 +280,7 @@ exact counts this **settles log factors with no tolerance at all**. The cost is 
 - **Solver cross-check:** the exchange optimum is certified and equals the exact simplex LP optimum in **960 of 960**
   (profile, degree) cases (all 0/1 profiles, n ≤ 6, d ≤ 3).
 - **Not done:** exact Q_E/Q₂ by SDP. No SDP solver is available in the standard library, and a pure-Python SDP with
-  certified rational rounding was not feasible in this round's budget (next step 5 in section 6).
+  certified rational rounding was not feasible in this round's budget.
 
 ### 5.4 (d) Tractability predictor [exp: csp_predictor]
 
@@ -319,15 +308,7 @@ papers) and were corrected through Crossref search: Graffiti, Siggers, Reichardt
 
 ## 6. Recommendations (proposals, ranked)
 
-| # | Recommendation | Why (evidence) | Effort |
-|---|---|---|---|
-| 1 | **Exact shape diagnostic for exact-count V2**: for exact counts at n = 2ᵏ, run Berlekamp–Massey in k and report (λ, multiplicity), i.e. exponent and log power. For exponential counts on consecutive n, run C-finite or holonomic guessing and report (λ, minimal polynomial, θ). Informational first, like the log-factor diagnostic. | 12/12 slow-count sequences and 4/4 doubling sequences identified exactly (5.1, 5.2); resolves log factors with no tolerance | 0.5–1 day (code exists in `methods/`; needs a harness option for n = 2ᵏ grids and a DECISION entry) |
-| 2 | **Document that timing V2 at ±0.25 cannot resolve log factors on any current grid** (max separation 0.1015), and move remaining log-sensitive claims to counts | 5.2 part 1 | 1 hour (text) plus per-entry conversions |
-| 3 | **Polynomial-method certificates for T9 entries**: store, for small N, the exact adeg with primal polynomial and dual weights as machine-checkable artefacts (OR for Grover and minimum finding; parity as the contrast) | 5.3; the certificates are exact rationals and checkable in milliseconds | 1 day |
-| 4 | **CSP predictor as a candidate source**: new T2 pairs Horn-SAT (brute force vs unit propagation, Dowling & Gallier 1984, doi:10.1016/0743-1066(84)90014-1 [DOI OK]) and XOR-SAT (brute force vs GF(2) elimination), plus a counting pair #XOR-SAT; boundary notes for 1-in-3-SAT and NAE-3-SAT next to the existing 2-SAT/3-SAT note | 5.4: solvers exist and agree 150/150 with brute force | 1 day per pair (hand to the candidates agent) |
-| 5 | **Exact Q_E and Q₂ of tiny functions by SDP** (Barnum–Saks–Szegedy), in a separate venv with a numerical SDP solver, then *rational rounding plus an exact feasibility check* of primal and dual, to cross-check published tables (Montanaro–Jozsa–Mitchison 2015) | Section 4.2; the only route to quantum *upper* bounds on small functions | 2–3 days |
-| 6 | **Finite-domain CSP predictor** (Siggers-polymorphism search, domain ≤ 3), plus matroid and TU tests on small instances | Section 2.1; decidable, mechanisable | 1–2 days |
-| 7 | **LLM or RL proposers only behind exact verifiers** (FunSearch/AlphaEvolve style) in spaces whose finite outputs amplify (bilinear schemes) | Section 1 take-away | high; only after 1–4 |
+*Forward-looking content is not published (RL-086).*
 
 ---
 
@@ -341,8 +322,8 @@ papers) and were corrected through Crossref search: Graffiti, Siggers, Reichardt
 | Extend call counts beyond the measured n with a recurrence read off the code, after checking equality with the measured counts | Measured counts only | Edit distance is measurable only to n = 7 (8 terms), but the holonomic ansatz needs ≥ 12 + margin terms; the model equals all measured counts in every case |
 | Symmetric approximate degree by the exchange algorithm with a dual certificate, cross-checked by the simplex LP | Simplex only | Exchange: 70 values of n in 1.5 s with optimality certificates; LP agreement 960/960 |
 | LLL acceptance uses an *estimated* error (Richardson difference) and an information bound | Using the true error (first version) | The first version leaked the exact answer into the "independent" route; fixed |
-| No SDP computation | Pure-Python SDP; a separate venv with a solver | No exact or well-documented numerics achievable in the budget; documented as next step 5 |
-| Matroid / TU demonstrations not run | Implement them in `methods/structure.py` | Time budget; recorded as next step 6 |
+| No SDP computation | Pure-Python SDP; a separate venv with a solver | No exact or well-documented numerics achievable in the budget |
+| Matroid / TU demonstrations not run | Implement them in `methods/structure.py` | Time budget |
 | adeg convention: least d with E_d ≤ 1/3 (ties count) | Strict < 1/3 | Standard; ties at n = 3 and 10 are listed so either convention can be read off |
 
 **Failures and near-misses of my own computations** (all fixed before the final runs)
@@ -364,12 +345,7 @@ papers) and were corrected through Crossref search: Graffiti, Siggers, Reichardt
    redone with the Edit tool. No result was affected.
 7. **Citations:** four guessed DOIs were wrong (section 5.5).
 
-**Open ideas** (IDEA): the holonomic θ formula could also check *staging* claims that state a polynomial factor; a
-Siggers-polymorphism search would extend the predictor beyond Boolean domains; dual-polynomial certificates for the
-collision problem need two-variable symmetrisation (Aaronson–Shi 2004, doi:10.1145/1008731.1008735 [DOI OK]); the
-222-class table is raw material for automated conjecturing on query measures; whether the MST enumeration count is
-holonomic is undecided (Flajolet, Gerhold, Salvy 2005, arXiv:math/0501379 [arXiv OK], give tools for
-non-holonomicity proofs; content recalled).
+*Forward-looking content is not published (RL-086).*
 
 ---
 
@@ -396,9 +372,6 @@ non-holonomicity proofs; content recalled).
 - **DRAFT · NULL · MST enumeration count**: no recurrence of order ≤ 4 and degree ≤ 4 from 39 exact terms. Not
   evidence of non-holonomicity.
 - **DRAFT · NEAR-MISS · Agent's own errors** (section 7, items 1–5), all fixed before the final runs.
-- **DRAFT · DECISION (proposed) · Exact shape diagnostic for exact-count V2** (recommendation 1), informational first.
-- **DRAFT · IDEA · SDP-based exact quantum query complexity; Horn-SAT / XOR-SAT / #XOR-SAT candidate pairs;
-  Siggers-polymorphism predictor** (recommendations 4–6).
 - **DRAFT · VERIFIED · Citations of the methodology report:** 117 identifiers, 114 OK, 1 OK without a year, 2 with empty
   Crossref titles (arXiv versions OK), 4 guessed DOIs corrected. Provenance: `2026-10-06d_meth_sources.py` (external).
 

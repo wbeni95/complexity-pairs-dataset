@@ -35,7 +35,8 @@
             "2**n",
             "4**n",
             "4**n/n**1.5"
-          ]
+          ],
+          "shape": {"sequence": "consecutive", "n_range": [1, 12]}
         }
       }
     },
@@ -62,7 +63,8 @@
           "rivals": [
             "n**2",
             "n**4"
-          ]
+          ],
+          "shape": {"sequence": "consecutive", "n_range": [1, 20]}
         }
       }
     },
@@ -92,7 +94,8 @@
             "n",
             "n*log(n)",
             "n**2*log(n)"
-          ]
+          ],
+          "shape": {"sequence": "consecutive", "n_range": [1, 20]}
         }
       }
     }

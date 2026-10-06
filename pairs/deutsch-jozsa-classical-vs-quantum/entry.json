@@ -17,7 +17,7 @@
       "correctness": "If two values differ, f is not constant, so by the promise it is balanced. If 2^(n-1) + 1 values agree, f has more than 2^(n-1) equal values, so it is not balanced, hence constant. Never wrong.",
       "implementation": "implementations/classical.py:dj_classical",
       "harness": {
-        "scaling": { "cost": "2**(n-1) + 1", "n_values": [2, 4, 6, 8, 10, 12, 14, 16], "measure": "reported" }
+        "scaling": { "cost": "2**(n-1) + 1", "n_values": [2, 4, 6, 8, 10, 12, 14, 16], "measure": "reported", "shape": {"sequence": "consecutive", "n_range": [1, 16]} }
       }
     },
     {
@@ -30,7 +30,7 @@
       "correctness": "Constant f always gives |S| = 1. For balanced f each answer is an independent fair bit, so all K agree with probability 2 * 2^(-K) = 2^(1-K) (here 2^-19). Elementary.",
       "implementation": "implementations/randomized.py:dj_randomized",
       "harness": {
-        "scaling": { "cost": "1", "n_values": [1, 2, 4, 8, 12, 16], "measure": "reported", "tolerance": 0.01 }
+        "scaling": { "cost": "1", "n_values": [1, 2, 4, 8, 12, 16], "measure": "reported", "tolerance": 0.01, "shape": {"sequence": "consecutive", "n_range": [1, 12]} }
       }
     },
     {
@@ -44,7 +44,7 @@
       "implementation": "implementations/quantum.py:dj_quantum",
       "harness": {
         "v1_max_n": 10,
-        "scaling": { "cost": "1", "n_values": [1, 2, 4, 6, 8, 10], "measure": "reported", "tolerance": 0.01 }
+        "scaling": { "cost": "1", "n_values": [1, 2, 4, 6, 8, 10], "measure": "reported", "tolerance": 0.01, "shape": {"sequence": "consecutive", "n_range": [1, 10]} }
       }
     }
   ],

@@ -1,0 +1,131 @@
+{
+  "id": "boolean-matrix-multiplication-naive-vs-strassen",
+  "title": "Boolean matrix multiplication: schoolbook vs Strassen over the integers",
+  "problem_statement": "Given two n x n Boolean (0/1) matrices A and B, compute their Boolean product C, C[i][j] = OR over k of (A[i][k] AND B[k][j]), i.e. C[i][j] = 1 iff A[i][k] = B[k][j] = 1 for some k. Equivalently: for the relations A and B, compute their composition; for adjacency matrices, which pairs are joined by a path of length 2 through the middle layer.",
+  "input": {
+    "parameter": "n = matrix dimension.",
+    "size_measure": "2n^2 bits. Strassen works on integers in a range polynomial in n (O(log n) bits), so its arithmetic is unit cost in the word RAM."
+  },
+  "algorithms": [
+    {
+      "name": "schoolbook (Boolean)",
+      "idea": "C[i][j] = OR over all k of (A[i][k] AND B[k][j]), evaluating every term (no early exit).",
+      "model": "classical-deterministic",
+      "pseudocode": "for i, j: c = 0; for k: c = c OR (A[i][k] AND B[k][j]); C[i][j] = c",
+      "time_complexity": "Theta(n^3): exactly n^3 AND and n^3 OR operations on every input.",
+      "space_complexity": "Theta(n^2)",
+      "correctness": "Definition of the Boolean product.",
+      "implementation": "implementations/naive.py:bmm_naive",
+      "harness": {
+        "scaling": {
+          "cost": "n**3",
+          "n_values": [
+            16,
+            32,
+            64,
+            128
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**log2(7)",
+            "n**2"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Strassen over the integers, then threshold",
+      "idea": "Read the 0/1 entries as integers, compute the integer product P = AB with Strassen's seven-product recursion, and set C[i][j] = 1 iff P[i][j] > 0. The Boolean semiring has no subtraction, which Strassen needs; embedding into the integers supplies it.",
+      "model": "classical-deterministic",
+      "pseudocode": "P = Strassen(A, B) over Z (zero-padded to a power of two, schoolbook below 16 x 16)\nC[i][j] = 1 if P[i][j] > 0 else 0",
+      "time_complexity": "Theta(n^(log2 7)) ~ Theta(n^2.807) arithmetic operations on O(log n)-bit integers: exactly 7^(log2(n/16)) * 16^3 multiplications for n a power of two >= 16.",
+      "space_complexity": "Theta(n^2)",
+      "correctness": "P[i][j] = sum over k of A[i][k] B[k][j] counts the k with A[i][k] = B[k][j] = 1, so P[i][j] > 0 iff the Boolean product is 1 (the reduction of Boolean matrix multiplication to integer matrix multiplication: Fischer & Meyer 1971; Munro 1971). Strassen 1969: the seven block products combine to the product over any ring, and T(n) = 7T(n/2) + Theta(n^2) gives Theta(n^log2(7)) operations. All entries of P are in [0, n], and every intermediate value is bounded in absolute value by a polynomial in n, so the integers have O(log n) bits.",
+      "implementation": "implementations/strassen_over_integers.py:bmm_strassen",
+      "harness": {
+        "scaling": {
+          "cost": "n**log2(7)",
+          "n_values": [
+            16,
+            32,
+            64,
+            128
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**3",
+            "n**2"
+          ]
+        }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "Both polynomial; the integer embedding lets Strassen lower the exponent of the Boolean product from 3 to log2(7) ~ 2.807, and any faster integer matrix multiplication algorithm transfers in the same way. Fischer & Meyer (1971) and Munro (1971) also relate Boolean matrix multiplication to the transitive closure of a directed graph (computed directly by Warshall's algorithm in Theta(n^3) Boolean operations); transitive closure is not implemented in this entry.",
+  "sources": [
+    {
+      "authors": "Fischer, M. J.; Meyer, A. R.",
+      "year": 1971,
+      "title": "Boolean matrix multiplication and transitive closure",
+      "venue": "12th Annual Symposium on Switching and Automata Theory (SWAT 1971), 129-131",
+      "doi": "10.1109/SWAT.1971.4"
+    },
+    {
+      "authors": "Munro, I.",
+      "year": 1971,
+      "title": "Efficient determination of the transitive closure of a directed graph",
+      "venue": "Information Processing Letters 1(2), 56-58",
+      "doi": "10.1016/0020-0190(71)90006-8"
+    },
+    {
+      "authors": "Strassen, V.",
+      "year": 1969,
+      "title": "Gaussian elimination is not optimal",
+      "venue": "Numerische Mathematik 13, 354-356",
+      "doi": "10.1007/BF02165411"
+    },
+    {
+      "authors": "Warshall, S.",
+      "year": 1962,
+      "title": "A theorem on Boolean matrices",
+      "venue": "Journal of the ACM 9(1), 11-12",
+      "doi": "10.1145/321105.321107",
+      "note": "Transitive closure in Theta(n^3) Boolean operations (context only; not implemented here)."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations return identical 0/1 matrices for n = 0..10 and n = 17, 31, 40, 64 (above the recursion cutoff of 16), 3 pairs per size, with densities 0.05-0.9 and special factors (zero, all-ones, identity, permutation matrices). The independent check() computes each row of the product as the bitwise OR of the rows of B (packed into integers) selected by row i of A, a row-union formulation with no inner products and no integer arithmetic on entries. Oracle control (experiments/2026-10-06f_entries_boolean_matmul.py): on 240 seeded instances (n = 1..40) it accepts all 240 correct products and rejects all 906 wrong outputs (240 single flipped entries, 132 integer products AB that differ from the Boolean product, 157 transposed products, 137 products BA, 240 wrong shapes). Negative controls: the same Strassen code run directly on Boolean values gives wrong products on 25 of 40 random instances when + and - are both read as OR, and on 33 of 40 when they are read as XOR (arithmetic mod 2). V2 (exact counts, RESEARCH_LOG RL-047 method): random 0/1 matrices of a harness number type CountingInt that counts every scalar product (multiplication, or AND for the schoolbook method); the implementations are unchanged. On n = 16, 32, 64, 128 the counts are exactly n^3 (schoolbook) and 7^(log2(n/16)) * 16^3 (Strassen: 4096, 28672, 200704, 1404928). Fits at tolerance 0.02: alpha = 1.000 for both; rivals: schoolbook against n^log2(7) 1.069 and n^2 1.500, Strassen against n^3 0.936 and n^2 1.404, all rejected. Additions, subtractions, ORs and comparisons are not counted.",
+    "artifacts": [
+      "implementations/naive.py",
+      "implementations/strassen_over_integers.py",
+      "harness.py",
+      "../../experiments/2026-10-06f_entries_boolean_matmul.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      17,
+      31,
+      40,
+      64
+    ],
+    "trials": 3
+  },
+  "caveats": "Costs count scalar products only (multiplications for Strassen, ANDs for the schoolbook method), as in pairs/matrix-multiplication-naive-vs-strassen; additions are not counted, and Strassen's additions are also Theta(n^log2(7)). Strassen's integers have O(log n) bits, so in bit complexity it carries an extra factor polynomial in log n; for fixed-size machine words this is a constant up to astronomically large n. For n not a power of two the matrices are padded; products of two padding zeros are plain integer products and are not counted (n = 17, padded to 32, gives 24832 counted multiplications instead of 28672), so V2 uses powers of two only. The schoolbook method here never exits early; a version that stops at the first true term is faster on dense inputs but still Theta(n^3) in the worst case (e.g. all-zero factors).",
+  "notes": "This entry isolates the step behind the mutation-pilot finding that Strassen does not survive in the Boolean semiring as written but does after embedding into the integers (research/2026-10-06d_mutation_pilot.md, section 5). The experiment's negative controls show the same: Strassen code on Boolean values with OR in place of subtraction, or over GF(2), gives wrong Boolean products."
+}

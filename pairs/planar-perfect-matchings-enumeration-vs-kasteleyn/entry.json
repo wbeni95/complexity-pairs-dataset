@@ -1,0 +1,165 @@
+{
+  "id": "planar-perfect-matchings-enumeration-vs-kasteleyn",
+  "title": "Weighted perfect matchings of planar grid graphs (dimers): backtracking enumeration vs Kasteleyn's signed determinant (Bareiss)",
+  "problem_statement": "Given integers a, b >= 0 and an N x N symmetric matrix W of non-negative integers, N = a*b, that is non-zero only for pairs of neighbours in the a x b grid graph (vertex u = r*b + c for 0 <= r < a, 0 <= c < b; (r, c) and (r', c') are neighbours iff |r - r'| + |c - c'| = 1), output the exact integer Z = sum over all perfect matchings M of the grid graph (sets of grid edges covering every vertex exactly once) of the product of W[u][v] over the edges {u, v} of M. Weight 0 means the edge is absent: with 0/1 weights Z is the number of perfect matchings of the corresponding spanning subgraph of the grid, and with weight 1 on every grid edge it is the number of domino tilings of the a x b rectangle. Conventions: Z = 1 if N = 0 (a = 0 or b = 0; the empty matching), Z = 0 if N is odd. Only spanning subgraphs of the full rectangle (edge deletions) can be expressed; vertex deletions are not part of this problem.",
+  "input": {
+    "parameter": "n = N = a*b, the number of grid vertices (shapes a x b and b x a both occur; for n = 0 one side is 0). w_max = the largest weight.",
+    "size_measure": "The N x N weight matrix W: N^2 entries, of which at most 2(2N - a - b) are non-zero (each of the 2N - a - b grid edges appears twice), each of O(log w_max) bits. The answer is at most (2 w_max)^(N/2) (Hadamard's bound on |det K|, see the Kasteleyn algorithm), so it has O(N log(2 w_max)) bits. The full matrix rather than a list of the 2N - a - b edge weights makes every entry of the Kasteleyn matrix input-derived, so the V2 instrumentation sees all determinant arithmetic; the costs in N are the same for both formats apart from the Theta(N^2) reading cost."
+  },
+  "algorithms": [
+    {
+      "name": "backtracking enumeration of perfect matchings",
+      "idea": "Take the first unmatched vertex u in index order. Every vertex before u is already matched, so u can only be matched to its right neighbour u+1 or its lower neighbour u+b: try each that is unmatched and has non-zero weight, recurse, and return the sum of weight * (sum over completions). Every perfect matching is a leaf of the search tree, so the work is at least the number of perfect matchings.",
+      "model": "classical-deterministic",
+      "pseudocode": "extend(start): u = first unmatched vertex >= start; if there is none: return 1; total = 0; mark u; for v in (u+1 if c+1 < b, u+b if r+1 < a): if v is unmatched and W[u][v] != 0: mark v; total = total + W[u][v] * extend(u+1); unmark v; unmark u; return total. Answer: extend(0).",
+      "time_complexity": "O(N 2^(N/2)) on every instance: the search tree has branching factor <= 2 and depth <= N/2, and the scan for the next unmatched vertex only moves forward along a root-to-leaf path. The time is also at least the number of perfect matchings, which is exponential in N for unit weights: F(N/2 + 1) = Theta(phi^(N/2)) (Fibonacci numbers) on the (N/2) x 2 ladder, and at least 2^(N/4) on a x b grids with a and b even (N/4 disjoint 2 x 2 blocks with 2 tilings each). Counted cost (one multiplication weight * subtotal per search-tree edge) on the V2 family, the unit-weight (n/2) x 2 ladder: Theta(phi^(n/2)) = Theta(1.272^n), exactly L(n/2 + 2) - 3 = phi^(n/2+2) + (-1/phi)^(n/2+2) - 3 multiplications (L = Lucas numbers). On the 2 x (n/2) ladder (the same graph, vertices numbered along the long side) it is Theta(n phi^(n/2)), see caveats.",
+      "space_complexity": "Theta(N) beyond the input (matched flags, recursion depth <= N/2 + 1), plus subtotals of O(N log(2 w_max)) bits",
+      "correctness": "Every perfect matching M is produced exactly once: at each node the first unmatched vertex u must be matched by M to a neighbour that is still unmatched, and all of u's neighbours before u are already matched, so M matches u to u+1 or u+b; the recursion follows M's choice, and different choices give different matchings. A leaf contributes the product of the weights along its path (the sum is factored as weight * subtotal). Skipping weight-0 edges removes exactly the matchings of weight product 0. N = 0: the root is a leaf (answer 1); odd N: no leaf (answer 0). The V2 count on the m x 2 ladder (m = n/2 rows): from a row whose two cells are free, the horizontal edge costs 1 multiplication and leads to the next row; the vertical edge at the left cell costs 1 and forces the vertical edge at the right cell (1 more), leading two rows down; the last row allows only the horizontal edge. So E(m) = E(m-1) + E(m-2) + 3 with E(0) = 0, E(1) = 1, i.e. E(m) + 3 = L(m + 2).",
+      "implementation": "implementations/enumeration.py:count_perfect_matchings_enumeration",
+      "harness": {
+        "v1_max_n": 48,
+        "scaling": {
+          "cost": "phi**(n/2 + 2) + (-1)**(n/2) * phi**(-(n/2 + 2)) - 3",
+          "n_values": [
+            16,
+            20,
+            24,
+            28,
+            32,
+            36,
+            40,
+            44,
+            48,
+            52
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "2**(n/2)",
+            "n * phi**(n/2)",
+            "n**3"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Kasteleyn signed determinant with Bareiss fraction-free elimination",
+      "idea": "Colour (r, c) black if r + c is even and white otherwise; every grid edge joins a black and a white vertex, so the perfect matchings are the non-zero terms, up to sign, of the determinant of the (N/2) x (N/2) black x white weight matrix. Kasteleyn's signs (+1 on horizontal edges, (-1)^c on the vertical edge (r, c)-(r+1, c)) give every such term the same sign, so the answer is |det K|, computed exactly with Bareiss's fraction-free elimination.",
+      "model": "classical-deterministic",
+      "pseudocode": "if N == 0: return 1; if N is odd: return 0; black = vertices with r + c even, white = the others, both in index order; K[i][j] = -W[x][y] if x = black[i] and y = white[j] are vertically adjacent in an odd column, else W[x][y]; return |det K| with det by Bareiss: m = N/2; sign = 1; prev = 1; for k = 0..m-2: if K[k][k] == 0: swap row k with a lower row r with K[r][k] != 0 (sign = -sign), or return 0 if there is none; for i, j = k+1..m-1: K[i][j] = (K[i][j] * K[k][k] - K[i][k] * K[k][j]) / prev (exact); prev = K[k][k]; det = sign * K[m-1][m-1]",
+      "time_complexity": "Theta(N^3) arithmetic operations: exactly (m-1) m (2m-1)/2 = (N-2) N (N-1)/8 multiplications and exact divisions (m = N/2) on every instance with a non-zero answer, whatever row swaps occur (the loops do not depend on the values unless a column is zero from the pivot down, which forces det = 0); at most that many when the answer is 0, none for odd N; plus Theta(N^2) entry reads and negations to build K. The integers are not of constant size: every Bareiss value is a minor of K (rows permuted), at most (2 w_max)^(N/2) in absolute value by Hadamard's inequality (each row of K has at most 4 non-zero entries, so Euclidean norm <= 2 w_max), and a product before division is at most 2 (2 w_max)^N in absolute value, so all values have O(N log(2 w_max)) bits. Bit complexity O(N^3 M(N log(2 w_max))), where M(b) is the cost of multiplying b-bit integers: polynomial in the input size.",
+      "space_complexity": "Theta(N^2) integers of O(N log(2 w_max)) bits",
+      "correctness": "det K = sum over bijections s: black -> white of sgn(s) prod_x K[x][s(x)]. The non-zero terms are the perfect matchings M of the full a x b grid (weight-0 edges give zero terms); M contributes sgn(s_M) eps(M) w(M), with eps(M) the product of M's signs and w(M) >= 0 its weight. Claim: sgn(s_M) eps(M) is the same for every M. The symmetric difference of two perfect matchings M, M' is a disjoint union of alternating simple cycles; a cycle C with 2l edges multiplies the permutation sign by (-1)^(l-1) and eps by eps(C), the product of the signs around C. The inside of a simple cycle of the grid is a union of f unit squares and every inner edge lies on two of them, so eps(C) = (-1)^f, because every unit square has sign product (+1)(+1)(-1)^c (-1)^(c+1) = -1. Euler's formula for the disc bounded by C, with p vertices strictly inside (2l + p vertices, 2l + (2f - l) edges, f faces), gives f = p + l - 1, so the factor is (-1)^(l-1) (-1)^(p+l-1) = (-1)^p. The vertices of C are matched along C and no grid edge crosses C, so M matches the p inner vertices among themselves: p is even and the factor is +1. Hence det K = +-Z, and Z = |det K| for non-negative weights. This is Kasteleyn's method (Kasteleyn 1961) specialised to the grid. Bareiss 1968: by Sylvester's identity each entry after step k is a minor of the row-permuted input, so the divisions are exact and the last pivot is the determinant up to the swap sign; if a pivot and every entry below it are zero, the trailing block has a zero column and det = 0. The experiment checks that every unit square of the implementation's matrix has sign product -1 (3456 squares) and that for every shape the sign of det K is the same on all instances with a non-zero answer.",
+      "implementation": "implementations/kasteleyn_bareiss.py:count_perfect_matchings_kasteleyn",
+      "harness": {
+        "scaling": {
+          "cost": "(n-2)*n*(n-1)/8",
+          "n_values": [
+            16,
+            32,
+            64,
+            128,
+            256
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**2",
+            "n**4",
+            "n**3 * log(n)"
+          ]
+        }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "Exponential -> polynomial on the same problem: the enumeration's search tree has a leaf for every perfect matching, exponentially many on unit-weight grids (Theta(phi^(n/2)) on ladders, at least 2^(n/4) on even x even grids), while Kasteleyn's signs turn the weighted count into one (n/2) x (n/2) determinant, Theta(n^3) arithmetic operations on O(n log(2 w_max))-bit integers. On the V2 family (the unit (n/2) x 2 ladder) the counted operations are exactly L(n/2 + 2) - 3 against (n-2) n (n-1)/8. Boundary: without the signs the same count is the permanent of the black x white matrix, and computing permanents of 0/1 matrices, i.e. counting perfect matchings of bipartite graphs, is #P-complete (Valiant 1979). The proof that the signs work here uses planarity (Euler's formula, and that no edge crosses a cycle); see permanent-naive-vs-ryser for the general bipartite case.",
+  "sources": [
+    {
+      "authors": "Kasteleyn, P. W.",
+      "year": 1961,
+      "title": "The statistics of dimers on a lattice: I. The number of dimer arrangements on a quadratic lattice",
+      "venue": "Physica 27(12), 1209-1225",
+      "doi": "10.1016/0031-8914(61)90063-5",
+      "note": "Counts dimer arrangements (perfect matchings) on the square (quadratic) lattice. The sign rule used here is proved in the entry itself (algorithm 2, correctness)."
+    },
+    {
+      "authors": "Temperley, H. N. V.; Fisher, M. E.",
+      "year": 1961,
+      "title": "Dimer problem in statistical mechanics-an exact result",
+      "venue": "Philosophical Magazine 6(68), 1061-1063",
+      "doi": "10.1080/14786436108243366",
+      "note": "An exact result for the dimer problem, published in the same year as Kasteleyn's paper."
+    },
+    {
+      "authors": "Valiant, L. G.",
+      "year": 1979,
+      "title": "The complexity of computing the permanent",
+      "venue": "Theoretical Computer Science 8(2), 189-201",
+      "doi": "10.1016/0304-3975(79)90044-6",
+      "note": "The permanent is #P-complete even for 0/1 matrices, so counting perfect matchings of general bipartite graphs is #P-complete."
+    },
+    {
+      "authors": "Bareiss, E. H.",
+      "year": 1968,
+      "title": "Sylvester's identity and multistep integer-preserving Gaussian elimination",
+      "venue": "Mathematics of Computation 22(103), 565-578",
+      "doi": "10.1090/S0025-5718-1968-0226829-0",
+      "note": "Fraction-free (integer-preserving) elimination; the one-step variant is implemented."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree and harness.check accepts their answers on 280 instances (35 sizes n = 0..144, 8 trials; the enumeration on the 240 with n <= 48): unit-weight rectangles, random 0/1 edge subsets (p in {0.5, 0.75, 0.9}), random weights 0..3 and 1..10^9 (with zeros), ladders, paths, odd N (56 instances with both sides >= 2) and N = 0 (0 x k and k x 0); answers 0 (143), 1 (42) and > 1 (95). harness.check shares no code with the implementations: a transfer-matrix (broken-profile) dynamic programme over the cells with a bitmask of covered cells, transposed to width min(a, b). The experiment script checks that oracle against Fibonacci numbers on unit ladders (80 cases) and parity on paths (122), against brute force over all (N/2)-edge subsets on all 35 shapes with N <= 12 (350 instances), under transposition (200), against a product-of-cosines formula for unit rectangles a, b <= 10 (evaluated in floating point and rounded; used as a numerical cross-check only) (100; 8 x 8 gives 12988816), and against the permanent of the black x white matrix (112); 0 failures. Extended battery: 1225 instances n = 0..48 (enumeration == Kasteleyn == check) and 384 instances n = 49..144 (Kasteleyn == check), 0 failures. Oracle control: check rejected all 1334 wrong outputs presented (answer +-1, 2 x answer, float, bool, the signed determinant without abs where it is negative, the determinant and |determinant| of the unsigned matrix, the unit-weight count ignoring W) and accepted all 270 correct ones. Negative control: |det| of the unsigned black x white matrix differs from the answer on 286 of 480 even-N instances (first: a 2 x 2 grid; on the unit 2 x 2 grid det [[1, 1], [1, 1]] = 0 vs 2) and on every unit m x 2 ladder, m = 2..30; det K itself is negative on 39 of them (always for shapes such as 2 x 3, 2 x 7, 6 x 3), and its sign never differs between instances of one shape. V2 (measure: reported, exact counts of multiplications and floor divisions on the harness's CountingInt weights; implementations unchanged; family: unit (n/2) x 2 ladder). Enumeration, n = 16, 20, ..., 52: 120, 319, 840, 2204, 5775, 15124, 39600, 103679, 271440, 710644 = L(n/2 + 2) - 3 (proven from the recursion, see correctness; checked for every even n = 2..60); fitted against that exact form, tolerance 0.02: alpha = 1.000; rivals 2^(n/2) (alpha 0.696), n phi^(n/2) (0.885) and n^3 (2.464) rejected; log-factor diagnostic resolved (0.962 / 1.040); the bare phi^(n/2) would give 1.002. Kasteleyn, n = 16, 32, 64, 128, 256: 420, 3720, 31248, 256032, 2072640 = (n-2) n (n-1)/8 (proven from the loop structure; checked for every even n = 2..120 and 256, and on 297 random even-N instances of all kinds and shapes with non-zero answers, 53 of which needed a row swap: all equal to the closed form); alpha = 1.000 against that form, tolerance 0.02; rivals n^2 (1.532), n^4 (0.766) and n^3 log n (0.943) rejected; diagnostic resolved (0.925 / 1.088); the bare n^3 would give 1.021, outside the tolerance. Bit sizes stay below the Hadamard-based bounds on unit and 10^9-weight grids up to 12 x 12 (e.g. 10 x 10 with weights up to 10^9: 1475 bits stored, bound 1544).",
+    "artifacts": [
+      "implementations/enumeration.py",
+      "implementations/kasteleyn_bareiss.py",
+      "harness.py",
+      "../../experiments/2026-10-06f_entries_planar_matchings.py",
+      "../../tests/test_entries_2026_10_06f_planar.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      12,
+      14,
+      15,
+      16,
+      18,
+      20,
+      21,
+      24,
+      25,
+      27,
+      28,
+      30,
+      32,
+      35,
+      36,
+      40,
+      42,
+      45,
+      48,
+      64,
+      81,
+      100,
+      120,
+      144
+    ],
+    "trials": 8
+  },
+  "caveats": "Scope: rectangular grids and their spanning subgraphs (edge deletions through weight 0) only; regions with holes or other boundaries need vertex deletions, which this input format cannot express, and other planar graphs need signs adapted to their embedding; neither is implemented. Weights must be non-negative: the proof gives det K = +-Z for any weights, but |det K| = Z needs Z >= 0. The Theta(N^3) bound counts arithmetic operations; the integers grow to O(N log(2 w_max)) bits, so the bit cost is higher but polynomial (see the algorithm's time_complexity). The counts include multiplications and divisions only: additions, comparisons, truth tests, the enumeration's scan for the next unmatched vertex and all list operations are not counted; on the ladder family each of these is O(1) per counted operation. The enumeration's cost depends on the vertex numbering: on the 2 x m ladder (numbered along the long side) the count is exactly F(m+3) - 2 + ((m-1) F(m) + 2m F(m-1))/5 = Theta(m phi^m) (checked for m = 1..24; e.g. 684816 against 271440 on the 24 x 2 ladder), because every row-0 tiling is completed by a private chain of row-1 steps; V2 uses the m x 2 orientation, whose count is Theta(phi^m). The enumeration's V2 is on ladders only, not on its worst case; its worst case over all N-vertex inputs depends on the shapes a*b = N allows (for prime N only paths exist, where it is linear). The exact counts involve no CPython built-in such as sorted, min or max.",
+  "notes": "Neighbours in the dataset: spanning-tree-count-enumeration-vs-kirchhoff (counting by a determinant, same Bareiss routine and counting convention); permanent-naive-vs-ryser (the sign-free analogue, #P-complete, for which only exponential algorithms are known); determinant-cofactor-vs-gaussian (the determinant step alone); bipartite-matching-kuhn-vs-hopcroft-karp (finding one maximum matching is polynomial for every bipartite graph; counting perfect matchings is what becomes hard without planarity). Experiment: experiments/2026-10-06f_entries_planar_matchings.py."
+}

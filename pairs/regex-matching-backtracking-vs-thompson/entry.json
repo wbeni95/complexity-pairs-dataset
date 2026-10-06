@@ -23,7 +23,8 @@
           "n_values": [4, 6, 8, 10, 12, 14, 16],
           "measure": "reported",
           "tolerance": 0.035,
-          "rivals": ["2**n", "n**2 * 2**n", "n**2"]
+          "rivals": ["2**n", "n**2 * 2**n", "n**2"],
+          "shape": {"sequence": "consecutive", "n_range": [1, 16]}
         }
       }
     },
@@ -42,7 +43,8 @@
           "n_values": [8, 16, 32, 64, 128],
           "measure": "reported",
           "tolerance": 0.05,
-          "rivals": ["n", "n**3", "n * 2**n"]
+          "rivals": ["n", "n**3", "n * 2**n"],
+          "shape": {"sequence": "consecutive", "n_range": [1, 20]}
         }
       }
     },
@@ -61,7 +63,8 @@
           "n_values": [8, 16, 32, 64, 128],
           "measure": "reported",
           "tolerance": 0.05,
-          "rivals": ["n", "n**3", "n * 2**n"]
+          "rivals": ["n", "n**3", "n * 2**n"],
+          "shape": {"sequence": "consecutive", "n_range": [1, 20]}
         }
       }
     }

@@ -1,25 +1,25 @@
 {
   "schema": "schema/entry.schema.json",
   "counts": {
-    "entries": 62,
-    "validated_pairs": 47,
-    "open_problems_T6": 12,
+    "entries": 69,
+    "validated_pairs": 54,
+    "open_problems_T6": 13,
     "proven_quantum_advantage_T9": 9,
     "synthetic_T7": 4,
     "with_quantum_algorithm": 12,
     "by_level": {
       "V0": 11,
       "V1": 4,
-      "V2": 47,
+      "V2": 54,
       "V3": 0
     },
     "by_type": {
       "T1": 2,
-      "T2": 16,
-      "T3": 18,
+      "T2": 20,
+      "T3": 20,
       "T4": 2,
       "T5": 1,
-      "T6": 11,
+      "T6": 12,
       "T7": 4,
       "T8": 0,
       "T9": 8
@@ -231,6 +231,33 @@
       "sources": 4
     },
     {
+      "id": "horn-sat-brute-force-vs-unit-propagation",
+      "title": "Horn-SAT: brute force over all assignments vs linear-time unit propagation",
+      "path": "pairs/horn-sat-brute-force-vs-unit-propagation",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "brute force over all assignments",
+          "model": "classical-deterministic",
+          "time_complexity": "O(2^n * L) always; Theta(2^n * n) = Theta(2^n * m) on the V2 family H_n, where every assignment is examined (unsatisfiable) and the 2^(n-1) assignments with x1 false pass n - 2 clauses before failing: exactly (2n + 13) 2^(n-2) - 2n - 4 literal evaluations.",
+          "implemented": true
+        },
+        {
+          "name": "unit propagation with clause counters (Dowling-Gallier)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n + L) on every input: every variable is set true at most once, so every negative literal occurrence is decremented at most once and every clause fires at most once. On H_n exactly 12n - 7 counted operations.",
+          "implemented": true
+        }
+      ],
+      "sources": 5
+    },
+    {
       "id": "lcs-brute-vs-dp",
       "title": "Longest common subsequence: subsequence enumeration vs dynamic programming",
       "path": "pairs/lcs-brute-vs-dp",
@@ -325,6 +352,33 @@
         }
       ],
       "sources": 3
+    },
+    {
+      "id": "max-weight-independent-set-grid-enumeration-vs-path-decomposition-dp",
+      "title": "Maximum-weight independent set on k x n grids with diagonals: exhaustive search vs DP over a path decomposition",
+      "path": "pairs/max-weight-independent-set-grid-enumeration-vs-path-decomposition-dp",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "exhaustive search over all vertex subsets",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(N 2^N) on every input (N = k n), i.e. 2^Theta(n) for every fixed k. Exactly N 2^(N-1) weight additions on every input: (3/2) n 8^n for k = 3 (the V2 family).",
+          "implemented": true
+        },
+        {
+          "name": "DP over the columns (path decomposition of width 2k-1)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(F_{k+2}^2 n) = Theta(phi^(2k) n) word operations (F_{k+2}^2 compatibility tests per column; F_{k+2} = 2, 3, 5, 8, 13, 21 for k = 1..6): Theta(n) for every fixed k, exponential in k. Weight additions: exactly n P_k + (n-1) F_{k+2} on every instance with positive weights, where P_k is the total number of rows over all column states; 10n - 5 for k = 3 (P_3 = 5, F_5 = 5), the V2 family.",
+          "implemented": true
+        }
+      ],
+      "sources": 4
     },
     {
       "id": "minimum-spanning-tree-brute-vs-kruskal",
@@ -429,6 +483,33 @@
         }
       ],
       "sources": 3
+    },
+    {
+      "id": "planar-perfect-matchings-enumeration-vs-kasteleyn",
+      "title": "Weighted perfect matchings of planar grid graphs (dimers): backtracking enumeration vs Kasteleyn's signed determinant (Bareiss)",
+      "path": "pairs/planar-perfect-matchings-enumeration-vs-kasteleyn",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "backtracking enumeration of perfect matchings",
+          "model": "classical-deterministic",
+          "time_complexity": "O(N 2^(N/2)) on every instance: the search tree has branching factor <= 2 and depth <= N/2, and the scan for the next unmatched vertex only moves forward along a root-to-leaf path. The time is also at least the number of perfect matchings, which is exponential in N for unit weights: F(N/2 + 1) = Theta(phi^(N/2)) (Fibonacci numbers) on the (N/2) x 2 ladder, and at least 2^(N/4) on a x b grids with a and b even (N/4 disjoint 2 x 2 blocks with 2 tilings each). Counted cost (one multiplication weight * subtotal per search-tree edge) on the V2 family, the unit-weight (n/2) x 2 ladder: Theta(phi^(n/2)) = Theta(1.272^n), exactly L(n/2 + 2) - 3 = phi^(n/2+2) + (-1/phi)^(n/2+2) - 3 multiplications (L = Lucas numbers). On the 2 x (n/2) ladder (the same graph, vertices numbered along the long side) it is Theta(n phi^(n/2)), see caveats.",
+          "implemented": true
+        },
+        {
+          "name": "Kasteleyn signed determinant with Bareiss fraction-free elimination",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(N^3) arithmetic operations: exactly (m-1) m (2m-1)/2 = (N-2) N (N-1)/8 multiplications and exact divisions (m = N/2) on every instance with a non-zero answer, whatever row swaps occur (the loops do not depend on the values unless a column is zero from the pivot down, which forces det = 0); at most that many when the answer is 0, none for odd N; plus Theta(N^2) entry reads and negations to build K. The integers are not of constant size: every Bareiss value is a minor of K (rows permuted), at most (2 w_max)^(N/2) in absolute value by Hadamard's inequality (each row of K has at most 4 non-zero entries, so Euclidean norm <= 2 w_max), and a product before division is at most 2 (2 w_max)^N in absolute value, so all values have O(N log(2 w_max)) bits. Bit complexity O(N^3 M(N log(2 w_max))), where M(b) is the cost of multiplying b-bit integers: polynomial in the input size.",
+          "implemented": true
+        }
+      ],
+      "sources": 4
     },
     {
       "id": "regex-matching-backtracking-vs-thompson",
@@ -545,6 +626,33 @@
       "sources": 3
     },
     {
+      "id": "xor-sat-brute-force-vs-gaussian-elimination",
+      "title": "XOR-SAT and #XOR-SAT: brute force over all assignments vs Gaussian elimination over GF(2)",
+      "path": "pairs/xor-sat-brute-force-vs-gaussian-elimination",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "brute force over all assignments",
+          "model": "classical-deterministic",
+          "time_complexity": "O(2^n * m * n) bit operations always; Theta(2^n * n) on systems whose rows are linearly independent (row i is reached by 2^(n-i) assignments), in particular exactly (2n + 1)(2^(n+1) - 2) counted operations on the V2 family X_n (and on every n x n system of full rank). The worst case Theta(2^n * m * n) needs many dependent rows (e.g. repeated equations).",
+          "implemented": true
+        },
+        {
+          "name": "Gaussian elimination over GF(2)",
+          "model": "classical-deterministic",
+          "time_complexity": "O(m n min(m, n)) bit operations; Theta(n^3) for n x n systems in the worst case: exactly n (n^2 + 6n - 4) / 3 counted operations on the V2 family X_n.",
+          "implemented": true
+        }
+      ],
+      "sources": 3
+    },
+    {
       "id": "all-pairs-shortest-paths-bellman-ford-vs-floyd-warshall",
       "title": "All-pairs shortest paths on dense digraphs: Bellman-Ford from every source vs Floyd-Warshall",
       "path": "pairs/all-pairs-shortest-paths-bellman-ford-vs-floyd-warshall",
@@ -597,6 +705,33 @@
         }
       ],
       "sources": 3
+    },
+    {
+      "id": "boolean-matrix-multiplication-naive-vs-strassen",
+      "title": "Boolean matrix multiplication: schoolbook vs Strassen over the integers",
+      "path": "pairs/boolean-matrix-multiplication-naive-vs-strassen",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "schoolbook (Boolean)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^3): exactly n^3 AND and n^3 OR operations on every input.",
+          "implemented": true
+        },
+        {
+          "name": "Strassen over the integers, then threshold",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^(log2 7)) ~ Theta(n^2.807) arithmetic operations on O(log n)-bit integers: exactly 7^(log2(n/16)) * 16^3 multiplications for n a power of two >= 16.",
+          "implemented": true
+        }
+      ],
+      "sources": 4
     },
     {
       "id": "closest-pair-brute-vs-divide-conquer",
@@ -828,6 +963,33 @@
           "name": "Kadane's algorithm (linear scan)",
           "model": "classical-deterministic",
           "time_complexity": "Theta(n)",
+          "implemented": true
+        }
+      ],
+      "sources": 2
+    },
+    {
+      "id": "or-convolution-naive-vs-zeta-mobius",
+      "title": "OR convolution (covering product): all index pairs vs zeta and Moebius transforms",
+      "path": "pairs/or-convolution-naive-vs-zeta-mobius",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "all index pairs (naive)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(4^n) = Theta(N^2): exactly 4^n multiplications and 4^n additions (counted: 2 * 4^n ring operations).",
+          "implemented": true
+        },
+        {
+          "name": "zeta transform, pointwise product, Moebius transform",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n * 2^n) = Theta(N log N): exactly 3n 2^(n-1) additions and subtractions plus 2^n multiplications, (3n + 2) 2^(n-1) ring operations for n >= 1.",
           "implemented": true
         }
       ],
@@ -1162,6 +1324,41 @@
         }
       ],
       "sources": 5
+    },
+    {
+      "id": "hamiltonian-cycle-count-enumeration-vs-inclusion-exclusion",
+      "title": "Counting Hamiltonian cycles: permutation enumeration vs inclusion-exclusion (and the Held-Karp counting DP)",
+      "path": "pairs/hamiltonian-cycle-count-enumeration-vs-inclusion-exclusion",
+      "location": "pairs",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T8"
+      ],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "permutation enumeration",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n!) arc tests in the worst case: exactly n! on the complete digraph (the V2 family), where no test fails; at least (n-1)! orders are generated on every input.",
+          "implemented": true
+        },
+        {
+          "name": "inclusion-exclusion over vertex subsets",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^3 2^n). Exactly, on every input with n >= 2 vertices: n(n-1)(n+2)2^(n-3) multiplications and n(n-1)(n+2)2^(n-3) + 2^(n-1) - 1 additions/subtractions, in total n(n-1)(n+2)2^(n-2) + 2^(n-1) - 1 operations (for |T| = t the DP makes n steps of t(t-1) products and t(t-1) additions, and sum over S of (|S|+1)|S| = (n-1)(n+2)2^(n-3); the extra 2^(n-1) - 1 are the signed accumulations, the one for T = {0} adds a plain 0).",
+          "implemented": true
+        },
+        {
+          "name": "Held-Karp counting DP",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2 2^n). Exactly, on every input with n >= 2 vertices: (n-1)(n-2)2^(n-3) + (n-1) multiplications and as many additions, in total (n-1)(n-2)2^(n-2) + 2(n-1) operations (a set S of size s >= 2 costs s(s-1) products, sum over s of C(n-1, s) s(s-1) = (n-1)(n-2)2^(n-3), plus n-1 closing products).",
+          "implemented": true
+        }
+      ],
+      "sources": 6
     },
     {
       "id": "knapsack-01-brute-vs-dp",

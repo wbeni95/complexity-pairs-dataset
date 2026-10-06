@@ -236,16 +236,14 @@ Positive controls in the same run:
    * It does **not** mean "new" in an absolute sense. Kauers and Moosbauer report "more than 100000" rank-47
      schemes, and the directory holds only 23 distinct term sets; their full set may contain more classes.
    * Unpublished or overlooked schemes may exist, and catalogues we did not find may hold others.
-   * The files are another agent's in-progress output; that agent's report should carry the claim, with this
-     audit as the evidence.
+   * The files are another agent's in-progress output.
 3. RL-059's "inequivalent to the AlphaTensor and the Kauers–Moosbauer files" remains true for RL-054, but the
    novelty question raised in RL-061 is now answered negatively for RL-054.
 
 ## 6. Near-misses
 
 * **RL-054 looked new against the two files RL-059 checked, and against 99,128 of the 99,129 published files.**
-  The only match was one file in a 19-file folder that no paper we read cites. This is the main lesson for future
-  novelty claims (open idea 2).
+  The only match was one file in a 19-file folder that no paper we read cites.
 * **The matching published scheme shares 0 of its 47 terms with ours.** Identical-term checks, or "zero terms in
   common", say nothing about equivalence. FastMatrixF2's inequivalence argument rests on the factor-rank
   signature, not on its "0 terms in common" remark.
@@ -296,20 +294,7 @@ Positive controls in the same run:
 
 ## 8. Open ideas
 
-1. **Classify the 99,120 published schemes into equivalence classes** (I1–I4, then the exact test inside each
-   invariant class, or a canonical form). The invariant counts in section 4 are lower bounds. A full
-   classification would show how many classes are public, whether Zaru's class occurs in them, and where every
-   future rank-47 hit of ours lands, in seconds.
-2. **Before any future novelty claim, run `experiments/2026-10-06c_equivalence.py` against the cached
-   collection first.** The RL-059 check against two files was not enough: the matching scheme was in a folder
-   of 19 files.
-3. **Use the published classes as starting points for the rank-46 search.** Download them at run time; the
-   repository must not redistribute them, since no license is stated. They are diverse rank-47 starts, and
-   RL-059 measured that walks from RL-054's scheme alone stay at 47.
-4. **Ask Kauers and Moosbauer** whether `444/x47/` is the full "more than 100000" set of the paper, and what
-   "x47" and the `-s1/-s2/-w1/-w2` suffixes mean. We did not find this stated anywhere.
-5. **Dataset entry idea (RL-054):** a characteristic-2 entry "Strassen recursion vs recursive rank-47 scheme"
-   should cite the published schemes (AlphaTensor; Kauers–Moosbauer), not RL-054 as a source of a new scheme.
+*Forward-looking content is not published (RL-086).*
 
 ## 9. Reproduction
 

@@ -51,10 +51,9 @@ it was fixed (section 3.2).
   - `experiments/2026-10-07_minimum_finding.py`
   - `experiments/2026-10-07_qsearch_expected_cost.py`
   - `experiments/2026-10-07_source_checks.py` (network; external provenance)
-- **Stale, not touched (by rule):** `index.json` and the README pairs table. The maintainer needs to run
-  `tools/build_index.py`.
+- **Stale, not touched (by rule):** `index.json` and the README pairs table.
 
-## 2. Reusable machinery (a tool for future T9 entries)
+## 2. Reusable machinery
 
 **Additions to `lib/qsim.py`:**
 - **`State.uniform(n)`** writes down H⊗ⁿ|0⟩ directly. A test checks that it equals `State(n)` followed by `h_all()`.
@@ -527,49 +526,13 @@ quant-ph/9708016, quant-ph/0311001, quant-ph/0111102, quant-ph/0112086, 1411.572
   and freshness without running `build_index.py`, which would rewrite `index.json` (forbidden).
 - **D15. Sample sizes from the predicted standard error of α** (delta method), not by trial and error. All predicted
   α values matched the validator within 0.5 s.e.
-- **D16. No `validate.py --record` run**, because `--record` calls `git` internally and git was not to be run. The
-  maintainer should make the recorded run.
+- **D16. No `validate.py --record` run**, because `--record` calls `git` internally and git was not to be run.
 - **D17. Large z-scores were never "fixed" by re-seeding.** Every original result is kept, and replications were
   declared before being run, with new seeds and larger samples.
 
 ## 8. Open ideas
 
-- **Forrelation on lib/qsim (V1/V2).** The quantum side is one query on n+1 qubits; the classical lower bound is
-  proven. It needs a sampler for forrelated pairs (f, g). The usual construction (signs of a Gaussian vector and of
-  its Hadamard transform) must be verified in the paper before use. This would be the dataset's strongest
-  *implemented* separation (1 vs Ω̃(√N)).
-- **Exact Simon (Brassard–Høyer 1997, ISTCS).** BHT's note cites it as making Simon worst-case polynomial. With it,
-  Simon's separation holds exact-quantum vs bounded-error-classical, the opposite corner from Deutsch–Jozsa. The DOI
-  needs verification.
-- **Boundary note on total functions.** Beals et al. 2001 (doi:10.1145/502090.502097, verified; J. ACM 48(4),
-  778–797): for total Boolean functions, deterministic and quantum query complexity are polynomially related (the
-  degree-6 relation should be quoted only after reading the paper). Together with Aaronson–Ambainis's "no partial
-  function with constant Q and linear R", this is the formal version of a lesson this batch makes concrete: Simon vs
-  collision shows that exponential query speedups need promise structure. A note like
-  `notes/boundary-2sat-vs-3sat.md` would fit.
-- **"Advantage without structure" counterpoint.** Yamakawa & Zhandry (2022) is reported to give an exponential
-  quantum query advantage for an NP search problem relative to a *random* oracle. If verified, it qualifies the
-  structure lesson above and belongs in the map. Not checked tonight.
-- **k-fold Forrelation.** Aaronson–Ambainis's conjecture of t vs Ω̃(N^(1−1/2t)) is reported to have been resolved
-  around 2021 (Bansal–Sinha; Sherstov–Storozhenko–Wu). This is unverified, and the DOIs need checking before staging.
-- **Glued-trees quantum walk** (Childs et al. 2003). An exponential speedup for traversing a black-box graph, with a
-  classical lower bound. It is a T9 candidate whose structure differs from the hidden-subgroup family.
-- **Quantum counting and amplitude estimation** (BBHT section 5 and its follow-ups). A quadratic speedup for
-  approximate counting and mean estimation over classical sampling. It needs phase estimation in qsim, which would be
-  a reusable building block (it is also needed for an HHL toy model).
-- **First implemented T5 entry.** A Chia–Lin–Wang / Gilyén–Lloyd–Tang length-squared sampler for low-rank Ax = b,
-  measuring samples and queries against dimension, compared with an exact solver. It would turn
-  `staging/recommendation-systems-dequantization` and the low-rank half of HHL into measured evidence.
-- **The exact-vs-bounded-error axis as a dataset field.** BBHT section 3.1 notes that at t = N/4 Grover succeeds
-  with certainty after one iteration (reproduced: every run 3 queries), "exponentially better than any possible
-  classical algorithm" in the worst case. That is again an exact-only separation, like DJ. An `error_model` field
-  per algorithm (exact / zero-error / one-sided / bounded) would make such distinctions queryable. It is a schema
-  change, so it was not made.
-- **Element-distinctness walk on qsim.** It needs an index register of N^⅔ entries with their values. That is
-  feasible only for very small N in a state-vector simulator, but would give V1. Consider the MNRS framework.
-- **Check of the existing Simon entry's attribution.** The Ω(2^(n/2)) classical bound is attributed to Simon 1997.
-  I did not read Simon's theorem statement. The bound itself is correct: the birthday argument of section 3.2 applies
-  to Simon instances, since non-collisions only exclude candidate values of s.
+*Forward-looking content is not published (RL-086).*
 
 ## 9. Updated short map of the classical-vs-quantum evidence
 
@@ -636,7 +599,4 @@ low-rank machine-learning and linear-algebra tasks under sampling access.
 
 ## 11. For the maintainer
 
-- Run `python tools/build_index.py`, because `index.json` and the README pairs table are stale.
-- Make a recorded run: `python tools/validate.py <the six new entries> pairs/bernstein-vazirani-classical-vs-quantum pairs/grover-search-classical-vs-quantum pairs/simon-classical-vs-quantum --scaling --record`.
-  I did not, because `--record` invokes git.
-- Consider adding the section 10 entries to RESEARCH_LOG.md.
+*Forward-looking content is not published (RL-086).*

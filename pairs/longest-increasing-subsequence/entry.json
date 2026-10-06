@@ -26,7 +26,8 @@
           "rivals": [
             "2**n",
             "2**n * n**2"
-          ]
+          ],
+          "shape": {"sequence": "consecutive", "n_range": [1, 18]}
         }
       }
     },
@@ -49,7 +50,8 @@
           "rivals": [
             "n*log(n)",
             "n**2*log(n)"
-          ]
+          ],
+          "shape": {"sequence": "consecutive", "n_range": [1, 20]}
         }
       }
     },
@@ -72,7 +74,8 @@
             "n",
             "n*log(n)**2",
             "n**2"
-          ]
+          ],
+          "shape": {"sequence": "doubling", "n_range": [2, 65536]}
         }
       }
     }

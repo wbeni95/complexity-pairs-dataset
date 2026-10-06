@@ -17,7 +17,7 @@
       "correctness": "f(e_i) = s_i by definition.",
       "implementation": "implementations/classical.py:bv_classical",
       "harness": {
-        "scaling": { "cost": "n", "n_values": [2, 4, 8, 12, 16], "measure": "reported" }
+        "scaling": { "cost": "n", "n_values": [2, 4, 8, 12, 16], "measure": "reported", "shape": {"sequence": "consecutive", "n_range": [1, 16]} }
       }
     },
     {
@@ -31,7 +31,7 @@
       "implementation": "implementations/quantum.py:bv_quantum",
       "harness": {
         "v1_max_n": 10,
-        "scaling": { "cost": "1", "n_values": [1, 2, 4, 6, 8, 10], "measure": "reported", "tolerance": 0.01 }
+        "scaling": { "cost": "1", "n_values": [1, 2, 4, 6, 8, 10], "measure": "reported", "tolerance": 0.01, "shape": {"sequence": "consecutive", "n_range": [1, 10]} }
       }
     }
   ],

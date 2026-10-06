@@ -24,7 +24,8 @@
           "tolerance": 0.02,
           "rivals": [
             "n**log2(3)"
-          ]
+          ],
+          "shape": {"sequence": "consecutive", "n_range": [1, 16]}
         }
       }
     },
@@ -45,7 +46,8 @@
           "tolerance": 0.02,
           "rivals": [
             "n**2"
-          ]
+          ],
+          "shape": {"sequence": "doubling", "n_range": [32, 4096], "note": "starts at the schoolbook cutoff (32 digits); below it the count is n^2"}
         }
       }
     }

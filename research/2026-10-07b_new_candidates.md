@@ -19,7 +19,7 @@ rivals (RL-047). One algorithm, spanning-tree enumeration, uses timing; the reas
 | [data] | closed form read off the data, not proven |
 | [DOI OK] | resolved with `lookup_doi`; venue details matched with `crossref_record` |
 
-## 0. Environment problem found (please fix)
+## 0. Environment problem found
 
 The repo `.venv` has **jsonschema 3.2.0**, which has no `Draft202012Validator`. `tools/validate.py` therefore exits
 with "jsonschema is required" in that venv. `requirements.txt` asks for `jsonschema>=4.18`.
@@ -27,7 +27,6 @@ with "jsonschema is required" in that venv. `requirements.txt` asks for `jsonsch
   site-packages, and cffconvert 2.x pins jsonschema 3 (recalled, not checked).
 - I did not modify `.venv`. All validation and unit tests here ran in a scratch venv built from `requirements.txt`
   (CPython 3.14.2, jsonschema 4.26.0), outside the repo.
-- Suggested fix: keep cffconvert in a separate venv, or run it with `pipx`.
 
 ## 1. Summary
 
@@ -259,10 +258,9 @@ This input is worst case for both algorithms.
 ## 3. Candidates not reached or rejected
 
 All eight requested candidates were implemented. Within them, these options were skipped:
-- **Karger–Stein** in the min-cut entry: its V1 check would be probabilistic, and the time box. Exact counts would
-  now separate it from Stoer–Wagner; see the open ideas.
+- **Karger–Stein** in the min-cut entry: its V1 check would be probabilistic, and the time box.
 - **Papadimitriou's random walk** in 2-SAT: its V1 check would be probabilistic, and its source has no Crossref year.
-- **Subset convolution** as a third zeta-transform pair: left as an open idea.
+- **Subset convolution** as a third zeta-transform pair.
 
 Other pattern-report candidates (7, 8, 11–40) were outside this brief.
 
@@ -312,8 +310,7 @@ Other pattern-report candidates (7, 8, 11–40) were outside this brief.
   claimed Θ class; the time_complexity fields state Θ(n·2ⁿ) and Θ(n³).
   - Alternative: bare forms with wider tolerances, which would lose rival or log discrimination (near-misses 6 and
     8).
-  - **Maintainer decision requested:** should the cost field allow exact forms? Strassen's precedent used n^log₂7,
-    not the exact 7^k·16³.
+  - Strassen's precedent used n^log₂7, not the exact 7^k·16³.
 - **D8. NAND tolerance 0.05.** Chosen from the exact-expectation deviation (0.002) plus the empirical seed spread
   (sd 0.005). The 2ʰ rival gap is 0.25; the pattern report's timing-free probe at 40 samples had found the margin
   "small".
@@ -326,24 +323,7 @@ Other pattern-report candidates (7, 8, 11–40) were outside this brief.
 
 ## 6. OPEN IDEAS
 
-1. **Subset convolution with exact counts:** naive 3ⁿ vs ranked zeta/Möbius n²·2ⁿ. The pattern report found timing
-   could not separate these (ρ = 1.205), but exact counts with tolerance 0.02 would. Computed (console, least squares): noise-free
-   n²·2ⁿ data fitted against 3ⁿ over n = 4..12 gives α = 0.875, far outside 0.02.
-2. **Karger–Stein as a counted third algorithm in min cut**, with a T4 secondary tag. Its n² log³ n is now
-   resolvable by counts. The V1 check is probabilistic.
-3. **Papadimitriou's 2-SAT walk:** a T4 secondary tag, and the ancestor of Schöning's walk in the dataset.
-4. **NAND tree as T9:** add the quantum line once a quantum NAND-tree source verifies by title. The classical
-   randomized lower bound above would be the T9 classical bound.
-5. **A small shared counting library** (CountingInt, CountingChar, counting sequences). Every harness in this batch
-   reimplements one. Placing it in `lib/` is the maintainer's decision.
-6. **An exact count for spanning-tree enumeration** via an input encoding that exposes both algorithms' work, e.g. an
-   adjacency matrix of counting 0/1 objects whose truth tests are counted, together with a union-find on instance
-   objects.
-7. **APT's 49(n+2):** derive it, to turn [data] into [proof].
-8. **Existing entries that might move to exact-count V2 with rivals in the same style** (RL-048 follow-up):
-   polynomial multiplication (NTT), Karatsuba, sorting comparisons. A parallel agent appears to be working on this:
-   `experiments/2026-10-07b_count_v2_*.py` scripts appeared during this session. They are not mine; check for
-   overlap before starting.
+*Forward-looking content is not published (RL-086).*
 
 ## 7. Files
 
@@ -369,8 +349,7 @@ Experiments, `experiments/2026-10-07b_*.py`:
 - `two_sat_counts`
 - `spanning_tree_counts`
 
-Not done (the maintainer's steps):
+Not done:
 - a RESEARCH_LOG entry;
 - `tools/build_index.py`;
-- a recorded ledger run (`--record`), which should not overlap the CPU-heavy search because one timed claim exists
-  (spanning-tree enumeration).
+- a recorded ledger run (`--record`).

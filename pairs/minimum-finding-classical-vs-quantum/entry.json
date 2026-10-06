@@ -17,7 +17,7 @@
       "correctness": "Trivial. Optimal for exact algorithms (any unread entry could hold the minimum), and Omega(N) queries are needed even with bounded error (see lower_bounds).",
       "implementation": "implementations/classical.py:minimum_scan",
       "harness": {
-        "scaling": { "cost": "2**n", "n_values": [2, 4, 6, 8, 10, 12, 14, 16], "measure": "reported" }
+        "scaling": { "cost": "2**n", "n_values": [2, 4, 6, 8, 10, 12, 14, 16], "measure": "reported", "shape": {"sequence": "consecutive", "n_range": [1, 14]} }
       }
     },
     {

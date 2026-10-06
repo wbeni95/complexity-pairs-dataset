@@ -13,6 +13,11 @@ What it checks (see START_HERE.txt section 3 for the level definitions):
            against log(cost(n)); the slope must be 1 +- tolerance, and every
            declared rival cost must NOT fit (discriminating V2). A log-factor
            diagnostic is recorded for every fit (informational only)
+  shape    for exact counts with a harness.scaling.shape block: an exact shape
+           diagnostic (guessed recurrence -> dominant root, exponent, log power)
+           compared with the claimed cost; printed with -v, stored with --record.
+           Informational only: it never changes a V2 verdict (methods/shape.py,
+           notes/v2-shape-diagnostic.md)
   V3       verification.proofs must cite at least one complexity proof
 
 Levels are cumulative: an entry claiming V2 must also pass V1.
@@ -31,6 +36,7 @@ Usage:
   python tools/validate.py                 # all entries, V1 runs, no timing
   python tools/validate.py --scaling       # also re-measure V2 claims
   python tools/validate.py --probe         # also try levels above the claim
+  python tools/validate.py --scaling -v --no-shape   # V2 without the shape diagnostic
   python tools/validate.py pairs/fibonacci-naive-vs-dp
 """
 from __future__ import annotations
@@ -258,9 +264,10 @@ def fit_slope(xs: list[float], ys: list[float]) -> float:
     return sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sxx
 
 
-def run_v2(entry: dict, entry_dir: Path, verbose: bool, rec: dict | None = None) -> list[str]:
+def run_v2(entry: dict, entry_dir: Path, verbose: bool, rec: dict | None = None, shape: bool = True) -> list[str]:
     errors = []
     measurements = rec.setdefault("v2", []) if rec is not None else []
+    pending_shape = []  # (alg, fn, sc, measurement): the informational shape diagnostic runs after the loop
     th = entry["test_harness"]
     harness = load_module(resolve_in_repo(entry_dir, th["module"]))
     gen = getattr(harness, "generate_scaling", harness.generate)
@@ -355,9 +362,97 @@ def run_v2(entry: dict, entry_dir: Path, verbose: bool, rec: dict | None = None)
             "alpha": None if constant else alpha, "max_over_min": ratio if constant else None,
             "tolerance": tol, "passed": ok, "rivals": rival_results, "diagnostics": diagnostics,
         })
+        pending_shape.append((alg, fn, sc, measurements[-1]))
         if not ok:
             errors.append(f"V2: '{alg['name']}' {summary} vs claimed cost {sc['cost']!r}")
+    # Exact shape diagnostic (informational only; see notes/v2-shape-diagnostic.md). It runs after every V2
+    # measurement of this entry, so it cannot influence them, and it never touches `errors` or `ok`.
+    # Callers decide whether it runs (validate_entry: only with -v or --record); a direct call computes it when
+    # there is verbose output or a record dict to put it in.
+    if shape and (verbose or rec is not None):
+        for alg, fn, sc, m in pending_shape:
+            res = run_shape(entry, harness, gen, alg, fn, sc, m)
+            m["shape"] = res
+            if verbose:
+                print(f"      shape {alg['name']}: {shape_line(res)}")
     return errors
+
+
+def run_shape(entry: dict, harness, gen, alg: dict, fn, sc: dict, m: dict) -> dict:
+    """Informational exact shape diagnostic for one V2 measurement (methods/shape.py). Never raises.
+
+    Counts on the shape grid reuse the V2 values where n coincides (same seeds); other n are counted with the V2
+    seeding scheme. An instance-dependence probe re-draws the instance (and the internal randomness) at a few small
+    n with other seeds; if a count changes, the sequence is not a function of n alone."""
+    if sc.get("measure", "time") == "time":
+        return {"category": "SKIPPED", "reason": "timing_measure"}
+    block = sc.get("shape")
+    if not block:
+        return {"category": "SKIPPED", "reason": "no_shape_block"}
+    t0 = time.perf_counter()
+    try:
+        from methods import shape as sd
+    except Exception as e:  # noqa: BLE001 -- the diagnostic must never break V2
+        return {"category": "UNDETERMINED", "reason": "internal_error", "detail": f"cannot import methods.shape: {e}"}
+    try:
+        try:
+            grid = sd.grid_from_block(block)
+        except sd.InvalidBlock as e:
+            return sd.outcome("UNDETERMINED", "invalid_shape_block", detail=str(e))
+        samples = sc.get("samples", 1)
+        if samples > 1:
+            res = sd.run(sc["cost"], block, grid, None, samples=samples)
+        else:
+            def count(n, inst_seed, alg_seed):
+                inst = gen(n, random.Random(inst_seed))
+                random.seed(alg_seed)
+                return harness.reported_cost(fn(inst))
+
+            known = dict(zip(m["n_values"], m["values"]))
+            got: dict = {}
+
+            def main_count(n):
+                if n not in got:
+                    v = known.get(n)
+                    if v is not None and float(v).is_integer() and abs(v) < 2 ** 53:
+                        got[n] = int(v)  # the V2 value at this n (same seeds)
+                    else:
+                        got[n] = count(n, f"{entry['id']}|v2|{n}", f"{entry['id']}|v2|{n}|0|{alg['name']}")
+                return got[n]
+
+            probe = {"n_values": sd.probe_points(grid), "seeds_per_point": sd.DEFAULTS["probe_seeds"],
+                     "identical": True}
+            try:
+                # 1. instance-dependence probe at a few small n (cheap); a failed probe skips the full grid
+                for n in probe["n_values"]:
+                    main = main_count(n)
+                    for j in range(1, sd.DEFAULTS["probe_seeds"] + 1):
+                        other = count(n, f"{entry['id']}|shape-probe|{n}|{j}",
+                                      f"{entry['id']}|shape-probe|{n}|{j}|{alg['name']}")
+                        if other != main:
+                            probe.update(identical=False, detail=f"n={n}: {main} (V2 seed) vs {other} (probe seed {j})")
+                            break
+                    if not probe["identical"]:
+                        break
+                # 2. the counts on the whole grid
+                values = None if not probe["identical"] else [main_count(n) for n in grid.ns]
+            except Exception as e:  # noqa: BLE001
+                return sd.outcome("UNDETERMINED", "count_failed", sequence=grid.sequence, n_values=grid.ns,
+                                  detail=f"{type(e).__name__}: {e}", seconds=round(time.perf_counter() - t0, 3))
+            res = sd.run(sc["cost"], block, grid, values, probe=probe)
+    except Exception as e:  # noqa: BLE001
+        res = {"category": "UNDETERMINED", "reason": "internal_error", "detail": f"{type(e).__name__}: {e}"}
+    res["seconds"] = round(time.perf_counter() - t0, 3)
+    return res
+
+
+def shape_line(res: dict) -> str:
+    try:
+        from methods import shape as sd
+        line = sd.summary_line(res)
+    except Exception:  # noqa: BLE001
+        line = f"{res.get('category')} ({res.get('reason')}) {res.get('detail', '')}"
+    return line + (f"  [{res['seconds']}s]" if "seconds" in res else "")
 
 
 # --------------------------------------------------------------------------
@@ -480,7 +575,9 @@ def validate_entry(entry_dir: Path, validator, args, recorder: list | None = Non
         want_v2 = args.scaling and (claimed >= 2 or args.probe)
         if achieved >= 1 and want_v2:
             try:
-                v2_errors = run_v2(entry, entry_dir, args.verbose, rec)
+                # the informational shape diagnostic runs only when someone will see it (-v or --record)
+                want_shape = not getattr(args, "no_shape", False) and (args.verbose or recorder is not None)
+                v2_errors = run_v2(entry, entry_dir, args.verbose, rec, shape=want_shape)
             except Exception as e:  # noqa: BLE001
                 v2_errors = [f"V2: crashed: {type(e).__name__}: {e}"]
             if not v2_errors:
@@ -533,7 +630,20 @@ def run_metadata(args) -> dict:
         "arguments": {"paths": args.paths, "scaling": args.scaling, "probe": args.probe, "static": args.static},
         "timing_parameters": {"min_sample_s": MIN_SAMPLE_S, "repeats": REPEATS,
                               "statistic": "per n: best of `repeats` samples, each the mean over a loop lasting >= min_sample_s"},
+        "shape_diagnostic": _shape_metadata(args),
     }
+
+
+def _shape_metadata(args) -> dict:
+    """Version and default limits of the informational shape diagnostic (stored with every recorded run)."""
+    if getattr(args, "no_shape", False):
+        return {"enabled": False}
+    try:
+        from methods import shape as sd
+        return {"enabled": True, "version": sd.SHAPE_VERSION, "defaults": dict(sd.DEFAULTS),
+                "informational": True, "notes": "notes/v2-shape-diagnostic.md"}
+    except Exception as e:  # noqa: BLE001
+        return {"enabled": True, "error": f"{type(e).__name__}: {e}"}
 
 
 def write_record(meta: dict, records: list) -> Path:
@@ -558,6 +668,8 @@ def main(argv=None) -> int:
     ap.add_argument("--probe", action="store_true", help="also try V1/V2 above the claimed level")
     ap.add_argument("--static", action="store_true", help="schema and folder rules only, run nothing")
     ap.add_argument("-v", "--verbose", action="store_true", help="print every scaling measurement")
+    ap.add_argument("--no-shape", action="store_true",
+                    help="skip the informational exact shape diagnostic (otherwise run with -v or --record)")
     ap.add_argument("--record", action="store_true",
                     help="write every result and measurement to ledger/runs/<UTC timestamp>.json")
     args = ap.parse_args(argv)

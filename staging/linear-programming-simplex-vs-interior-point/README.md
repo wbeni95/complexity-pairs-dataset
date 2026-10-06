@@ -17,9 +17,9 @@
 
 **Caveats.** Ellipsoid and interior-point methods are WEAKLY polynomial (polynomial in L, not only in n and m). Whether LP has a STRONGLY polynomial algorithm is open (Smale's 9th problem), hence secondary tag T6. Whether some simplex pivot rule is polynomial is also open. In practice simplex is fast; smoothed analysis (Spielman-Teng) explains part of this.
 
-**Notes.** Path to V1: implement simplex (Bland's rule) and a basic interior-point method with exact rational arithmetic; verify agreement on random LPs and on Klee-Minty cubes.
+**Notes.** Not implemented; the costs are as stated in the cited sources.
 
-**Verification.** Cited from the literature; not yet independently implemented.
+**Verification.** Cited from the literature; not independently implemented.
 
 **Sources.**
 

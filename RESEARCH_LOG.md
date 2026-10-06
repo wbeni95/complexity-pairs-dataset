@@ -2,7 +2,7 @@
 
 The project's lab notebook. **Every result is recorded here, whether a claim held, failed, was corrected or
 stayed undecided**, with exact numbers and with the provenance of those numbers. Entries are never
-edited after the fact except to fix typos. A later finding gets a new entry that references the old one.
+edited after the fact except to fix typos, or to remove forward-looking content (RL-086). A later finding gets a new entry that references the old one.
 
 ## Entry types
 
@@ -14,11 +14,11 @@ edited after the fact except to fix typos. A later finding gets a new entry that
 | INCONCLUSIVE | Tested, but the evidence cannot decide. The claim is not raised. |
 | DECISION | A methodological or policy choice that changes what counts as evidence. |
 | NULL | A search found nothing within a stated scope. This is never evidence of impossibility (START_HERE section 6). |
-| NEAR-MISS | Something almost worked: how close (numbers), why it fell short, and what might fix it. Kept because near-misses often point to the next attempt. |
-| IDEA | A hypothesis or direction not yet tested, with what motivates it (evidence or literature). Dropped directions are recorded too, with the concrete reason. |
+| NEAR-MISS | Something almost worked: how close (numbers) and why it fell short. |
+| IDEA | Not used in the public log since RL-086: forward-looking plans and untested directions are kept privately. Earlier IDEA entries keep their headings only. |
 
 Entries may carry a **Rationale:** line giving the considerations behind a decision or an attempt, including
-alternatives that were rejected and why, so that later work can reuse or revisit them.
+alternatives that were rejected and why.
 
 ## Provenance labels
 
@@ -283,8 +283,8 @@ The three were relaunched with the same mandates, and the documentation request 
 
 ## 2026-10-06 (overnight agents, consolidated by the maintainer; heading date corrected, see RL-055)
 
-Four background agents worked in separate areas. Their full reports, with every number, decision log, near-miss and
-open idea, are in [research/](research/):
+Four background agents worked in separate areas. Their full reports, with every number, decision log and near-miss,
+are in [research/](research/):
 - [classical_entries](research/2026-10-07_classical_entries.md)
 - [quantum_entries](research/2026-10-07_quantum_entries.md)
 - [patterns](research/2026-10-07_patterns.md) and [technique_mapping](research/2026-10-07_technique_mapping.json)
@@ -392,34 +392,17 @@ The pattern agent traced the unchanged slow implementations to count their disti
 The closed forms were read off the tables, not proven. So memoising the natural key gives a polynomial algorithm for the first three but not for the last two, whose fast algorithms need a structural insight: row-operation invariance, and dropping the visited set. This is a measurable form of the START_HERE section 5 warning about "un-bloating".
 
 ### RL-040 · IDEA · Count-based V2 for classical entries, and a discriminating V2 diagnostic
-Proposed independently by two agents:
-1. **Operation counts:** let classical implementations report exact operation counts (e.g. an instrumented number type counting multiplications). This would make small exponent gaps resolvable: Strassen 7ᵏ vs 8ᵏ, matching, Schöning.
-2. **Discriminating diagnostic:** report local slopes, or require the fit against the next-lower plausible cost to *fail*, so that a V2 pass rules out the slower alternative.
-
-Not adopted yet; this needs a DECISION.
+*Forward-looking content is not published (RL-086).*
 
 ### RL-041 · IDEA · Candidates for the next round (pattern report §3; costs mostly recalled, to be checked when implemented)
-- **XOR convolution:** naive 4ⁿ vs fast Walsh–Hadamard n·2ⁿ, the classical twin of the Hadamard step in Bernstein–Vazirani, Deutsch–Jozsa and Forrelation.
-- **Zeta transform:** 3ⁿ vs Yates n·2ⁿ.
-- **Regex matching:** backtracking vs Thompson NFA. Backtracking on (a?)ⁿaⁿ took exactly (n/2+2)·2ⁿ − 1 steps for every even n ≤ 20 (measured).
-- **Global minimum cut:** brute force vs Stoer–Wagner.
-- **NAND-tree evaluation:** deterministic 2ʰ vs randomized ((1+√33)/4)ʰ leaf reads; the tag is to be decided.
-- **Optimal BST:** n³ DP vs Knuth's n².
-
-40 candidates in total, with their traps.
+*Forward-looking content is not published (RL-086).*
 
 ### RL-042 · DECISION · Two questions raised by the pattern agent
 - **Lehman factoring (candidate 28): not implemented.** Factoring stays catalogued as open (START_HERE section 10).
 - **NAND-tree tag:** decided when the entry is implemented. The proposal is T4 primary with T3 secondary, because randomisation changes the exponent.
 
 ### RL-043 · NULL · Pair generators beyond linear recurrences: designs only
-The pattern report §5 proposes generator designs:
-- a bilinear-scheme amplifier fed by the flip-graph search;
-- a branching-rule synthesiser (honest only as upper bounds);
-- a small Boolean-function composer;
-- shared gates for every generator: a resolvability check that blocks undecidable V2 claims, a subproblem profiler, and deduplication.
-
-None was implemented tonight.
+The pattern report §5 proposes generator designs. None was implemented tonight.
 
 ### RL-044 · VERIFIED · Recorded run over all 54 entries before committing the overnight work
 Ledger: [ledger/runs/20261006T025704Z.json](ledger/runs/20261006T025704Z.json), at base commit `ae69311` with uncommitted agent work in the tree (so `git_dirty` is true), and no other Python process running.
@@ -469,7 +452,6 @@ In the recorded run (RL-050), 82 of the 90 V2 measurements had a computable diag
 - schoolbook counts (0.930 / 1.081).
 
 **None of the 77 timing fits at tolerance 0.25 resolves a log factor.** A timing-based V2 therefore means "growth consistent with the claim *up to logarithmic factors*". The README's level table now says so.
-**Follow-up IDEA:** move more entries to exact-count V2 with rivals (e.g. comparison counts for sorting, edge scans for matching), where the claim includes or excludes a log factor.
 
 ### RL-049 · DECISION · Background execution and compiled kernels (by the user)
 1. **Background runs:** every run longer than a few seconds goes in the background with an explicit time budget and a completion signal. The maintainer does not watch it and stays available meanwhile. Timing-sensitive runs must not overlap CPU-heavy jobs.
@@ -514,7 +496,7 @@ This supersedes RL-009. The repository is no longer non-commercial: code is unde
 `COMMERCIAL.md` and the PolyForm Noncommercial text were removed. The commercial-relicensing clause in CONTRIBUTING was replaced by "inbound = outbound" under the same licenses.
 Added `CITATION.cff` (author Benjamin Weisz; type dataset; validated with cffconvert against CFF schema 1.2.0) and a "How to cite" section with BibTeX in the README. The official license texts were downloaded from apache.org and creativecommons.org.
 **Rationale:** the user prioritises reliability and reputation, with positive effects on their other projects, over license income. Openness maximises reuse, independent re-verification and citation.
-CC BY 4.0 is the license researchers expect for data, and it explicitly asks for attribution when material is shared. The licenses themselves do not compel academic citation. Citations come from scholarly norms and from making citing easy: a DOI per release (Zenodo, planned at public release), CITATION.cff, and a dataset paper or preprint (planned).
+CC BY 4.0 is the license researchers expect for data, and it explicitly asks for attribution when material is shared. The licenses themselves do not compel academic citation. Citations come from scholarly norms and from making citing easy: a DOI per release (Zenodo) and CITATION.cff.
 The change was made while the repository is private with no external contributors. Once a version is published under Apache 2.0, that grant cannot be withdrawn.
 
 ### RL-054 · VERIFIED (rediscovery of the best known 4×4 rank) and NULL · First parallel Rust search, 30 minutes on 12 processes
@@ -540,8 +522,6 @@ Throughput was 1.27–2.30·10⁷ steps/s per process with 12 processes running 
 - 4×4×4 below 52 under weight cap 4, in about 9.6·10¹⁰ steps.
 
 **NEAR-MISS / deviation:** with this kernel the weight cap of 4 *hurt*: all capped walks stuck at 52, while uncapped walks reached 49, 50 and 47. The Python driver (RL-036) had found the cap helpful (one capped walk reached 49). The move policies differ (plus-transition form, restarts, candidate selection), so the effect of the cap depends on the policy and should not be generalised.
-
-**IDEA:** add a dataset entry for characteristic 2, "Strassen recursion vs recursive rank-47 4×4 scheme", with V2 on exact multiplication counts. The exponent gap is small: the rival's α would be log₂7 / log₄47 = 1.0108, so the tolerance must be below 0.0108. Exact counts at powers of 4 give α = 1.000 exactly, which makes this discriminable (the method of RL-047).
 
 ---
 
@@ -575,13 +555,13 @@ The deviation agent analysed the 5 ledger runs recorded before 09:08 local (agen
 | F1 | Matching: timing data fitted the other algorithm's cost too (Hopcroft–Karp against n³: α ≈ 0.82; Kuhn against n^2.5: ≈ 1.17) | **fixed** by count-based V2 with rivals (RL-057) |
 | F2 | Karatsuba: timing data also fitted n² (α 0.806–0.811) | **fixed by the maintainer** (below) |
 | F3 | Collision, BBHT variant: neither the measured means nor the exact expectations over n = 3..15 rule out 2^(n/2) (α 0.776 / 0.770) | **fixed**: the known-t variant declares 2^(n/2) as a rival and rejects it (α = 0.681). The BBHT variant is documented as pre-asymptotic in this range and gets no such rival. |
-| F4 | Chromatic inclusion–exclusion: the timing fit cannot tell n·2ⁿ from 2ⁿ (α 0.905 against 2ⁿ passes) | **open**; the entry already states it (IDEA, RL-061) |
+| F4 | Chromatic inclusion–exclusion: the timing fit cannot tell n·2ⁿ from 2ⁿ (α 0.905 against 2ⁿ passes) | **open**; the entry already states it |
 | F5 | Simon quantum: α 1.121 was 1.80 standard errors above the exact-E slope; n = 2 supplied 83% of the variance | **fixed**: n_values 3, 4, 6, 8, 10 with 100 instances. Recorded α = 0.970 against an exact-E slope of 0.9573 over these n. |
 | F6 | Run-to-run stability reflects timing noise only, because each run uses the same seeded instance per n | **documented** here. Instance variation is covered only by `samples`. |
 | F7 | Maximum subarray: the instance type (all-negative, all-positive, mixed) changed with n, which bent Kadane's local slopes (0.778 / 1.235) | **fixed**: `generate_scaling` always draws mixed signs |
 | F8 | Provenance: the only rival-based evidence sat in one run on a dirty tree | addressed by RL-064 (recorded run) and the follow-up run on the clean commit |
 | F9 | High-exponent timing fits have α < 1 with rising local slopes, from pre-asymptotic lower-order terms (Floyd–Warshall would need n > 703 to reach a local slope of 0.99) | Floyd–Warshall **fixed** by exact counts (exactly n³ − n, RL-057); others documented |
-| F10 | All five log n fits have α > 1 with falling slopes (untested hypothesis: cheap small-integer arithmetic) | **open** (IDEA) |
+| F10 | All five log n fits have α > 1 with falling slopes (untested hypothesis: cheap small-integer arithmetic) | **open** |
 | low | Secondary T3 tag applied unevenly | **fixed**: T3 added to Fibonacci (DP Θ(n) → fast doubling Θ(log n)) and MST (Kruskal O(n² log n) → Prim Θ(n²)) |
 
 **Maintainer's fixes, validated with `--scaling -v` (console):**
@@ -629,7 +609,7 @@ Agent report. The maintainer checked that no saved scheme is below its best know
 **Best known ranks.**
 - **Verified by the agent with both exact verifiers on published scheme files:** AlphaTensor's GF(2) factorisations (20 formats, including 4×4×4 rank 47 and 4×4×5 rank 63) and 13 Kauers–Moosbauer files (4×4×4 rank 47 and 4×4×5 rank 60 valid over GF(2) only). The downloaded files were not added to the repository.
 - **Over general rings, 4×4×4 = 48:** complex coefficients (AlphaEvolve) or rational coefficients (Dumas–Pernet–Sedoglavic), the latter not valid in characteristic 2.
-- **47 is still the best known 4×4×4 rank over GF(2)** in every source consulted. Perminov's and Kauers–Wood's lists were not checked format by format, so any future rank-46 claim needs a full literature check.
+- **47 is still the best known 4×4×4 rank over GF(2)** in every source consulted. Perminov's and Kauers–Wood's lists were not checked format by format.
 
 **Small formats** (8 seeds each, 30–180 s per walk):
 - (2,2,3) 11, (2,2,4) 14, (2,3,3) 15, (2,3,4) 20, (2,4,4) 26, (3,3,4) 29 and (3,3,5) 36: best known reached by 8/8 seeds, the slowest after 20.8 s.
@@ -644,7 +624,7 @@ Agent report. The maintainer checked that no saved scheme is below its best know
 - rank 46 from RL-054's rank-47 scheme: 1073 s plus 8 × 120 s, about 5.2·10¹⁰ steps in total;
 - below the best known rank for all ten formats within these budgets.
 
-**Inequivalence:** RL-054's rank-47 scheme has a factor-rank invariant different from the AlphaTensor and the Kauers–Moosbauer rank-47 files, so it is provably inequivalent to **those two**. Whether it is new among *all* published rank-47 schemes was not checked (IDEA, RL-061).
+**Inequivalence:** RL-054's rank-47 scheme has a factor-rank invariant different from the AlphaTensor and the Kauers–Moosbauer rank-47 files, so it is provably inequivalent to **those two**. Whether it is new among *all* published rank-47 schemes was not checked.
 
 **Unplanned second execution, an accidental reproducibility check.** `experiments/2026-10-07b_small_formats.py` ran a second time, 10:55–11:07 local, after the agent had written its report. It was the agent's background job; the maintainer waited for it to finish instead of killing it, so that no log was cut off mid-write.
 Consequences:
@@ -660,11 +640,7 @@ The maintainer removed `cffconvert` and restored jsonschema 4.26.0 from requirem
 **Lesson:** auxiliary tools go into a separate environment, never into the project's `.venv`.
 
 ### RL-061 · IDEA · Next steps from this round
-1. **Kernel:** detect dead ends (no pair of terms shares a factor) and leave them at once with a plus transition or restart, instead of idling for 50 000 steps. This changes trajectories, so `kernel_reference.py` must mirror it and the differential test must cover it.
-2. **Novelty audit of RL-054's rank-47 scheme** against all published 4×4 GF(2) rank-47 schemes (AlphaTensor's full set, the Kauers–Moosbauer flip-graph sets, later catalogues), using invariants and equivalence tests.
-3. **Remaining timing fits whose claims contain a log factor:** Fibonacci fast doubling, MST Kruskal, NTT and sparse-table RMQ. Convert them to exact counts.
-4. **Chromatic number:** count-based V2 able to reject 2ⁿ (F4).
-5. **F10:** test the small-integer arithmetic hypothesis behind the log n fits.
+*Forward-looking content is not published (RL-086).*
 
 ### RL-062 · DECISION · Cost expressions may use exact closed forms
 A cost expression may be the exact closed form of the count, e.g. (n+7)·2ⁿ for 2-SAT or (n−1)³ for Kirchhoff, when it lies in the claimed Θ class. `time_complexity` must still state the Θ class, and the exact form must be stated next to it in the entry.
@@ -784,9 +760,7 @@ To collect published schemes, the novelty agent made about 99 000 HTTP requests 
 **Rule from now on:** crawls of third-party servers are rate-limited (at most about 1–2 requests per second, one connection), prefer bulk archives or repositories, and identify themselves in the User-Agent. The cache (outside the repository) makes any repeat unnecessary.
 
 ### RL-074 · IDEA · Next steps from the third round
-1. **Line-execution counts** via `sys.monitoring` (a prototype exists in `experiments/2026-10-06c_value_reach_probe.py`) would give exact counts for Fibonacci fast doubling (bit_length(n) loop steps) and chromatic number (χ·2ⁿ multiplications; 3ⁿ − 2ⁿ submask steps). This is a methodology change, counting executions of code lines rather than operations on values, so it needs a DECISION. For chromatic number the instance family also matters: χ/n wanders between 0.500 and 0.636 on G(n, 0.8); the complement of a perfect matching (χ = n/2) is an untested alternative.
-2. **Search:** stronger escapes, such as several plus transitions, a tabu on recently visited dead ends, or portfolio restarts, compared on the same seeds with about 83 walks per arm.
-3. **The rank-47 class of RL-071:** a check against further collections, if any appear. Contacting the authors of the known collections is an outward-facing step and is left to the owner.
+*Forward-looking content is not published (RL-086).*
 
 ### RL-075 · VERIFIED · Recorded run after the third round
 Ledger: [ledger/runs/20261006T104637Z.json](ledger/runs/20261006T104637Z.json), at base commit `1dd6556` with this round's work uncommitted, on a quiet machine.
@@ -810,7 +784,7 @@ For it, `experiments/2026-10-06c_export_exp.py` exports two schemes in their `.e
 - RL-054's scheme, `search/schemes/rust-2026-10-07/4x4x4_rank47_seed8.exp`, for checking the RL-070 certificate.
 Both round-trip exactly through the audit's parser and pass both verifiers.
 The class's factor-rank profile (sorted rank triple → number of terms) is 111:1, 112:3, 113:9, 123:12, 133:9, 222:6, 223:6, 333:1. RL-054's profile is 111:2, 112:4, 113:6, 122:5, 123:16, 133:4, 222:5, 223:1, 233:2, 333:2.
-The e-mail claims no novelty. It asks whether the scheme is in their collection, and it apologises for the crawl load of RL-073. Any reply will be logged.
+The e-mail claims no novelty. It asks whether the scheme is in their collection, and it apologises for the crawl load of RL-073.
 
 ### RL-078 · DECISION · Disclosure of AI assistance
 **Finding.** Until now the repository showed the AI's part only indirectly. Every commit carries a `Co-Authored-By: Claude …` line, and the reports in research/ name their author as a "delegated research agent (Claude)". The README, CITATION.cff, .zenodo.json and NOTICE did not mention it.
@@ -826,7 +800,7 @@ In this log, "the maintainer" (27 uses before this entry) always meant the AI as
 **Unchanged.** Benjamin Weisz remains the only listed author. Authorship carries responsibility for the content, which the owner holds; this matches common policy, for example arXiv's, that AI tools are disclosed but not listed as authors.
 **Rationale:** the project's value rests on transparency. An AI role that readers can only infer from commit metadata is not transparent, and errors must be attributable to whoever made them.
 
-**The RL-077 e-mail** was sent by the owner on 2026-10-06, before this disclosure. It does not mention the AI assistance; the audit report it links to names its author as a delegated research agent (Claude). Any reply will be logged.
+**The RL-077 e-mail** was sent by the owner on 2026-10-06, before this disclosure. It does not mention the AI assistance; the audit report it links to names its author as a delegated research agent (Claude).
 
 ---
 
@@ -847,7 +821,7 @@ The owner's idea is therefore applied one level down:
 - use the slow side as the oracle, since it evaluates any objective or algebra;
 - **measure** the cost change with exact counts instead of assuming it.
 
-**Rationale:** every output stays checkable to the validator's standard. Formula-level structure remains useful as a map of gaps for literature search.
+**Rationale:** every output stays checkable to the validator's standard.
 
 ### RL-080 · VERIFIED (rediscoveries) and NEAR-MISS · Mutation pilot: where fast algorithms survive mirroring and operation swaps
 **Engine:** `mutations/` (16 tests).
@@ -917,7 +891,7 @@ The last two are pseudo-polynomial in the weights.
 
 **Preconditions:** a stated precondition implied EXACT in every rule (precision 1.000). They are often not necessary, though: 97 magma, 43 Knuth, 9 meet-in-the-middle, 5 greedy and 4 compression candidates were EXACT without them.
 
-**IDEA** (supported on fresh seeds and held-out families; not theorems):
+**Observations** (supported on fresh seeds and held-out families; not theorems):
 - **Binary powering** is exact iff p_a·p_a = p_2a for every left power, which is weaker than power-associativity. 900/900 magmas agree, and 37 exact ones are not power-associative. Likely folklore; the literature was not checked.
 - **A compressed memo key** is exact iff the dropped coordinate is a function of the kept one on the reachable states (400/400).
 - **Concave length weights** made Knuth's speed-up exact on 600/600 instances, although the quadrangle inequality failed on all of them. Open. A possible explanation, not checked: with length-only weights the value depends only on the interval length.
@@ -936,11 +910,11 @@ The last two are pseudo-polynomial in the weights.
 
 Bilinear repairs never gained (0/127).
 
-**Nearness metric:** use the adversarial ratio or a structural distance, not sampled ratios. For greedy, sampling reached the rank quotient on only 72 of 147 non-matroids.
+**Nearness metric:** for greedy, sampling reached the rank quotient on only 72 of 147 non-matroids.
 
 **Maintainer re-run:** `experiments/2026-10-06d_rules_mass_screen.py`, `…_hypotheses.py` and `…_analysis.py`. All 1920 verdicts are identical; only the `seconds` fields differ.
 
-**Data:** store `candidates/2026-10-06d/` (1.7 MB). The promotion list has 15 items. The only staging-level one is the maximum-weight basis of a binary matroid, which has low novelty next to the MST entry.
+**Data:** store `candidates/2026-10-06d/` (1.7 MB).
 
 ### RL-082 · VERIFIED and INCONCLUSIVE · Methodology: exact formula recognition, log-factor identifiability, polynomial-method certificates, a tractability predictor
 **Output:** package `methods/` (20 tests); a survey of four areas with 117 checked identifiers; the guide `notes/discovery-methods.md`. Of the identifiers, 114 are OK, 1 is OK without a year, and 2 Theory of Computing DOIs have empty Crossref titles while their arXiv versions match.
@@ -987,7 +961,7 @@ Bilinear repairs never gained (0/127).
 **Records table** for all 35 formats 2 ≤ n ≤ m ≤ p ≤ 6:
 - 372 published scheme files all verify over GF(2): Kauers–Moosbauer flips @e31a0a0f (37), Kauers' meta-flip-graph repository @12c26b29 (309), Arai–Ichikawa–Hukushima (2), Moosbauer–Poole (4), AlphaTensor (20).
 - **GF(2) vs general rings:** GF(2) is ahead in (4,4,4) 47/48, (4,4,5) 60/61 and (4,5,5) 73/76, and behind in (2,4,5) 33/32, (3,3,6) 42/40 and (3,6,6) 82/80.
-- The Q records 32 and 40 verify over Q but have denominators 2 and 8, so they do not reduce to GF(2) as they stand. An equivalent 2-integral scheme is not excluded.
+- The Q records 32 and 40 verify over Q but have denominators 2 and 8, so they do not reduce to GF(2) as they stand.
 - Source oddity: KM's `366-85-mod2.exp` holds 86 terms.
 - The Linz server was not contacted.
 
@@ -1035,19 +1009,101 @@ Ledger: [ledger/runs/20261006T143136Z.json](ledger/runs/20261006T143136Z.json). 
 - **Agents' experiments:** re-run as stated in RL-080 to RL-082, all reproduced.
 
 ### RL-085 · IDEA · Next steps from the fourth round
-1. **Exact shape diagnostic** for exact-count V2 (methodology recommendation 1; the code is in `methods/recurrences.py`). Start it as informational output; making it part of V2 needs a DECISION.
-2. **Entry candidates:** known, named problems, each needing the usual V1/V2 and verified citations.
-   - From the mutation pilot: Boolean matrix multiplication and transitive closure, bottleneck paths, counting Hamiltonian cycles, weighted spanning-tree sums.
-   - From the methodology survey: Horn-SAT, XOR-SAT, #XOR-SAT.
-   - From rule mining: OR/AND convolution, as an extension of the zeta entry.
-   - From the outside suggestion: bit-parallel algorithms in the word-RAM (log-factor gaps), and restricted graph classes with proven bounds (planar separators, bounded treewidth).
-   - Bit tricks for a fixed word size are constant factors and stay out of scope (START_HERE).
-3. **Search:**
-   - an exact SAT attack on (2,4,5) at rank 32 over GF(2);
-   - a pool of rank-48 (3,4,5) schemes;
-   - block starts from all four rank-47 4×4×4 classes;
-   - equivalence testing for non-square formats;
-   - format-dependent plateau and slack.
-4. **Open checks:**
-   - the (max,+) Knuth near-miss and the concave-weights observation against the literature;
-   - exact quantum query complexity by SDP, in a separate venv.
+*Forward-looking content is not published (RL-086).*
+
+---
+
+## 2026-10-06 (late evening: fifth round, consolidated by the maintainer)
+
+Detailed reports: [new_entries](research/2026-10-06f_new_entries.md) and [shape_diagnostic](research/2026-10-06f_shape_diagnostic.md), with the reader's guide [notes/v2-shape-diagnostic.md](notes/v2-shape-diagnostic.md).
+
+### RL-086 · DECISION · The public repository records completed work only
+**Decision (owner):** public files state what was done, not what will be done. Results, negative results, corrections, the limits of completed work and the open problems of the field (with citations) stay public. The project's own plans, next steps, idea lists, recommendations and candidate or target lists are kept privately.
+
+**Applied in this round:**
+- **This log:**
+  - The IDEA entries RL-040, RL-041, RL-061, RL-074 and RL-085 keep their headings only.
+  - Forward-looking sentences were removed from other entries; facts, numbers and corrections are unchanged.
+  - The header now allows this one kind of edit besides typo fixes, and the public log no longer uses the IDEA type.
+- **Reports in research/:** the "Open ideas", "Next steps", "Recommendations", "Proposed entries", "Promotion list" and similar sections are replaced by a one-line note, with the section numbering kept.
+- **Other files:**
+  - notes/discovery-methods.md is now a past-tense summary of RL-082;
+  - the agent backlog in START_HERE.txt was removed;
+  - plan sentences in a few entry notes, one code comment and one generated table heading were reworded as facts.
+
+The earlier versions remain in the git history.
+
+### RL-087 · DECISION and VERIFIED · Exact shape diagnostic for exact-count V2 (informational)
+**Decision (owner):** exact counts get an additional check that never changes a V2 verdict.
+
+**Why:** the V2 fit works with a tolerance and only rejects the rivals someone declared. Two examples were computed with noise-free data on the entries' own grids:
+- A claim of n^2.8 would pass for the Strassen counts (α = 1.0026 at tolerance 0.02).
+- The edit-distance claim without its 1/√n factor would pass on its V2 grid (α = 0.9585 at 0.25).
+
+The diagnostic gives MISMATCH in both cases.
+
+**How it works:**
+- A recurrence is guessed from the counts on a regular grid of n (consecutive, or n = 2^k). It is accepted only if it is overdetermined, unique at its size and reproduces held-out terms.
+- It then gives the growth exactly: the base with its minimal polynomial, the power of n and the power of log n. This is compared with the claimed cost, parsed exactly, with no tolerance.
+- Every run ends in MATCH, MISMATCH, UNDETERMINED or SKIPPED, with one of 20 machine-readable reasons.
+- A MATCH is strong evidence, not a proof.
+
+**Code:**
+- `methods/shape.py`, wired into `tools/validate.py`;
+- output: a line per measurement with `-v`, a `shape` field with `--record`, and `--no-shape` to skip;
+- the optional `harness.scaling.shape` block was added to the schema;
+- plain `--scaling` and CI are unaffected.
+
+**Applied:** 46 blocks on 23 existing entries.
+- Over the 59 exact-count series: 40 MATCH, 0 MISMATCH and 6 UNDETERMINED (counts that change when the instance is re-drawn).
+- 13 series have no block: 10 randomised series; the 2 matching harnesses, which are defined only on n = 4k² + k; and MST enumeration, which has too few reachable terms.
+- Examples: Strassen root 7 → n^log₂7 (n = 16..512); Karatsuba root 3 (n = 32..4096); NTT, sparse table and patience sorting (x−2)² → n log n.
+- Three first grids were UNDETERMINED because they started below the regular range (Strassen's cutoff at 16, Karatsuba's at 32, KMP for n ≤ 5). Starting at the regular range gives MATCH. This was a grid-choice limit, not a claim problem.
+
+**Unchanged verdicts:** a regression test compares the V2 verdicts of all exact-count series with ledger 20261006T143136Z, and also the values when the Python version matches. The agent reported 59/59 identical in verdict and value. The maintainer's recorded run (RL-090) carries the shape results.
+
+### RL-088 · VERIFIED · Seven new pairs with exact-count V2
+All seven are known results.
+
+| Entry | Tags | V2 (exact counts) |
+|---|---|---|
+| horn-sat-brute-force-vs-unit-propagation | T2 | 2 fits, α = 1.000; 4 rivals rejected |
+| xor-sat-brute-force-vs-gaussian-elimination (decision and counting) | T2 | 2 fits; 4 rivals rejected |
+| boolean-matrix-multiplication-naive-vs-strassen | T3 | 2 fits; 4 rivals rejected |
+| hamiltonian-cycle-count-enumeration-vs-inclusion-exclusion | T6+T8 | 3 fits (incl. Held–Karp); 9 rivals rejected |
+| planar-perfect-matchings-enumeration-vs-kasteleyn | T2 | 2 fits; 6 rivals rejected |
+| max-weight-independent-set-grid-enumeration-vs-path-decomposition-dp | T2 | 2 fits; 5 rivals rejected |
+| or-convolution-naive-vs-zeta-mobius | T3 | 2 fits; 6 rivals rejected |
+
+**V2:** every count equals an exact closed form derived from the algorithm, checked over a range of n. Rival counts are those of the agent report: 38 of 38 rejected, the closest being Kasteleyn vs n³ log n at |α−1| = 0.057.
+
+**Oracle controls** (deliberately wrong outputs): 16 651 rejected, 0 accepted, 64 undecided. The undecided ones are Hamiltonian cycles at n = 11–14, where no exact rule applies; the entry says so.
+
+**Cross-version:** all 15 count series are identical under CPython 3.12.10 and 3.14.2.
+
+**Citations:** 28 identifiers, 0 problems. Sources that could not be checked were left out (Furman 1970, Kasteleyn 1967, Yates 1937).
+
+**Boundaries stated with citations:**
+- #XOR-SAT is easy, while #2-SAT and #Horn-SAT are #P-complete (Creignou–Hermann).
+- Perfect matchings of planar graphs can be counted in polynomial time, while the 0/1 permanent is #P-complete (Valiant).
+
+**Decisions:**
+- XOR-SAT and #XOR-SAT form one entry.
+- AND convolution is a verified note in the OR entry.
+- **INCONCLUSIVE:** transitive closure was not added. Thresholding back to 0/1 between Boolean products yields plain integers, which breaks count-based V2 unless the code is written unnaturally.
+
+**Maintainer re-run:** `tools/validate.py --scaling -v` on the seven entries and their seven experiments; all checks reproduced, e.g. planar matchings: 1334 wrong outputs presented, 0 accepted. Negative control: Strassen's code on Booleans with OR/OR/AND is wrong on 25 of 40 instances, and with XOR/XOR/AND on 33 of 40.
+
+### RL-089 · CORRECTED · Two count statements made precise
+- **KMP:** the counted comparisons are 4n − 6 for even n and 4n − 7 for odd n (checked for n = 6..60 by the shape diagnostic). RL-057 quoted 4n − 6, measured on even-n grids. The V2 verdict is unaffected.
+- **Sparse-table RMQ:** the count includes the comparison made inside CPython's two-argument `min()`. The entry now says so, as RL-069 requires, and notes that the counts were identical under CPython 3.12.10 and 3.14.2 (RL-069).
+
+### RL-090 · VERIFIED · Recorded run after the fifth round
+Ledger: [ledger/runs/20261006T162402Z.json](ledger/runs/20261006T162402Z.json). Base commit `bfeec33`, with this round's work uncommitted.
+- **Result:** 69/69 entries pass. V1 covered 58 entries, 4121 instances and 8640 implementation runs.
+- **V2:** 123 measurements, all passing (74 exact counts, 49 wall-clock); 151 of 151 rivals rejected; log factor resolved in 62 fits.
+- **Shape diagnostic** (recorded for the first time): 40 MATCH, 6 UNDETERMINED (instance-dependent counts), 0 MISMATCH. 77 measurements were SKIPPED: 49 timing measures and 28 exact-count series without a shape block.
+- **Stability against RL-084:** all 59 earlier exact-count series are identical.
+- **Machine load:** the machine was not quiet (other jobs were running). The largest change in a timing α was 0.1705, for Fibonacci fast doubling (1.0969 → 0.9264, tolerance 0.25). The next largest were 0.1177 and 0.0912, all on series with sub-millisecond runtimes, and every timing fit stayed within its tolerance.
+- **Unit tests:** OK. **Citations:** 201 identifiers, 0 problems.
+- **Index:** rebuilt; 69 entries.

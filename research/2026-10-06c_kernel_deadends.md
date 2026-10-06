@@ -47,10 +47,6 @@ result unless explicitly labelled, and nothing is claimed as a discovery.
     rediscoveries of the best known GF(2) rank**. They share one factor-rank invariant that differs from
     AlphaTensor's, Kauers-Moosbauer's and RL-054's, so they are provably inequivalent to those three.
   * **Nothing below 47**; rank 46 is NULL, with 860.7 s and 1.18·10¹⁰ steps walked after reaching 47.
-* **Recommendation.** Keep the detection: it is exact and cheap, and it turns idle time at dead ends into about
-  50 times more moves. But it does **not** by itself raise the chance of reaching 47. The evidence points to bursts
-  out of rank 50 as the route to 47, and to a stronger escape or portfolio restarts as the next experiment
-  (OPEN IDEAS 1-2).
 
 ## 1. Design
 
@@ -334,7 +330,7 @@ They share **one** factor-rank invariant: (1,1,1)×1, (1,1,2)×3, (1,1,3)×9, (1
 Kauers-Moosbauer `444-47-mod2` scheme (both downloaded by the analysis script and verified there) and of RL-054's
 rank-47 scheme. So the five are **provably inequivalent to those three**. Whether the five are equivalent to each
 other was not decided, since equal invariants prove nothing. Whether they are new among *all* published rank-47
-schemes was not checked (RL-061 item 2).
+schemes was not checked.
 These are **VERIFIED rediscoveries of the best known rank**, not new results.
 
 ## 5. Saved schemes and verification
@@ -384,7 +380,7 @@ triggered.
   The sweep cuts the expected latency to about 157 step-equivalents. With the final kernel, one escape cycle at S⊗S
   takes about 717 steps in Rust (section 3), most of it now in the descent.
   The threshold r was chosen so that a sweep costs at most 2r scans and never runs in the normal flipping regime. It
-  was **not tuned** (OPEN IDEAS).
+  was **not tuned**.
 * **D3. How to leave: the plateau rule, applied at once.** Alternatives:
   * always restart from best: pointless when the best scheme is the dead end itself, which is the RL-059 case;
   * several plus transitions in a row (a bigger "kick");
@@ -408,32 +404,7 @@ triggered.
 
 ## 8. Open ideas
 
-1. **A stronger escape for rank-49 dead ends.** One plus transition plus greedy flips falls back into the same 2-11
-   dead ends (section 4.4). Candidates:
-   * k plus transitions in a row (k = 2-5) before flipping resumes;
-   * a short tabu that forbids returning to the last dead end, identified by a hash of the sorted terms (cheap: the
-     detection already knows when the walk is at one);
-   * a phase of flips without merges at rank + 1.
-
-   Each needs its own mirrored test and an RL-059-style statistic.
-2. **Make the walk faster where it matters.** Every 47 seen so far came from a burst out of rank 50 (five walks
-   here, RL-054 seed 8). That favours *more walks at rank 50* over better handling of rank-49 dead ends. Options:
-   * restart a walk that has sat at a rank-49 dead end for T seconds, from the standard algorithm with a fresh seed
-     (portfolio restarts);
-   * start from rank-50 states saved from the walks.
-3. **Tune the sweep threshold** (now r cells). At a threshold of 0 the sweep would run at the first failure of every
-   epoch. The cost model in section 1.2 suggests little gain, because the descent, not the detection, now dominates
-   the cycle (about 717 steps per cycle at S⊗S).
-4. **Recover the 5% overhead** away from dead ends. For example, stamp only after k consecutive failures. That stays
-   exact, because stamps are still proofs, but detection would be delayed.
-5. **Weight-cap dead ends.** Schemes where every shared-factor flip is rejected by the cap are not detected. Exact
-   detection would need all candidates of a cell to be checked against the cap, not one random candidate.
-6. **Statistics with power.** To detect a rise from 1/28 to 4/24 at 5% (two-sided) with 80% power needs about 83
-   walks per arm (normal approximation, `experiments/2026-10-06c_analysis.py`); Fisher's exact test needs somewhat
-   more. For a kernel comparison the arms should use the **same seeds**: walks without dead ends then coincide, and
-   only the divergent part is compared.
-7. **Equivalence of the five rank-47 schemes of section 4.5** with each other and with all published rank-47
-   schemes (RL-061 item 2).
+*Forward-looking content is not published (RL-086).*
 
 ## 9. Files and reproduction
 

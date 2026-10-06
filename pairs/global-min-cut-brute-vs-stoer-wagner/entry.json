@@ -34,7 +34,8 @@
             "2**n",
             "n * 2**n",
             "n**3 * 2**n"
-          ]
+          ],
+          "shape": {"sequence": "consecutive", "n_range": [2, 17]}
         }
       }
     },
@@ -63,7 +64,8 @@
             "n**4",
             "n**2",
             "n**2 * log(n)**3"
-          ]
+          ],
+          "shape": {"sequence": "consecutive", "n_range": [2, 21]}
         }
       }
     }
@@ -136,5 +138,5 @@
     "trials": 6
   },
   "caveats": "Costs count weight additions and comparisons as unit-cost operations (word-RAM); with b-bit weights each costs O(b + log n) bit operations. The input has N = n^2 matrix entries, so the brute force is 2^Theta(sqrt N) in the input size (super-polynomial, not 2^Theta(N)) and Stoer-Wagner is Theta(N^1.5). Loop overhead not involving weights (building the sides, list removals, index scans) is of the same order as the counted operations (Theta(n^2 2^n) and Theta(n^3)) but is not counted. Convention: for n < 2 the answer is None (no partition into two non-empty sides). The diagonal must be zero; both implementations ignore it, but the harness's subset oracle assumes it.",
-  "notes": "Karger-Stein was considered as a third, classical-randomized algorithm (it would allow secondary tag T4 under the validator rule) and skipped: its V1 check would be probabilistic, the 45-minute budget favoured exact closed forms for the two deterministic algorithms, and the pattern report's timing analysis (rho = 1.050) shows timing could not separate n^3 from n^2 log^3 n. With exact counts the Stoer-Wagner implementation's counts do reject an n^2 log^3 n cost (alpha 1.128 at tolerance 0.03), so a counted Karger-Stein implementation would be a resolvable future addition. Experiment: experiments/2026-10-07b_global_min_cut_counts.py."
+  "notes": "Karger-Stein was considered as a third, classical-randomized algorithm (it would allow secondary tag T4 under the validator rule) and skipped: its V1 check would be probabilistic, the 45-minute budget favoured exact closed forms for the two deterministic algorithms, and the pattern report's timing analysis (rho = 1.050) shows timing could not separate n^3 from n^2 log^3 n. With exact counts the Stoer-Wagner implementation's counts do reject an n^2 log^3 n cost (alpha 1.128 at tolerance 0.03). Experiment: experiments/2026-10-07b_global_min_cut_counts.py."
 }

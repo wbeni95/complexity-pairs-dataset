@@ -18,7 +18,7 @@
       "implementation": "implementations/bellman_ford.py:apsp_bellman_ford",
       "harness": {
         "v1_max_n": 30,
-        "scaling": { "cost": "n**2 * (n-1)**2", "n_values": [8, 10, 13, 16, 20, 25, 32, 40], "measure": "reported", "tolerance": 0.03, "rivals": ["n**3"] }
+        "scaling": { "cost": "n**2 * (n-1)**2", "n_values": [8, 10, 13, 16, 20, 25, 32, 40], "measure": "reported", "tolerance": 0.03, "rivals": ["n**3"], "shape": {"sequence": "consecutive", "n_range": [1, 20]} }
       }
     },
     {
@@ -32,7 +32,7 @@
       "implementation": "implementations/floyd_warshall.py:apsp_floyd_warshall",
       "harness": {
         "v1_max_n": 60,
-        "scaling": { "cost": "n**3", "n_values": [32, 48, 64, 96, 128, 160, 200], "measure": "reported", "tolerance": 0.03, "rivals": ["n**2 * (n-1)**2"] }
+        "scaling": { "cost": "n**3", "n_values": [32, 48, 64, 96, 128, 160, 200], "measure": "reported", "tolerance": 0.03, "rivals": ["n**2 * (n-1)**2"], "shape": {"sequence": "consecutive", "n_range": [1, 20]} }
       }
     }
   ],

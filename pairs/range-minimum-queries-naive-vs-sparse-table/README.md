@@ -20,7 +20,9 @@ is stated for long queries.
 **Verification.** V1: both agree with each other and with an independent segment-tree oracle on random
 values (with many ties) and mixed query kinds. V2 uses exact comparison counts. The scaling values are
 wrapped in a counting type, and the implementations are unchanged. CPython's two-argument `min()` calls
-`__lt__` once, so the table build's comparisons are counted too.
+`__lt__` once, so the table build's comparisons are counted too. Because these comparisons happen inside a
+CPython built-in, the count is an implementation property, not a language guarantee (RL-069); it was identical
+under CPython 3.12.10 and 3.14.2 (RL-069).
 - Scan: the count equals Σ(r − l) over the queries. α = 1.001 against n², and the rivals n log n, n² log n
   and n³ are rejected.
 - Sparse table: the count equals Σ_{j=1..⌊log₂n⌋}(n − 2^j + 1) + n, i.e. n log₂n − n + log₂n + 2 on powers of

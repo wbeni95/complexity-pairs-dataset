@@ -24,7 +24,8 @@
           "tolerance": 0.02,
           "rivals": [
             "n**log2(7)"
-          ]
+          ],
+          "shape": {"sequence": "consecutive", "n_range": [1, 18]}
         }
       }
     },
@@ -45,7 +46,8 @@
           "tolerance": 0.02,
           "rivals": [
             "n**3"
-          ]
+          ],
+          "shape": {"sequence": "doubling", "n_range": [16, 512], "holdout": 2, "note": "starts at the schoolbook cutoff (16); 6 terms, so the holdout is lowered to 2 (n = 1024 would cost about 7 times n = 512)"}
         }
       }
     }

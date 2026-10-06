@@ -123,8 +123,7 @@ cited-bounds file (4 non-commutative claims for these formats, the lowest for 4�
 papers' abstracts contain no lower claim, and both published characteristic-2
 schemes (AlphaTensor's and Kauers-Moosbauer's) have rank 47 and verify here. **Residual risk:** the binary-field improvements of Perminov (2511.20317) and
 the formats of Kauers & Wood were not checked one by one, and the MMC may not hold every characteristic-2 scheme
-(e.g. it lists 76 for (4,5,5) in F2, while Arai et al. report 73 in characteristic two). A rank-46 claim would
-therefore need a literature check by the maintainer in any case.
+(e.g. it lists 76 for (4,5,5) in F2, while Arai et al. report 73 in characteristic two).
 
 ## 3. Runs
 
@@ -285,8 +284,7 @@ ones (not needed for any claim).
 * **D5 – the optional kernel throughput work (task item 4) was not done.** `rust_kernel.build()` rebuilds the
   binary whenever `flipwalk.rs` changes, so editing the kernel during the campaign would have rebuilt it under
   running walks (on Windows the overwrite of a running .exe fails, so the next job would have crashed) or mixed two
-  kernels in one statistic. Benchmarking it would also need walk processes beyond the cap of 8. Ideas are in
-  section 8.
+  kernels in one statistic. Benchmarking it would also need walk processes beyond the cap of 8.
 * **D6 – how the GF(2) best-known ranks were established.** A catalogue value alone does not say whether a
   scheme is valid in characteristic 2 (Sedoglavic's page does not mark it). So: (a) published scheme files were
   downloaded and verified with our own verifiers, which proves existence at that rank over GF(2) and over Z;
@@ -312,36 +310,7 @@ ones (not needed for any claim).
 
 ## 8. Open ideas
 
-1. **Kernel throughput (task item 4, not done here; D5).** Every step scans all r terms for partners sharing the
-   chosen factor (`cands`), and draws two random numbers with a `%` (an integer division). Untested candidates:
-   (a) structure-of-arrays storage plus a count-then-select scan (count the matches in one branch-free pass; only
-   if the count is non-zero, draw an index and find that match). This keeps the exact same random draws and
-   candidate order, so the trajectories stay bit-identical and the differential test needs no new semantics;
-   (b) a hash index from factor value to term indices, which avoids the O(r) scan but must be kept consistent
-   under removals and index shifts, so it is riskier; (c) Lemire's multiply-shift instead of `%`, which changes
-   every trajectory and must be mirrored in `search/kernel_reference.py`. Each needs a benchmark on an idle machine
-   and the branch-coverage check of RL-052.
-2. **Dead-end handling (the strongest lead from this round).** 19 of 20 stalled 4×4 walks sat at a rank-49 scheme
-   with 0 flippable pairs, where about 99.9% of the steps do nothing (section 4). Two cheap changes: (a) detect a
-   dead end (no term pair shares a factor; checkable in O(r²) once, or by counting failed proposals) and do a plus
-   transition or a restart at once instead of waiting 50 000 steps; (b) restart from the standard algorithm (or
-   from a random point of a rank-52-55 plateau) when a walk is stuck at a Strassen ⊗ Strassen-like dead end,
-   since reaching 49 takes a median of 13.8 s but leaving it never happened in 20 walks × up to 900 s. Both change
-   the trajectories, so they need the mirror in `search/kernel_reference.py`, the differential test and a coverage
-   check (RL-052). The from-47 comparison of plateau 50 000 vs 5 000 (section 3) is a first, parameter-only probe.
-3. **Rank 46 from many rank-47 starts.** Walks from the three mutually inequivalent rank-47 schemes now verified
-   (AlphaTensor's, Kauers-Moosbauer's, RL-054 seed 8), with longer budgets than the 8 × 120 s tried here, and with
-   the dead-end handling of idea 2 (the RL-054 scheme is itself a dead end with 0 flippable pairs). A walk cannot prove that 46 is impossible; the null result
-   stays a statement about the search.
-4. **Full equivalence test for rank-47 schemes.** The factor-rank invariant separates some schemes; a canonical
-   form under GL(4,2)³ ⋊ S₃ would decide equivalence completely and tell whether the walks keep finding the same
-   few classes.
-5. **(4,4,5) over GF(2).** The best known rank is 60 (Kauers & Moosbauer); 180 s walks from the standard algorithm
-   reached 64. Starting from AlphaTensor's verified rank-63 scheme, or from a rank-47 (4,4,4) scheme plus the 16
-   products of a (4,4,1) block (rank 63), is a cheaper start than the standard algorithm.
-6. **Dataset (unchanged from RL-054):** a characteristic-2 entry "Strassen recursion vs recursive rank-47 4×4
-   scheme", V2 on exact multiplication counts, now backed by three pairwise inequivalent verified rank-47 schemes
-   (AlphaTensor's and Kauers-Moosbauer's published ones, re-verified here, and RL-054's).
+*Forward-looking content is not published (RL-086).*
 
 ## 9. Reproduction
 

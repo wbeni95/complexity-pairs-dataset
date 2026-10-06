@@ -23,7 +23,8 @@
           "n_values": [4, 5, 6, 7, 8, 9, 10, 11],
           "measure": "reported",
           "tolerance": 0.02,
-          "rivals": ["n * 2**n", "n * 3**n", "4**n"]
+          "rivals": ["n * 2**n", "n * 3**n", "4**n"],
+          "shape": {"sequence": "consecutive", "n_range": [1, 12]}
         }
       }
     },
@@ -42,7 +43,8 @@
           "n_values": [4, 6, 8, 10, 12, 14, 16],
           "measure": "reported",
           "tolerance": 0.02,
-          "rivals": ["2**n", "n**2 * 2**n", "3**n"]
+          "rivals": ["2**n", "n**2 * 2**n", "3**n"],
+          "shape": {"sequence": "consecutive", "n_range": [1, 16]}
         }
       }
     }
@@ -74,5 +76,5 @@
     "trials": 3
   },
   "caveats": "Costs count additions on integers with O(n) bits (bounded entries); index arithmetic and loop control are not counted. Counts measure arithmetic, not wall-clock time; timing would not resolve the log factor (RESEARCH_LOG RL-048). The name 'Yates' method' refers to Yates (1937), a book on factorial experiments that was not checked here; the algorithm's correctness is proved in this entry, not taken from that source.",
-  "notes": "Same Kronecker-power structure as the fast Walsh-Hadamard transform (xor-convolution-naive-vs-walsh-hadamard), with the 2x2 matrix [[1,0],[1,1]] in place of [[1,1],[1,-1]]. Its inverse, the Moebius transform, uses [[1,0],[-1,1]] and also costs n 2^(n-1) operations. Subset convolution as a third pair (naive 3^n vs ranked transforms n^2 2^n) was not implemented here; the pattern report found timing could not separate those two claims at n <= 12 (rho = 1.205), but exact counts as used here would (see research/2026-10-07b_new_candidates.md, open ideas)."
+  "notes": "Same Kronecker-power structure as the fast Walsh-Hadamard transform (xor-convolution-naive-vs-walsh-hadamard), with the 2x2 matrix [[1,0],[1,1]] in place of [[1,1],[1,-1]]. Its inverse, the Moebius transform, uses [[1,0],[-1,1]] and also costs n 2^(n-1) operations. Subset convolution (naive 3^n vs ranked transforms n^2 2^n) is not part of this entry; the pattern report found that timing could not separate those two claims at n <= 12 (rho = 1.205)."
 }

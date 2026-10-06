@@ -401,24 +401,15 @@ known rank: 2×2 rank 7, 3×3 rank 23, and 4×4 rank 49. These are VERIFIED redi
 pipeline works and is correct, not discoveries. Below the known ranks, the bounded searches found nothing: NULL
 results with the scope given in sections 4 and 5, which prove nothing about existence.
 
-**Which dataset entry would be justified?** None from tonight's runs. Options for the maintainer:
+**Which dataset entry would be justified?** None from tonight's runs.
 
-1. *No new entry* (recommended for now). The existing entry `matrix-multiplication-naive-vs-strassen` (T3) already
-   covers Strassen's exponent, which is what our 2×2 result reproduces.
-2. A *staging (V0) entry* "matrix multiplication in characteristic 2: schoolbook vs recursive AlphaTensor rank-47
-   scheme, O(n^2.7773)", tag T3, citing Fawzi et al. 2022. It could be raised to V1 by importing the published
-   rank-47 GF(2) factorization (we did not download it), checking it with `search.gf2mm.verify` and
-   `verify_explicit`, and implementing the recursive GF(2) multiplication next to the schoolbook one. V2 is
-   unlikely to resolve 3 vs 2.777 in pure Python (cf. RL-006, where 3 vs 2.807 could not be resolved).
-3. Laderman's rank 23 (1976) as a T3 pair n³ → n^2.854 would be valid over any ring, but it is dominated by
-   Strassen and adds little.
+*Forward-looking content is not published (RL-086).*
 
 Sorting networks (section 6.1) are fixed-size objects and belong in notes only (decision of 2026-10, CONTRIBUTING).
 
 **Correction found on the way (not edited, outside my permissions):** log₄47 = 2.77729 (4^2.7773 = 47.0004, while
 4^2.774 = 46.79). The repository says "≈ 2.774" in three places: `notes/constant-factor-alphadev.md` line 30,
 `pairs/matrix-multiplication-naive-vs-strassen/entry.json` (`relationship`), and that entry's `README.md` line 11.
-Proposed RESEARCH_LOG entry: CORRECTED, "log4(47) ≈ 2.777, not 2.774".
 
 ## 8. Limits of pure Python, and machine notes
 
@@ -459,7 +450,7 @@ and passes the exact verifiers (section 6).
 
 Variants that underperformed are listed with their numbers in section 10.2.
 
-## 10. IDEAS: reasoning behind the design, abandoned variants, next steps
+## 10. IDEAS: reasoning behind the design, abandoned variants
 
 ### 10.1 Why the design is the way it is
 
@@ -489,7 +480,6 @@ Variants that underperformed are listed with their numbers in section 10.2.
   shown.
 * *Lookahead every 16 flips* (V1): 54 and 55 against P2's 53 and 52, at 0.55× the flip rate; 16 and 18 of
   1,250,000 scans found a reducing flip. Abandoned: reducing flips are too rare at rank 54 for a full scan to pay.
-  An incremental lookahead (re-scanning only flips touched by the last move) might, and is untested.
 * *Weight cap 6* (V2): 55 and 54. Worse than no cap.
 * *Weight cap 4* (V3, G3e): one of 14 walks (V3 seed 2) reached 49, very likely Strassen ⊗ Strassen up to equivalence, at step 1,631,342, and was then trapped in dead ends. The other 13 ended at 53 (V3 seed 1) or 54-56 (G3e). On average no better than no cap at the same budget. Kept as an option (off by default), because it is the only setting that reached 49 from the standard algorithm.
 * *Strassen ⊗ Strassen as a start* (G3d): 4 walks, 2·10⁸ steps, never below 49. The start is a sink: dead ends every 43.5-130.6 flips (probe), 3.3 million plus transitions in G3d. A walk that starts at a good scheme stays near it; to get below 49 it would have to leave this basin, and our escapes are too weak for that.
@@ -506,21 +496,7 @@ Variants that underperformed are listed with their numbers in section 10.2.
 
 ### 10.4 What a stronger search should try next
 
-1. A compiled inner loop (C, Rust, Cython or numba). A flip is a handful of integer operations plus dict updates;
-   interpreter overhead dominates the 4.4 µs. Then run many independent walks in parallel, one per core (tonight
-   was limited to one process by agreement).
-2. Population search across walks: keep many schemes per rank level, continue from the lowest levels, and
-   deduplicate by invariants. G3c's two-stage design is a minimal version of this.
-3. Adaptive weight caps: start tight to reach a sparse low-rank basin fast, then relax the cap to escape its dead
-   ends. Also an incremental lookahead.
-4. Start from the best known schemes (AlphaTensor's published GF(2) factorizations) and explore their
-   neighbourhoods; lift GF(2) schemes to Z (Hensel lifting) to get statements beyond characteristic 2.
-5. Symmetry-restricted flip graphs (Moosbauer & Poole 2025, abstract) shrink the search space.
-6. For questions like 3×3 rank 22, walks are the wrong tool for proving anything. Exhaustive or SAT-based methods
-   (Heule, Kauers & Seidl) can at least settle restricted versions; a walk can only find, never exclude.
-7. For the moonshot (START_HERE section 6): this environment is a proposer + exact verifier loop on a problem
-   with a cheap exact verifier. That is the right shape, but tonight it only rediscovered known ranks. As START_HERE
-   says, a null result says nothing about whether a better algorithm exists.
+*Forward-looking content is not published (RL-086).*
 
 ## 11. Compute used tonight
 
@@ -583,7 +559,7 @@ the full texts were not read.** Claims attributed to a source below are limited 
 | Kauers, M.; Moosbauer, J. (2023). *Flip Graphs for Matrix Multiplication*. ISSAC 2023, 381-388 | doi:10.1145/3597066.3597120, arXiv:2212.01175 | the flip-graph method | DOI title/year/pages; arXiv abstract: random walks in the flip graph, reduced multiplications for (4,4,5) and (5,5,5) in characteristic two and for arbitrary fields |
 | Kauers, M.; Moosbauer, J. (2022). *The FBHHRBNRSSSHK-Algorithm for Multiplication in Z_2^{5×5} is still not the end of the story* | arXiv:2210.04045 (no DOI found; the DOI we guessed, 10.1145/3610377.3610381, does not exist) | their related 5×5 work over Z_2 | abstract: 95 multiplications for 5×5 over Z_2, against 96 announced in the AlphaTensor paper |
 | Arai, Y.; Ichikawa, Y.; Hukushima, K. (2023). *Adaptive Flip Graph Algorithm for Matrix Multiplication* | arXiv:2312.16960 (a guessed DOI, 10.1145/3666000.3669715, belongs to a different paper) | rank-increasing ("plus") transitions | abstract: transitions "that do not strictly reduce the number of multiplications", adaptive constraints on the search range |
-| Moosbauer, J.; Poole, M. (2025). *Flip Graphs with Symmetry and New Matrix Multiplication Schemes* | arXiv:2502.04514 | next steps (symmetry, lifting) | abstract: symmetric flip graphs; 5×5 with 93 and 6×6 with 153 multiplications over arbitrary fields |
+| Moosbauer, J.; Poole, M. (2025). *Flip Graphs with Symmetry and New Matrix Multiplication Schemes* | arXiv:2502.04514 | context (symmetric flip graphs) | abstract: symmetric flip graphs; 5×5 with 93 and 6×6 with 153 multiplications over arbitrary fields |
 | Fawzi, A.; Balog, M.; Huang, A.; et al. (2022). *Discovering faster matrix multiplication algorithms with reinforcement learning*. Nature 610, 47-53 | doi:10.1038/s41586-022-05172-4 | best known 4×4 rank over GF(2): 47 | DOI title/year/volume/issue/pages (the rank 47 is as stated in the repository's existing entry, verified there) |
 | Strassen, V. (1969). *Gaussian elimination is not optimal*. Numer. Math. 13(4), 354-356 | doi:10.1007/BF02165411 | rank 7 for 2×2; recursion argument | DOI metadata |
 | Laderman, J. D. (1976). *A noncommutative algorithm for multiplying 3×3 matrices using 23 multiplications*. Bull. AMS 82(1), 126-128 | doi:10.1090/S0002-9904-1976-13988-2 | rank 23 for 3×3 | DOI metadata (the title states 23) |

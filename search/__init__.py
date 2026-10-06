@@ -1,4 +1,4 @@
-"""Search environment for the complexity-pairs dataset (START_HERE backlog item [5]).
+"""Search environment for the complexity-pairs dataset.
 
 Modules:
   gf2mm      matrix multiplication tensors and schemes over GF(2); exact verifiers; known schemes; JSON I/O

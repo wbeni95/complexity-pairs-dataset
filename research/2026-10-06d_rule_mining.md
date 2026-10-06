@@ -78,7 +78,7 @@ new content here is the executable precondition, the failure mode as a screenabl
 | R7 | meet in the middle (`mitm`) | group operation (unique completion) and no interaction across the split | enumerate halves, look up the completing value | ops: 2ⁿ − 1 → Θ(2^(n/2)) | non-unique completion undercounts; crossing interactions corrupt half values |
 
 **Rules catalogued but not generated (time box):** subset DP, inclusion–exclusion, augmenting paths with
-potentials, randomisation (Schwartz–Zippel / Freivalds). Templates, for later generators:
+potentials, randomisation (Schwartz–Zippel / Freivalds). Templates:
 
 | Rule | Precondition | Transformation | Cost change | Failure mode |
 |---|---|---|---|---|
@@ -227,12 +227,9 @@ that fail an exhaustive check (0/900).
 | M2 mean closeness | mean of per-instance closeness | sensitive to the output type: one wrong table entry costs 2/N output coordinates in convolution, so perturbed tables with table agreement ≥ 0.875 are WRONG by M2 |
 | M3 worst-case approximation ratio | min closeness over instances | for greedy, the sampled worst over 200 random weight vectors equals q in only 72/147 non-matroids [hyp]: sampling underestimates the worst case |
 | M4 structural distance | distance of the input structure from the precondition (table agreement with the nearest structure; QI/monotonicity violation counts; rank − m) | table agreement vs output agreement: Pearson r = 0.812 over 153 non-structured tables [hyp]; cheap and instance-free |
-| M5 adversarial ratio | ratio on constructed worst-case instances | greedy: equals the rank quotient within 0.0005 on 400/400 systems; random weights stay ≥ q on 400/400 [hyp]. **Recommended**: it is exact, needs no sampling, and has a theorem behind it |
+| M5 adversarial ratio | ratio on constructed worst-case instances | greedy: equals the rank quotient within 0.0005 on 400/400 systems; random weights stay ≥ q on 400/400 [hyp]. It is exact, needs no sampling, and has a theorem behind it |
 | M6 robustness | exact-rate per instance family | greedy non-matroids: 0.921 (0/1 weights), 0.815 (weights 1..3), 0.882 (other) [hyp]; non-matroids missed by 40 random weights in the mass screen: 5; by 200 weights: 2/147 (both basis_removed) |
 | M7 exponent gap Δα with interval | α of each side, cross α, and the local-slope interval | section 3.1; for the repaired rules the gap shrinks with the repair cost (5.4) |
-
-**Recommendation:** report M5 (or M4 where no adversary is known) as the primary nearness, M1/M6 as secondary,
-and never M3 from random sampling alone.
 
 ### 5.3 Knuth: what actually decides exactness (H-K1, 5400 instances, seed 3, 10 families incl. 2 held out) [hyp]
 
@@ -258,8 +255,7 @@ and never M3 from random sampling alone.
 ### 5.4 Merge proposals and thresholds (tested)
 
 1. **One parametrised family per cluster.** The 219 EXACT magmas share one scaling key; the 138 EXACT convolution
-   tables share six. A single T7 entry "binary powering in a finite magma satisfying the square condition" (magma
-   as parameter) or "T-convolution for T isomorphic to a library structure" would carry the whole cluster.
+   tables share six.
 2. **Rule composition.** MITM ∘ monoid convolution makes meet in the middle exact for every commutative monoid
    (141/141). Transform ∘ sparse correction makes the convolution rule exact for every table (300/300). Lift ∘ fold
    handles saturating addition (17/17 EXACT in the mass screen).
@@ -282,7 +278,7 @@ and never M3 from random sampling alone.
 | H-R2 | State compression is exact iff δ = 0, no flips, or the flag is a function of n on the reachable states | seed 3: 400 compress candidates | **400/400 agree**: 292 stated+refined EXACT, 35 refined-only EXACT, 70 WRONG + 3 NEAR-MISS with neither |
 | H-G1 | Worst greedy ratio = rank quotient; adversarial weights attain it | seed 2: 400 set systems, 200 random weight vectors each | matroid ⇔ q = 1: 400/400; random worst ≥ q: 400/400; adversarial − q ≤ 0.0005 on 400/400. Literature: Jenkyns 1976 / Korte–Hausmann 1978 [DOI OK for the latter], so this is a **pipeline check** of a known theorem |
 | H-K1 | Knuth is exact under QI alone (without monotonicity) | 5400 instances (section 5.3) | **REFUTED**: 728 of 1161 QI-only instances are not exact |
-| H-K2 | Translation-invariant weights h(j − i) make Knuth exact | held-out family random_len (600 instances) | **REFUTED**: 157/600 exact. Concave non-decreasing h: 600/600 exact on seed 3 plus 36/36 mass-screen candidates. **Remaining IDEA**: concave h suffices although QI fails on every such instance. Literature status not checked |
+| H-K2 | Translation-invariant weights h(j − i) make Knuth exact | held-out family random_len (600 instances) | **REFUTED**: 157/600 exact. Concave non-decreasing h: 600/600 exact on seed 3 plus 36/36 mass-screen candidates. **Observation, not proven**: concave h suffices although QI fails on every such instance. Literature status not checked |
 | H-C1 | Table agreement predicts output agreement | 153 non-structured tables | r = 0.812 (supports M4 as a proxy, not a law) |
 | H-T1 | Plain MITM is exact iff completions are unique | 141 interaction-free candidates | sufficient, not necessary: 121/141 agree; mul_zero is exact on 17/23 and addsat on 3/16 candidates where non-unique completions happen not to be hit |
 | H-B1 | Random small GF(2) bilinear maps often have rank < support, more so with density | seed 2: 24 format × density cells | e.g. 2×3×3: 4/10 at density 0.15 up to 22/23 at 0.5; 2×3×2 at 0.15: 0/9 |
@@ -296,23 +292,7 @@ around power-associativity [recalled]; no literature search was made for it.
 
 ## 7. Promotion list (at most 15; no entry folders created)
 
-| # | Candidate | Evidence | Literature status | Suggested destination |
-|---|---|---|---|---|
-| 1 | Maximum-weight basis of a binary matroid (GF(2) vectors): 2^g oracle calls → greedy with elimination | 31 EXACT linear-matroid candidates, fits resolved [ana] | Rado 1957 / Edmonds 1971 [DOI OK] | staging; low novelty next to MST (same technique) |
-| 2 | OR / AND convolution via zeta–Möbius: 4ᵏ → k·2ᵏ | 23 EXACT (or+and), certificates of isomorphism | Yates 1937 [recalled]; extends the zeta-transform entry | extension of `subset-sum-zeta-transform-naive-vs-yates` (section 3.3 type), not a new pair |
-| 3 | Max-convolution over a chain: N² → N via prefix sums | 22 EXACT (max+min) | folklore [recalled] | T7 |
-| 4 | Cyclic convolution over Z_N and Z_(N/2)×Z₂ | 44 EXACT | Cooley–Tukey 1965 [DOI OK] | pipeline check (NTT entry exists) |
-| 5 | Saturating-addition convolution by lift-and-fold | 17 EXACT | composition of known pieces | T7; example of a homomorphic-image rule |
-| 6 | Karatsuba as GF(2) rank 3 of the 2-term polynomial product | rediscovered, m = 4, r = 3 | Karatsuba [recalled]; entry exists | pipeline check |
-| 7 | GF(4) multiplication over GF(2), rank 3 (tensor powers: 4ᵈ → 3ᵈ) | EXACT, fits resolved | rank 3 for quadratic extensions [recalled] | T7 / methodology note |
-| 8 | Knuth on convex length weights a·d² + b·d | 24 EXACT, Yao conditions hold on every instance | Yao 1980 [DOI OK] | T7 (extension of the optimal-BST entry's family) |
-| 9 | Knuth on concave length weights (QI fails, still exact) | 600/600 + 36/36 | not checked | IDEA; literature check first |
-| 10 | Counting subsets with a given product in Z_p^* by meet in the middle | 21/21 exact on seed 2, fits resolved | Horowitz–Sahni 1974 [DOI OK] pattern | T7; same caveat as knapsack (a DP over the group is pseudo-polynomial in p) |
-| 11 | MITM with boundary conditioning for interaction graphs | 92/92 exact; cost 2^(|B|) · 2^(n/2) | split-and-list style [recalled] | methodology note |
-| 12 | Square condition for binary powering | H-M1 | folklore [recalled] | methodology note (generator precondition) |
-| 13 | Functional-dependence criterion for state compression | H-R2 | relates to patterns.md §1.2 (shortest-path state compression) | methodology note for generator G1 |
-| 14 | Corrected 2-D call-count asymptotics (`memo.growth_2d`) | H-R1 | ACSV, Pemantle–Wilson 2002 [DOI OK, title only; theorem details recalled] | infrastructure for a 2-D recurrence generator (T7 output) |
-| 15 | Rank quotient / adversarial ratio as the near-miss metric for greedy | H-G1 | Korte–Hausmann 1978 [DOI OK] | methodology note |
+*Forward-looking content is not published (RL-086).*
 
 ---
 
@@ -337,14 +317,9 @@ sparse correction (300/300), all-solutions MITM (141/141), boundary conditioning
 (900/900). Gain thresholds: convolution |D| ≤ 95 (xor, N = 16); bilinear repairs never gain (0/127). Provenance:
 experiment `2026-10-06d_rules_hypotheses.py`.
 
-**DRAFT RL-d · IDEA (supported) · Weaker preconditions.**
-Binary powering exact iff the square condition (900/900; 37 exact magmas not power-associative); state compression
-exact iff the flag is functional on reachable states (400/400). Fresh seeds and held-out families; not theorems;
-likely folklore.
-
 **DRAFT RL-e · REFUTED · Two Knuth hypotheses.**
 QI without monotonicity: 728 of 1161 instances not exact. Translation invariance: 157/600 exact on random h.
-Remaining IDEA: concave non-decreasing h (600/600 and 36/36 exact although QI fails on every instance).
+Observation, not proven: concave non-decreasing h (600/600 and 36/36 exact although QI fails on every instance).
 
 **DRAFT RL-f · VERIFIED (pipeline check) · Rank quotient.**
 Greedy's adversarial ratio equals the rank quotient within 0.0005 on 400/400 set systems; random weights stay
@@ -414,14 +389,7 @@ mean output agreement ≤ 0.57); Knuth on QI-only weights; near-miss repair for 
 
 ## 10. Open ideas
 
-1. Concave length weights and Knuth (H-K2 remainder): prove or find the literature; test other concave families.
-2. Generators for the four catalogued-only rules (subset DP, inclusion–exclusion, augmenting paths,
-   randomisation), with the same harness.
-3. Adversarial instance construction (M5) for the other rules: Knuth (non-monotone split witnesses), meet in the
-   middle (targets hitting non-unique completions), so that near-miss metrics stop depending on sampling.
-4. Bilinear maps over Z or GF(3), where ranks can differ from GF(2).
-5. Use the refined preconditions as the gates of generator G1 (recurrences) and G3 (monoid powering) from
-   research/2026-10-07_patterns.md.
+*Forward-looking content is not published (RL-086).*
 
 ## 11. Reproduction
 

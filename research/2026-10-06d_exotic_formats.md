@@ -154,7 +154,7 @@ Observations (all from the script output):
 * Constructions: Strassen ⊗ our (2,3,3) rank-15 scheme = (4,6,6) rank 105, and ⟨1,1,2:2⟩ ⊗ (2,3,3):15 = (2,3,6) rank 30;
   both verify over GF(2).
 
-"Not 2-integral as it stands" does not exclude an equivalent scheme (another basis) that is 2-integral, and says
+"Not 2-integral as it stands" says
 nothing about whether a GF(2) scheme of that rank exists. It does say that these general-ring records do not transfer
 to GF(2) by reduction mod 2, so over GF(2) the two formats are open at ranks 32 and 40-41 as far as these sources go.
 
@@ -346,8 +346,7 @@ triggered.
 Per format:
 * **(2,4,5).** The record 33 is easy for the kernel: 14/16 walks from our own starts reached it (the block start in
   ≤ 0.1 s), so the pipeline works here; 32 walks spent 1 920 walk-seconds (3.96·10¹⁰ steps) at or near 33 without
-  finding 32. Two standard-start walks stayed at 39 and 37 with no restart for 40-50 s (a plateau trap; IDEA 5 in
-  section 10).
+  finding 32. Two standard-start walks stayed at 39 and 37 with no restart for 40-50 s (a plateau trap).
 * **(3,3,6).** Our own starts end one above the GF(2) record: 9/16 walks at **43** (all 8 block-start walks and one
   standard-start walk); the other 7 standard-start walks stopped at 45 within 11 s and stayed there for 170 s. The
   record 42 was not rediscovered from our own starts in this budget, and the walks from KM's 42 did not go below it.
@@ -448,24 +447,7 @@ Per format:
 
 ## 9. Open ideas
 
-1. **A pool at record + 1 for (3,4,5).** Block starts give 48 in 23/24 walks within 61 s, at pairwise inequivalent
-   schemes. Many short walks from a pool of such rank-48 schemes (Kauers-Moosbauer's protocol) would measure whether 47
-   is reachable from most 48s or only from a few.
-2. **(4,4,5) block starts from all four rank-47 classes of RL-071** (AlphaTensor, KM, Zaru, our class): different 63-starts
-   may lead to different rank-60 schemes and, possibly, to 59. Cheap: the starts are one direct sum each.
-3. **Equivalence testing for non-square formats** (extend `search/equivalence.py` to GL(n)×GL(m)×GL(p) sandwiches plus the
-   format-preserving permutations) to classify the rank-60 (4,4,5) schemes exactly, and to compare them with Kauers'
-   collections if more (4,4,5) files become available.
-4. **A cheaper full reduction**, e.g. run the dependency test only after flips that create a group of three or more equal
-   factors, or only at plateaus; only worth it if a benefit shows up in a larger sample.
-5. **(2,4,5) at rank 32 over GF(2) by an exact method.** The format is small (factors of 8, 20 and 10 bits); a SAT
-   encoding of the Brent equations at rank 32 with symmetry breaking might be within reach and would give a definite
-   answer where walks only give a NULL (cf. the exhaustive 2×2 check of RL-036).
-6. **Hensel lifting of the six rank-60 (4,4,5) schemes** to Z/4: Kauers and Moosbauer report that none of their
-   characteristic-2 (4,4,4) rank-47 schemes lift [quoted in the RL-071 audit]; whether (4,4,5) rank 60 lifts is a
-   separate question (over Z the best known is 61 per CAT/PER).
-
-
+*Forward-looking content is not published (RL-086).*
 
 ## 10. Draft RESEARCH_LOG entries (DRAFT; for the maintainer to consolidate; numbers are agent report)
 
@@ -480,8 +462,7 @@ Experiment `experiments/2026-10-06d_fmt_records.py`; report research/2026-10-06d
 **DRAFT · VERIFIED · The Q records of (2,4,5) (rank 32) and (3,3,6) (rank 40) do not reduce to GF(2) as they stand.**
 Both verify exactly over Q; their denominators are {1, 2} and {1, 8}, and after per-factor rescaling a term keeps a
 negative 2-adic valuation. AlphaEvolve's (2,5,6) rank-47 scheme has integer coefficients and verifies over GF(2) after
-reduction. Experiment `experiments/2026-10-06d_fmt_char0_records.py`. This does not exclude an equivalent 2-integral
-scheme.
+reduction. Experiment `experiments/2026-10-06d_fmt_char0_records.py`.
 
 **DRAFT · DECISION · Target formats: (3,3,6) → ≤ 41, (2,4,5) → 32, (2,5,6) → 46, (4,4,5) → 59.**
 Rationale: a general-ring record that does not transfer to GF(2) ((3,3,6), (2,4,5)), a GF(2) flip-graph result above the
@@ -522,11 +503,6 @@ Nothing below a record; nothing claimed. Experiments `experiments/2026-10-06d_fm
 the block start (50) the walks never improved (4 + 4 walks × 180 s; the pre-round kernel is identical on 2 × 2·10⁸
 steps). With plateau 2 000 and slack 1 they descend at once (58, 55, 56, 59 within 30 s; 57, 51, 52, 59 within 300 s).
 The default plateau/slack is therefore format-dependent in its effect. Experiment `experiments/2026-10-06d_fmt_256_probe.py`.
-
-**DRAFT · IDEA · Next steps.** (1) A pool of rank-48 (3,4,5) schemes and many short walks from it; (2) (4,4,5) block
-starts from all four rank-47 classes; (3) equivalence testing for non-square formats; (4) an exact (SAT) attack on
-(2,4,5) at rank 32 over GF(2); (5) portfolio restarts for walks that sit far above the record with no restarts
-((2,4,5) seeds 1004 and 1006 stayed at 39 and 37 for 40-50 s).
 
 
 

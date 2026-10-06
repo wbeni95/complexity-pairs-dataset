@@ -3,8 +3,7 @@
 **Not an entry.** START_HERE section 1 requires an *asymptotic* difference. For a fixed sequence
 length k, both the human-written and the discovered routine are O(1), so this is out of scope as a
 pair (decision of 2026-10, see CONTRIBUTING.md). It is recorded here because it is the closest
-published example of the search pipeline the project plans to build (START_HERE section 5,
-backlog item [5]).
+published example of the search pipeline described in START_HERE section 5.
 
 ## What was done
 
@@ -21,8 +20,6 @@ The paper reports up to 70% speedups for short sequences and about 1.7% for sequ
 - **Exact verifier.** For fixed k, the 0-1 principle reduces correctness to finitely many inputs, so every
   candidate can be checked exhaustively. This is the property START_HERE section 5 asks for.
 - **A proposer, not an oracle.** The learned agent proposes, and the exact check decides (START_HERE section 6).
-- **First search target.** Small-k sorting networks, optimised for comparator count or depth, are a natural
-  first target for our own search, with known optima for small k to validate against.
 
 ## When fixed-size results *are* in scope
 

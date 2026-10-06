@@ -49,7 +49,8 @@
             "n",
             "n*log(n)**2",
             "n**2"
-          ]
+          ],
+          "shape": {"sequence": "doubling", "n_range": [2, 4096], "note": "count depends on the drawn instance; kept so the record says why the diagnostic cannot decide"}
         }
       }
     }

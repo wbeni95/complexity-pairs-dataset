@@ -121,7 +121,7 @@ def readme_table(rows: list[dict]) -> str:
         "",
         table(verified),
         "",
-        "### Staging (`staging/`, V0: cited, not yet independently checked)",
+        "### Staging (`staging/`, V0: cited, not independently checked)",
         "",
         table(staging),
     ]

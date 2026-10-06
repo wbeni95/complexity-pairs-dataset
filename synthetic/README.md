@@ -8,5 +8,3 @@ Rules, enforced by `tools/validate.py`:
 
 - every entry here must be tagged T7, and T7 entries may live nowhere else;
 - T7 entries never count toward the "validated pairs" headline.
-
-The folder is empty for now.

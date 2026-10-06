@@ -17,7 +17,7 @@
 
 **Caveats.** 2-SAT is solvable in linear time; see notes/boundary-2sat-vs-3sat.md. That is a boundary between problems, not a same-problem pair.
 
-**Notes.** Path to V1: brute force vs Schöning (randomized, so V1 needs the satisfiable/unsatisfiable answers to agree with high probability over planted and random instances).
+**Notes.** Brute force vs Schöning is a separate V1 entry (pairs/3sat-brute-force-vs-schoening); this staging entry also cites PPSZ, which is not implemented.
 
 **Verification.** Cited from the literature.
 

@@ -213,7 +213,7 @@ on seeded scaling instances. Tolerance is 0.03 unless stated. Library = the 13 d
 edges are the code's plain `INF` literals, and plain+plain additions are not counted. The random density of
 `gen_digraph` (0.3/0.6/1.0, drawn per instance) therefore changes the counted fraction between n values. The
 algorithm performs n³ steps on every input; the counter does not see them all. This is classified as a measurement
-artifact, not a scaling failure. A fixed-density or complete-digraph scaling family would fix it (open item).
+artifact, not a scaling failure.
 
 ## 7. Near-misses (all KILLED)
 
@@ -295,7 +295,7 @@ below means known from recall, with the citation's existence verified.
 | D6 | Polynomial Karatsuba written in `mutations/` (closely related problem) | semiring-swap the integer Karatsuba | carries have no semiring meaning |
 | D7 | Strassen tested both unchanged (CUTOFF 16, n = 17/24) and as a CUTOFF=1 copy (n ≤ 8) | unchanged only | below the cutoff Strassen *is* schoolbook; CUTOFF=1 gives n = 2 counterexamples, while the unchanged copy has only n ≥ 17 ones |
 | D8 | Exact operation-count expressions as the claimed costs where lower-order terms matter (NTT, Kirchhoff, Held–Karp) | leading term only | leading-term fits missed tolerance in the first pass (NTT α = 0.9545, Kirchhoff 1.0542, Held–Karp 1.0518–1.0523); this is the practice of the NTT entry (RL-062) |
-| D9 | No new entries written; proposals in section 12 | writing up to 5 entries | ~2.5 h budget used by the engine and pilot; each entry needs its own harness, scaling family and V2 run; "If unsure, propose instead of writing" |
+| D9 | No new entries written | writing up to 5 entries | ~2.5 h budget used by the engine and pilot; each entry needs its own harness, scaling family and V2 run; "If unsure, propose instead of writing" |
 | D10 | Recorded run with trials ×5 | ×1 | tests are cheap (whole run 141.8 s); status counts were identical to the ×1 first pass (results/…firstpass) |
 | D11 | MIRROR comparison flip by `Rev` injection *and* AST flips; naive flips without the sentinel flip kept as KILLED | dropping them | they show that a comparison flip needs the sentinels (±inf) flipped too: Dijkstra and Held–Karp on `Rev` return inf |
 
@@ -315,30 +315,11 @@ below means known from recall, with the citation's existence verified.
   tests per cell. It is not a proof.
 - Property checks on infinite carriers use bounded sample domains.
 
-**Open ideas** (IDEA, untested):
-1. A Kleene-star Floyd–Warshall as a *new subject* for closed non-idempotent semirings (Z on DAGs with the diagonal handled), to check that it repairs the n = 1 kill.
-2. A larger structure library, so that separators that coincide here can be split: semirings that are absorptive but
-   not selective (e.g. the (max, ×) "fuzzy" variants, the (∪,∩) lattice of sets) and non-commutative semirings (2×2
-   tropical matrices).
-3. Knuth's speed-up: test (max,+) with monotone frequencies and characterise the failing instances (all disagreements
-   had the oracle above Knuth).
-4. A fixed-density scaling family for the Bool Floyd–Warshall count fit.
-5. Mutation-as-generator: feed the boundary map into `generators/` as structured negative examples ("this fast
-   algorithm, this algebra, killed by this counterexample") for algorithm-discovery training. To coordinate with the
-   agent who owns `generators/`.
+*Forward-looking content is not published (RL-086).*
 
 ## 12. Proposed entries (not written; for the maintainer to decide)
 
-All would be pipeline rediscoveries of known, named problems. The evidence above covers V1-style differential tests
-and exact counts, but none has an entry harness or a recorded V2 run.
-
-1. **Boolean matrix multiplication: schoolbook vs Strassen over Z** (T3). The evidence: io mutant SURVIVED in 160 tests; ⊗ counts exactly 7^k·16³, α = 1.0, 12 rivals rejected. Fischer–Meyer 1971 [DOI OK], Munro 1971 [DOI OK].
-2. **All-pairs widest (bottleneck) paths: Bellman–Ford from every source vs Floyd–Warshall over (max,min)** (T3; both survive on all 750 tests per family; FW ⊗ count fits n³ at α = 1.0052). Pollack 1960 [DOI OK].
-3. **Transitive closure: path enumeration vs Warshall** (T2: enumeration of simple paths vs n³). Warshall 1962 [DOI OK].
-4. **Counting Hamiltonian cycles: permutation enumeration vs Held–Karp over (+,×)** (T6+T8 like TSP; ⊕-form SURVIVED on Z and Z7, exact count fit α = 1.0005). Bellman 1962 / Held–Karp 1962 [DOI OK].
-5. **Weighted spanning-tree sum: enumeration vs weighted matrix-tree theorem** (T2; Kirchhoff + Bareiss SURVIVED on Z, Z7 and GF2; count = (n−2)(n−1)(2n−3)/3 exactly). Kirchhoff 1847 [DOI OK].
-
-Maximum spanning tree, max TSP and min subarray are TRIVIAL mirrors and should not become entries.
+*Forward-looking content is not published (RL-086).*
 
 ## 13. Draft RESEARCH_LOG entries (DRAFT, for the maintainer)
 
@@ -391,10 +372,6 @@ cited as verified.
 **DRAFT · INCONCLUSIVE · Two measurement gaps.** The Bool Floyd–Warshall ⊗-count fit gives α = 1.0372 against n³
 (tolerance 0.03), because counting misses plain-literal operations under variable density; the algorithm makes n³
 steps regardless. The LeftZero zeta transform cannot be tested because the oracle needs an identity.
-
-**DRAFT · IDEA · Next steps.** Kleene-star FW subject; a structure library with absorptive non-selective and
-non-commutative semirings; failing instances of Knuth under (max,+); fixed-density count fits; mutation records as
-negative examples for `generators/`.
 
 ## 14. Reproduction
 

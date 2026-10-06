@@ -21,7 +21,7 @@ In the query model, separations are **theorems**:
 | Unstructured search (Grover) | Θ(N) | Θ(√N), and no better (BBBV 1997) | `pairs/grover-search-classical-vs-quantum` (T9, V2) |
 | Simon's problem | Ω(2^(n/2)) | O(n) | `pairs/simon-classical-vs-quantum` (T9, V2) |
 | Discrete log, generic groups | Ω(√p) (Shoup 1997) | poly(log p) (Shor) | `staging/discrete-logarithm` (T6 + T9) |
-| Forrelation | Ω̃(√N) | 1 query (Aaronson–Ambainis 2015) | not yet ingested |
+| Forrelation | Ω̃(√N) | 1 query (Aaronson–Ambainis 2015) | `staging/forrelation` (T9, V0) |
 | BQP ⊄ PH relative to an oracle | — | — | Raz & Tal 2019/2022 |
 
 These results show that *black-box* quantum speedups are real, sometimes exponential. Grover's lower bound also

@@ -1,6 +1,6 @@
 {
-  "status": "PROPOSAL (research/2026-10-07, pattern-mining agent). Not part of schema/entry.schema.json; nothing in the dataset depends on it.",
-  "purpose": "A controlled vocabulary for a possible future per-algorithm 'technique' field, plus a draft mapping of every entry that had an entry.json when this file was written.",
+  "status": "Research artefact (research/2026-10-07, pattern-mining agent). Not part of schema/entry.schema.json; nothing in the dataset depends on it.",
+  "purpose": "A controlled vocabulary of algorithmic techniques, and a mapping of every entry that had an entry.json when this file was written.",
   "how_to_read": {
     "techniques": "Each technique has an id, a name, a definition (what the algorithm does) and the structural property of the problem it exploits.",
     "baselines": "Kinds of SLOW algorithm. A baseline is a description of the slow side, not a technique.",

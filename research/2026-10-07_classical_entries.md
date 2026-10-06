@@ -177,14 +177,7 @@ The unit tests pass: `python -m unittest discover -s tests`, 84 tests, OK.
 
 ## Open ideas
 
-1. **Operation-count V2 (`measure: "reported"`) for classical algorithms whose exponent gaps are smaller than the tolerance** (matching, Schöning, Strassen). Exact counts discriminated what timing could not (entry 6). This needs a maintainer decision on extending RL-010 beyond query models.
-2. **Max flow to V2.** Implement Zadeh's (1972) bad networks for Edmonds–Karp, and search for or construct a Dinic family with Θ(V) phases of Θ(VE) blocking-flow work. The counting harness in `max_flow_probe` can be reused to confirm such a family before any timing.
-3. **Schöning, closer to the bound.** Clauses with exactly one literal true under a* make every useful flip succeed with probability exactly 1/3, but the complement of a* then satisfies the formula too and attracts the walk. Mixing in all-true clauses placed last in the clause order might break that symmetry. An incremental list of falsified clauses (O(1) per flip on bounded-occurrence formulas) would extend the timeable n range, so that the exponential could dominate the polynomial factors.
-4. **Lawler's maximal-independent-set DP as a third χ algorithm** (needs an MIS enumerator), and the BHK polynomial-space variant (their Proposition 7).
-5. **Element distinctness on integers.** Read Yao 1991 to decide whether the Ω(n log n) bound extends to integer inputs. Add universal hashing as a randomized third algorithm (expected O(n)).
-6. **RMQ with linear preprocessing** (Bender–Farach-Colton or Fischer–Heun) as a third algorithm. Note that V2 could not separate it from the sparse table (log factor only).
-7. **A stronger V2 diagnostic.** The validator's single global slope hides curvature (Floyd–Warshall). Reporting local slopes, or requiring α against the *next lower* candidate cost to fail, would make V2 discriminate (for example, Schöning would then fail against 2ⁿ).
-8. **Robustness of the matching family to scan order.** Shuffling the adjacency lists probably destroys the HK phase structure. Measuring this would show how implementation-specific the family is.
+*Forward-looking content is not published (RL-086).*
 
 ## Files
 

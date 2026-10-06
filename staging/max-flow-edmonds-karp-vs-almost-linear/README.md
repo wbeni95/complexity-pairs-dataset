@@ -17,9 +17,9 @@
 
 **Caveats.** The almost-linear algorithm is far from practical; its m^(o(1)) factor hides large terms. The m^(1+o(1)) bound assumes polynomially bounded integer capacities.
 
-**Notes.** Path to V1: implement Edmonds-Karp and push-relabel (FIFO, O(n^3)) as a T3 pair with V2 scaling; keep the almost-linear algorithm as cited.
+**Notes.** Not implemented here; Edmonds-Karp vs Dinic is a separate V1 entry (pairs/max-flow-edmonds-karp-vs-dinic). The almost-linear algorithm is cited only.
 
-**Verification.** Cited from the literature; not yet independently implemented.
+**Verification.** Cited from the literature; not independently implemented.
 
 **Sources.**
 

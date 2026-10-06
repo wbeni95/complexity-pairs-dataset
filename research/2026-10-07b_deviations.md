@@ -34,24 +34,24 @@ Severity levels:
 - **medium:** the claim passes, but its evidence is fragile, misdescribed or hides structure.
 - **low:** provenance or bookkeeping.
 
-| # | Finding | Evidence | Severity | Suggested action |
+| # | Finding | Evidence | Severity | Note |
 |---|---|---|---|---|
-| F1 | **Matching: the recorded timing V2 does not separate Kuhn from Hopcroft–Karp.** HK's times also fit Kuhn's n³, and Kuhn's times also fit HK's n^2.5. No rivals were declared. | Cross-fit, ledger 025704Z / 030338Z / 070542Z: HK data vs n³ gives α = 0.818 / 0.817 / 0.819; Kuhn data vs n^2.5 gives 1.172 / 1.169 / 1.170. All are inside 1 ± 0.25. In the recorded evidence, the exact counts come only from an agent experiment (RL-030). | high | Count-based V2 with rivals. The working tree now has `measure: reported`, tolerance 0.03 and rivals (10:03), but no recorded run yet. Record one before relying on it. |
-| F2 | **Karatsuba: the measurements also fit schoolbook n².** The schoolbook data reject Karatsuba's n^log₂3 only by a hair. | Cross-fit over 5 runs: Karatsuba data vs n² gives α = 0.810 / 0.810 / 0.809 / 0.811 / 0.806, which passes. Schoolbook data vs n^1.585 gives 1.267 / 1.263 / 1.271 / 1.272 / 1.273, a margin of only 0.013–0.023. | high | Exact digit-multiplication counts (3^k vs 4^k at n = 2^k) with rivals at tolerance ≤ 0.05, as for Strassen (RL-047). |
-| F3 | **Collision, BBHT variant: neither the measurements nor the exact expectations over n = 3..15 exclude the classical 2^(n/2).** In the V2 range the T9 separation rests on the known-t variant alone, which rejects 2^(n/2) with margin 0.069. | Recorded BBHT means vs 2^(n/2): α = 0.776 in all 3 runs, which passes. The exact expectations against 2^(n/2) give 0.7696 (`theory_vs_ledger.py`), which also passes. Known-t: recorded 0.681, exact 0.6844, both rejected. | high (for any reading of this fit as separation evidence) | Say in the entry that the BBHT fit is pre-asymptotic and not discriminating. Do not add 2^(n/2) as its rival: it would fail. Exact slope over n = 15..30 is 1.009 (RL-032). |
-| F4 | **Chromatic number, inclusion–exclusion: the claimed cost n·2ⁿ is not the operation count on the timing instances, and the fit cannot tell n·2ⁿ from 2ⁿ.** | χ(G) of the 9 exact timing graphs (G(n, 0.8), n = 10..18) is 6, 7, 7, 8, 8, 8, 8, 9, 10 (χ/n = 0.50–0.64). Fitting the exact operation-count model (2χ+2)·2ⁿ against n·2ⁿ gives α = 0.9638. Plain 2ⁿ against n·2ⁿ gives 0.9047, which also passes. Recorded α = 0.984. | medium | Count the arithmetic operations and add rival 2ⁿ. Alternatively, state the cost as (2χ+2)·2ⁿ, or use a family with known χ = Θ(n). |
-| F5 | **Simon, quantum: the recorded α = 1.121 is a 1.8-s.e. draw dominated by the n = 2 point.** The exact-E(n) slope is 1.0186. | Mean at n = 2 is 1.65 vs E = 2 (z = −1.57, exact variance). Delta-method s.e.(α) = 0.0569 at 40 samples, and n = 2 contributes 83% of Var(α). (recorded − exact)/s.e. = +1.80. Without n = 2: recorded 0.960, exact 0.957. | medium | Test the means against exact E(n) directly (z-test), as experiment RL-015 does. Raise the samples at n = 2..3, or start at n = 3. The cost span is only 5×. |
-| F6 | **Run-to-run stability measures timing noise only.** Every run times the same seeded single instance per n (samples = 1 for all 74 timing fits), so instance effects are frozen in and look perfectly stable. | Validator: `random.Random(f"{id}|v2|{n}")` with samples defaulting to 1. Max timing-α spread over the 5 runs is 0.044 (section 1), yet max-subarray and LCS show reproducible local-slope jumps (F7, F16). | medium | Time ≥ 3 distinct instances per n, or add a second seed family in CI. Report instance spread separately from timing spread. |
-| F7 | **Maximum subarray: the timing instances change type between n values.** The harness has no `generate_scaling`, and its generator mixes all-negative, all-non-negative and mixed arrays. | Instance audit: Kadane's n = 100 000 instance is all-negative and its n = 10⁶ instance all-non-negative; brute force has all-negative at n = 150 and all-non-negative at 200. Re-measurement (two interpretable runs, under contention): per-element time is ×0.63–0.94 (all-negative) and ×0.75–0.96 (all-non-negative) of mixed, all 24 round-ratios below 1. The predicted local slopes 0.697 / 1.332 / 0.894 have the same direction and similar size as the recorded 0.778 / 1.235 / 0.895 (070542Z), overshooting the first two. | medium | Add a `generate_scaling` with one fixed instance type, or count steps exactly. |
-| F8 | **The only discriminating (rival-based) V2 evidence comes from a dirty tree.** Strassen counts appear in one run only (070542Z, `git_dirty` true, base 83b12c3 plus the uncommitted RL-047 changes). | Ledger run metadata: 2 of 5 runs are on a clean commit (005747Z at d8ddc58, 030338Z at 7511ea9). 005329Z has git_commit null; 025704Z and 070542Z are dirty. | medium | Make a recorded run on a clean commit after the in-progress conversions land. |
-| F9 | **Every timing fit with claimed exponent ≥ 2.5 has α < 1 and a rising local slope.** One lower-order term n^(p−1) explains it. Floyd–Warshall (α = 0.925, the lowest timing α) would need n > 703 for its local slope to exceed 0.99; the largest measured n is 200. | 10/10 fits in 070542Z (α 0.925–0.982) and 40/40 run-fits across the ledger. The two-term fit T = a·n^p + b·n^(p−1) reproduces the recorded α to within ±0.001 (3-decimal values) in 8 of 9 n^p fits (max-subarray brute: 0.966 vs 0.974). It cuts the relative RMS residual 4.68–21.80× (1.39× for max-subarray brute, whose residual is the instance mix). b/a = 6.85–21.76. | medium (systematic, explained) | Nothing is needed for pass/fail. Exact counts remove the effect. |
-| F10 | **The five log n fits have α > 1, a slope falling from 1.02–1.27 to 0.92–1.04, and only a 16× cost span.** These are fast doubling and four companion-matrix powers. | 070542Z: α 1.001–1.087. Fast doubling local slopes are 1.265, 1.080, 1.060, 0.963, and the spread over 5 runs is 0.040 (1.087–1.128), the second largest of all. Hypothesis, untested: the first few doubling steps work on small integers (F(k) < 2³⁰ for k ≤ 44), which CPython handles cheaply. Their number is roughly fixed, while the total number of steps grows with log n, so the average cost per step rises with n until it saturates. linear-recurrence-c2-3 (α 1.001) does not show the pattern, which the hypothesis has not explained. | medium | Count multiplications exactly (3 per bit of n). |
-| F11 | **Dürr–Høyer uses more queries than the classical scan at 4 of the 5 measured n.** | 070542Z: quantum/classical ratio is 17.15, 7.43, 3.38, 1.64 and 0.77 at n = 4, 6, 8, 10, 12. α = 0.886 (margin 0.136). | low | Already in RL-034. Put the crossover next to the V2 numbers in the README. |
-| F12 | **Grover's α = 0.924 is deterministic and pre-asymptotic, not noise.** | The closed form ⌊(π/4)·2^(n/2)⌋ + 1 has slope 0.9245 over n = 2..12, matching the record exactly, and 0.9996 over n = 14..40. | low | None; optionally state it in the entry. |
-| F13 | **The working tree is ahead of both the index and the ledger.** | At 10:03: 56 entries on disk vs 54 in `index.json` (written 09:03); more were added by 10:07. At 10:03, 3 entries' current `scaling` (measure, tolerance, rivals; sorting also n_values) differed from 070542Z and 2 new entries had no record; by 10:05–10:06 inversion counting and LIS had changed too. | low (transient) | Rebuild the index and make a recorded run before committing. |
-| F14 | **The T3 secondary tag is applied inconsistently.** LIS carries it for its n² → n log n step; Fibonacci (n → log n) and MST (n² log n → n²) have a poly → faster-poly step without it. | `2026-10-07b_consistency.py` §4. | low | Decide the convention and apply it. |
-| F15 | **Dates disagree.** RESEARCH_LOG sections "2026-10-07 (overnight)" and "(day)" cite ledger files stamped 2026-10-06, and the files themselves have 2026-10-06 mtimes. | For example, RL-044 under "2026-10-07" cites 20261006T025704Z (UTC). `experiments/2026-10-07_dataset_stats.py` has mtime 2026-10-06 03:43 +0200. The shell clock read 2026-10-06 during this analysis. | low | Clarify the dating convention (session day vs calendar date). |
-| F16 | **LCS subsequence enumeration: local slopes oscillate reproducibly** between 0.825 and 1.403. The brute force exits early, so per-mask cost depends on the instance (hypothesis, untested). | 070542Z local slopes: 0.897, 1.123, 0.842, 0.994, 0.825, 1.403. Last-minus-first drift is +0.48 / +0.48 / +0.50 / +0.51 / +0.51 over 5 runs. The implementation breaks when `b.find` fails, so time per mask lies between Θ(1) and Θ(n + m). | low | A worst-case generator (a == b, so there is no early exit) makes the per-mask cost exactly Θ(n + m). |
+| F1 | **Matching: the recorded timing V2 does not separate Kuhn from Hopcroft–Karp.** HK's times also fit Kuhn's n³, and Kuhn's times also fit HK's n^2.5. No rivals were declared. | Cross-fit, ledger 025704Z / 030338Z / 070542Z: HK data vs n³ gives α = 0.818 / 0.817 / 0.819; Kuhn data vs n^2.5 gives 1.172 / 1.169 / 1.170. All are inside 1 ± 0.25. In the recorded evidence, the exact counts come only from an agent experiment (RL-030). | high | The working tree now has `measure: reported`, tolerance 0.03 and rivals (10:03), but no recorded run yet. |
+| F2 | **Karatsuba: the measurements also fit schoolbook n².** The schoolbook data reject Karatsuba's n^log₂3 only by a hair. | Cross-fit over 5 runs: Karatsuba data vs n² gives α = 0.810 / 0.810 / 0.809 / 0.811 / 0.806, which passes. Schoolbook data vs n^1.585 gives 1.267 / 1.263 / 1.271 / 1.272 / 1.273, a margin of only 0.013–0.023. | high | — |
+| F3 | **Collision, BBHT variant: neither the measurements nor the exact expectations over n = 3..15 exclude the classical 2^(n/2).** In the V2 range the T9 separation rests on the known-t variant alone, which rejects 2^(n/2) with margin 0.069. | Recorded BBHT means vs 2^(n/2): α = 0.776 in all 3 runs, which passes. The exact expectations against 2^(n/2) give 0.7696 (`theory_vs_ledger.py`), which also passes. Known-t: recorded 0.681, exact 0.6844, both rejected. | high (for any reading of this fit as separation evidence) | 2^(n/2) as a rival of this fit would fail. Exact slope over n = 15..30 is 1.009 (RL-032). |
+| F4 | **Chromatic number, inclusion–exclusion: the claimed cost n·2ⁿ is not the operation count on the timing instances, and the fit cannot tell n·2ⁿ from 2ⁿ.** | χ(G) of the 9 exact timing graphs (G(n, 0.8), n = 10..18) is 6, 7, 7, 8, 8, 8, 8, 9, 10 (χ/n = 0.50–0.64). Fitting the exact operation-count model (2χ+2)·2ⁿ against n·2ⁿ gives α = 0.9638. Plain 2ⁿ against n·2ⁿ gives 0.9047, which also passes. Recorded α = 0.984. | medium | — |
+| F5 | **Simon, quantum: the recorded α = 1.121 is a 1.8-s.e. draw dominated by the n = 2 point.** The exact-E(n) slope is 1.0186. | Mean at n = 2 is 1.65 vs E = 2 (z = −1.57, exact variance). Delta-method s.e.(α) = 0.0569 at 40 samples, and n = 2 contributes 83% of Var(α). (recorded − exact)/s.e. = +1.80. Without n = 2: recorded 0.960, exact 0.957. | medium | The cost span is only 5×. |
+| F6 | **Run-to-run stability measures timing noise only.** Every run times the same seeded single instance per n (samples = 1 for all 74 timing fits), so instance effects are frozen in and look perfectly stable. | Validator: `random.Random(f"{id}|v2|{n}")` with samples defaulting to 1. Max timing-α spread over the 5 runs is 0.044 (section 1), yet max-subarray and LCS show reproducible local-slope jumps (F7, F16). | medium | — |
+| F7 | **Maximum subarray: the timing instances change type between n values.** The harness has no `generate_scaling`, and its generator mixes all-negative, all-non-negative and mixed arrays. | Instance audit: Kadane's n = 100 000 instance is all-negative and its n = 10⁶ instance all-non-negative; brute force has all-negative at n = 150 and all-non-negative at 200. Re-measurement (two interpretable runs, under contention): per-element time is ×0.63–0.94 (all-negative) and ×0.75–0.96 (all-non-negative) of mixed, all 24 round-ratios below 1. The predicted local slopes 0.697 / 1.332 / 0.894 have the same direction and similar size as the recorded 0.778 / 1.235 / 0.895 (070542Z), overshooting the first two. | medium | — |
+| F8 | **The only discriminating (rival-based) V2 evidence comes from a dirty tree.** Strassen counts appear in one run only (070542Z, `git_dirty` true, base 83b12c3 plus the uncommitted RL-047 changes). | Ledger run metadata: 2 of 5 runs are on a clean commit (005747Z at d8ddc58, 030338Z at 7511ea9). 005329Z has git_commit null; 025704Z and 070542Z are dirty. | medium | — |
+| F9 | **Every timing fit with claimed exponent ≥ 2.5 has α < 1 and a rising local slope.** One lower-order term n^(p−1) explains it. Floyd–Warshall (α = 0.925, the lowest timing α) would need n > 703 for its local slope to exceed 0.99; the largest measured n is 200. | 10/10 fits in 070542Z (α 0.925–0.982) and 40/40 run-fits across the ledger. The two-term fit T = a·n^p + b·n^(p−1) reproduces the recorded α to within ±0.001 (3-decimal values) in 8 of 9 n^p fits (max-subarray brute: 0.966 vs 0.974). It cuts the relative RMS residual 4.68–21.80× (1.39× for max-subarray brute, whose residual is the instance mix). b/a = 6.85–21.76. | medium (systematic, explained) | — |
+| F10 | **The five log n fits have α > 1, a slope falling from 1.02–1.27 to 0.92–1.04, and only a 16× cost span.** These are fast doubling and four companion-matrix powers. | 070542Z: α 1.001–1.087. Fast doubling local slopes are 1.265, 1.080, 1.060, 0.963, and the spread over 5 runs is 0.040 (1.087–1.128), the second largest of all. Hypothesis, untested: the first few doubling steps work on small integers (F(k) < 2³⁰ for k ≤ 44), which CPython handles cheaply. Their number is roughly fixed, while the total number of steps grows with log n, so the average cost per step rises with n until it saturates. linear-recurrence-c2-3 (α 1.001) does not show the pattern, which the hypothesis has not explained. | medium | — |
+| F11 | **Dürr–Høyer uses more queries than the classical scan at 4 of the 5 measured n.** | 070542Z: quantum/classical ratio is 17.15, 7.43, 3.38, 1.64 and 0.77 at n = 4, 6, 8, 10, 12. α = 0.886 (margin 0.136). | low | Already in RL-034. |
+| F12 | **Grover's α = 0.924 is deterministic and pre-asymptotic, not noise.** | The closed form ⌊(π/4)·2^(n/2)⌋ + 1 has slope 0.9245 over n = 2..12, matching the record exactly, and 0.9996 over n = 14..40. | low | — |
+| F13 | **The working tree is ahead of both the index and the ledger.** | At 10:03: 56 entries on disk vs 54 in `index.json` (written 09:03); more were added by 10:07. At 10:03, 3 entries' current `scaling` (measure, tolerance, rivals; sorting also n_values) differed from 070542Z and 2 new entries had no record; by 10:05–10:06 inversion counting and LIS had changed too. | low (transient) | — |
+| F14 | **The T3 secondary tag is applied inconsistently.** LIS carries it for its n² → n log n step; Fibonacci (n → log n) and MST (n² log n → n²) have a poly → faster-poly step without it. | `2026-10-07b_consistency.py` §4. | low | — |
+| F15 | **Dates disagree.** RESEARCH_LOG sections "2026-10-07 (overnight)" and "(day)" cite ledger files stamped 2026-10-06, and the files themselves have 2026-10-06 mtimes. | For example, RL-044 under "2026-10-07" cites 20261006T025704Z (UTC). `experiments/2026-10-07_dataset_stats.py` has mtime 2026-10-06 03:43 +0200. The shell clock read 2026-10-06 during this analysis. | low | — |
+| F16 | **LCS subsequence enumeration: local slopes oscillate reproducibly** between 0.825 and 1.403. The brute force exits early, so per-mask cost depends on the instance (hypothesis, untested). | 070542Z local slopes: 0.897, 1.123, 0.842, 0.994, 0.825, 1.403. Last-minus-first drift is +0.48 / +0.48 / +0.50 / +0.51 / +0.51 over 5 runs. The implementation breaks when `b.find` fails, so time per mask lies between Θ(1) and Θ(n + m). | low | — |
 
 ---
 
@@ -277,18 +277,18 @@ fit accepts any alternative power law n^q with q roughly in [0.8·p_eff·α, 1.3
 - a 2ⁿ claim accepts bases in about [1.74, 2.52] (trial divisors: [1.785, 2.628]);
 - Held–Karp's n²·2ⁿ accepts effective bases [2.03, 3.24], so its data would also pass 3ⁿ.
 
-| Rank | Entry (algorithm) | Weakness | What would strengthen it |
+| Rank | Entry (algorithm) | Weakness | Note |
 |---|---|---|---|
-| 1 | bipartite matching (both) | the separation is not resolved in either direction; timing only, no rivals (F1) | exact edge-scan or phase counts with rivals (in progress, unrecorded) |
-| 2 | integer multiplication (Karatsuba) | data also fit n²; the schoolbook-side rejection margin is 0.013–0.023 (F2) | exact digit-product counts, rivals, tolerance ≤ 0.05 |
-| 3 | collision (BBHT variant) | smallest margin (0.086); pre-asymptotic; does not exclude 2^(n/2) (F3) | declare it non-discriminating, rely on known t; the exact formula gives slope 1.009 over n = 15..30 (RL-032) |
-| 4 | chromatic number (inclusion–exclusion) | cost model ≠ instances; 2ⁿ, χ·2ⁿ and n·2ⁿ are not distinguishable (F4) | operation counts, rival 2ⁿ, a family with known χ |
-| 5 | Simon (quantum) | α = 1.121 is driven by n = 2; span 5×; s.e. 0.057 (F5) | z-test against exact E(n); more samples at small n |
-| 6 | all n log n timing claims (7) and Kruskal | log factor unresolvable; passing band [0.87, 1.49] | comparison or operation counts with rivals n and n·log² n (in progress for 4 of them) |
-| 7 | Fibonacci fast doubling and companion-matrix log n (4, three of them T7) | span 16×; falling local slope; margin down to 0.122 (F10) | exact multiplication counts (3 per bit) |
-| 8 | maximum subarray (all three) | instance type changes with n (F7) | `generate_scaling` with a fixed type, or step counts |
-| 9 | Dürr–Høyer | α = 0.886 (margin 0.136); quantum > classical below n = 12 (F11) | larger n if simulation allows; quote the crossover |
-| 10 | Floyd–Warshall and the other n^2.5+ fits | α 0.925–0.982 from lower-order terms (F9) | exact relaxation and step counts (n³ exactly) |
+| 1 | bipartite matching (both) | the separation is not resolved in either direction; timing only, no rivals (F1) | — |
+| 2 | integer multiplication (Karatsuba) | data also fit n²; the schoolbook-side rejection margin is 0.013–0.023 (F2) | — |
+| 3 | collision (BBHT variant) | smallest margin (0.086); pre-asymptotic; does not exclude 2^(n/2) (F3) | the exact formula gives slope 1.009 over n = 15..30 (RL-032) |
+| 4 | chromatic number (inclusion–exclusion) | cost model ≠ instances; 2ⁿ, χ·2ⁿ and n·2ⁿ are not distinguishable (F4) | — |
+| 5 | Simon (quantum) | α = 1.121 is driven by n = 2; span 5×; s.e. 0.057 (F5) | — |
+| 6 | all n log n timing claims (7) and Kruskal | log factor unresolvable; passing band [0.87, 1.49] | — |
+| 7 | Fibonacci fast doubling and companion-matrix log n (4, three of them T7) | span 16×; falling local slope; margin down to 0.122 (F10) | — |
+| 8 | maximum subarray (all three) | instance type changes with n (F7) | — |
+| 9 | Dürr–Høyer | α = 0.886 (margin 0.136); quantum > classical below n = 12 (F11) | — |
+| 10 | Floyd–Warshall and the other n^2.5+ fits | α 0.925–0.982 from lower-order terms (F9) | — |
 
 **Not weak** (for contrast):
 - Exact deterministic counts (Strassen, Deutsch–Jozsa, Bernstein–Vazirani, minimum finding classical, Grover
@@ -331,8 +331,7 @@ n range.
    - GCD trial divisors is the one exponential above 1 (1.044–1.052, local slopes 1.052, 1.047, 1.052, 1.024). Its
      cost text allows an extra n-bit-division factor, which could explain it, but this was not tested.
 5. **Quantum counts.** Every non-exact quantum count fit is pre-asymptotic (Simon, BHT, BBHT, Dürr–Høyer, Grover); the
-   pre-asymptotic part is computable exactly from closed forms (section 3). An exact-expectation z-test would be
-   stronger evidence than a slope with ±0.25 for all of them.
+   pre-asymptotic part is computable exactly from closed forms (section 3).
 
 ---
 
@@ -364,7 +363,7 @@ in-progress files):
 - XOR convolution naive vs n·4ⁿ: +0.065.
 
 Exact counts with lower-order terms (e.g. merge-sort comparisons, n log₂ n − Θ(n)) will use part of the 0.03 band.
-The size of that part depends on the count definition, which was not checked here (see open ideas).
+The size of that part depends on the count definition, which was not checked here.
 
 **Other close calls:**
 - Simon quantum would have read α ≈ 1.0186 with an n = 2 mean equal to E(2). It reads 1.121, 1.80 s.e. away
@@ -399,20 +398,4 @@ The size of that part depends on the count definition, which was not checked her
 
 ## Open ideas
 
-1. **An exact-expectation test for randomized count fits.** Where a closed form exists (Simon, birthday, Grover
-   classical, BHT), require |z| ≤ 3 at every n besides the slope test. This is stronger than ±0.25, and it removes the
-   leverage problem of the smallest n (F5). The expectations are in `lib/qsearch.py` and the experiments already.
-2. **Multi-instance timing.** samples ≥ 3 distinct instances per n for timing fits, with the across-instance spread
-   recorded. This would turn F6, F7 and F16 into measurable quantities.
-3. **Record machine load in the run metadata**, for example the number of other Python or flipwalk processes and the
-   1-minute CPU utilisation, so that a timing run overlapping CPU-heavy jobs is visible in the ledger. CONTRIBUTING
-   forbids the overlap but nothing records it.
-4. **Report the passing band** (section 5) in the ledger next to α. It states "what else this fit would accept"
-   directly, and it generalises the log-factor diagnostic of RL-048.
-5. **Budget lower-order terms in count-based rivals.** For each count-based claim, compute α of the *exact* count
-   formula (with its lower-order terms) over n_values before choosing the tolerance. The noise-free margins above are
-   as small as +0.035, and a −Θ(n) term in the counts could use a material part of them.
-6. **Look for the LCS and knapsack-MITM anomalies cheaply.** Instance audit of the LCS mask early-exit rate per n;
-   list size and object count for MITM at n = 32 → 36. Both need no timing.
-7. **A worst-case generator check in the validator.** Warn when a V2 timing fit uses `harness.generate` (10 entries
-   in `2026-10-07b_instance_audit.py` part C) and the implementation's cost depends on the instance.
+*Forward-looking content is not published (RL-086).*

@@ -42,6 +42,15 @@ Per algorithm, `harness.v1_max_n` caps the sizes a slow algorithm is run on. `ha
 claimed cost as an expression in `n` (`"n**2"`, `"phi**n"`, `"n * factorial(n - 2)"`) together with n values
 spanning at least a factor of 8 in cost. Choose n values so that the runtimes land roughly between 0.1 ms and 300 ms.
 
+For `"measure": "reported"` claims you may add an optional `shape` block to `harness.scaling`, e.g.
+`"shape": {"sequence": "doubling", "n_range": [2, 16384]}`. Use `doubling` (n = 2^k) for costs with a log factor or
+an irrational power of n, and `consecutive` otherwise. Start the range where the count is regular, for example above
+a schoolbook cutoff. The validator then identifies the exact growth of the counts and compares it with `cost`
+(`python tools/validate.py <entry> --scaling -v`). The result is informational and does not affect V2. If the count
+includes comparisons inside CPython built-ins, say so in the entry (RL-069), and set `"python_version_dependent": true`
+when the count is not known to be identical across Python versions. If `cost` cannot be parsed exactly (e.g. a
+decimal base), give `expect`. Details: [notes/v2-shape-diagnostic.md](notes/v2-shape-diagnostic.md).
+
 ## Research log (required)
 
 This is research, so every change to what the dataset claims leaves a trace. Add a dated entry to
@@ -51,7 +60,7 @@ This is research, so every change to what the dataset claims leaves a trace. Add
 - find that a claim, tag, citation or implementation was wrong (REFUTED / CORRECTED, recording the old state);
 - change methodology (DECISION);
 - run a search that finds nothing (NULL, with the exact scope searched);
-- get close but not all the way (NEAR-MISS, with the numbers), or have an untested hypothesis worth keeping (IDEA).
+- get close but not all the way (NEAR-MISS, with the numbers).
 
 Keep every script that produced or attempted a result, failed ones included, and say in its docstring what
 happened. Scripts that manufacture candidate pairs belong in `generators/` (see generators/README.md).

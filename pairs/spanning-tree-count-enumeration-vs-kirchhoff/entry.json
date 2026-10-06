@@ -40,7 +40,8 @@
           "n_values": [16, 32, 64, 128],
           "measure": "reported",
           "tolerance": 0.03,
-          "rivals": ["n**4", "n**2"]
+          "rivals": ["n**4", "n**2"],
+          "shape": {"sequence": "consecutive", "n_range": [1, 20]}
         }
       }
     }

@@ -1,0 +1,192 @@
+{
+  "id": "hamiltonian-cycle-count-enumeration-vs-inclusion-exclusion",
+  "title": "Counting Hamiltonian cycles: permutation enumeration vs inclusion-exclusion (and the Held-Karp counting DP)",
+  "problem_statement": "Given a directed graph on n vertices as an n x n 0/1 adjacency matrix A (A[u][v] = 1 iff there is an arc u -> v; diagonal entries are ignored), compute the number of directed Hamiltonian cycles: cyclic vertex sequences that visit every vertex exactly once with an arc from each vertex to the next, each cycle counted once (not once per start vertex). Conventions: n <= 1 gives 0; n = 2 gives A[0][1] * A[1][0] (the cycle 0 -> 1 -> 0). An undirected graph is a symmetric matrix; for it, with n >= 3, the answer is twice the number of undirected Hamiltonian cycles, because each can be traversed in two directions.",
+  "input": {
+    "parameter": "n = number of vertices.",
+    "size_measure": "n^2 matrix entries (0/1). Counts are at most (n-1)!, i.e. O(n log n)-bit integers; arithmetic on them is treated as unit cost."
+  },
+  "algorithms": [
+    {
+      "name": "permutation enumeration",
+      "idea": "Every directed Hamiltonian cycle can be written in exactly one way as 0 -> v_1 -> ... -> v_{n-1} -> 0. Enumerate the (n-1)! orders of the vertices 1..n-1 and test the n arcs of each order, stopping at the first missing arc.",
+      "model": "classical-deterministic",
+      "pseudocode": "if n <= 1: return 0\ncount = 0\nfor order in permutations(1..n-1):\n  if all arcs 0 -> order[0] -> ... -> order[-1] -> 0 exist (tested in turn, stop at the first missing one):\n    count += 1\nreturn count",
+      "time_complexity": "Theta(n!) arc tests in the worst case: exactly n! on the complete digraph (the V2 family), where no test fails; at least (n-1)! orders are generated on every input.",
+      "space_complexity": "Theta(n)",
+      "correctness": "The rotation of a directed Hamiltonian cycle that starts at vertex 0 is unique, so cycles correspond one-to-one to the orders (v_1, ..., v_{n-1}) whose n arcs all exist. For n = 2 the single order (1) is counted iff both arcs exist, matching the convention.",
+      "implementation": "implementations/enumeration.py:count_hamiltonian_cycles_enumeration",
+      "harness": {
+        "v1_max_n": 9,
+        "scaling": {
+          "cost": "factorial(n)",
+          "n_values": [
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "factorial(n - 1)",
+            "n * factorial(n)",
+            "n**2 * 2**n"
+          ]
+        }
+      }
+    },
+    {
+      "name": "inclusion-exclusion over vertex subsets",
+      "idea": "A closed walk of length n from vertex 0 (consecutive vertices distinct) is a Hamiltonian cycle iff its first n vertices cover all n vertices. Inclusion-exclusion over the vertices a walk misses gives #cycles = sum over T containing 0 of (-1)^(n-|T|) W(T), where W(T) counts closed walks of length n from 0 inside T; each W(T) comes from a walk-length DP that keeps one number per vertex of T, so the memory stays polynomial.",
+      "model": "classical-deterministic",
+      "pseudocode": "if n <= 1: return 0\ntotal = 0\nfor each T = {0} + S, S a subset of {1..n-1}:\n  w = indicator of vertex 0 on T\n  repeat n times: w[v] = sum over u in T, u != v, of w[u] * A[u][v]   (all v in T)\n  total += (-1)^(n - |T|) * w[0]\nreturn total",
+      "time_complexity": "Theta(n^3 2^n). Exactly, on every input with n >= 2 vertices: n(n-1)(n+2)2^(n-3) multiplications and n(n-1)(n+2)2^(n-3) + 2^(n-1) - 1 additions/subtractions, in total n(n-1)(n+2)2^(n-2) + 2^(n-1) - 1 operations (for |T| = t the DP makes n steps of t(t-1) products and t(t-1) additions, and sum over S of (|S|+1)|S| = (n-1)(n+2)2^(n-3); the extra 2^(n-1) - 1 are the signed accumulations, the one for T = {0} adds a plain 0).",
+      "space_complexity": "Theta(n) numbers of O(n log n) bits (polynomial space): two walk vectors of length |T| <= n and the list of T.",
+      "correctness": "Let U be the closed walks w_0 = 0, w_1, ..., w_n = 0 of length n whose steps are arcs between distinct vertices, and B_v (v != 0) those that avoid v. A walk in U is a Hamiltonian cycle written from 0 iff it lies in no B_v (n positions w_0..w_{n-1} covering n vertices are pairwise distinct), and each directed Hamiltonian cycle arises from exactly one walk. Inclusion-exclusion: |U minus the union of the B_v| = sum over X subset of V - {0} of (-1)^|X| |intersection of B_v, v in X|, and that intersection is the set of walks inside T = V - X, counted by n steps of the walk DP (a matrix-vector product restricted to T without the diagonal). For n = 2 the formula gives A[0][1]A[1][0]. Inclusion-exclusion counting of Hamiltonian cycles goes back to Kohn, Gottlieb & Kohn 1977, Karp 1982 and Bax 1993.",
+      "implementation": "implementations/inclusion_exclusion.py:count_hamiltonian_cycles_inclusion_exclusion",
+      "harness": {
+        "v1_max_n": 12,
+        "scaling": {
+          "cost": "n*(n-1)*(n+2)*2**(n-2) + 2**(n-1) - 1",
+          "n_values": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**2 * 2**n",
+            "n**4 * 2**n",
+            "3**n"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Held-Karp counting DP",
+      "idea": "paths[S][v] = number of directed paths from vertex 0 through exactly {0} + S ending at v; paths[S][v] = sum over u in S - {v} of paths[S - {v}][u] * A[u][v], and the answer closes every full path with the arc back to 0. This is the Bellman / Held-Karp TSP recurrence with (min, +) replaced by (+, *).",
+      "model": "classical-deterministic",
+      "pseudocode": "if n <= 1: return 0\npaths[{v}][v] = A[0][v]\nfor S subset of {1..n-1}, |S| >= 2, in increasing order:\n  for v in S: paths[S][v] = sum over u in S - {v} of paths[S - {v}][u] * A[u][v]\nreturn sum over v of paths[{1..n-1}][v] * A[v][0]",
+      "time_complexity": "Theta(n^2 2^n). Exactly, on every input with n >= 2 vertices: (n-1)(n-2)2^(n-3) + (n-1) multiplications and as many additions, in total (n-1)(n-2)2^(n-2) + 2(n-1) operations (a set S of size s >= 2 costs s(s-1) products, sum over s of C(n-1, s) s(s-1) = (n-1)(n-2)2^(n-3), plus n-1 closing products).",
+      "space_complexity": "Theta(n 2^n) numbers: the table has 2^(n-1) rows of n-1 entries.",
+      "correctness": "Every path counted in paths[S][v] with |S| >= 2 ends with a unique last arc u -> v preceded by a path over S - {v} ending at u, so the sum of products counts these paths exactly (induction on |S|). Closing each path over all of {1..n-1} with the arc back to 0 gives every directed Hamiltonian cycle once, because the start vertex 0 is fixed. The recurrence is that of Bellman 1962 and Held & Karp 1962 for the travelling salesman problem, over the semiring (+, *) instead of (min, +).",
+      "implementation": "implementations/held_karp_counting.py:count_hamiltonian_cycles_held_karp",
+      "harness": {
+        "scaling": {
+          "cost": "(n-1)*(n-2)*2**(n-2) + 2*(n-1)",
+          "n_values": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n * 2**n",
+            "n**3 * 2**n",
+            "3**n"
+          ]
+        }
+      }
+    }
+  ],
+  "pair_type": "T6",
+  "secondary_tags": [
+    "T8"
+  ],
+  "relationship": "Same problem, three exact algorithms: permutation enumeration Theta(n!) -> inclusion-exclusion Theta(n^3 2^n) in polynomial space -> Held-Karp counting Theta(n^2 2^n) with Theta(n 2^n) space. The super-polynomial n! becomes 2^n poly(n) (T8); both improved algorithms are still exponential. Deciding whether a directed or an undirected graph has a Hamiltonian cycle is NP-complete (Karp 1972), and a graph is Hamiltonian iff the count is positive, so a polynomial-time counting algorithm would imply P = NP: hence primary T6. The two exponential algorithms trade time for memory: inclusion-exclusion is slower by a factor Theta(n) but stores Theta(n) numbers instead of Theta(n 2^n).",
+  "sources": [
+    {
+      "authors": "Kohn, S.; Gottlieb, A.; Kohn, M.",
+      "year": 1977,
+      "title": "A generating function approach to the traveling salesman problem",
+      "venue": "Proceedings of the 1977 Annual Conference (ACM '77), 294-300",
+      "doi": "10.1145/800179.810218"
+    },
+    {
+      "authors": "Karp, R. M.",
+      "year": 1982,
+      "title": "Dynamic programming meets the principle of inclusion and exclusion",
+      "venue": "Operations Research Letters 1(2), 49-51",
+      "doi": "10.1016/0167-6377(82)90044-X"
+    },
+    {
+      "authors": "Bax, E. T.",
+      "year": 1993,
+      "title": "Inclusion and exclusion algorithm for the Hamiltonian path problem",
+      "venue": "Information Processing Letters 47(4), 203-207",
+      "doi": "10.1016/0020-0190(93)90033-6"
+    },
+    {
+      "authors": "Held, M.; Karp, R. M.",
+      "year": 1962,
+      "title": "A dynamic programming approach to sequencing problems",
+      "venue": "Journal of the Society for Industrial and Applied Mathematics 10(1), 196-210",
+      "doi": "10.1137/0110015"
+    },
+    {
+      "authors": "Bellman, R.",
+      "year": 1962,
+      "title": "Dynamic programming treatment of the travelling salesman problem",
+      "venue": "Journal of the ACM 9(1), 61-63",
+      "doi": "10.1145/321105.321111"
+    },
+    {
+      "authors": "Karp, R. M.",
+      "year": 1972,
+      "title": "Reducibility among combinatorial problems",
+      "venue": "Complexity of Computer Computations, Plenum Press, 85-103",
+      "doi": "10.1007/978-1-4684-2001-2_9",
+      "note": "NP-completeness of the directed and the undirected Hamiltonian cycle problems."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: the validator runs n = 0..12 and 14, 8 instances per size (112 instances, 296 implementation runs, 104 instances with at least two implementations compared): random digraphs and undirected graphs at densities 0.3-0.9, complete digraphs with and without one arc, directed and undirected cycles, balanced and unbalanced complete bipartite graphs, digraphs with a vertex without out-arcs or in-arcs, planted Hamiltonian cycles with sparse extra arcs and the Petersen graph, all randomly relabelled, about 30% with random diagonal bits; for n = 2 both answers occur. Enumeration runs up to n = 9, inclusion-exclusion up to n = 12, the Held-Karp count on every size; every implementation that runs agrees with the others and with check. check is independent of the implementations: closed forms valid for every n (complete digraph (n-1)!; minus one arc (n-1)! - (n-2)!; not strongly connected 0; a single directed n-cycle 1; an undirected n-cycle 2; bipartite with unequal sides 0; K_{m,m} m!(m-1)!), otherwise a depth-first backtracking count along existing arcs (always complete for n <= 10, capped at 200 000 search nodes above); it judged 109 of the 112 instances exactly and the other 3 (n = 14) by necessary conditions only (count at most the product of the out-degrees and of the in-degrees; even for undirected graphs with n >= 3). experiments/2026-10-06f_entries_hamiltonian.py adds 400 instances (n = 3..12; 388 judged exactly; 0 failures), checks every closed form against the exhaustive depth-first count on 39 graphs (0 mismatches; the Petersen graph gives 0 in all four methods), and runs an oracle control: 3535 deliberately wrong outputs on 410 instances (off by one, doubled, halved = the undirected count, multiplied by n = counted per start vertex, (n-1)!, negative, float, bool, None): 3471 rejected, 64 undecided (n = 11..14 without an exact rule), 0 accepted; the correct outputs: 398 accepted, 12 undecided, 0 rejected. V2 (exact counts, RESEARCH_LOG RL-047 method): generate_scaling gives the complete digraph K_n (deterministic) with entries of the harness type CountingInt, which counts every truth test, comparison and +, -, * on entry-derived values; the implementations are unchanged, and on K_n the enumeration never stops early. Enumeration: exactly n! truth tests (checked for n = 2..10); fit against factorial(n) on n = 5..10: alpha = 1.000 (tol 0.02); rivals factorial(n - 1) (1.071), n * factorial(n) (0.938) and n**2 * 2**n (2.130) rejected. Inclusion-exclusion: exactly n(n-1)(n+2)2^(n-3) multiplications and n(n-1)(n+2)2^(n-3) + 2^(n-1) - 1 additions/subtractions (checked for n = 2..13, and identical on random graphs); fit against the exact form on n = 6..13: alpha = 1.000; rivals n**2 * 2**n (1.112), n**4 * 2**n (0.897), 3**n (0.923) rejected; the leading term n**3 * 2**n alone gives 0.993. Held-Karp counting: exactly (n-1)(n-2)2^(n-3) + (n-1) multiplications and as many additions (checked for n = 2..16, identical on random graphs); fit against the exact form on n = 8..16: alpha = 1.000; rivals n * 2**n (1.144), n**3 * 2**n (0.938), 3**n (0.811) rejected; the bare n**2 * 2**n gives 1.031, outside the band, hence the exact form (RL-062). The log-factor diagnostic is resolved in all three fits. No counted operation happens inside a CPython built-in (sorted, min, max), so RL-069 does not apply.",
+    "artifacts": [
+      "implementations/enumeration.py",
+      "implementations/inclusion_exclusion.py",
+      "implementations/held_karp_counting.py",
+      "harness.py",
+      "../../experiments/2026-10-06f_entries_hamiltonian.py",
+      "../../tests/test_entries_2026_10_06f_hamiltonian.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      14
+    ],
+    "trials": 8
+  },
+  "caveats": "Arithmetic is counted at unit cost: answers are at most (n-1)! and the inclusion-exclusion walk counts at most (n-1)^n, so all numbers have O(n log n) bits and the bit complexity is larger by a polynomial factor. The enumeration stops at the first missing arc, so Theta(n!) arc tests is its worst case (reached on the complete digraph used for V2); on sparse graphs it makes fewer tests but still generates all (n-1)! orders. What is counted differs by algorithm: truth tests for the enumeration (it does no arithmetic on entries), products and sums for the two dynamic programmes. Loop control, subset bookkeeping and membership tests on plain integers are not counted; in both dynamic programmes they are of the same order as the counted operations (the Held-Karp inner loop makes (n-1)^2 (2^(n-2) - 1) membership tests against (n-1)(n-2)2^(n-3) + (n-1) counted products; inclusion-exclusion makes n t^2 index comparisons per set of size t against 2n t(t-1) counted operations). Inputs are restricted to 0/1 entries: with larger integer entries the two dynamic programmes would count arc-weighted cycles (a multigraph count), while the enumeration only tests entries for non-zero. Above n = 10, check is exact only for the recognised families or when the depth-first count finishes within its node cap; elsewhere it applies necessary conditions, and the agreement of inclusion-exclusion with the Held-Karp count (n = 10..12) carries the V1 evidence. The entry makes no claim about the fastest known algorithms for counting or deciding Hamiltonian cycles.",
+  "notes": "Relatives in the dataset: tsp-brute-vs-held-karp uses the same recurrence over (min, +); permanent-naive-vs-ryser and chromatic-number-subset-dp-vs-inclusion-exclusion also replace a sum over permutations or partitions by a signed sum over subsets. Inclusion-exclusion and the Held-Karp count are both exponential; they differ in memory: the walk vectors of inclusion-exclusion hold at most 2n numbers, the Held-Karp table (n-1) 2^(n-1) numbers (4608 at n = 10, 9 961 472 at n = 20). For a symmetric matrix with n >= 3, halving the output gives the number of undirected Hamiltonian cycles. The Petersen graph appears in the V1 battery as a computed test (0 cycles in all four methods)."
+}

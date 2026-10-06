@@ -300,7 +300,7 @@ Fits of the χ·2ⁿ counts, for information only:
   *source-line executions*, not operations on data. They also need a process-wide monitoring hook that the
   harness would switch on in `generate_scaling` and off in `reported_cost`; if the implementation raises
   in between, the hook stays on. And they require CPython ≥ 3.12.
-- Adopting them is a methodology change (a DECISION for the maintainer). The prototype is kept as evidence
+- Adopting them is a methodology change. The prototype is kept as evidence
   (Part B).
 - **Deciding evidence:** the counts are exact (bit_length(n), χ·2ⁿ, 3ⁿ − 2ⁿ), so the method works. Whether it
   is sanctioned is not for this agent to decide.
@@ -377,31 +377,7 @@ and was not used.
 
 ## 9. Open ideas
 
-1. **A sanctioned line-execution measure.** A `measure: "executions"` mode, or a shared helper in `lib/`, would
-   count executions of a named statement of the unchanged implementation. With it, Fibonacci fast doubling,
-   chromatic inclusion–exclusion and the chromatic subset DP could get exact-count V2 (Part B shows the counts
-   are exact).
-   - The validator would have to own the hook, setting and clearing it in a `try/finally` around the call, not
-     the harness.
-   - It needs CPython ≥ 3.12 (CI uses 3.12).
-   - It needs a maintainer DECISION.
-2. **F4 needs an instance family with χ = Θ(n)**, not only a better measurement. Untested candidate: the
-   complement of a perfect matching (even n). Its independent sets are the n/2 matched pairs and the
-   singletons, so χ = n/2 exactly, and the number of rounds is exactly n/2.
-   - From memory and not checked: for G(n, p) with constant p, χ ≈ n / (2 log_b n) with b = 1/(1 − p)
-     (Bollobás 1988). If that holds, the round count on the current G(n, 0.8) family is Θ(n / log n)
-     asymptotically.
-   - The entry already avoids an asymptotic claim about G(n, 0.8). The reference should be checked before it
-     is used anywhere.
-3. **Pin Kruskal's counts per Python version**, or record them in the ledger with the version, so that a future
-   CPython sort change shows up as a count change rather than passing silently.
-4. **Equality checks for closed forms.** NTT (3n·log₂n + 5n), Prim ((n−1)²), the enumeration
-   ((n−1)·C(m, n−1) + n^(n−2) − 1), the RMQ sparse table (Σ formula) and the RMQ scan (Σ(r − l) from the
-   instance) all match exactly. A validator check of equality with a declared closed form would be stronger
-   than a slope (same idea as the previous round; needs a schema change).
-5. **Fibonacci:** an instance that supplies the modulus or the initial pair would make the arithmetic
-   instance-derived. That changes the problem statement and the implementation, so it is out of scope under
-   these rules.
+*Forward-looking content is not published (RL-086).*
 
 ## 10. Files
 

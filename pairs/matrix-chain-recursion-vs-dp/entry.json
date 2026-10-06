@@ -72,5 +72,5 @@
     "trials": 5
   },
   "caveats": "Dimensions are small integers, so arithmetic is unit cost.",
-  "notes": "Candidate T3 follow-up: implement Hu-Shing O(n log n) and pair it with the O(n^3) DP."
+  "notes": "A faster known algorithm exists (Hu-Shing, O(n log n)); it is not implemented in this entry."
 }

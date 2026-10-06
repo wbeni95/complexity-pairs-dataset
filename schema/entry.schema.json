@@ -286,6 +286,117 @@
           "items": {
             "type": "string"
           }
+        },
+        "shape": {
+          "$ref": "#/$defs/shape"
+        }
+      }
+    },
+    "shape": {
+      "description": "Optional and informational (never changes a V2 verdict): exact shape diagnostic for exact counts (measure 'reported'). The counts are computed on a regular grid, a recurrence is guessed (overdetermined, one-dimensional solution space, held-out terms reproduced) and its dominant root and exponent are compared exactly with the shape of `cost` (C * b^n * n^p * (log n)^q). A consecutive grid sees b and p; a doubling grid (n = 2^k) sees p and q. See notes/v2-shape-diagnostic.md.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sequence",
+        "n_range"
+      ],
+      "properties": {
+        "sequence": {
+          "description": "'consecutive': n = lo, lo+step, ..., hi; 'doubling': n = lo, 2 lo, 4 lo, ..., hi (powers of two).",
+          "enum": [
+            "consecutive",
+            "doubling"
+          ]
+        },
+        "n_range": {
+          "description": "[lo, hi], inclusive. At most 64 grid points.",
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "step": {
+          "description": "Consecutive grids only: spacing of n (must divide lo). The recurrence is guessed in t = n/step.",
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "max_order": {
+          "description": "Largest recurrence order tried.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 6
+        },
+        "max_degree": {
+          "description": "Largest coefficient degree of a polynomial-coefficient (P-recursive) recurrence tried.",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 4
+        },
+        "holdout": {
+          "description": "Held-out terms the guess must reproduce (default 4 for constant coefficients, 3 for polynomial coefficients; never below 2). Recorded with the result.",
+          "type": "integer",
+          "minimum": 2
+        },
+        "python_version_dependent": {
+          "description": "True if the count includes work inside CPython built-ins (sorted, min, max, ...), which may differ between Python versions (RL-069). The result is then UNDETERMINED (python_version_dependent); what was found is still recorded.",
+          "type": "boolean",
+          "default": false
+        },
+        "expect": {
+          "description": "Explicit claimed shape, used instead of parsing `cost` (e.g. when cost uses a decimal approximation of an algebraic base).",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "base": {
+              "description": "Exponential base b: an exact constant expression ('phi', '3 + 2*sqrt(2)'), or {minpoly: integer coefficients highest degree first, approx: a number that singles out the real root}. Default '1'.",
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "minpoly",
+                    "approx"
+                  ],
+                  "properties": {
+                    "minpoly": {
+                      "type": "array",
+                      "minItems": 2,
+                      "items": {
+                        "type": "integer"
+                      }
+                    },
+                    "approx": {
+                      "type": "number"
+                    }
+                  }
+                }
+              ]
+            },
+            "polynomial_factor": {
+              "description": "Exponent p of n: rational or rational + log2(exact constant), e.g. '-1/2', 'log2(7)'. Default '0'.",
+              "type": "string"
+            },
+            "log_power": {
+              "description": "Exponent q of log n (rational). Default 0.",
+              "type": [
+                "string",
+                "number"
+              ]
+            }
+          }
+        },
+        "note": {
+          "description": "Free text, e.g. why this grid was chosen.",
+          "type": "string"
         }
       }
     },
