@@ -783,3 +783,9 @@ Ledger: [ledger/runs/20261006T104637Z.json](ledger/runs/20261006T104637Z.json), 
 - **Log-factor diagnostic:** resolved in 47 fits, all exact counts.
 - **Unit tests:** 110 OK.
 - **Citations:** 173 identifiers checked, 0 problems; 147 sources also compared on volume, issue and pages.
+
+### RL-076 · VERIFIED · Third-round state: clean recorded run and CI
+Ledger: [ledger/runs/20261006T105123Z.json](ledger/runs/20261006T105123Z.json), at commit `10e7896` with a clean tree.
+- **Result:** 62/62 entries pass. All 108 V2 measurements pass, and 113 of 113 rivals are rejected.
+- **Stability against RL-075:** all 59 exact-count series are identical; the largest change in a timing α is 0.014.
+- **CI:** GitHub Actions run 37452518800 on `10e7896` succeeded in validate, scaling and sources (`ubuntu-latest`, Python 3.12). The Kruskal counts differ across Python versions (RL-069), but the verdicts are the same under Python 3.12.
