@@ -1,0 +1,27 @@
+start 2026-10-06 11:40:49
+build new: {'binary': 'D:\\0. Polinomiális-Exponenciális\\complexity-pairs-dataset\\search\\kernel\\build\\flipwalk.exe', 'rebuilt': False, 'seconds': 0.0, 'source_sha256': '69837abe4abcd0e4ce26dd56689dc39729c1f99d62f1a33d54a664bbd890f550'}
+identity (2, 2, 2) standard seed 1 steps 200000 plateau 50: IDENTICAL (best rank 7, flips 83288, plus 2855, restarts 1)
+identity (2, 2, 2) standard seed 1 steps 200000 plateau 50000: IDENTICAL (best rank 7, flips 2109, plus 3, restarts 0)
+identity (2, 2, 2) standard seed 2 steps 200000 plateau 50: IDENTICAL (best rank 7, flips 84006, plus 2877, restarts 1)
+identity (2, 2, 2) standard seed 2 steps 200000 plateau 50000: IDENTICAL (best rank 7, flips 795, plus 3, restarts 0)
+identity (2, 2, 2) standard seed 3 steps 200000 plateau 50: IDENTICAL (best rank 7, flips 83864, plus 2883, restarts 1)
+identity (2, 2, 2) standard seed 3 steps 200000 plateau 50000: IDENTICAL (best rank 7, flips 1273, plus 3, restarts 0)
+identity (3, 3, 3) standard seed 1 steps 2000000 plateau 500: IDENTICAL (best rank 23, flips 592491, plus 3604, restarts 48)
+identity (3, 3, 3) standard seed 1 steps 2000000 plateau 50000: IDENTICAL (best rank 23, flips 192454, plus 36, restarts 0)
+identity (3, 3, 3) standard seed 2 steps 2000000 plateau 500: IDENTICAL (best rank 23, flips 562700, plus 3615, restarts 67)
+identity (3, 3, 3) standard seed 2 steps 2000000 plateau 50000: IDENTICAL (best rank 23, flips 345928, plus 35, restarts 0)
+identity (4, 4, 4) standard seed 1 steps 30000000 plateau 50000: IDENTICAL (best rank 54, flips 6681875, plus 576, restarts 0)
+identity (4, 4, 4) standard seed 2 steps 30000000 plateau 50000: IDENTICAL (best rank 53, flips 6558936, plus 568, restarts 0)
+identity (4, 4, 4) standard seed 3 steps 30000000 plateau 50000: IDENTICAL (best rank 51, flips 6159567, plus 585, restarts 0)
+identity (4, 4, 4) strassen_squared seed 1 steps 5000000 plateau 5000: IDENTICAL (best rank 49, flips 38936, plus 980, restarts 0)
+identity (4, 4, 4) strassen_squared seed 1 steps 5000000 plateau 50000: IDENTICAL (best rank 49, flips 10584, plus 99, restarts 0)
+identity (4, 4, 4) strassen_squared seed 2 steps 5000000 plateau 5000: IDENTICAL (best rank 49, flips 44262, plus 967, restarts 0)
+identity (4, 4, 4) strassen_squared seed 2 steps 5000000 plateau 50000: IDENTICAL (best rank 49, flips 30849, plus 98, restarts 0)
+identity: 17/17 cases identical
+standard          before   45s x8 (wall 45.0s): median steps/s 1.493e+07  flips/s 2.147e+06  plus/s 2.896e+02  dead-ends/s 0.000e+00  best ranks [47, 49, 50, 50, 51, 52, 52, 52]  first 49 (s) [3.2, None, None, None, None, None, 43.6, None]
+standard          off      45s x8 (wall 45.0s): median steps/s 1.463e+07  flips/s 2.128e+06  plus/s 2.836e+02  dead-ends/s 0.000e+00  best ranks [47, 49, 50, 50, 51, 52, 52, 52]  first 49 (s) [3.1, None, None, None, None, None, 44.0, None]
+standard          on       45s x8 (wall 45.0s): median steps/s 1.403e+07  flips/s 2.092e+06  plus/s 2.720e+02  dead-ends/s 0.000e+00  best ranks [49, 50, 50, 50, 51, 52, 52, 52]  first 49 (s) [3.2, None, None, None, None, None, None, None]
+strassen_squared  before   20s x8 (wall 20.0s): median steps/s 2.243e+07  flips/s 1.907e+04  plus/s 4.401e+02  dead-ends/s 0.000e+00  best ranks [49, 49, 49, 49, 49, 49, 49, 49]  first 49 (s) [None, None, None, None, None, None, None, None]
+strassen_squared  off      20s x8 (wall 20.0s): median steps/s 2.276e+07  flips/s 1.928e+04  plus/s 4.459e+02  dead-ends/s 0.000e+00  best ranks [49, 49, 49, 49, 49, 49, 49, 49]  first 49 (s) [None, None, None, None, None, None, None, None]
+strassen_squared  on       20s x8 (wall 20.0s): median steps/s 1.575e+07  flips/s 9.405e+05  plus/s 2.200e+04  dead-ends/s 2.244e+04  best ranks [49, 49, 49, 49, 49, 49, 49, 49]  first 49 (s) [None, None, None, None, None, None, None, None]
+end 2026-10-06 11:44:17

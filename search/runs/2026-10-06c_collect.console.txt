@@ -1,0 +1,35 @@
+cache: <scratchpad>\cache
+AT factorizations_f2.npz: sha256 70f09f349d8d2874ef0e0e089459c7320f5aa3eef277df5ffa67f573709db2da; keys with format 4,4,4: ['4,4,4'] (of 20 keys)
+AT factorizations_r.npz (sha256 4d59571a2537a9472e8229176d5ebe2925f3e041ad403c095b41853026caec33): key 4,4,4 has rank 49 (standard arithmetic)
+AT nonequivalence/factorizations.npy: header {'descr': '<i8', 'fortran_order': False, 'shape': (14236, 49, 3, 16), } (sha256 of npz 15d27e300a68868710c2f5824f7987b10e004c6d7de6a3e65ae35caf42ed06a3) -> rank-49 factorizations, not rank 47
+[src_alphatensor done in 0.4 s]
+KMg 444-47-mod2.exp: 47 products, sha256 3f7d141d494a93fd4a674bae2a31e96e413a8eaa05a224d986afd98641e8051e
+[src_km_github done in 0.0 s]
+KMn s47.exp: 47 products, sha256 8b58b9756e95961f805d6900dcdd3b4ec3310b6e144170cdcdeeb18bb3d8dce9
+[src_km_note done in 0.0 s]
+FM: rank-47 JSON files in results/: ['results/alphatensor_444_rank47.json', 'results/gamma_scratch_rank47.json', 'results/group_sat_inc_rank47.json', 'results/h1_stabilizer_alphatensor_444_rank47.json', 'results/n1_probe_rank47.json', 'results/records/gamma47_B_rank47.json']
+FM results/h1_stabilizer_alphatensor_444_rank47.json: no scheme_bitmasks (keys ['elements', 'order', 'scheme']), skipped
+[src_fastmatrixf2 done in 0.0 s]
+MMC catalog.json (sha256 475c05d2a8c0503925aa1814f5d0b7d3bdcde1390e25b474789d1cb5cae21c30): 1 entries 4x4x4 rank 47 F2: [('AlphaTensor', 'known/section4/4x4x4-r47-alphatensor_F2-258e5b7.json')]
+[src_mmc done in 0.1 s]
+KW 444/47: 15 subdirectories, 19 .exp files listed
+KW 444/x47: 256 subdirectories, 99101 .exp files listed
+KW: 99120 files downloaded, 99120 accepted (verify passes in exactly one convention); manifest sha256 92b418c0d8a183d3b53c623a1d5a0d3209541a9137f65f4f7a028b58a3d7db63
+[src_kauers_web done in 925.4 s]
+verify_explicit on 99129 accepted schemes: 99129 pass, 0 fail (1071.6 s)
+  AT: 1 schemes, rank(s) [47], third factor as published: ['c(k,i)']
+  FM: 5 schemes, rank(s) [47], third factor as published: ['c(k,i)']
+  KMg: 1 schemes, rank(s) [47], third factor as published: ['c(k,i)']
+  KMn: 1 schemes, rank(s) [47], third factor as published: ['c(k,i)']
+  KW-47: 19 schemes, rank(s) [47], third factor as published: ['c(k,i)']
+  KW-x47: 99101 schemes, rank(s) [47], third factor as published: ['c(k,i)']
+  MMC: 1 schemes, rank(s) [47], third factor as published: ['c(k,i)']
+distinct term sets: 25 among 99129 accepted schemes; groups of identical term sets: 7
+  identical: ['AT', 'FM/alphatensor_444_rank47', 'FM/group_sat_inc_rank47', 'FM/n1_probe_rank47', 'MMC/AlphaTensor']
+  identical: ['KMg', 'KW-x47/j0033b234d3b9f7f', 'KW-x47/j005b0e9c3ee4ccf', 'KW-x47/j0067163496feb68', 'KW-x47/j0098218c3a6da26', 'KW-x47/j00b785ffc3cc6ce'] ...
+  identical: ['KMn', 'KW-47/j1b8560e020060ab4-s1']
+  identical: ['FM/gamma_scratch_rank47', 'FM/gamma47_B_rank47']
+  identical: ['KW-x47/j00379b14491fd1e', 'KW-x47/j0048117b8a802de', 'KW-x47/j0048117bb45bcde', 'KW-x47/j009fa548982251e', 'KW-x47/j009fde0e973f39e', 'KW-x47/j00a0233f78a491e'] ...
+  identical: ['KW-x47/j00baf1e1388fd0d', 'KW-x47/j00d5d0c32130ad5', 'KW-x47/j00e760f771a630d', 'KW-x47/j00ebf5d90dbb8dd', 'KW-x47/j00f7a57b7e6fad5', 'KW-x47/j00fac281867101d'] ...
+  identical: ['KW-x47/j019fb8d4d29bc9e', 'KW-x47/j019fde300d541de', 'KW-x47/j019fdffbea71d66', 'KW-x47/j019fe328e2ab89e', 'KW-x47/j019fe5d18580b10', 'KW-x47/j01a02faee537606'] ...
+wrote <scratchpad>\cache\collected.json

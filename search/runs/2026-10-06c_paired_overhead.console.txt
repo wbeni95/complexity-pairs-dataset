@@ -1,0 +1,9 @@
+seed 701: escape on detected 886217 dead ends -> trajectories differ, skipped
+seed 702: steps/s before 1.4151e+07  off 1.3900e+07  on 1.3508e+07  on/off 0.9718  off/before 0.9823  (flips/step on 0.1635)
+seed 703: steps/s before 1.3548e+07  off 1.3380e+07  on 1.3004e+07  on/off 0.9718  off/before 0.9876  (flips/step on 0.2117)
+seed 704: steps/s before 1.5576e+07  off 1.5353e+07  on 1.4727e+07  on/off 0.9592  off/before 0.9856  (flips/step on 0.1304)
+seed 705: steps/s before 1.6996e+07  off 1.6566e+07  on 1.5592e+07  on/off 0.9412  off/before 0.9747  (flips/step on 0.0948)
+seed 706: steps/s before 1.5090e+07  off 1.4761e+07  on 1.4345e+07  on/off 0.9718  off/before 0.9782  (flips/step on 0.1401)
+seed 707: steps/s before 1.4770e+07  off 1.4491e+07  on 1.3717e+07  on/off 0.9466  off/before 0.9811  (flips/step on 0.1586)
+seed 708: steps/s before 1.3928e+07  off 1.3595e+07  on 1.3105e+07  on/off 0.9640  off/before 0.9761  (flips/step on 0.2152)
+median on/off 0.9640 (range 0.9412-0.9718, n=7); median off/before 0.9811 (range 0.9747-0.9876)

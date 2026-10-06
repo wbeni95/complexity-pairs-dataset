@@ -1,0 +1,8 @@
+start 2026-10-06 12:30:50
+seed 610: main run (escape on) dead_ends 843815, last improvement rank 47 at step 16849618541 | old kernel (--dead-end 0): best rank 47, steps 16849618541, last improvement (47, 16849618541) | identical improvement history: True | identical rank-47 scheme: True
+seed 617: main run (escape on) dead_ends 4305415, last improvement rank 47 at step 13249771120 | old kernel (--dead-end 0): best rank 47, steps 13249771120, last improvement (47, 13249771120) | identical improvement history: True | identical rank-47 scheme: True
+seed 618: main run (escape on) dead_ends 51741652, last improvement rank 47 at step 3618583155 | old kernel (--dead-end 0): best rank 47, steps 3618583155, last improvement (47, 3618583155) | identical improvement history: True | identical rank-47 scheme: True
+seed 622: main run (escape on) dead_ends 7815682, last improvement rank 47 at step 12415779886 | old kernel (--dead-end 0): best rank 47, steps 12415779886, last improvement (47, 12415779886) | identical improvement history: True | identical rank-47 scheme: True
+seed 612: main run (escape on) dead_ends 0, last improvement rank 50 at step 448489272 | old kernel (--dead-end 0): best rank 50, steps 448489272, last improvement (50, 448489272) | identical improvement history: True
+seed 614: main run (escape on) dead_ends 0, last improvement rank 50 at step 185012038 | old kernel (--dead-end 0): best rank 50, steps 185012038, last improvement (50, 185012038) | identical improvement history: True
+end 2026-10-06 12:43:17

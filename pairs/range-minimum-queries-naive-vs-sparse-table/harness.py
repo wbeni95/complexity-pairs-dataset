@@ -39,9 +39,82 @@ def generate(n, rng):
     return values, _queries(n, rng)
 
 
-def generate_scaling(n, rng):
+def _scaling_draws(n, rng):
     values = tuple(rng.randint(-10 ** 6, 10 ** 6) for _ in range(n))
     return values, _queries(n, rng, long_only=True)
+
+
+# --- Exact comparison counting for V2 (measure: "reported"; RESEARCH_LOG RL-047/RL-048) --------------
+# Timing cannot tell n log n from n (experiments/2026-10-07_rmq_probe.py). generate_scaling() therefore
+# draws the same values and queries as before (same seeds, same order) and wraps each VALUE in CountingKey,
+# which counts every comparison the UNCHANGED implementations make between values: `x < m` in the scan,
+# and in the sparse table the comparison inside each two-argument min() (CPython's min() calls __lt__ once
+# per extra argument) plus `a <= b` per query. Index arithmetic is on plain ints and is not counted.
+# experiments/2026-10-06c_rmq_counts.py checks the counts against closed forms computed from the
+# instance alone: sum(r - l) over the queries (scan) and sum_{j=1..K}(n - 2^j + 1) + q (sparse table).
+
+_comparisons = 0
+
+
+def _val(x):
+    return x.v if isinstance(x, CountingKey) else x
+
+
+class CountingKey:
+    """A value that counts every comparison made on it (in either operand position)."""
+    __slots__ = ("v",)
+
+    def __init__(self, v):
+        self.v = v
+
+    def __lt__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v < _val(other)
+
+    def __le__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v <= _val(other)
+
+    def __gt__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v > _val(other)
+
+    def __ge__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v >= _val(other)
+
+    def __eq__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v == _val(other)
+
+    def __ne__(self, other):
+        global _comparisons
+        _comparisons += 1
+        return self.v != _val(other)
+
+    def __hash__(self):
+        return hash(self.v)
+
+    def __repr__(self):
+        return f"CountingKey({self.v!r})"
+
+
+def generate_scaling(n, rng):
+    """The long-query family (unchanged draws) with every value wrapped in CountingKey; resets the counter."""
+    global _comparisons
+    values, queries = _scaling_draws(n, rng)
+    _comparisons = 0
+    return tuple(CountingKey(x) for x in values), queries
+
+
+def reported_cost(output):
+    """Number of value comparisons performed since the counting instance was generated."""
+    return _comparisons
 
 
 def _segment_tree_answers(values, queries):

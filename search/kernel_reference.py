@@ -3,6 +3,8 @@
 Identical inputs and seeds must give identical results (best scheme, step count, counters) in both
 implementations; tests/test_search_rust.py checks this. It is slow and not meant for real searches.
 The time budget is not mirrored, so call it with max_seconds effectively unlimited.
+Dead-end detection and escape (flipwalk.rs --dead-end, research/2026-10-06c_kernel_deadends.md) are mirrored;
+walk(..., dead_end=False) reproduces the earlier kernel exactly.
 """
 from __future__ import annotations
 
@@ -116,17 +118,28 @@ def plus_transition(terms, rng, cap) -> bool:
     return True
 
 
-def walk(start, seed, max_steps, plateau=50_000, slack=3, max_weight=0, target_rank=0):
+def walk(start, seed, max_steps, plateau=50_000, slack=3, max_weight=0, target_rank=0, dead_end=True,
+         on_dead_end=None):
+    """Mirror of flipwalk.rs walk(). `on_dead_end(terms, best_rank)` (testing only, default None) is called at
+    every step where a dead end is detected, before the escape move, with the current scheme (which it must not
+    modify) and the rank of the best scheme so far."""
     rng = SplitMix64(seed)
     terms = [list(t) for t in start]
     best = [list(t) for t in terms]
     since = 0
-    counters = {"flips": 0, "rejected_weight": 0, "plus": 0, "restarts": 0}
+    counters = {"flips": 0, "rejected_weight": 0, "plus": 0, "restarts": 0, "dead_ends": 0}
     improvements = []
+    # Exact dead-end detection (see flipwalk.rs): stamp[3*i+p] == epoch records that term i had no partner
+    # sharing factor p in the current scheme; the epoch advances whenever the scheme may have changed.
+    stamp = [0] * (3 * len(terms))
+    epoch = 1
+    unmatched = 0
+    swept = 0
     step = 0
     while step < max_steps and len(best) > target_rank:
         step += 1
         r = len(terms)
+        found_dead_end = False
         if r >= 2:
             i = rng.below(r)
             p = rng.below(3)
@@ -137,19 +150,48 @@ def walk(start, seed, max_steps, plateau=50_000, slack=3, max_weight=0, target_r
                 if flip(terms, i, j, p, max_weight):
                     counters["flips"] += 1
                     reduce(terms, [i, j])
+                    epoch += 1
+                    unmatched = 0
                 else:
                     counters["rejected_weight"] += 1
+            elif dead_end:
+                if len(stamp) < 3 * r:
+                    stamp.extend([0] * (3 * r - len(stamp)))
+                cell = 3 * i + p
+                if stamp[cell] != epoch:
+                    stamp[cell] = epoch
+                    unmatched += 1
+                if unmatched >= r and swept != epoch:  # one deterministic completion sweep per epoch
+                    swept = epoch
+                    for c in range(3 * r):
+                        if stamp[c] == epoch:
+                            continue
+                        ti, tp = c // 3, c % 3
+                        key2 = terms[ti][tp]
+                        if any(q != ti and terms[q][tp] == key2 for q in range(r)):
+                            break
+                        stamp[c] = epoch
+                        unmatched += 1
+                found_dead_end = unmatched == 3 * r
         if len(terms) < len(best):
             best = [list(t) for t in terms]
             since = 0
             improvements.append((len(best), step))
         else:
             since += 1
-        if since >= plateau:
+        if since >= plateau or found_dead_end:
+            if found_dead_end:
+                counters["dead_ends"] += 1
+                if on_dead_end is not None:
+                    on_dead_end(terms, len(best))
             if len(terms) > len(best) + slack:
                 terms = [list(t) for t in best]
                 counters["restarts"] += 1
+                epoch += 1
+                unmatched = 0
             elif plus_transition(terms, rng, max_weight):
                 counters["plus"] += 1
+                epoch += 1
+                unmatched = 0
             since = 0
     return {"best": [tuple(t) for t in best], "steps": step, "improvements": improvements, **counters}

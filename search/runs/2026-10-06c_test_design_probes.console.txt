@@ -1,0 +1,18 @@
+A1: Rust, plateau 1e9, slack 0, seeds 1-30, 200 000 steps
+  (2, 2, 2): walks with a restart 0/30 []; dead-end detections in total 9469
+  (2, 2, 3): walks with a restart 0/30 []; dead-end detections in total 0
+  (2, 3, 3): walks with a restart 0/30 []; dead-end detections in total 1846
+  (3, 3, 3): walks with a restart 0/30 []; dead-end detections in total 0
+  (2, 2, 4): walks with a restart 0/30 []; dead-end detections in total 0
+A2: mirror, detections above best + slack
+  detections above best + slack: 0 (in 270 walks)
+B: mirror from Strassen (x) Strassen, plateau 1e9, slack 0, 20 000 steps
+  seed 1: best 49, flips 1191, plus 37, restarts 0, dead ends 38
+  seed 2: best 49, flips 1150, plus 33, restarts 0, dead ends 33
+  seed 3: best 49, flips 1399, plus 7, restarts 0, dead ends 7
+  seed 4: best 49, flips 1277, plus 16, restarts 0, dead ends 16
+  seed 5: best 49, flips 1147, plus 41, restarts 0, dead ends 42
+  seed 6: best 49, flips 1288, plus 12, restarts 0, dead ends 12
+  seed 7: best 49, flips 1265, plus 10, restarts 0, dead ends 10
+  seed 8: best 49, flips 1146, plus 41, restarts 0, dead ends 41
+7.2 s

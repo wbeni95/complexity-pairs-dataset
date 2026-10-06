@@ -1,0 +1,104 @@
+
+## Detection latency at a rank-49 dead end (expected, analytic)
+stamping only: 818.9 steps | with the sweep: 59.4 steps + 98 scans = 157.4 step-equivalents | plateau of the old kernel: 50000 steps
+
+## Planning: walks per arm to detect 0.0357 -> 0.1667 (alpha 0.05 two-sided, power 0.8, normal approximation): 83
+## Throughput (experiments/2026-10-06c_kernel_throughput.py; 8 walks at once, seeds 701-708)
+median (min-max) over the 8 walks
+standard          before 45 s: steps/s 1.493e+07 (1.355e+07-2.179e+07) | flips/s 2.147e+06 (1.976e+05-2.940e+06) | plus/s 2.896e+02 (2.619e+02-4.261e+02) | dead-ends/s 0.000e+00 (0.000e+00-0.000e+00) | flips/step 0.1438 | best [47, 49, 50, 50, 51, 52, 52, 52] | first 49 (s) [3.2, None, None, None, None, None, 43.6, None]
+standard          off    45 s: steps/s 1.463e+07 (1.338e+07-2.159e+07) | flips/s 2.128e+06 (1.975e+05-2.891e+06) | plus/s 2.836e+02 (2.587e+02-4.222e+02) | dead-ends/s 0.000e+00 (0.000e+00-0.000e+00) | flips/step 0.1456 | best [47, 49, 50, 50, 51, 52, 52, 52] | first 49 (s) [3.1, None, None, None, None, None, 44.0, None]
+standard          on     45 s: steps/s 1.403e+07 (1.300e+07-1.559e+07) | flips/s 2.092e+06 (1.003e+06-2.820e+06) | plus/s 2.720e+02 (2.513e+02-1.933e+04) | dead-ends/s 0.000e+00 (0.000e+00-1.969e+04) | flips/step 0.1493 | best [49, 50, 50, 50, 51, 52, 52, 52] | first 49 (s) [3.2, None, None, None, None, None, None, None]
+strassen_squared  before 20 s: steps/s 2.243e+07 (2.221e+07-2.258e+07) | flips/s 1.907e+04 (1.755e+04-2.071e+04) | plus/s 4.401e+02 (4.343e+02-4.423e+02) | dead-ends/s 0.000e+00 (0.000e+00-0.000e+00) | flips/step 0.0008 | best [49, 49, 49, 49, 49, 49, 49, 49] | first 49 (s) [None, None, None, None, None, None, None, None]
+strassen_squared  off    20 s: steps/s 2.276e+07 (2.257e+07-2.290e+07) | flips/s 1.928e+04 (1.791e+04-2.107e+04) | plus/s 4.459e+02 (4.420e+02-4.493e+02) | dead-ends/s 0.000e+00 (0.000e+00-0.000e+00) | flips/step 0.0008 | best [49, 49, 49, 49, 49, 49, 49, 49] | first 49 (s) [None, None, None, None, None, None, None, None]
+strassen_squared  on     20 s: steps/s 1.575e+07 (1.565e+07-1.617e+07) | flips/s 9.405e+05 (8.444e+05-9.493e+05) | plus/s 2.200e+04 (1.804e+04-2.272e+04) | dead-ends/s 2.244e+04 (1.833e+04-2.316e+04) | flips/step 0.0599 | best [49, 49, 49, 49, 49, 49, 49, 49] | first 49 (s) [None, None, None, None, None, None, None, None]
+
+## 4x4x4 with dead-end escape (seeds 601-624, 900 s): per walk
+seed | final | <=52 s | <=50 s | <=49 s; step | <=48 s; step | <=47 s; step | steps | steps/s | flips | plus | restarts | dead_ends | wall s | verified
+601 | 49 | 3.0 | 3.2 | 3.2; 4.292e+07 | - | - | 1.4606e+10 | 1.623e+07 | 879645747 | 20491120 | 0 | 20899063 | 900.073 | True
+602 | 49 | 5.9 | 11.3 | 11.3; 1.627e+08 | - | - | 1.4606e+10 | 1.623e+07 | 885149130 | 20237128 | 0 | 20637263 | 900.071 | True
+603 | 49 | 3.1 | 6.6 | 6.6; 9.777e+07 | - | - | 1.4595e+10 | 1.622e+07 | 881012086 | 20449562 | 0 | 20856547 | 900.069 | True
+604 | 49 | 0.5 | 1.1 | 1.1; 1.819e+07 | - | - | 1.4591e+10 | 1.621e+07 | 869722434 | 20298481 | 0 | 20700441 | 900.068 | True
+605 | 49 | 2.5 | 2.6 | 2.6; 3.674e+07 | - | - | 1.4564e+10 | 1.618e+07 | 876901522 | 20508660 | 0 | 20917173 | 900.066 | True
+606 | 50 | 1.5 | 73.2 | - | - | - | 1.5890e+10 | 1.766e+07 | 1283188312 | 309498 | 0 | 0 | 900.065 | True
+607 | 49 | 1.3 | 656.5 | 656.5; 9.314e+09 | - | - | 1.3353e+10 | 1.484e+07 | 2120317804 | 5868889 | 0 | 5802486 | 900.064 | True
+608 | 52 | 2.6 | - | - | - | - | 1.1123e+10 | 1.236e+07 | 3302376820 | 214317 | 0 | 0 | 900.062 | True
+609 | 50 | 7.5 | 17.3 | - | - | - | 1.7204e+10 | 1.912e+07 | 1831796880 | 334777 | 1 | 0 | 900.068 | True
+610 | 47 | 7.1 | 23.0 | 890.5; 1.685e+10 | 890.5; 1.685e+10 | 890.5; 1.685e+10 | 1.7004e+10 | 1.889e+07 | 1817911800 | 1153553 | 0 | 843815 | 900.066 | True
+611 | 52 | 1.8 | - | - | - | - | 1.5411e+10 | 1.712e+07 | 2691716622 | 299220 | 4 | 0 | 900.065 | True
+612 | 50 | 5.2 | 28.1 | - | - | - | 1.8061e+10 | 2.007e+07 | 1536550541 | 352096 | 1 | 0 | 900.064 | True
+613 | 50 | 6.6 | 687.2 | - | - | - | 1.5267e+10 | 1.696e+07 | 2685917572 | 296188 | 5 | 0 | 900.063 | True
+614 | 50 | 6.2 | 12.0 | - | - | - | 1.7126e+10 | 1.903e+07 | 1829270093 | 333030 | 0 | 0 | 900.061 | True
+615 | 49 | 4.0 | 5.9 | 11.5; 1.949e+08 | - | - | 1.6522e+10 | 1.836e+07 | 992556109 | 22944544 | 0 | 23398383 | 900.059 | True
+616 | 49 | 0.8 | 1.1 | 1.1; 1.333e+07 | - | - | 1.6454e+10 | 1.828e+07 | 979006890 | 22880111 | 0 | 23332963 | 900.057 | True
+617 | 47 | 3.4 | 605.3 | 842.9; 1.325e+10 | 842.9; 1.325e+10 | 842.9; 1.325e+10 | 1.4034e+10 | 1.559e+07 | 1736922384 | 4471309 | 0 | 4305415 | 900.361 | True
+618 | 47 | 0.9 | 209.8 | 209.8; 3.619e+09 | 209.8; 3.619e+09 | 209.8; 3.619e+09 | 1.3069e+10 | 1.452e+07 | 667565769 | 50712539 | 0 | 51741652 | 900.359 | True
+619 | 50 | 4.5 | 314.6 | - | - | - | 1.4886e+10 | 1.654e+07 | 1537315638 | 289648 | 0 | 0 | 900.104 | True
+620 | 49 | 3.2 | 3.2 | 3.2; 4.625e+07 | - | - | 1.4502e+10 | 1.611e+07 | 874114806 | 20263852 | 0 | 20668049 | 900.102 | True
+621 | 49 | 4.3 | 4.7 | 4.7; 7.110e+07 | - | - | 1.4506e+10 | 1.612e+07 | 879012380 | 20363889 | 1 | 20770504 | 900.101 | True
+622 | 47 | 3.4 | 789.0 | 796.1; 1.242e+10 | 796.1; 1.242e+10 | 796.1; 1.242e+10 | 1.3843e+10 | 1.538e+07 | 1586906457 | 7890877 | 0 | 7815682 | 900.086 | True
+623 | 50 | 7.4 | 285.5 | - | - | - | 1.5641e+10 | 1.738e+07 | 1322109334 | 304509 | 1 | 0 | 900.084 | True
+624 | 52 | 3.0 | - | - | - | - | 1.2017e+10 | 1.335e+07 | 2949237869 | 232235 | 3 | 0 | 900.083 | True
+
+## Comparison with the RL-059 baseline (within 900 s per walk)
+rank <= 49: this round 14/24 (95% CI 0.366-0.779) | baseline 20/24 (95% CI 0.626-0.953) | Fisher two-sided p = 0.1107
+rank <= 48: this round 4/24 (95% CI 0.047-0.374) | baseline 0/24 (95% CI 0.000-0.142) | Fisher two-sided p = 0.1092
+rank <= 47: this round 4/24 (95% CI 0.047-0.374) | baseline 0/24 (95% CI 0.000-0.142) | Fisher two-sided p = 0.1092
+rank <= 47, baseline pooled with RL-054 job B truncated at 900 s: 1/28 (95% CI 0.001-0.183) | this round 4/24 | Fisher two-sided p = 0.1686
+rank <= 48, pooled baseline: 1/28 (95% CI 0.001-0.183)
+rank <= 47, all three runs pooled (old and new kernel mixed, information only): 5/52
+
+time to rank <= 49 (s), this round (14/24 reached it): [1.1, 1.1, 2.6, 3.2, 3.2, 4.7, 6.6, 11.3, 11.5, 209.8, 656.5, 796.1, 842.9, 890.5]
+  median over walks that reached it 8.967500000000001; median over all walks (never = 900+) 819.531
+time to rank <= 49 (s), baseline (20/24): [0.3, 0.4, 0.8, 0.9, 2.0, 2.2, 2.5, 3.4, 4.0, 13.3, 14.3, 19.2, 27.5, 35.2, 45.6, 75.4, 84.2, 325.7, 622.8, 774.6]
+  median over walks that reached it 13.803; median over all walks (never = 900+) 23.3425
+Mann-Whitney (never reached = tied last): U(this round vs baseline) = 381.0 of 576, z = 1.94, two-sided p ~= 0.052 (normal approximation)
+this round: 24 walks, 3.5887e+11 steps, 3.7016e+10 flips, 2.6150e+08 plus transitions, 2.6269e+08 dead-end detections, 21600 walk-seconds; final ranks {47: 4, 49: 10, 50: 7, 52: 3}
+baseline: 24 walks, 5.1348e+11 steps, 1.9049e+10 flips, 1.0038e+07 plus transitions, 0.0000e+00 dead-end detections, 21600 walk-seconds; final ranks {49: 20, 50: 1, 51: 2, 52: 1}
+
+## Paths to 47 and the rank-49 dead-end phase
+this round: walks reaching 47: 4; (seed, step first <= 49, step first 47, difference): [(610, 16849601432, 16849618541, 17109), (617, 13249769132, 13249771120, 1988), (618, 3618582674, 3618583155, 481), (622, 12415773485, 12415779886, 6401)]
+  walks that ended at 49 (sat at 49 after reaching it): 10, none improved; time at 49 in total 8298 s; plus transitions in those walks 1.9431e+08; dead-end detections 1.9798e+08
+baseline: walks reaching 47: 0; (seed, step first <= 49, step first 47, difference): []
+  walks that ended at 49 (sat at 49 after reaching it): 20, none improved; time at 49 in total 15946 s; plus transitions in those walks 8.8640e+06; dead-end detections 0.0000e+00
+rank-46 attempt scope (walking after reaching 47, escape on): (seed, steps, seconds) [(610, 154220947.0, 9.543000000000006), (617, 783780240.0, 57.081999999999994), (618, 9450671501.0, 690.19), (622, 1426734034.0, 103.85800000000006)]; total 1.1815e+10 steps, 860.7 s
+this round, walks with no dead end at all in 900 s (trajectory identical to the old kernel's): 10 [606, 608, 609, 611, 612, 613, 614, 619, 623, 624]; their final ranks [50, 50, 50, 50, 50, 50, 50, 52, 52, 52]
+
+## Separate re-verification of every saved scheme in search\schemes\rust-2026-10-06c
+4x4x4_rank47_before_seed707.json: rank 47 status 'matches best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S False
+4x4x4_rank47_seed610.json: rank 47 status 'matches best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S False
+4x4x4_rank47_seed617.json: rank 47 status 'matches best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S False
+4x4x4_rank47_seed618.json: rank 47 status 'matches best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S False
+4x4x4_rank47_seed622.json: rank 47 status 'matches best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S False
+4x4x4_rank49_seed601.json: rank 49 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S True
+4x4x4_rank49_seed602.json: rank 49 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S True
+4x4x4_rank49_seed603.json: rank 49 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S True
+4x4x4_rank49_seed604.json: rank 49 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S True
+4x4x4_rank49_seed605.json: rank 49 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S True
+4x4x4_rank49_seed607.json: rank 49 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S True
+4x4x4_rank49_seed615.json: rank 49 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S True
+4x4x4_rank49_seed616.json: rank 49 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S True
+4x4x4_rank49_seed620.json: rank 49 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S True
+4x4x4_rank49_seed621.json: rank 49 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 0 | invariant = S(x)S True
+4x4x4_rank50_seed606.json: rank 50 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 6 | invariant = S(x)S False
+4x4x4_rank50_seed609.json: rank 50 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 10 | invariant = S(x)S False
+4x4x4_rank50_seed612.json: rank 50 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 7 | invariant = S(x)S False
+4x4x4_rank50_seed613.json: rank 50 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 6 | invariant = S(x)S False
+4x4x4_rank50_seed614.json: rank 50 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 6 | invariant = S(x)S False
+4x4x4_rank50_seed619.json: rank 50 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 8 | invariant = S(x)S False
+4x4x4_rank50_seed623.json: rank 50 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 8 | invariant = S(x)S False
+4x4x4_rank52_seed608.json: rank 52 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 18 | invariant = S(x)S False
+4x4x4_rank52_seed611.json: rank 52 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 14 | invariant = S(x)S False
+4x4x4_rank52_seed624.json: rank 52 status 'above best known' | verify True | verify_explicit True | 200 random checks True | over Z (info) False | pairs sharing a factor 10 | invariant = S(x)S False
+summary (rank, no flip possible, invariant equals S(x)S): {(47, True, False): 5, (49, True, True): 10, (50, False, False): 7, (52, False, False): 3}
+
+## Rank <= 47 schemes: factor-rank profile (invariant under the symmetry group)
+4x4x4_rank47_before_seed707.json: rank 47, pairs sharing a factor 0, profile (((1, 1, 1), 1), ((1, 1, 2), 3), ((1, 1, 3), 9), ((1, 2, 3), 12), ((1, 3, 3), 9), ((2, 2, 2), 6), ((2, 2, 3), 6), ((3, 3, 3), 1))
+4x4x4_rank47_seed610.json: rank 47, pairs sharing a factor 0, profile (((1, 1, 1), 1), ((1, 1, 2), 3), ((1, 1, 3), 9), ((1, 2, 3), 12), ((1, 3, 3), 9), ((2, 2, 2), 6), ((2, 2, 3), 6), ((3, 3, 3), 1))
+4x4x4_rank47_seed617.json: rank 47, pairs sharing a factor 0, profile (((1, 1, 1), 1), ((1, 1, 2), 3), ((1, 1, 3), 9), ((1, 2, 3), 12), ((1, 3, 3), 9), ((2, 2, 2), 6), ((2, 2, 3), 6), ((3, 3, 3), 1))
+4x4x4_rank47_seed618.json: rank 47, pairs sharing a factor 0, profile (((1, 1, 1), 1), ((1, 1, 2), 3), ((1, 1, 3), 9), ((1, 2, 3), 12), ((1, 3, 3), 9), ((2, 2, 2), 6), ((2, 2, 3), 6), ((3, 3, 3), 1))
+4x4x4_rank47_seed622.json: rank 47, pairs sharing a factor 0, profile (((1, 1, 1), 1), ((1, 1, 2), 3), ((1, 1, 3), 9), ((1, 2, 3), 12), ((1, 3, 3), 9), ((2, 2, 2), 6), ((2, 2, 3), 6), ((3, 3, 3), 1))
+AlphaTensor factorizations_f2 4,4,4 (published): rank 47, pairs sharing a factor 0, profile (((1, 1, 1), 3), ((1, 1, 2), 3), ((1, 1, 3), 7), ((1, 1, 4), 1), ((1, 2, 3), 12), ((1, 3, 3), 6), ((2, 2, 2), 6), ((2, 2, 3), 6), ((2, 3, 3), 3))
+Kauers-Moosbauer 444-47-mod2 (published): rank 47, pairs sharing a factor 0, profile (((1, 1, 1), 2), ((1, 1, 2), 4), ((1, 1, 3), 8), ((1, 2, 2), 2), ((1, 2, 3), 10), ((1, 3, 3), 7), ((1, 3, 4), 1), ((2, 2, 2), 8), ((2, 2, 3), 2), ((2, 3, 3), 2), ((3, 3, 3), 1))
+RL-054 seed 8 (rust-2026-10-07): rank 47, pairs sharing a factor 0, profile (((1, 1, 1), 2), ((1, 1, 2), 4), ((1, 1, 3), 6), ((1, 2, 2), 5), ((1, 2, 3), 16), ((1, 3, 3), 4), ((2, 2, 2), 5), ((2, 2, 3), 1), ((2, 3, 3), 2), ((3, 3, 3), 2))
+8 schemes, 4 distinct invariants (distinct => provably inequivalent)
+  same invariant (equivalence NOT decided): ['4x4x4_rank47_before_seed707.json', '4x4x4_rank47_seed610.json', '4x4x4_rank47_seed617.json', '4x4x4_rank47_seed618.json', '4x4x4_rank47_seed622.json']

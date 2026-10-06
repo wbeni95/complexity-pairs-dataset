@@ -5,6 +5,8 @@
 * run(): one walk in a separate process at below-normal priority; the result is RE-VERIFIED with the exact
   Python verifier (gf2mm.verify) and a random-matrix check before it is returned.
 * run_parallel(): many independent seeds at once (one process each, `workers` at a time).
+* dead_end=True (default; CLI --dead-end 1) makes the kernel leave dead ends at once, see
+  research/2026-10-06c_kernel_deadends.md; dead_end=False reproduces the earlier trajectories.
 
 Nothing produced by the kernel is trusted: a result that fails verification raises KernelResultError.
 
@@ -75,10 +77,11 @@ def _write_input(terms) -> str:
     return path
 
 
-def _command(input_path, seed, max_steps, max_seconds, plateau, slack, max_weight, target_rank):
+def _command(input_path, seed, max_steps, max_seconds, plateau, slack, max_weight, target_rank, dead_end=True):
     return [str(BIN), "--input", input_path, "--seed", str(seed), "--max-steps", str(max_steps),
             "--max-seconds", str(max_seconds), "--plateau", str(plateau), "--slack", str(slack),
-            "--max-weight", str(max_weight), "--target-rank", str(target_rank)]
+            "--max-weight", str(max_weight), "--target-rank", str(target_rank),
+            "--dead-end", "1" if dead_end else "0"]
 
 
 def _popen(cmd):
@@ -124,7 +127,7 @@ def check_result(fmt, terms, seed: int) -> None:
 
 
 def run(fmt, start, seed=1, max_steps=10**9, max_seconds=60.0, plateau=50_000, slack=3, max_weight=0,
-        target_rank=0) -> dict:
+        target_rank=0, dead_end=True) -> dict:
     fmt = tuple(fmt)
     if max(gf2mm.dims(fmt)) > 64:
         raise ValueError("the kernel stores factors in u64: each factor must have at most 64 bits")
@@ -132,7 +135,8 @@ def run(fmt, start, seed=1, max_steps=10**9, max_seconds=60.0, plateau=50_000, s
     path = _write_input(start)
     try:
         t0 = time.perf_counter()
-        proc = _popen(_command(path, seed, max_steps, max_seconds, plateau, slack, max_weight, target_rank))
+        proc = _popen(_command(path, seed, max_steps, max_seconds, plateau, slack, max_weight, target_rank,
+                               dead_end))
         out, err = proc.communicate()
         wall = time.perf_counter() - t0
     finally:
@@ -158,7 +162,7 @@ def run_parallel(fmt, start, seeds, workers, **kw) -> list[dict]:
                 seed = pending.pop(0)
                 cmd = _command(path, seed, kw.get("max_steps", 10**12), kw.get("max_seconds", 60.0),
                                kw.get("plateau", 50_000), kw.get("slack", 3), kw.get("max_weight", 0),
-                               kw.get("target_rank", 0))
+                               kw.get("target_rank", 0), kw.get("dead_end", True))
                 active.append((seed, time.perf_counter(), _popen(cmd)))
             still = []
             for seed, t0, proc in active:
@@ -208,6 +212,8 @@ def main(argv=None) -> int:
     ap.add_argument("--slack", type=int, default=3)
     ap.add_argument("--max-weight", type=int, default=0)
     ap.add_argument("--target-rank", type=int, default=0)
+    ap.add_argument("--dead-end", type=int, choices=(0, 1), default=1,
+                    help="1: leave dead ends (no two terms share a factor) at once; 0: earlier behaviour")
     ap.add_argument("--best-known", type=int)
     ap.add_argument("--save-dir")
     ap.add_argument("--log", help="append one JSON line per walk")
@@ -218,7 +224,8 @@ def main(argv=None) -> int:
     print(json.dumps({"build": info}))
     results = run_parallel(fmt, start, _parse_seeds(args.seeds), args.workers, max_seconds=args.max_seconds,
                            max_steps=args.max_steps, plateau=args.plateau, slack=args.slack,
-                           max_weight=args.max_weight, target_rank=args.target_rank)
+                           max_weight=args.max_weight, target_rank=args.target_rank,
+                           dead_end=bool(args.dead_end))
     env = {"python": platform.python_version(), "platform": platform.platform(), "cpus": os.cpu_count(),
            "kernel_sha256": info["source_sha256"]}
     for res in results:

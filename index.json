@@ -848,13 +848,13 @@
         {
           "name": "schoolbook convolution",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(n^2)",
+          "time_complexity": "Theta(n^2) (exactly n^2 coefficient multiplications when no coefficient of A is 0)",
           "implemented": true
         },
         {
           "name": "number-theoretic transform (Cooley-Tukey over Z_p)",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(n log n)",
+          "time_complexity": "Theta(n log n). Exact count used for V2: 3 n log2(n) + 5 n multiplications on input-derived values for n a power of two (see verification.method)",
           "implemented": true
         }
       ],
@@ -875,7 +875,7 @@
         {
           "name": "scan each range",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(q + sum of the query lengths); Theta(n^2) for q = n queries of length Theta(n), as in the timing family (every range longer than n/2; total scanned length 0.75 n^2 within 0.5% at n = 800, 1200, 1600)",
+          "time_complexity": "Theta(q + sum of the query lengths); Theta(n^2) for q = n queries of length Theta(n), as in the scaling family (every range longer than n/2; total scanned length 0.75 n^2 within 0.5% at n = 800, 1200, 1600)",
           "implemented": true
         },
         {

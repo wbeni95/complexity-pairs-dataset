@@ -79,12 +79,13 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: all three implementations agree on n = 0..25 and selected large n, and match OEIS A000045 for n <= 25. V2: measured runtimes fitted against phi^n, n and log n respectively.",
+    "method": "V1: all three implementations agree on n = 0..25 and selected large n, and match OEIS A000045 for n <= 25. V2: measured runtimes fitted against phi^n, n and log n respectively. Exact-count V2 by harness instrumentation was examined in round 2026-10-06c and is not possible with the implementation unchanged: the only operation fast doubling performs on its input is bin(n), which makes one __index__ call on an instrumented non-int value and none on an int subclass; the loop runs over the characters of the str that bin() builds in C, and all arithmetic is on a and b, which start from the literals 0 and 1, and on the module constant MASK. The bottom-up DP likewise touches its input only through range(n) (one __index__ call). See experiments/2026-10-06c_value_reach_probe.py and research/2026-10-06c_count_v2_remaining.md.",
     "artifacts": [
       "implementations/naive.py",
       "implementations/dp.py",
       "implementations/fast_doubling.py",
-      "harness.py"
+      "harness.py",
+      "../../experiments/2026-10-06c_value_reach_probe.py"
     ]
   },
   "test_harness": {

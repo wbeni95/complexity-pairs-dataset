@@ -1,0 +1,5 @@
+seed 1: 214 detections, 11 distinct dead ends, 32 at the start S(x)S, most visited 54x, ranks {49: 214}, flips 12307, plus 204, restarts 0, best rank 49
+seed 2: 242 detections, 10 distinct dead ends, 4 at the start S(x)S, most visited 40x, ranks {49: 242}, flips 11162, plus 237, restarts 0, best rank 49
+seed 3: 141 detections, 11 distinct dead ends, 3 at the start S(x)S, most visited 34x, ranks {49: 141}, flips 12885, plus 136, restarts 0, best rank 49
+seed 4: 72 detections, 2 distinct dead ends, 16 at the start S(x)S, most visited 56x, ranks {49: 72}, flips 11503, plus 71, restarts 0, best rank 49
+3.1 s

@@ -9,9 +9,16 @@
 //! search/kernel_reference.py is a line-by-line Python mirror used for differential tests
 //! (identical seeds must give identical results).
 //!
+//! Dead ends (--dead-end 1, the default; research/2026-10-06c_kernel_deadends.md): a scheme in which no two
+//! terms share a factor in any position admits no flip. The walk detects this exactly and cheaply (failed
+//! candidate searches are recorded per term and position; once r of the 3r cells are known to be unmatched, one
+//! sweep settles the rest), and leaves at once (restart or plus transition, by the same rule as at a plateau)
+//! instead of idling until the plateau. --dead-end 0 reproduces the earlier kernel's trajectories exactly.
+//!
 //! Input file (--input): first line r, then r lines "a b c" (decimal u64 bitmasks).
 //! Output (stdout): "IMPROVED <rank> <step> <seconds>" lines, then
-//!                  "STATS steps=<s> seconds=<t> flips=<f> rejected_weight=<w> plus=<p> restarts=<q>",
+//!                  "STATS steps=<s> seconds=<t> flips=<f> rejected_weight=<w> plus=<p> restarts=<q>
+//!                   dead_ends=<d>" (one line),
 //!                  "BEST <r>", then r lines "a b c".
 //! Exit codes: 0 ok, 2 bad arguments or input. A panic (e.g. an out-of-range index) exits with 101 and
 //! never writes memory out of bounds: safe Rust checks every index.
@@ -48,6 +55,7 @@ struct Params {
     slack: usize,
     max_weight: u32,
     target_rank: usize,
+    dead_end: bool,
 }
 
 #[derive(Default)]
@@ -56,6 +64,7 @@ struct Counters {
     rejected_weight: u64,
     plus: u64,
     restarts: u64,
+    dead_ends: u64, // steps at which a dead end was detected (each triggers one restart or plus attempt)
 }
 
 fn has_zero(t: &Term) -> bool {
@@ -182,6 +191,15 @@ fn walk(start: Vec<Term>, prm: &Params, out: &mut String) -> (Vec<Term>, u64, f6
     let mut since: u64 = 0;
     let mut cnt = Counters::default();
     let mut cands: Vec<usize> = Vec::with_capacity(256);
+    // Exact dead-end detection. Cell 3*i+p means "term i, factor position p". stamp[cell] == epoch records that
+    // a candidate search in the current epoch found no other term with the same factor p as term i. The epoch
+    // advances whenever the scheme may have changed (successful flip, restart, successful plus transition), so
+    // every stamp of the current epoch is a true statement about the current scheme. When all 3r cells carry
+    // it (unmatched == 3r), no two terms share a factor in any position: no flip exists.
+    let mut stamp: Vec<u64> = vec![0; 3 * terms.len()];
+    let mut epoch: u64 = 1;
+    let mut unmatched: usize = 0;
+    let mut swept: u64 = 0; // epoch of the last completion sweep
     let t0 = Instant::now();
     let mut step: u64 = 0;
     while step < prm.max_steps && best.len() > prm.target_rank {
@@ -190,6 +208,7 @@ fn walk(start: Vec<Term>, prm: &Params, out: &mut String) -> (Vec<Term>, u64, f6
             break;
         }
         let r = terms.len();
+        let mut dead_end = false;
         if r >= 2 {
             let i = rng.below(r);
             let p = rng.below(3);
@@ -205,9 +224,39 @@ fn walk(start: Vec<Term>, prm: &Params, out: &mut String) -> (Vec<Term>, u64, f6
                 if flip(&mut terms, i, j, p, prm.max_weight) {
                     cnt.flips += 1;
                     reduce(&mut terms, &[i, j]);
+                    epoch += 1;
+                    unmatched = 0;
                 } else {
                     cnt.rejected_weight += 1;
                 }
+            } else if prm.dead_end {
+                if stamp.len() < 3 * r {
+                    stamp.resize(3 * r, 0);
+                }
+                let cell = 3 * i + p;
+                if stamp[cell] != epoch {
+                    stamp[cell] = epoch;
+                    unmatched += 1;
+                }
+                // Once r of the 3r cells are known to be unmatched, settle the question with one deterministic
+                // sweep over the other cells, in index order, stopping at the first cell that has a partner.
+                // At most one sweep per epoch; it consumes no random numbers.
+                if unmatched >= r && swept != epoch {
+                    swept = epoch;
+                    for c in 0..3 * r {
+                        if stamp[c] == epoch {
+                            continue;
+                        }
+                        let (ti, tp) = (c / 3, c % 3);
+                        let key = terms[ti][tp];
+                        if (0..r).any(|q| q != ti && terms[q][tp] == key) {
+                            break;
+                        }
+                        stamp[c] = epoch;
+                        unmatched += 1;
+                    }
+                }
+                dead_end = unmatched == 3 * r;
             }
         }
         if terms.len() < best.len() {
@@ -217,12 +266,19 @@ fn walk(start: Vec<Term>, prm: &Params, out: &mut String) -> (Vec<Term>, u64, f6
         } else {
             since += 1;
         }
-        if since >= prm.plateau {
+        if since >= prm.plateau || dead_end {
+            if dead_end {
+                cnt.dead_ends += 1;
+            }
             if terms.len() > best.len() + prm.slack {
                 terms = best.clone();
                 cnt.restarts += 1;
+                epoch += 1;
+                unmatched = 0;
             } else if plus_transition(&mut terms, &mut rng, prm.max_weight) {
                 cnt.plus += 1;
+                epoch += 1;
+                unmatched = 0;
             }
             since = 0;
         }
@@ -239,7 +295,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let mut input: Option<String> = None;
     let mut prm = Params { seed: 1, max_steps: 1_000_000, max_seconds: 60.0, plateau: 50_000, slack: 3,
-                           max_weight: 0, target_rank: 0 };
+                           max_weight: 0, target_rank: 0, dead_end: true };
     let mut k = 1;
     while k < args.len() {
         let val = args.get(k + 1).unwrap_or_else(|| fail("missing value after flag"));
@@ -252,6 +308,13 @@ fn main() {
             "--slack" => prm.slack = val.parse().unwrap_or_else(|_| fail("bad --slack")),
             "--max-weight" => prm.max_weight = val.parse().unwrap_or_else(|_| fail("bad --max-weight")),
             "--target-rank" => prm.target_rank = val.parse().unwrap_or_else(|_| fail("bad --target-rank")),
+            "--dead-end" => {
+                prm.dead_end = match val.as_str() {
+                    "0" => false,
+                    "1" => true,
+                    _ => fail("bad --dead-end (0 or 1)"),
+                }
+            }
             other => fail(&format!("unknown flag {}", other)),
         }
         k += 2;
@@ -277,8 +340,8 @@ fn main() {
     }
     let mut out = String::new();
     let (best, steps, secs, cnt) = walk(start, &prm, &mut out);
-    out.push_str(&format!("STATS steps={} seconds={:.3} flips={} rejected_weight={} plus={} restarts={}\n",
-                          steps, secs, cnt.flips, cnt.rejected_weight, cnt.plus, cnt.restarts));
+    out.push_str(&format!("STATS steps={} seconds={:.3} flips={} rejected_weight={} plus={} restarts={} dead_ends={}\n",
+                          steps, secs, cnt.flips, cnt.rejected_weight, cnt.plus, cnt.restarts, cnt.dead_ends));
     out.push_str(&format!("BEST {}\n", best.len()));
     for t in &best {
         out.push_str(&format!("{} {} {}\n", t[0], t[1], t[2]));

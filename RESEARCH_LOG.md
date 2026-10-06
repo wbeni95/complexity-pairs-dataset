@@ -689,3 +689,97 @@ GitHub Actions (`ubuntu-latest`, Python 3.12) succeeded in validate, scaling and
 - `cd28ddc`: citation version 0.2.0, run 37441727738;
 - `a232962`: Zenodo DOI, run 37441885450.
 So the 47 validated pairs, the 94 rival rejections and the exact-count V2 fits also reproduce on a second OS and Python version. Provenance: external (GitHub Actions).
+
+---
+
+## 2026-10-06 (afternoon: third round, consolidated by the maintainer)
+
+Three background agents. Their detailed reports are in research/:
+- [count_v2_remaining](research/2026-10-06c_count_v2_remaining.md)
+- [kernel_deadends](research/2026-10-06c_kernel_deadends.md)
+- [novelty_audit](research/2026-10-06c_novelty_audit.md)
+
+Numbers marked "agent report" were not re-run by the maintainer unless stated. All entries were re-validated in the recorded run (RL-075).
+
+### RL-068 · VERIFIED and INCONCLUSIVE · Remaining timing fits: 3 converted to exact counts, 2 cannot be
+Agent report; re-validated in RL-075.
+
+**Converted:**
+- **range-minimum-queries:** value comparisons; a two-argument `min()` calls `__lt__` exactly once, which was checked.
+- **polynomial-multiplication-ntt:** multiplications with an input-derived operand. Schoolbook gives exactly n²; the NTT gives exactly 3n·log₂n + 5n for n a power of two, used as the cost expression (RL-062).
+- **minimum-spanning-tree:** comparisons and +, *, divmod on input weights, for all three algorithms. Packed integer keys are themselves counting values, so `sorted()` calls their `__lt__`. Prim gives exactly (n−1)², and the enumeration exactly (n−1)·C(m, n−1) + n^(n−2) − 1.
+
+All 7 fits pass at tolerance 0.03 (common valid window [0.0073, 0.0652)), all 18 rivals are rejected, and the log factor is resolved in every one.
+
+**Not convertible with unchanged implementations (INCONCLUSIVE, documented in the entries):**
+- **fibonacci fast doubling:** a propagating tracer sees one `__index__` call (from `bin(n)`); all arithmetic is on values created from the literals 0 and 1.
+- **chromatic number:** the χ·2ⁿ multiplications and the 3ⁿ − 2ⁿ submask steps have no input-derived operand. Deviation finding F4 stays open.
+
+**Partial counts:** the NTT count misses the twiddle updates, `pow()`, padding-zero products and all additions and reductions; the MST counts miss the union-find work and the enumeration's DFS. Both entries say so.
+
+### RL-069 · CORRECTED · Exact counts are not always identical across Python versions
+RL-057 reported that all 17 count series were identical under CPython 3.12.10 and 3.14.2. For the newly converted **Kruskal** counts this does not hold: under 3.12.10, the version CI uses, they are 0.17–0.30% lower, entirely in the comparisons inside `sorted()` (agent report).
+α is 0.9982 against 0.9980, so the verdicts are unchanged. The other 6 new series are identical across the two versions.
+**Rule from now on:** a count that includes comparisons made inside CPython built-ins (`sorted`, `min`, `max`, …) may depend on the Python version. The entry must say so, and V2 must not rest on an exact equality across versions.
+
+### RL-070 · CORRECTED · RL-054's rank-47 scheme is a rediscovery of a published scheme
+The novelty audit found that the rank-47 scheme of RL-054 (`search/schemes/rust-2026-10-07/4x4x4_rank47_seed8.json`) is **equivalent** to a scheme Kauers and Moosbauer have published since October 2022: `http://www.algebra.uni-linz.ac.at/people/mkauers/matrix-mult/solutions/444/47/b0/jb050da4aa249f5a.exp` (directory date 2022-10-27).
+- **Certificate:** the cyclic shift (a,b,c) → (b,c,a), then the sandwich P a Q⁻¹ ⊗ Q b R⁻¹ ⊗ R c P⁻¹ with P = 49571, Q = 65191, R = 6073 (bitmask encoding; rows in the report). It maps our 47 terms exactly onto the published 47.
+- **Check:** the certificate was re-checked with separate list arithmetic and brute-force inverses. The same group element also maps the standard algorithm to a valid scheme, which confirms it is a symmetry of the tensor.
+- The two schemes share no terms, so only an equivalence test could reveal the identity.
+
+RL-054's wording ("matches the best known rank; a rediscovery, not a new record") stands. The scheme itself is now known to be **a published scheme up to equivalence**.
+RL-059's statement that it is inequivalent to one AlphaTensor file and one Kauers–Moosbauer file remains true, but is superseded: those were not all the published schemes.
+
+### RL-071 · VERIFIED · Equivalence testing; a rank-47 class not among the published classes we could obtain
+**Tool:** `search/equivalence.py` (16 unit tests in `tests/test_search_equivalence.py`).
+- **Group:** the one Kauers and Moosbauer state (ISSAC 2023 §2): GL(4,2)³ sandwiches, the cyclic shift, transposition and term permutations; AlphaTensor uses the same action. The de Groote 1978 papers were not read, so this is not claimed to be the full isotropy group. Equivalence certificates hold under any larger group; inequivalence is relative to this group.
+- **Invariants,** each with a preservation argument in the report: the factor-rank profile, the ordered profile over S₃, per-term ranks plus the characteristic polynomial of abc, and colour refinement over pairs of terms.
+- **Exact test:** a complete backtracking search returning a checked certificate or "none". No pair was left undecided.
+
+**Collection.** 99 129 public 4×4×4 rank-47 GF(2) scheme files, all passing both exact verifiers. They contain only **25 distinct term sets**: the 99 101 files under `x47/` are 4 schemes repeated with their products in different orders. The 25 sets form **exactly 4 equivalence classes**: AlphaTensor; Kauers–Moosbauer (the flips-repo file and the arXiv:2210.04045 scheme are equivalent); Zaru's FastMatrixF2 (doi:10.5281/zenodo.22823115); and the class containing RL-054's scheme.
+Sources and pinned versions are in the report. No third-party scheme file was added to the repository.
+
+**Result.** The five rank-47 schemes from RL-072 (seeds 610, 617, 618, 622 and the benchmark's seed 707) are pairwise equivalent, each with a certificate. Their factor-rank profile proves them **inequivalent to all four published classes**.
+The strongest allowed statement is therefore: *this rank-47 class is inequivalent to all 99 129 published 4×4×4 rank-47 GF(2) schemes we could obtain (4 classes)*. It is **not** a claim of absolute novelty: Kauers and Moosbauer report more than 100 000 rank-47 schemes, while their public directory holds 23 distinct ones. It is the same rank, so it is not a new pair and changes no exponent.
+
+### RL-072 · VERIFIED (exactness) and NULL (benefit) · Dead-end detection in the Rust kernel
+**Design** (agent report):
+- A failed candidate search proves that term i's factor at position p is unique. These facts are stamped per cell, with an epoch counter that advances on every scheme change.
+- Once r of the 3r cells are stamped, a deterministic completion sweep checks the rest.
+- The scheme is a dead end exactly when all 3r cells carry the current stamp. The detection is exact in both directions, with the argument in the report, and leaves the dead end at once (restart or plus transition).
+- `--dead-end 0` reproduces the old kernel exactly: 17/17 step-limited cases match a verbatim copy of the old source, whose checksum equals the kernel recorded in RL-054 and RL-059.
+
+Mirrored in `kernel_reference.py`. The differential tests cover both modes and assert that the branch is exercised. One gap: a dead end left through a restart is not asserted, because it never occurred in any probe.
+
+**Throughput (8 walks at once):**
+- at a dead end: flips/s ×49 (1.91·10⁴ → 9.41·10⁵);
+- away from dead ends: about 5% slower (medians 0.981 and 0.964), with machine drift not separated.
+
+The agent's first note ("no measurable overhead") was wrong and was corrected.
+
+**Measurement** (seeds 601–624, 900 s each, 8 at a time, 11:44–12:29 local): rank 47 in **4/24** walks (95% CI 0.047–0.374), against 0/24 in RL-059 (Fisher p = 0.109). Reaching rank ≤ 49 was 14/24 against 20/24.
+**But the four rank-47 walks owe nothing to the escape.** Re-run with `--dead-end 0`, all four reach the same rank-47 scheme at the same step (`experiments/2026-10-06c_counterfactual_old_kernel.py`); the 0/24 → 4/24 difference lies between seed sets.
+**NULL:**
+- no walk left a rank-49 dead end, despite 1.94·10⁸ escapes in 8 298 s, because each walk's escapes landed on only 2–11 distinct dead ends;
+- rank 46: about 1.18·10¹⁰ steps after reaching 47.
+
+**Decision:** the detection stays available and on by default, since it is exact and cheap, but it is not expected to raise the rate of reaching 47. Detecting a change from 1/28 to 4/24 would need about 83 walks per arm.
+
+### RL-073 · CORRECTED · Process: too many requests to an academic server
+To collect published schemes, the novelty agent made about 99 000 HTTP requests to the Linz server of Kauers' directory in roughly 30 minutes, over 4 parallel connections, all cached and none repeated. That is about 55 requests per second against a university web server, which is not considerate use. The brief set no rate limit; that omission is the maintainer's.
+**Rule from now on:** crawls of third-party servers are rate-limited (at most about 1–2 requests per second, one connection), prefer bulk archives or repositories, and identify themselves in the User-Agent. The cache (outside the repository) makes any repeat unnecessary.
+
+### RL-074 · IDEA · Next steps from the third round
+1. **Line-execution counts** via `sys.monitoring` (a prototype exists in `experiments/2026-10-06c_value_reach_probe.py`) would give exact counts for Fibonacci fast doubling (bit_length(n) loop steps) and chromatic number (χ·2ⁿ multiplications; 3ⁿ − 2ⁿ submask steps). This is a methodology change, counting executions of code lines rather than operations on values, so it needs a DECISION. For chromatic number the instance family also matters: χ/n wanders between 0.500 and 0.636 on G(n, 0.8); the complement of a perfect matching (χ = n/2) is an untested alternative.
+2. **Search:** stronger escapes, such as several plus transitions, a tabu on recently visited dead ends, or portfolio restarts, compared on the same seeds with about 83 walks per arm.
+3. **The rank-47 class of RL-071:** a check against further collections, if any appear. Contacting the authors of the known collections is an outward-facing step and is left to the owner.
+
+### RL-075 · VERIFIED · Recorded run after the third round
+Ledger: [ledger/runs/20261006T104637Z.json](ledger/runs/20261006T104637Z.json), at base commit `1dd6556` with this round's work uncommitted, on a quiet machine.
+- **Result:** 62/62 entries pass. V1 covered 51 entries, 3447 instances and 7323 implementation runs.
+- **V2:** 108 measurements, all passing (59 exact reported counts, 49 wall-clock), α from 0.886 to 1.164.
+- **Rivals:** 113 declared, **113 rejected**.
+- **Log-factor diagnostic:** resolved in 47 fits, all exact counts.
+- **Unit tests:** 110 OK.
+- **Citations:** 173 identifiers checked, 0 problems; 147 sources also compared on volume, issue and pages.
