@@ -503,3 +503,29 @@ Added `CITATION.cff` (author Benjamin Weisz; type dataset; validated with cffcon
 **Rationale:** the user prioritises reliability and reputation, with positive effects on their other projects, over license income. Openness maximises reuse, independent re-verification and citation.
 CC BY 4.0 is the license researchers expect for data, and it explicitly asks for attribution when material is shared. The licenses themselves do not compel academic citation. Citations come from scholarly norms and from making citing easy: a DOI per release (Zenodo, planned at public release), CITATION.cff, and a dataset paper or preprint (planned).
 The change was made while the repository is private with no external contributors. Once a version is published under Apache 2.0, that grant cannot be withdrawn.
+
+### RL-054 · VERIFIED (rediscovery of the best known 4×4 rank) and NULL · First parallel Rust search, 30 minutes on 12 processes
+Script: `experiments/2026-10-07_rust_parallel_30min.py`. It ran three jobs of 4 walk processes each, every walk limited to 1800 s, at below-normal priority. Logs are in `search/runs/2026-10-07_rust_*.jsonl`; verified schemes in `search/schemes/rust-2026-10-07/`.
+
+| Job | Setting | Best rank per seed (time first reached) |
+|---|---|---|
+| A | 4×4×4 from the standard algorithm, weight cap 4, seeds 1–4 | 52, 52, 52, 52 (3.7–25.6 s), then no further improvement |
+| B | 4×4×4 from the standard algorithm, no cap, seeds 5–8 | 49 (1.3 s), 49 (195 s), 50 (1159 s), **47 (726.7 s, step 1.23·10¹⁰)** |
+| C | 3×3×3 from a saved rank-23 scheme, target 22, seeds 1–4 | 23, 23, 23, 23 |
+
+Throughput was 1.27–2.30·10⁷ steps/s per process with 12 processes running concurrently.
+
+**Rank 47, 4×4×4 over GF(2):** this matches the best known rank over GF(2) (Fawzi et al. 2022, AlphaTensor).
+- The scheme passes both independent exact verifiers (`verify`, `verify_explicit`) and 200 random GF(2) matrix-pair checks; the checks took 0.05 s.
+- It is **not** valid over the integers as it stands, so it is a characteristic-2 result, like AlphaTensor's.
+- Applied recursively, it gives exponent log₄47 = 2.7773 in characteristic 2, below Strassen's log₂7 = 2.8074.
+- This is a **VERIFIED rediscovery** of a known rank, not a new record. Whether the scheme is equivalent to a published rank-47 scheme was not checked.
+- For comparison, the Python driver's best over about 1.05·10⁹ steps was 49 (RL-036).
+
+**NULL:**
+- 3×3×3 rank 22 over GF(2), in about 1.65·10¹¹ steps (2.75·10¹⁰ flips) from one rank-23 start; rank 22 over GF(2) remains open as far as we know.
+- 4×4×4 below 52 under weight cap 4, in about 9.6·10¹⁰ steps.
+
+**NEAR-MISS / deviation:** with this kernel the weight cap of 4 *hurt*: all capped walks stuck at 52, while uncapped walks reached 49, 50 and 47. The Python driver (RL-036) had found the cap helpful (one capped walk reached 49). The move policies differ (plus-transition form, restarts, candidate selection), so the effect of the cap depends on the policy and should not be generalised.
+
+**IDEA:** add a dataset entry for characteristic 2, "Strassen recursion vs recursive rank-47 4×4 scheme", with V2 on exact multiplication counts. The exponent gap is small: the rival's α would be log₂7 / log₄47 = 1.0108, so the tolerance must be below 0.0108. Exact counts at powers of 4 give α = 1.000 exactly, which makes this discriminable (the method of RL-047).
