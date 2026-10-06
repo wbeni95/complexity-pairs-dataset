@@ -1,0 +1,4999 @@
+{
+ "run": {
+  "timestamp_utc": "2026-10-06T09:12:45+00:00",
+  "git_commit": "aedbdc66ae4924646de8747866c2cc3212bc4917",
+  "git_dirty": false,
+  "python": "3.14.2",
+  "python_implementation": "CPython",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "machine": "AMD64",
+  "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "jsonschema": "4.26.0",
+  "arguments": {
+   "paths": [],
+   "scaling": true,
+   "probe": false,
+   "static": false
+  },
+  "timing_parameters": {
+   "min_sample_s": 0.02,
+   "repeats": 3,
+   "statistic": "per n: best of `repeats` samples, each the mean over a loop lasting >= min_sample_s"
+  }
+ },
+ "summary": {
+  "entries": 62,
+  "ok": 62
+ },
+ "entries": [
+  {
+   "path": "pairs/3sat-brute-force-vs-schoening",
+   "id": "3sat-brute-force-vs-schoening",
+   "claimed": "V1",
+   "v1": {
+    "passed": true,
+    "instances": 84,
+    "algorithm_runs": 162,
+    "errors": []
+   },
+   "status": "OK",
+   "achieved": "V1",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/all-pairs-shortest-paths-bellman-ford-vs-floyd-warshall",
+   "id": "all-pairs-shortest-paths-bellman-ford-vs-floyd-warshall",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 70,
+    "algorithm_runs": 130,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "Bellman-Ford from every source",
+     "measure": "reported",
+     "cost": "n**2 * (n-1)**2",
+     "samples": 1,
+     "n_values": [
+      8,
+      10,
+      13,
+      16,
+      20,
+      25,
+      32,
+      40
+     ],
+     "values": [
+      3136.0,
+      8100.0,
+      24336.0,
+      57600.0,
+      144400.0,
+      360000.0,
+      984064.0,
+      2433600.0
+     ],
+     "unit": "count",
+     "alpha": 1.0,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**3",
+       "alpha": 1.3768515815463593,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.921016683954045,
+      "alpha_vs_cost_over_log": 1.0937006120084598,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "Floyd-Warshall",
+     "measure": "reported",
+     "cost": "n**3",
+     "samples": 1,
+     "n_values": [
+      32,
+      48,
+      64,
+      96,
+      128,
+      160,
+      200
+     ],
+     "values": [
+      32736.0,
+      110544.0,
+      262080.0,
+      884640.0,
+      2097024.0,
+      4095840.0,
+      7999800.0
+     ],
+     "unit": "count",
+     "alpha": 1.0001545006185275,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**2 * (n-1)**2",
+       "alpha": 0.7448986667941799,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9288468837301949,
+      "alpha_vs_cost_over_log": 1.0832717752524905,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/assignment-brute-vs-hungarian",
+   "id": "assignment-brute-vs-hungarian",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 65,
+    "algorithm_runs": 110,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "permutation enumeration",
+     "measure": "time",
+     "cost": "n * factorial(n)",
+     "samples": 1,
+     "n_values": [
+      6,
+      7,
+      8,
+      9
+     ],
+     "values": [
+      0.00027437857019581963,
+      0.002123710000887513,
+      0.01807045005261898,
+      0.17128199990838766
+     ],
+     "unit": "seconds",
+     "alpha": 0.9707375403215357,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9418845987949298,
+      "alpha_vs_cost_over_log": 1.0013894376706036,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Hungarian method (shortest augmenting paths with potentials)",
+     "measure": "time",
+     "cost": "n**3",
+     "samples": 1,
+     "n_values": [
+      30,
+      50,
+      75,
+      100,
+      150,
+      200
+     ],
+     "values": [
+      0.0011941117700189352,
+      0.005116874992381781,
+      0.01644430006854236,
+      0.03843069984577596,
+      0.12628030008636415,
+      0.2966950999107212
+     ],
+     "unit": "seconds",
+     "alpha": 0.9696152123949296,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8997840165061569,
+      "alpha_vs_cost_over_log": 1.0511349975005204,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/bernstein-vazirani-classical-vs-quantum",
+   "id": "bernstein-vazirani-classical-vs-quantum",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 40,
+    "algorithm_runs": 76,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "classical: query the unit vectors",
+     "measure": "reported",
+     "cost": "n",
+     "samples": 1,
+     "n_values": [
+      2,
+      4,
+      8,
+      12,
+      16
+     ],
+     "values": [
+      2.0,
+      4.0,
+      8.0,
+      12.0,
+      16.0
+     ],
+     "unit": "count",
+     "alpha": 1.0,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.6006780293930777,
+      "alpha_vs_cost_over_log": 2.5796649492200037,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "Bernstein-Vazirani quantum algorithm",
+     "measure": "reported",
+     "cost": "1",
+     "samples": 1,
+     "n_values": [
+      1,
+      2,
+      4,
+      6,
+      8,
+      10
+     ],
+     "values": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ],
+     "unit": "count",
+     "alpha": null,
+     "max_over_min": 1.0,
+     "tolerance": 0.01,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {}
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/bipartite-matching-kuhn-vs-hopcroft-karp",
+   "id": "bipartite-matching-kuhn-vs-hopcroft-karp",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 114,
+    "algorithm_runs": 228,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "Kuhn's augmenting paths (one DFS per left vertex)",
+     "measure": "reported",
+     "cost": "n**3",
+     "samples": 1,
+     "n_values": [
+      39,
+      68,
+      105,
+      150,
+      203,
+      264,
+      333,
+      410,
+      495
+     ],
+     "values": [
+      987.0,
+      5190.0,
+      19210.0,
+      56439.0,
+      140945.0,
+      312092.0,
+      630000.0,
+      1181845.0,
+      2088999.0
+     ],
+     "unit": "count",
+     "alpha": 1.0054680794430655,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**2.5",
+       "alpha": 1.2065616953316787,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9412062334328913,
+      "alpha_vs_cost_over_log": 1.0790846197767552,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "Hopcroft-Karp",
+     "measure": "reported",
+     "cost": "n**2.5",
+     "samples": 1,
+     "n_values": [
+      68,
+      105,
+      150,
+      203,
+      264,
+      333,
+      410,
+      495,
+      588,
+      689,
+      798,
+      915
+     ],
+     "values": [
+      4572.0,
+      13602.0,
+      33313.0,
+      71227.0,
+      137782.0,
+      246812.0,
+      416027.0,
+      667493.0,
+      1028112.0,
+      1530102.0,
+      2211477.0,
+      3116527.0
+     ],
+     "unit": "count",
+     "alpha": 1.0040877808587363,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**2",
+       "alpha": 1.2551097260734203,
+       "rejected": true
+      },
+      {
+       "cost": "n**3",
+       "alpha": 0.8367398173822804,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9359970171398917,
+      "alpha_vs_cost_over_log": 1.0828044791816092,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/chromatic-number-subset-dp-vs-inclusion-exclusion",
+   "id": "chromatic-number-subset-dp-vs-inclusion-exclusion",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 90,
+    "algorithm_runs": 180,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "subset DP over all independent sets",
+     "measure": "time",
+     "cost": "3**n",
+     "samples": 1,
+     "n_values": [
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+     ],
+     "values": [
+      5.8757412990655055e-05,
+      0.00015645390703866724,
+      0.00048252143010142303,
+      0.001465064290511821,
+      0.004107760032638907,
+      0.012551950057968497,
+      0.03580570011399686
+     ],
+     "unit": "seconds",
+     "alpha": 0.980089773513823,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9411188351520642,
+      "alpha_vs_cost_over_log": 1.0223660713307572,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "inclusion-exclusion (Bjorklund-Husfeldt-Koivisto)",
+     "measure": "time",
+     "cost": "n * 2**n",
+     "samples": 1,
+     "n_values": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+     ],
+     "values": [
+      0.0003147603470254047,
+      0.0007048851844889146,
+      0.0014580285642296076,
+      0.0032106500196581087,
+      0.006505424971692264,
+      0.013075349968858063,
+      0.02761229989118874,
+      0.06091309990733862,
+      0.14425190002657473
+     ],
+     "unit": "seconds",
+     "alpha": 0.9826955318314508,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9478875994358644,
+      "alpha_vs_cost_over_log": 1.0201242100840746,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/closest-pair-brute-vs-divide-conquer",
+   "id": "closest-pair-brute-vs-divide-conquer",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 70,
+    "algorithm_runs": 135,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "all pairs",
+     "measure": "reported",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      125,
+      250,
+      500,
+      1000,
+      2000
+     ],
+     "values": [
+      15500.0,
+      62250.0,
+      249500.0,
+      999000.0,
+      3998000.0
+     ],
+     "unit": "count",
+     "alpha": 1.001303591421992,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n*log(n)",
+       "alpha": 1.7214221291789116,
+       "rejected": true
+      },
+      {
+       "cost": "n**2*log(n)",
+       "alpha": 0.9257199645106527,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9257199645106527,
+      "alpha_vs_cost_over_log": 1.0902554633347417,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "Shamos-Hoey divide and conquer",
+     "measure": "reported",
+     "cost": "n * log(n)",
+     "samples": 1,
+     "n_values": [
+      1000,
+      2000,
+      4000,
+      8000,
+      16000,
+      32000,
+      64000
+     ],
+     "values": [
+      14523.0,
+      31335.0,
+      68047.0,
+      147196.0,
+      314573.0,
+      674959.0,
+      1436363.0
+     ],
+     "unit": "count",
+     "alpha": 0.9932546904564308,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n",
+       "alpha": 1.105375306507684,
+       "rejected": true
+      },
+      {
+       "cost": "n*log(n)**2",
+       "alpha": 0.90172112222306,
+       "rejected": true
+      },
+      {
+       "cost": "n**2",
+       "alpha": 0.552687653253842,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9017211222230597,
+      "alpha_vs_cost_over_log": 1.105375306507684,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/collision-problem-classical-vs-quantum",
+   "id": "collision-problem-classical-vs-quantum",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 60,
+    "algorithm_runs": 168,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "classical birthday search",
+     "measure": "reported",
+     "cost": "2**(n/2)",
+     "samples": 100,
+     "n_values": [
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16
+     ],
+     "values": [
+      4.83,
+      9.8,
+      19.61,
+      40.43,
+      83.7,
+      150.45,
+      317.48
+     ],
+     "unit": "count",
+     "alpha": 1.00320897555738,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "2**(n/3)",
+       "alpha": 1.50481346333607,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8664862608073061,
+      "alpha_vs_cost_over_log": 1.184543165427056,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Brassard-Hoyer-Tapp, known number of marked points",
+     "measure": "reported",
+     "cost": "2**(n/3)",
+     "samples": 40,
+     "n_values": [
+      3,
+      6,
+      9,
+      12,
+      15
+     ],
+     "values": [
+      4.55,
+      11.0,
+      20.675,
+      39.125,
+      83.0
+     ],
+     "unit": "count",
+     "alpha": 1.0208933000366502,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "2**(n/2)",
+       "alpha": 0.680595533357767,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.7779683512170854,
+      "alpha_vs_cost_over_log": 1.4243185697758958,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Brassard-Hoyer-Tapp with BBHT exponential search (unknown number of marked points)",
+     "measure": "reported",
+     "cost": "2**(n/3)",
+     "samples": 100,
+     "n_values": [
+      3,
+      6,
+      9,
+      12,
+      15
+     ],
+     "values": [
+      4.69,
+      10.21,
+      27.1,
+      51.84,
+      117.58
+     ],
+     "unit": "count",
+     "alpha": 1.1639904752092587,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8850068819642932,
+      "alpha_vs_cost_over_log": 1.63098556368735,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/determinant-cofactor-vs-gaussian",
+   "id": "determinant-cofactor-vs-gaussian",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 66,
+    "algorithm_runs": 120,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "Laplace (cofactor) expansion",
+     "measure": "time",
+     "cost": "factorial(n)",
+     "samples": 1,
+     "n_values": [
+      6,
+      7,
+      8,
+      9
+     ],
+     "values": [
+      0.0004771439040579447,
+      0.003554183330076436,
+      0.027084900066256523,
+      0.2606512999627739
+     ],
+     "unit": "seconds",
+     "alpha": 1.0093035192998308,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9774343945292221,
+      "alpha_vs_cost_over_log": 1.0432888828605533,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Gaussian elimination mod p",
+     "measure": "time",
+     "cost": "n**3",
+     "samples": 1,
+     "n_values": [
+      32,
+      48,
+      64,
+      96,
+      128,
+      192
+     ],
+     "values": [
+      0.0016136250148216884,
+      0.005202899978030473,
+      0.011806899914517999,
+      0.03866830002516508,
+      0.09060409991070628,
+      0.3011435999069363
+     ],
+     "unit": "seconds",
+     "alpha": 0.9725092322198471,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9026699346224074,
+      "alpha_vs_cost_over_log": 1.0540081444124851,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/deutsch-jozsa-classical-vs-quantum",
+   "id": "deutsch-jozsa-classical-vs-quantum",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 60,
+    "algorithm_runs": 168,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "classical deterministic: scan until a difference or a majority",
+     "measure": "reported",
+     "cost": "2**(n-1) + 1",
+     "samples": 1,
+     "n_values": [
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16
+     ],
+     "values": [
+      3.0,
+      9.0,
+      33.0,
+      129.0,
+      513.0,
+      2049.0,
+      8193.0,
+      32769.0
+     ],
+     "unit": "count",
+     "alpha": 1.0,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8879554312549106,
+      "alpha_vs_cost_over_log": 1.1321368052002196,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "classical randomized, one-sided bounded error (K = 20 random queries)",
+     "measure": "reported",
+     "cost": "1",
+     "samples": 1,
+     "n_values": [
+      1,
+      2,
+      4,
+      8,
+      12,
+      16
+     ],
+     "values": [
+      20.0,
+      20.0,
+      20.0,
+      20.0,
+      20.0,
+      20.0
+     ],
+     "unit": "count",
+     "alpha": null,
+     "max_over_min": 1.0,
+     "tolerance": 0.01,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {}
+    },
+    {
+     "algorithm": "Deutsch-Jozsa quantum algorithm (one-query version)",
+     "measure": "reported",
+     "cost": "1",
+     "samples": 1,
+     "n_values": [
+      1,
+      2,
+      4,
+      6,
+      8,
+      10
+     ],
+     "values": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ],
+     "unit": "count",
+     "alpha": null,
+     "max_over_min": 1.0,
+     "tolerance": 0.01,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {}
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/edit-distance-brute-vs-dp",
+   "id": "edit-distance-brute-vs-dp",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 50,
+    "algorithm_runs": 90,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "plain recursion",
+     "measure": "time",
+     "cost": "(3 + 2*sqrt(2))**n / sqrt(n)",
+     "samples": 1,
+     "n_values": [
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "values": [
+      0.00018017247763522175,
+      0.0009535333319079308,
+      0.005108850018586963,
+      0.027368899900466204,
+      0.15043319994583726
+     ],
+     "unit": "seconds",
+     "alpha": 0.9950201086194322,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9515561075773635,
+      "alpha_vs_cost_over_log": 1.0425590155197673,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Wagner-Fischer dynamic programming",
+     "measure": "time",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      100,
+      200,
+      300,
+      400,
+      600,
+      800
+     ],
+     "values": [
+      0.0006983551710587123,
+      0.002754412475042045,
+      0.006229149992577732,
+      0.01157634996343404,
+      0.02806599996984005,
+      0.05286920000799
+     ],
+     "unit": "seconds",
+     "alpha": 1.0410206011504,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9554655618303268,
+      "alpha_vs_cost_over_log": 1.1433354735598151,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/element-distinctness-pairs-vs-sorting",
+   "id": "element-distinctness-pairs-vs-sorting",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 84,
+    "algorithm_runs": 156,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "all pairs",
+     "measure": "reported",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      500,
+      1000,
+      1500,
+      2000,
+      3000,
+      4000
+     ],
+     "values": [
+      124750.0,
+      499500.0,
+      1124250.0,
+      1999000.0,
+      4498500.0,
+      7998000.0
+     ],
+     "unit": "count",
+     "alpha": 1.0004101356958588,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n*log(n)",
+       "alpha": 1.7572354190778114,
+       "rejected": true
+      },
+      {
+       "cost": "n**2*log(n)",
+       "alpha": 0.9355738677612632,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9355738677612632,
+      "alpha_vs_cost_over_log": 1.0748792606787025,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "sort, then compare neighbours",
+     "measure": "reported",
+     "cost": "n*log(n)",
+     "samples": 1,
+     "n_values": [
+      1000,
+      2000,
+      4000,
+      8000,
+      16000,
+      32000,
+      64000,
+      128000
+     ],
+     "values": [
+      9710.0,
+      21426.0,
+      46876.0,
+      101729.0,
+      219403.0,
+      471108.0,
+      1006063.0,
+      2140632.0
+     ],
+     "unit": "count",
+     "alpha": 1.0020897249161829,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n",
+       "alpha": 1.1113426386497034,
+       "rejected": true
+      },
+      {
+       "cost": "n*log(n)**2",
+       "alpha": 0.9123186503378565,
+       "rejected": true
+      },
+      {
+       "cost": "n**2",
+       "alpha": 0.5556713193248517,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9123186503378564,
+      "alpha_vs_cost_over_log": 1.1113426386497036,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/fibonacci-naive-vs-dp",
+   "id": "fibonacci-naive-vs-dp",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 30,
+    "algorithm_runs": 86,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "naive recursion",
+     "measure": "time",
+     "cost": "phi**n",
+     "samples": 1,
+     "n_values": [
+      18,
+      20,
+      22,
+      24,
+      26,
+      28
+     ],
+     "values": [
+      0.00024178024829813727,
+      0.0006197187467478216,
+      0.0016315846274105401,
+      0.004262720001861453,
+      0.011092650005593896,
+      0.02913290006108582
+     ],
+     "unit": "seconds",
+     "alpha": 0.9966695851874281,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9681785124159101,
+      "alpha_vs_cost_over_log": 1.0268749627090985,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "bottom-up dynamic programming",
+     "measure": "time",
+     "cost": "n",
+     "samples": 1,
+     "n_values": [
+      10000,
+      30000,
+      100000,
+      300000,
+      1000000
+     ],
+     "values": [
+      0.0003345349997592469,
+      0.0010072899982333182,
+      0.0033677166405444345,
+      0.010007700067944825,
+      0.03352069994434714
+     ],
+     "unit": "seconds",
+     "alpha": 0.9997963997674799,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9189917006510943,
+      "alpha_vs_cost_over_log": 1.096113931631887,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "fast doubling (matrix power)",
+     "measure": "time",
+     "cost": "log(n)",
+     "samples": 1,
+     "n_values": [
+      256,
+      65536,
+      4294967296,
+      18446744073709551616,
+      340282366920938463463374607431768211456
+     ],
+     "values": [
+      1.006970893328828e-06,
+      2.4115657681257215e-06,
+      5.299512534210114e-06,
+      1.0965365162283482e-05,
+      2.1534490587830143e-05
+     ],
+     "unit": "seconds",
+     "alpha": 1.1022022412546146,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {}
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/gcd-trial-vs-euclid",
+   "id": "gcd-trial-vs-euclid",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 132,
+    "algorithm_runs": 234,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "trial divisors",
+     "measure": "time",
+     "cost": "2**n",
+     "samples": 1,
+     "n_values": [
+      14,
+      16,
+      18,
+      20,
+      22
+     ],
+     "values": [
+      0.00011896071373485029,
+      0.0005353256427229214,
+      0.002175460010766983,
+      0.0094135666731745,
+      0.03904310008510947
+     ],
+     "unit": "seconds",
+     "alpha": 1.042656498018779,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 1.0138813796621036,
+      "alpha_vs_cost_over_log": 1.0730981328207743,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Euclid's algorithm",
+     "measure": "time",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      4000,
+      8000,
+      16000,
+      32000,
+      64000
+     ],
+     "values": [
+      0.0010158300050534309,
+      0.0038019666681066155,
+      0.014047199976630509,
+      0.055394900031387806,
+      0.21071470016613603
+     ],
+     "unit": "seconds",
+     "alpha": 0.9628955846770593,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9153232418366039,
+      "alpha_vs_cost_over_log": 1.0156734554169287,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/global-min-cut-brute-vs-stoer-wagner",
+   "id": "global-min-cut-brute-vs-stoer-wagner",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 96,
+    "algorithm_runs": 174,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "brute force",
+     "measure": "reported",
+     "cost": "n**2 * 2**n",
+     "samples": 1,
+     "n_values": [
+      6,
+      8,
+      10,
+      12,
+      14
+     ],
+     "values": [
+      270.0,
+      1918.0,
+      12030.0,
+      69630.0,
+      380926.0
+     ],
+     "unit": "count",
+     "alpha": 1.001791534381156,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**3",
+       "alpha": 2.838038650826016,
+       "rejected": true
+      },
+      {
+       "cost": "2**n",
+       "alpha": 1.3053352838371008,
+       "rejected": true
+      },
+      {
+       "cost": "n * 2**n",
+       "alpha": 1.133830789642451,
+       "rejected": true
+      },
+      {
+       "cost": "n**3 * 2**n",
+       "alpha": 0.8970948067219128,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9513320499139689,
+      "alpha_vs_cost_over_log": 1.057755880872557,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "Stoer-Wagner (array)",
+     "measure": "reported",
+     "cost": "n**3",
+     "samples": 1,
+     "n_values": [
+      32,
+      64,
+      128,
+      256
+     ],
+     "values": [
+      10415.0,
+      85343.0,
+      690879.0,
+      5559679.0
+     ],
+     "unit": "count",
+     "alpha": 1.0065891048563747,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**2 * 2**n",
+       "alpha": 0.03688282723748705,
+       "rejected": true
+      },
+      {
+       "cost": "n**4",
+       "alpha": 0.7549418286422811,
+       "rejected": true
+      },
+      {
+       "cost": "n**2",
+       "alpha": 1.5098836572845622,
+       "rejected": true
+      },
+      {
+       "cost": "n**2 * log(n)**3",
+       "alpha": 1.1277353145685245,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9361566638778851,
+      "alpha_vs_cost_over_log": 1.0884163684164865,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/grover-search-classical-vs-quantum",
+   "id": "grover-search-classical-vs-quantum",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 36,
+    "algorithm_runs": 68,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "classical random-order search",
+     "measure": "reported",
+     "cost": "2**n",
+     "samples": 40,
+     "n_values": [
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14
+     ],
+     "values": [
+      2.275,
+      8.025,
+      28.1,
+      133.775,
+      491.925,
+      2204.825,
+      7817.075
+     ],
+     "unit": "count",
+     "alpha": 0.9923808979500511,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.866545072209334,
+      "alpha_vs_cost_over_log": 1.1479416295514129,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Grover's algorithm",
+     "measure": "reported",
+     "cost": "2**(n/2)",
+     "samples": 5,
+     "n_values": [
+      2,
+      4,
+      6,
+      8,
+      10,
+      12
+     ],
+     "values": [
+      2.0,
+      4.0,
+      7.0,
+      13.0,
+      26.0,
+      51.0
+     ],
+     "unit": "count",
+     "alpha": 0.9244723045818356,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.6845426258501396,
+      "alpha_vs_cost_over_log": 1.3178534627765743,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/integer-multiplication-schoolbook-vs-karatsuba",
+   "id": "integer-multiplication-schoolbook-vs-karatsuba",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 90,
+    "algorithm_runs": 180,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "schoolbook (long) multiplication",
+     "measure": "reported",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      64,
+      128,
+      256,
+      512,
+      1024
+     ],
+     "values": [
+      4096.0,
+      16384.0,
+      65536.0,
+      262144.0,
+      1048576.0
+     ],
+     "unit": "count",
+     "alpha": 1.0,
+     "max_over_min": null,
+     "tolerance": 0.02,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**log2(3)",
+       "alpha": 1.261859507142915,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9158606966093211,
+      "alpha_vs_cost_over_log": 1.1010452509004047,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "Karatsuba",
+     "measure": "reported",
+     "cost": "n**log2(3)",
+     "samples": 1,
+     "n_values": [
+      64,
+      128,
+      256,
+      512,
+      1024,
+      2048
+     ],
+     "values": [
+      3072.0,
+      9216.0,
+      27648.0,
+      82944.0,
+      248832.0,
+      746496.0
+     ],
+     "unit": "count",
+     "alpha": 0.9999999999999998,
+     "max_over_min": null,
+     "tolerance": 0.02,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**2",
+       "alpha": 0.7924812503605779,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.901067700054468,
+      "alpha_vs_cost_over_log": 1.1230951648124232,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/inversion-counting-quadratic-vs-merge",
+   "id": "inversion-counting-quadratic-vs-merge",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 55,
+    "algorithm_runs": 110,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "all pairs",
+     "measure": "reported",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      250,
+      500,
+      750,
+      1000,
+      1500,
+      2000
+     ],
+     "values": [
+      31125.0,
+      124750.0,
+      280875.0,
+      499500.0,
+      1124250.0,
+      1999000.0
+     ],
+     "unit": "count",
+     "alpha": 1.0008211549490313,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n*log(n)",
+       "alpha": 1.735323877086408,
+       "rejected": true
+      },
+      {
+       "cost": "n**2*log(n)",
+       "alpha": 0.9295069140113847,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9295069140113844,
+      "alpha_vs_cost_over_log": 1.0839528142789057,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "merge-sort counting",
+     "measure": "reported",
+     "cost": "n * log(n)",
+     "samples": 1,
+     "n_values": [
+      2000,
+      4000,
+      8000,
+      16000,
+      32000,
+      64000
+     ],
+     "values": [
+      19421.0,
+      42827.0,
+      93679.0,
+      203327.0,
+      438368.0,
+      941126.0
+     ],
+     "unit": "count",
+     "alpha": 1.0101342980941854,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n",
+       "alpha": 1.1193756165787705,
+       "rejected": true
+      },
+      {
+       "cost": "n*log(n)**2",
+       "alpha": 0.9202796178683027,
+       "rejected": true
+      },
+      {
+       "cost": "n**2",
+       "alpha": 0.5596878082893852,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9202796178683024,
+      "alpha_vs_cost_over_log": 1.1193756165787705,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/knapsack-01-brute-vs-dp",
+   "id": "knapsack-01-brute-vs-dp",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 65,
+    "algorithm_runs": 185,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "subset enumeration",
+     "measure": "time",
+     "cost": "2**n * n",
+     "samples": 1,
+     "n_values": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+     ],
+     "values": [
+      0.00035137895151580637,
+      0.0007654269172165256,
+      0.0016337538388772653,
+      0.003474533325061202,
+      0.007343433331698179,
+      0.015432900050655007,
+      0.03228980000130832
+     ],
+     "unit": "seconds",
+     "alpha": 0.9759214098818619,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9384826658458447,
+      "alpha_vs_cost_over_log": 1.0164452484755548,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "meet in the middle (Horowitz-Sahni)",
+     "measure": "time",
+     "cost": "2**(n/2) * n",
+     "samples": 1,
+     "n_values": [
+      16,
+      20,
+      24,
+      28,
+      32,
+      36
+     ],
+     "values": [
+      5.6207946359815185e-05,
+      0.00024017619176043404,
+      0.0011378999915905297,
+      0.0050035250023938715,
+      0.02195600001141429,
+      0.12838119990192354
+     ],
+     "unit": "seconds",
+     "alpha": 0.9914207158681572,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9598663521027769,
+      "alpha_vs_cost_over_log": 1.0250730340760452,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "capacity DP (Bellman)",
+     "measure": "time",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      50,
+      100,
+      150,
+      200,
+      300,
+      400
+     ],
+     "values": [
+      0.00038828979702476335,
+      0.001790342852473259,
+      0.004325379990041256,
+      0.00714130001142621,
+      0.017889300012029707,
+      0.032124900026246905
+     ],
+     "unit": "seconds",
+     "alpha": 1.0575099627574873,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9594965828489663,
+      "alpha_vs_cost_over_log": 1.1777029723459482,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/lcs-brute-vs-dp",
+   "id": "lcs-brute-vs-dp",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 55,
+    "algorithm_runs": 105,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "subsequence enumeration",
+     "measure": "time",
+     "cost": "2**n * n",
+     "samples": 1,
+     "n_values": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+     ],
+     "values": [
+      0.00031702742055659335,
+      0.0006278125001699664,
+      0.001493142851229225,
+      0.0028833285572805573,
+      0.006157349969726056,
+      0.011592149967327714,
+      0.03343049995601177
+     ],
+     "unit": "seconds",
+     "alpha": 0.9826942748683904,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9449011368329675,
+      "alpha_vs_cost_over_log": 1.02361028519047,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "dynamic programming",
+     "measure": "time",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      100,
+      200,
+      300,
+      400,
+      600,
+      800
+     ],
+     "values": [
+      0.0004200913042396955,
+      0.0016098769310002143,
+      0.0037058500262598195,
+      0.00668239997078975,
+      0.01599164993967861,
+      0.029284500051289797
+     ],
+     "unit": "seconds",
+     "alpha": 1.0231825953065437,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9391135579729855,
+      "alpha_vs_cost_over_log": 1.1237156581535865,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/longest-increasing-subsequence",
+   "id": "longest-increasing-subsequence",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 95,
+    "algorithm_runs": 265,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "subset enumeration",
+     "measure": "reported",
+     "cost": "2**n * n",
+     "samples": 1,
+     "n_values": [
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+     ],
+     "values": [
+      20481.0,
+      45057.0,
+      98305.0,
+      212993.0,
+      458753.0,
+      983041.0,
+      2097153.0
+     ],
+     "unit": "count",
+     "alpha": 1.0139945818193843,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "2**n",
+       "alpha": 1.1125444354330176,
+       "rejected": true
+      },
+      {
+       "cost": "2**n * n**2",
+       "alpha": 0.9314447191736411,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9816308796574675,
+      "alpha_vs_cost_over_log": 1.0485516949559672,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "quadratic dynamic programming",
+     "measure": "reported",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      100,
+      200,
+      400,
+      800,
+      1600
+     ],
+     "values": [
+      4950.0,
+      19900.0,
+      79800.0,
+      319600.0,
+      1279200.0
+     ],
+     "unit": "count",
+     "alpha": 1.0016311139592888,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n*log(n)",
+       "alpha": 1.7127337329090007,
+       "rejected": true
+      },
+      {
+       "cost": "n**2*log(n)",
+       "alpha": 0.923343778270516,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9233437782705164,
+      "alpha_vs_cost_over_log": 1.094339754567232,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "patience sorting with binary search",
+     "measure": "reported",
+     "cost": "n*log(n)",
+     "samples": 1,
+     "n_values": [
+      10000,
+      30000,
+      100000,
+      300000
+     ],
+     "values": [
+      113631.0,
+      387248.0,
+      1468946.0,
+      4875732.0
+     ],
+     "unit": "count",
+     "alpha": 1.0120206779342655,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n",
+       "alpha": 1.105458068312893,
+       "rejected": true
+      },
+      {
+       "cost": "n*log(n)**2",
+       "alpha": 0.9331258480588,
+       "rejected": true
+      },
+      {
+       "cost": "n**2",
+       "alpha": 0.5527290341564465,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9331258480587996,
+      "alpha_vs_cost_over_log": 1.105458068312893,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/longest-palindromic-substring",
+   "id": "longest-palindromic-substring",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 108,
+    "algorithm_runs": 300,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "brute force (test every substring)",
+     "measure": "time",
+     "cost": "n**3",
+     "samples": 1,
+     "n_values": [
+      40,
+      60,
+      80,
+      120,
+      160,
+      240,
+      320
+     ],
+     "values": [
+      0.00018877115396137995,
+      0.0005767352961222915,
+      0.0013220866676419973,
+      0.004308080021291971,
+      0.009982950054109097,
+      0.03301310003735125,
+      0.07795029995031655
+     ],
+     "unit": "seconds",
+     "alpha": 0.9679964022028146,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9035836084002249,
+      "alpha_vs_cost_over_log": 1.0422492321609493,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "expand around centers",
+     "measure": "time",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      200,
+      400,
+      800,
+      1600,
+      3200
+     ],
+     "values": [
+      0.0007009928563742765,
+      0.0028116500179748982,
+      0.011454100022092462,
+      0.04609249997884035,
+      0.18397710006684065
+     ],
+     "unit": "seconds",
+     "alpha": 1.0053432289715223,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9345524759910425,
+      "alpha_vs_cost_over_log": 1.0876849046229127,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Manacher's algorithm",
+     "measure": "time",
+     "cost": "n",
+     "samples": 1,
+     "n_values": [
+      3000,
+      10000,
+      30000,
+      100000,
+      300000
+     ],
+     "values": [
+      0.0012649999931454658,
+      0.004251660034060478,
+      0.012739800033159554,
+      0.042832700069993734,
+      0.12962230015546083
+     ],
+     "unit": "seconds",
+     "alpha": 1.0048849090325023,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9148532022670083,
+      "alpha_vs_cost_over_log": 1.1144614705750773,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/matrix-chain-recursion-vs-dp",
+   "id": "matrix-chain-recursion-vs-dp",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 55,
+    "algorithm_runs": 105,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "plain recursion",
+     "measure": "time",
+     "cost": "3**n",
+     "samples": 1,
+     "n_values": [
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+     ],
+     "values": [
+      0.00010672157973443207,
+      0.00030459692486776757,
+      0.0009201045507903804,
+      0.002761471417865583,
+      0.008278366721545657,
+      0.024982300121337175
+     ],
+     "unit": "seconds",
+     "alpha": 0.995665539064069,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9535324483348498,
+      "alpha_vs_cost_over_log": 1.0416381382889877,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "bottom-up dynamic programming",
+     "measure": "time",
+     "cost": "n**3",
+     "samples": 1,
+     "n_values": [
+      25,
+      50,
+      75,
+      100,
+      150
+     ],
+     "values": [
+      0.00031129671947755774,
+      0.00220489997882396,
+      0.00718469995384415,
+      0.016887549892999232,
+      0.053560900036245584
+     ],
+     "unit": "seconds",
+     "alpha": 0.959906695861844,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8866442994798641,
+      "alpha_vs_cost_over_log": 1.0462925775892826,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/matrix-multiplication-naive-vs-strassen",
+   "id": "matrix-multiplication-naive-vs-strassen",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 30,
+    "algorithm_runs": 60,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "schoolbook",
+     "measure": "reported",
+     "cost": "n**3",
+     "samples": 1,
+     "n_values": [
+      32,
+      64,
+      128,
+      256
+     ],
+     "values": [
+      32768.0,
+      262144.0,
+      2097152.0,
+      16777216.0
+     ],
+     "unit": "count",
+     "alpha": 1.0,
+     "max_over_min": null,
+     "tolerance": 0.02,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**log2(7)",
+       "alpha": 1.0686215613240664,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9300197401244071,
+      "alpha_vs_cost_over_log": 1.0813036119892319,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "Strassen",
+     "measure": "reported",
+     "cost": "n**log2(7)",
+     "samples": 1,
+     "n_values": [
+      32,
+      64,
+      128,
+      256
+     ],
+     "values": [
+      28672.0,
+      200704.0,
+      1404928.0,
+      9834496.0
+     ],
+     "unit": "count",
+     "alpha": 1.0000000000000004,
+     "max_over_min": null,
+     "tolerance": 0.02,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**3",
+       "alpha": 0.9357849740192018,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.925573490144697,
+      "alpha_vs_cost_over_log": 1.0873674274478284,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/max-flow-edmonds-karp-vs-dinic",
+   "id": "max-flow-edmonds-karp-vs-dinic",
+   "claimed": "V1",
+   "v1": {
+    "passed": true,
+    "instances": 78,
+    "algorithm_runs": 156,
+    "errors": []
+   },
+   "status": "OK",
+   "achieved": "V1",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/maximum-subarray",
+   "id": "maximum-subarray",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 80,
+    "algorithm_runs": 225,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "brute force (sum every subarray)",
+     "measure": "time",
+     "cost": "n**3",
+     "samples": 1,
+     "n_values": [
+      50,
+      100,
+      150,
+      200,
+      300,
+      400
+     ],
+     "values": [
+      0.00038656999822705984,
+      0.002666824992047623,
+      0.008984600038578113,
+      0.020440800115466118,
+      0.07153300009667873,
+      0.17425449984148145
+     ],
+     "unit": "seconds",
+     "alpha": 0.9804067085997359,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.91777416292703,
+      "alpha_vs_cost_over_log": 1.0521672000500433,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "running sums",
+     "measure": "time",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      100,
+      200,
+      400,
+      800,
+      1600,
+      3200
+     ],
+     "values": [
+      0.00011278662781859206,
+      0.00043480217193617767,
+      0.0018456363627179103,
+      0.00755626669464012,
+      0.030773100210353732,
+      0.12290999991819263
+     ],
+     "unit": "seconds",
+     "alpha": 1.013114408055372,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9375545339388535,
+      "alpha_vs_cost_over_log": 1.1018158478001807,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Kadane's algorithm (linear scan)",
+     "measure": "time",
+     "cost": "n",
+     "samples": 1,
+     "n_values": [
+      3000,
+      10000,
+      30000,
+      100000,
+      300000,
+      1000000
+     ],
+     "values": [
+      9.380147696055215e-05,
+      0.0003132285690674233,
+      0.0009477714276207345,
+      0.0031255571437733515,
+      0.00933506665751338,
+      0.03095489996485412
+     ],
+     "unit": "seconds",
+     "alpha": 0.997997385719308,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9126557338809708,
+      "alpha_vs_cost_over_log": 1.1008080506827367,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/minimum-finding-classical-vs-quantum",
+   "id": "minimum-finding-classical-vs-quantum",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 54,
+    "algorithm_runs": 102,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "classical scan",
+     "measure": "reported",
+     "cost": "2**n",
+     "samples": 1,
+     "n_values": [
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16
+     ],
+     "values": [
+      4.0,
+      16.0,
+      64.0,
+      256.0,
+      1024.0,
+      4096.0,
+      16384.0,
+      65536.0
+     ],
+     "unit": "count",
+     "alpha": 1.0,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8898445189721574,
+      "alpha_vs_cost_over_log": 1.1309656850583627,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Durr-Hoyer quantum minimum finding",
+     "measure": "reported",
+     "cost": "2**(n/2)",
+     "samples": 5,
+     "n_values": [
+      4,
+      6,
+      8,
+      10,
+      12
+     ],
+     "values": [
+      274.4,
+      475.8,
+      865.8,
+      1677.2,
+      3154.4
+     ],
+     "unit": "count",
+     "alpha": 0.8863654016291265,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.733484646414867,
+      "alpha_vs_cost_over_log": 1.1120846608388288,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/minimum-spanning-tree-brute-vs-kruskal",
+   "id": "minimum-spanning-tree-brute-vs-kruskal",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 40,
+    "algorithm_runs": 108,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "enumeration of all (n-1)-edge subsets",
+     "measure": "time",
+     "cost": "n * factorial(n*(n-1)/2) / (factorial(n-1) * factorial(n*(n-1)/2 - n + 1))",
+     "samples": 1,
+     "n_values": [
+      4,
+      5,
+      6,
+      7
+     ],
+     "values": [
+      1.306609995663166e-05,
+      0.00014896821699921013,
+      0.0024753333483305243,
+      0.04909300012513995
+     ],
+     "unit": "seconds",
+     "alpha": 0.9742799469745471,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9371073722086501,
+      "alpha_vs_cost_over_log": 1.0144254668093942,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Kruskal with union-find",
+     "measure": "time",
+     "cost": "n**2 * log(n)",
+     "samples": 1,
+     "n_values": [
+      50,
+      100,
+      200,
+      400,
+      800
+     ],
+     "values": [
+      0.00016328076927516705,
+      0.0007956249949832758,
+      0.003519599985641738,
+      0.0158158999402076,
+      0.0786888999864459
+     ],
+     "unit": "seconds",
+     "alpha": 1.0096498223050054,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9280223860941859,
+      "alpha_vs_cost_over_log": 1.1069233065257107,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Prim, array version",
+     "measure": "time",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      50,
+      100,
+      200,
+      400,
+      800
+     ],
+     "values": [
+      9.053641070540134e-05,
+      0.0003441636365923015,
+      0.0013688799925148487,
+      0.0056742249871604145,
+      0.023564199917018414
+     ],
+     "unit": "seconds",
+     "alpha": 1.0045511258338453,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9162007203318584,
+      "alpha_vs_cost_over_log": 1.1116151003943922,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/modular-exponentiation-repeated-vs-square-multiply",
+   "id": "modular-exponentiation-repeated-vs-square-multiply",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 88,
+    "algorithm_runs": 156,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "repeated multiplication",
+     "measure": "time",
+     "cost": "2**n",
+     "samples": 1,
+     "n_values": [
+      12,
+      14,
+      16,
+      18,
+      20
+     ],
+     "values": [
+      0.00035772586225307193,
+      0.0013291812501847744,
+      0.005528775043785572,
+      0.02203770005144179,
+      0.08839249983429909
+     ],
+     "unit": "seconds",
+     "alpha": 0.9974607684102792,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9650625132826358,
+      "alpha_vs_cost_over_log": 1.0320842059490862,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "left-to-right square-and-multiply (binary method)",
+     "measure": "time",
+     "cost": "n",
+     "samples": 1,
+     "n_values": [
+      1000,
+      2000,
+      4000,
+      8000,
+      16000,
+      32000,
+      64000
+     ],
+     "values": [
+      0.00017993571444614126,
+      0.0003502051715321582,
+      0.0007032714285222548,
+      0.0013967333361506462,
+      0.00281949999043718,
+      0.005696650012396276,
+      0.011186450021341443
+     ],
+     "unit": "seconds",
+     "alpha": 0.9973339099111249,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8961246631168394,
+      "alpha_vs_cost_over_log": 1.1241638740296616,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/nand-tree-evaluation-deterministic-vs-randomized",
+   "id": "nand-tree-evaluation-deterministic-vs-randomized",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 52,
+    "algorithm_runs": 96,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "deterministic left-first evaluation",
+     "measure": "reported",
+     "cost": "2**n",
+     "samples": 1,
+     "n_values": [
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16
+     ],
+     "values": [
+      16.0,
+      64.0,
+      256.0,
+      1024.0,
+      4096.0,
+      16384.0,
+      65536.0
+     ],
+     "unit": "count",
+     "alpha": 1.0,
+     "max_over_min": null,
+     "tolerance": 0.02,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "((1 + sqrt(33)) / 4)**n",
+       "alpha": 1.3267440252463394,
+       "rejected": true
+      },
+      {
+       "cost": "n * 2**n",
+       "alpha": 0.8604791876762254,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9270895198680971,
+      "alpha_vs_cost_over_log": 1.0839989197939475,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "randomized random-order evaluation",
+     "measure": "reported",
+     "cost": "((1 + sqrt(33)) / 4)**n",
+     "samples": 200,
+     "n_values": [
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16
+     ],
+     "values": [
+      7.54,
+      21.98,
+      61.7,
+      177.465,
+      491.04,
+      1327.41,
+      4001.985
+     ],
+     "unit": "count",
+     "alpha": 0.9946046141659427,
+     "max_over_min": null,
+     "tolerance": 0.05,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "2**n",
+       "alpha": 0.7496582575386176,
+       "rejected": true
+      },
+      {
+       "cost": "1.5**n",
+       "alpha": 1.2815492559171235,
+       "rejected": true
+      },
+      {
+       "cost": "n * ((1 + sqrt(33)) / 4)**n",
+       "alpha": 0.8184027498384842,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9005563860819651,
+      "alpha_vs_cost_over_log": 1.1080605046130794,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/optimal-bst-recursion-vs-dp-vs-knuth",
+   "id": "optimal-bst-recursion-vs-dp-vs-knuth",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 192,
+    "algorithm_runs": 516,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "plain recursion",
+     "measure": "reported",
+     "cost": "3**n",
+     "samples": 1,
+     "n_values": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "values": [
+      40.0,
+      121.0,
+      364.0,
+      1093.0,
+      3280.0,
+      9841.0,
+      29524.0
+     ],
+     "unit": "count",
+     "alpha": 1.0015143400337008,
+     "max_over_min": null,
+     "tolerance": 0.04,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "2**n",
+       "alpha": 1.5873626728879127,
+       "rejected": true
+      },
+      {
+       "cost": "4**n",
+       "alpha": 0.7936813364439563,
+       "rejected": true
+      },
+      {
+       "cost": "4**n/n**1.5",
+       "alpha": 0.9231887213622305,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9455132326258598,
+      "alpha_vs_cost_over_log": 1.0643299609168808,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "cubic interval DP (every root)",
+     "measure": "reported",
+     "cost": "n**3",
+     "samples": 1,
+     "n_values": [
+      16,
+      32,
+      64,
+      128
+     ],
+     "values": [
+      680.0,
+      5456.0,
+      43680.0,
+      349504.0
+     ],
+     "unit": "count",
+     "alpha": 1.0005910940930909,
+     "max_over_min": null,
+     "tolerance": 0.04,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**2",
+       "alpha": 1.500886641139637,
+       "rejected": true
+      },
+      {
+       "cost": "n**4",
+       "alpha": 0.7504433205698186,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9183509983710156,
+      "alpha_vs_cost_over_log": 1.0988746682475967,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "Knuth's speed-up (monotone roots)",
+     "measure": "reported",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      32,
+      64,
+      128,
+      256,
+      512
+     ],
+     "values": [
+      961.0,
+      3969.0,
+      16129.0,
+      65025.0,
+      261121.0
+     ],
+     "unit": "count",
+     "alpha": 1.0103039854460434,
+     "max_over_min": null,
+     "tolerance": 0.04,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**3",
+       "alpha": 0.6735359902973622,
+       "rejected": true
+      },
+      {
+       "cost": "n",
+       "alpha": 2.0206079708920868,
+       "rejected": true
+      },
+      {
+       "cost": "n*log(n)",
+       "alpha": 1.6681198002669713,
+       "rejected": true
+      },
+      {
+       "cost": "n**2*log(n)",
+       "alpha": 0.9138130659690257,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9138130659690257,
+      "alpha_vs_cost_over_log": 1.129363063322457,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/permanent-naive-vs-ryser",
+   "id": "permanent-naive-vs-ryser",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 48,
+    "algorithm_runs": 84,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "sum over all permutations",
+     "measure": "time",
+     "cost": "n * factorial(n)",
+     "samples": 1,
+     "n_values": [
+      6,
+      7,
+      8,
+      9
+     ],
+     "values": [
+      0.00013211768652711595,
+      0.001055383330418004,
+      0.009331466630101204,
+      0.09119289997033775
+     ],
+     "unit": "seconds",
+     "alpha": 0.9861068269934601,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9567983005229737,
+      "alpha_vs_cost_over_log": 1.017242630842303,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Ryser's formula with Gray-code ordering",
+     "measure": "time",
+     "cost": "n * 2**n",
+     "samples": 1,
+     "n_values": [
+      10,
+      12,
+      14,
+      16,
+      18
+     ],
+     "values": [
+      0.0005038921096313157,
+      0.0024062444507661792,
+      0.010892000049352646,
+      0.04854370001703501,
+      0.2159520999994129
+     ],
+     "unit": "seconds",
+     "alpha": 0.9868980290971748,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9518109628306072,
+      "alpha_vs_cost_over_log": 1.0246344433700136,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/polynomial-multiplication-naive-vs-ntt",
+   "id": "polynomial-multiplication-naive-vs-ntt",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 42,
+    "algorithm_runs": 84,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "schoolbook convolution",
+     "measure": "time",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      100,
+      200,
+      300,
+      400,
+      600,
+      800
+     ],
+     "values": [
+      0.0005451228602656297,
+      0.00223811113068627,
+      0.005306375038344413,
+      0.009686466694499055,
+      0.02215160010382533,
+      0.03965499997138977
+     ],
+     "unit": "seconds",
+     "alpha": 1.0339327164742738,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9490825239144615,
+      "alpha_vs_cost_over_log": 1.1353758851912283,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "number-theoretic transform (Cooley-Tukey over Z_p)",
+     "measure": "time",
+     "cost": "n * log(n)",
+     "samples": 1,
+     "n_values": [
+      512,
+      1024,
+      2048,
+      4096,
+      8192,
+      16384
+     ],
+     "values": [
+      0.0023221777907262244,
+      0.00503225001739338,
+      0.01084594998974353,
+      0.02343099983409047,
+      0.04968010005541146,
+      0.10884579992853105
+     ],
+     "unit": "seconds",
+     "alpha": 0.9828801165026294,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8831792538961183,
+      "alpha_vs_cost_over_log": 1.1078502084018358,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/primality-miller-rabin-vs-aks",
+   "id": "primality-miller-rabin-vs-aks",
+   "claimed": "V1",
+   "v1": {
+    "passed": true,
+    "instances": 126,
+    "algorithm_runs": 228,
+    "errors": []
+   },
+   "status": "OK",
+   "achieved": "V1",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/primality-trial-vs-aks",
+   "id": "primality-trial-vs-aks",
+   "claimed": "V1",
+   "v1": {
+    "passed": true,
+    "instances": 126,
+    "algorithm_runs": 228,
+    "errors": []
+   },
+   "status": "OK",
+   "achieved": "V1",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/range-minimum-queries-naive-vs-sparse-table",
+   "id": "range-minimum-queries-naive-vs-sparse-table",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 70,
+    "algorithm_runs": 135,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "scan each range",
+     "measure": "time",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      200,
+      400,
+      600,
+      800,
+      1200,
+      1600,
+      2400,
+      3200
+     ],
+     "values": [
+      0.00041835870006648094,
+      0.001741791667882353,
+      0.003957440005615353,
+      0.007081466649348537,
+      0.01592034997884184,
+      0.028278799960389733,
+      0.06365090003237128,
+      0.11444239993579686
+     ],
+     "unit": "seconds",
+     "alpha": 1.0093236296512635,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9386705605961174,
+      "alpha_vs_cost_over_log": 1.0914213878119416,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "sparse table",
+     "measure": "time",
+     "cost": "n*log(n)",
+     "samples": 1,
+     "n_values": [
+      2000,
+      4000,
+      8000,
+      16000,
+      32000,
+      64000,
+      128000
+     ],
+     "values": [
+      0.0008780043470956709,
+      0.0018512727269394832,
+      0.0042611999902874235,
+      0.009178733297934135,
+      0.019290649914182723,
+      0.04121970012784004,
+      0.08818060019984841
+     ],
+     "unit": "seconds",
+     "alpha": 1.0050110371162213,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9180603585145815,
+      "alpha_vs_cost_over_log": 1.1100831288474926,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/regex-matching-backtracking-vs-thompson",
+   "id": "regex-matching-backtracking-vs-thompson",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 84,
+    "algorithm_runs": 234,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "backtracking (consume first)",
+     "measure": "reported",
+     "cost": "n * 2**n",
+     "samples": 1,
+     "n_values": [
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16
+     ],
+     "values": [
+      47.0,
+      255.0,
+      1279.0,
+      6143.0,
+      28671.0,
+      131071.0,
+      589823.0
+     ],
+     "unit": "count",
+     "alpha": 0.9738525844890888,
+     "max_over_min": null,
+     "tolerance": 0.035,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "2**n",
+       "alpha": 1.1311388621226608,
+       "rejected": true
+      },
+      {
+       "cost": "n**2 * 2**n",
+       "alpha": 0.8540927849493866,
+       "rejected": true
+      },
+      {
+       "cost": "n**2",
+       "alpha": 3.385553782846854,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9116184297769978,
+      "alpha_vs_cost_over_log": 1.044414711885764,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "memoised backtracking",
+     "measure": "reported",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      8,
+      16,
+      32,
+      64,
+      128
+     ],
+     "values": [
+      72.0,
+      272.0,
+      1056.0,
+      4160.0,
+      16512.0
+     ],
+     "unit": "count",
+     "alpha": 0.9808754739869999,
+     "max_over_min": null,
+     "tolerance": 0.05,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n",
+       "alpha": 1.9617509479739998,
+       "rejected": true
+      },
+      {
+       "cost": "n**3",
+       "alpha": 0.6539169826579999,
+       "rejected": true
+      },
+      {
+       "cost": "n * 2**n",
+       "alpha": 0.05797005250522419,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8515019541866894,
+      "alpha_vs_cost_over_log": 1.1556028553142355,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "Thompson's NFA simulation",
+     "measure": "reported",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      8,
+      16,
+      32,
+      64,
+      128
+     ],
+     "values": [
+      72.0,
+      272.0,
+      1056.0,
+      4160.0,
+      16512.0
+     ],
+     "unit": "count",
+     "alpha": 0.9808754739869999,
+     "max_over_min": null,
+     "tolerance": 0.05,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n",
+       "alpha": 1.9617509479739998,
+       "rejected": true
+      },
+      {
+       "cost": "n**3",
+       "alpha": 0.6539169826579999,
+       "rejected": true
+      },
+      {
+       "cost": "n * 2**n",
+       "alpha": 0.05797005250522419,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8515019541866894,
+      "alpha_vs_cost_over_log": 1.1556028553142355,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/shortest-path-enumeration-vs-dijkstra",
+   "id": "shortest-path-enumeration-vs-dijkstra",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 45,
+    "algorithm_runs": 85,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "simple-path enumeration",
+     "measure": "time",
+     "cost": "n * factorial(n - 2)",
+     "samples": 1,
+     "n_values": [
+      8,
+      9,
+      10,
+      11
+     ],
+     "values": [
+      0.0005224351330685455,
+      0.003793233345883588,
+      0.031507099978625774,
+      0.28975559980608523
+     ],
+     "unit": "seconds",
+     "alpha": 0.9662869662962221,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9457547333225922,
+      "alpha_vs_cost_over_log": 0.9877223875170718,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Dijkstra (array version)",
+     "measure": "time",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      200,
+      300,
+      400,
+      600,
+      800
+     ],
+     "values": [
+      0.001986380014568567,
+      0.004456100007519126,
+      0.008026599961643418,
+      0.018302600015886128,
+      0.03344010002911091
+     ],
+     "unit": "seconds",
+     "alpha": 1.018133616313625,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9394806146884553,
+      "alpha_vs_cost_over_log": 1.1111390303997348,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/simon-classical-vs-quantum",
+   "id": "simon-classical-vs-quantum",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 36,
+    "algorithm_runs": 68,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "classical collision search",
+     "measure": "reported",
+     "cost": "2**(n/2)",
+     "samples": 40,
+     "n_values": [
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16
+     ],
+     "values": [
+      5.275,
+      10.325,
+      19.55,
+      40.85,
+      84.075,
+      165.075,
+      314.475
+     ],
+     "unit": "count",
+     "alpha": 0.9926862666138162,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n",
+       "alpha": 2.9572654097268103,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8569219575128414,
+      "alpha_vs_cost_over_log": 1.1730102955369799,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Simon's quantum algorithm",
+     "measure": "reported",
+     "cost": "n",
+     "samples": 100,
+     "n_values": [
+      3,
+      4,
+      6,
+      8,
+      10
+     ],
+     "values": [
+      3.25,
+      4.49,
+      6.56,
+      8.53,
+      10.61
+     ],
+     "unit": "count",
+     "alpha": 0.969980729736159,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "2**(n/2)",
+       "alpha": 0.47339039933928495,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.6017950289592934,
+      "alpha_vs_cost_over_log": 2.424955159927268,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/sorting-insertion-vs-merge",
+   "id": "sorting-insertion-vs-merge",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 60,
+    "algorithm_runs": 120,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "insertion sort",
+     "measure": "reported",
+     "cost": "n**2",
+     "samples": 3,
+     "n_values": [
+      250,
+      500,
+      1000,
+      2000,
+      4000
+     ],
+     "values": [
+      15574.666666666666,
+      63461.666666666664,
+      250154.66666666666,
+      999716.3333333334,
+      3990076.0
+     ],
+     "unit": "count",
+     "alpha": 0.9989851867540043,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n*log(n)",
+       "alpha": 1.7426579026569102,
+       "rejected": true
+      },
+      {
+       "cost": "n**2*log(n)",
+       "alpha": 0.9308142326455123,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9308142326455121,
+      "alpha_vs_cost_over_log": 1.0778852553625982,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "merge sort",
+     "measure": "reported",
+     "cost": "n*log(n)",
+     "samples": 1,
+     "n_values": [
+      1000,
+      2000,
+      4000,
+      8000,
+      16000,
+      32000,
+      64000
+     ],
+     "values": [
+      8701.0,
+      19408.0,
+      42854.0,
+      93621.0,
+      203198.0,
+      438577.0,
+      941409.0
+     ],
+     "unit": "count",
+     "alpha": 1.0113718365086104,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n",
+       "alpha": 1.1255031380546987,
+       "rejected": true
+      },
+      {
+       "cost": "n*log(n)**2",
+       "alpha": 0.9181915825383927,
+       "rejected": true
+      },
+      {
+       "cost": "n**2",
+       "alpha": 0.5627515690273494,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9181915825383924,
+      "alpha_vs_cost_over_log": 1.1255031380546987,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/spanning-tree-count-enumeration-vs-kirchhoff",
+   "id": "spanning-tree-count-enumeration-vs-kirchhoff",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 88,
+    "algorithm_runs": 152,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "enumeration of all (n-1)-edge subsets",
+     "measure": "time",
+     "cost": "n * factorial(n*(n-1)/2) / (factorial(n-1) * factorial(n*(n-1)/2 - n + 1))",
+     "samples": 1,
+     "n_values": [
+      4,
+      5,
+      6,
+      7,
+      8
+     ],
+     "values": [
+      9.765881425092467e-06,
+      0.0001216333331258008,
+      0.0018569363746792078,
+      0.03795909998007119,
+      0.9196977999527007
+     ],
+     "unit": "seconds",
+     "alpha": 0.979493089945628,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "factorial(n)",
+       "alpha": 1.5408876632393735,
+       "rejected": true
+      },
+      {
+       "cost": "2**n",
+       "alpha": 4.133186353310982,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9472992732854666,
+      "alpha_vs_cost_over_log": 1.013848064868687,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Kirchhoff's matrix-tree theorem with Bareiss fraction-free elimination",
+     "measure": "reported",
+     "cost": "(n-1)**3",
+     "samples": 1,
+     "n_values": [
+      16,
+      32,
+      64,
+      128
+     ],
+     "values": [
+      3045.0,
+      28365.0,
+      244125.0,
+      2024253.0
+     ],
+     "unit": "count",
+     "alpha": 1.0140003642650282,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n**4",
+       "alpha": 0.7808907822877176,
+       "rejected": true
+      },
+      {
+       "cost": "n**2",
+       "alpha": 1.5617815645754352,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9326484474674808,
+      "alpha_vs_cost_over_log": 1.1107950634956378,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/string-matching-naive-vs-kmp",
+   "id": "string-matching-naive-vs-kmp",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 88,
+    "algorithm_runs": 176,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "naive matching",
+     "measure": "reported",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      200,
+      400,
+      800,
+      1600,
+      3200
+     ],
+     "values": [
+      10100.0,
+      40200.0,
+      160400.0,
+      640800.0,
+      2561600.0
+     ],
+     "unit": "count",
+     "alpha": 0.998384948037935,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n",
+       "alpha": 1.99676989607587,
+       "rejected": true
+      },
+      {
+       "cost": "n**2*log(n)",
+       "alpha": 0.928076752429614,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.928076752429614,
+      "alpha_vs_cost_over_log": 1.0801667453193862,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "Knuth-Morris-Pratt",
+     "measure": "reported",
+     "cost": "n",
+     "samples": 1,
+     "n_values": [
+      3000,
+      10000,
+      30000,
+      100000,
+      300000
+     ],
+     "values": [
+      11994.0,
+      39994.0,
+      119994.0,
+      399994.0,
+      1199994.0
+     ],
+     "unit": "count",
+     "alpha": 1.0000982033026034,
+     "max_over_min": null,
+     "tolerance": 0.03,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n*log(n)",
+       "alpha": 0.9104996282112453,
+       "rejected": true
+      },
+      {
+       "cost": "n**2",
+       "alpha": 0.5000491016513017,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9104996282112455,
+      "alpha_vs_cost_over_log": 1.1091464652740028,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/subset-sum-zeta-transform-naive-vs-yates",
+   "id": "subset-sum-zeta-transform-naive-vs-yates",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 33,
+    "algorithm_runs": 66,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "submask enumeration (naive)",
+     "measure": "reported",
+     "cost": "3**n",
+     "samples": 1,
+     "n_values": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "values": [
+      81.0,
+      243.0,
+      729.0,
+      2187.0,
+      6561.0,
+      19683.0,
+      59049.0,
+      177147.0
+     ],
+     "unit": "count",
+     "alpha": 1.0,
+     "max_over_min": null,
+     "tolerance": 0.02,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n * 2**n",
+       "alpha": 1.3152643743428605,
+       "rejected": true
+      },
+      {
+       "cost": "n * 3**n",
+       "alpha": 0.8855636965642237,
+       "rejected": true
+      },
+      {
+       "cost": "4**n",
+       "alpha": 0.792481250360578,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9358540080164149,
+      "alpha_vs_cost_over_log": 1.0730355715628557,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "Yates' method (fast zeta transform)",
+     "measure": "reported",
+     "cost": "n * 2**n",
+     "samples": 1,
+     "n_values": [
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16
+     ],
+     "values": [
+      32.0,
+      192.0,
+      1024.0,
+      5120.0,
+      24576.0,
+      114688.0,
+      524288.0
+     ],
+     "unit": "count",
+     "alpha": 1.0,
+     "max_over_min": null,
+     "tolerance": 0.02,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "2**n",
+       "alpha": 1.161245488274894,
+       "rejected": true
+      },
+      {
+       "cost": "n**2 * 2**n",
+       "alpha": 0.8771752097351176,
+       "rejected": true
+      },
+      {
+       "cost": "3**n",
+       "alpha": 0.7326643297532455,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9362291777961813,
+      "alpha_vs_cost_over_log": 1.0722805153038006,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/three-sum-cubic-vs-quadratic",
+   "id": "three-sum-cubic-vs-quadratic",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 72,
+    "algorithm_runs": 138,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "all triples",
+     "measure": "time",
+     "cost": "n**3",
+     "samples": 1,
+     "n_values": [
+      40,
+      60,
+      80,
+      120,
+      160,
+      200
+     ],
+     "values": [
+      0.00018103727435862476,
+      0.0005292810776547805,
+      0.0011972749925917014,
+      0.0037735666458805404,
+      0.008719433331862092,
+      0.016886950004845858
+     ],
+     "unit": "seconds",
+     "alpha": 0.9416424464042927,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8761679957005228,
+      "alpha_vs_cost_over_log": 1.0176598457353583,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "sort + two pointers",
+     "measure": "time",
+     "cost": "n**2",
+     "samples": 1,
+     "n_values": [
+      250,
+      500,
+      1000,
+      1500,
+      2000,
+      3000
+     ],
+     "values": [
+      0.0013040874910075217,
+      0.005535899952519685,
+      0.021630899980664253,
+      0.049153400119394064,
+      0.08818609989248216,
+      0.19711700011976063
+     ],
+     "unit": "seconds",
+     "alpha": 1.0075295770641524,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9374281180779471,
+      "alpha_vs_cost_over_log": 1.0889254016383383,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/tsp-brute-vs-held-karp",
+   "id": "tsp-brute-vs-held-karp",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 45,
+    "algorithm_runs": 85,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "permutation enumeration",
+     "measure": "time",
+     "cost": "factorial(n)",
+     "samples": 1,
+     "n_values": [
+      7,
+      8,
+      9,
+      10
+     ],
+     "values": [
+      0.0001964895855053328,
+      0.001497292318023168,
+      0.013128550024703145,
+      0.1278659999370575
+     ],
+     "unit": "seconds",
+     "alpha": 0.9850400178238328,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9605601081983546,
+      "alpha_vs_cost_over_log": 1.010786536563929,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "Held-Karp dynamic programming",
+     "measure": "time",
+     "cost": "n**2 * 2**n",
+     "samples": 1,
+     "n_values": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+     ],
+     "values": [
+      0.0002148892796997513,
+      0.0005249648694754453,
+      0.0013313133269548417,
+      0.0032118166564032435,
+      0.007630466638753812,
+      0.018705649999901652,
+      0.042489200131967664
+     ],
+     "unit": "seconds",
+     "alpha": 1.0060965298529592,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9629075850066625,
+      "alpha_vs_cost_over_log": 1.0532987671941139,
+      "resolves_log_factor": false
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/two-sat-brute-force-vs-scc",
+   "id": "two-sat-brute-force-vs-scc",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 60,
+    "algorithm_runs": 108,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "brute force over all assignments",
+     "measure": "reported",
+     "cost": "(n + 7) * 2**n",
+     "samples": 1,
+     "n_values": [
+      8,
+      10,
+      12,
+      14,
+      16
+     ],
+     "values": [
+      11532.0,
+      52236.0,
+      233484.0,
+      1032204.0,
+      4521996.0
+     ],
+     "unit": "count",
+     "alpha": 0.9998458147753801,
+     "max_over_min": null,
+     "tolerance": 0.02,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "2**n",
+       "alpha": 1.0767443108909869,
+       "rejected": true
+      },
+      {
+       "cost": "n**2 * 2**n",
+       "alpha": 0.8621199815647433,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9542794980510624,
+      "alpha_vs_cost_over_log": 1.0498821326488295,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "Aspvall-Plass-Tarjan (implication graph + Tarjan SCC)",
+     "measure": "reported",
+     "cost": "n",
+     "samples": 1,
+     "n_values": [
+      1000,
+      2000,
+      4000,
+      8000,
+      16000,
+      32000
+     ],
+     "values": [
+      49098.0,
+      98098.0,
+      196098.0,
+      392098.0,
+      784098.0,
+      1568098.0
+     ],
+     "unit": "count",
+     "alpha": 0.999482651462702,
+     "max_over_min": null,
+     "tolerance": 0.02,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n * log(n)",
+       "alpha": 0.8947441219920688,
+       "rejected": true
+      },
+      {
+       "cost": "n**2",
+       "alpha": 0.499741325731351,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.8947441219920688,
+      "alpha_vs_cost_over_log": 1.131867984662794,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "pairs/xor-convolution-naive-vs-walsh-hadamard",
+   "id": "xor-convolution-naive-vs-walsh-hadamard",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 30,
+    "algorithm_runs": 60,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "all index pairs (naive)",
+     "measure": "reported",
+     "cost": "4**n",
+     "samples": 1,
+     "n_values": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+     ],
+     "values": [
+      128.0,
+      512.0,
+      2048.0,
+      8192.0,
+      32768.0,
+      131072.0,
+      524288.0
+     ],
+     "unit": "count",
+     "alpha": 1.0,
+     "max_over_min": null,
+     "tolerance": 0.05,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "n * 2**n",
+       "alpha": 1.5874022271160613,
+       "rejected": true
+      },
+      {
+       "cost": "n * 4**n",
+       "alpha": 0.8852189880549225,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9261338786039653,
+      "alpha_vs_cost_over_log": 1.0856354964428254,
+      "resolves_log_factor": true
+     }
+    },
+    {
+     "algorithm": "fast Walsh-Hadamard transform (FWHT)",
+     "measure": "reported",
+     "cost": "n * 2**n",
+     "samples": 1,
+     "n_values": [
+      4,
+      6,
+      8,
+      10,
+      12,
+      14
+     ],
+     "values": [
+      224.0,
+      1280.0,
+      6656.0,
+      32768.0,
+      155648.0,
+      720896.0
+     ],
+     "unit": "count",
+     "alpha": 0.9874937497313155,
+     "max_over_min": null,
+     "tolerance": 0.05,
+     "passed": true,
+     "rivals": [
+      {
+       "cost": "2**n",
+       "alpha": 1.1619706002918009,
+       "rejected": true
+      },
+      {
+       "cost": "n**2 * 2**n",
+       "alpha": 0.8577442968123431,
+       "rejected": true
+      },
+      {
+       "cost": "4**n",
+       "alpha": 0.5809853001459004,
+       "rejected": true
+      }
+     ],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9174889911488541,
+      "alpha_vs_cost_over_log": 1.068214490557895,
+      "resolves_log_factor": true
+     }
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "staging/boolean-satisfiability",
+   "id": "boolean-satisfiability",
+   "claimed": "V0",
+   "status": "OK",
+   "achieved": "V0",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "staging/discrete-logarithm",
+   "id": "discrete-logarithm",
+   "claimed": "V0",
+   "status": "OK",
+   "achieved": "V0",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "staging/element-distinctness-quantum-walk",
+   "id": "element-distinctness-quantum-walk",
+   "claimed": "V0",
+   "status": "OK",
+   "achieved": "V0",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "staging/forrelation",
+   "id": "forrelation",
+   "claimed": "V0",
+   "status": "OK",
+   "achieved": "V0",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "staging/graph-isomorphism",
+   "id": "graph-isomorphism",
+   "claimed": "V0",
+   "status": "OK",
+   "achieved": "V0",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "staging/integer-factoring",
+   "id": "integer-factoring",
+   "claimed": "V0",
+   "status": "OK",
+   "achieved": "V0",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "staging/linear-programming-simplex-vs-interior-point",
+   "id": "linear-programming-simplex-vs-interior-point",
+   "claimed": "V0",
+   "status": "OK",
+   "achieved": "V0",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "staging/linear-systems-hhl",
+   "id": "linear-systems-hhl",
+   "claimed": "V0",
+   "status": "OK",
+   "achieved": "V0",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "staging/max-flow-edmonds-karp-vs-almost-linear",
+   "id": "max-flow-edmonds-karp-vs-almost-linear",
+   "claimed": "V0",
+   "status": "OK",
+   "achieved": "V0",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "staging/polynomial-identity-testing",
+   "id": "polynomial-identity-testing",
+   "claimed": "V0",
+   "status": "OK",
+   "achieved": "V0",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "staging/recommendation-systems-dequantization",
+   "id": "recommendation-systems-dequantization",
+   "claimed": "V0",
+   "status": "OK",
+   "achieved": "V0",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "synthetic/linear-recurrence-c1-0-1",
+   "id": "linear-recurrence-c1-0-1",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 35,
+    "algorithm_runs": 102,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "naive recursion (deliberately wasteful)",
+     "measure": "time",
+     "cost": "1.4655712319**n",
+     "samples": 1,
+     "n_values": [
+      23,
+      26,
+      29,
+      32,
+      35,
+      38
+     ],
+     "values": [
+      0.0007449000142514706,
+      0.0023281666605422893,
+      0.007103366622080405,
+      0.022527600172907114,
+      0.07115760003216565,
+      0.2233027999754995
+     ],
+     "unit": "seconds",
+     "alpha": 0.9948439042557331,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9698577139952186,
+      "alpha_vs_cost_over_log": 1.0211389590218056,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "bottom-up dynamic programming",
+     "measure": "time",
+     "cost": "n",
+     "samples": 1,
+     "n_values": [
+      10000,
+      30000,
+      100000,
+      300000,
+      1000000
+     ],
+     "values": [
+      0.001886809096586975,
+      0.005668825004249811,
+      0.018900500028394163,
+      0.05668749986216426,
+      0.18848960008472204
+     ],
+     "unit": "seconds",
+     "alpha": 0.9998167459598473,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9190096295076181,
+      "alpha_vs_cost_over_log": 1.0961373375358796,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "companion-matrix power",
+     "measure": "time",
+     "cost": "log(n)",
+     "samples": 1,
+     "n_values": [
+      256,
+      65536,
+      4294967296,
+      18446744073709551616,
+      340282366920938463463374607431768211456
+     ],
+     "values": [
+      5.6048134105530245e-05,
+      0.00012458258068128938,
+      0.0002633821895371561,
+      0.0005407270258040847,
+      0.001081131582491492
+     ],
+     "unit": "seconds",
+     "alpha": 1.065726203422547,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {}
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "synthetic/linear-recurrence-c1-1-1",
+   "id": "linear-recurrence-c1-1-1",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 24,
+    "algorithm_runs": 69,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "naive recursion (deliberately wasteful)",
+     "measure": "time",
+     "cost": "1.8392867552**n",
+     "samples": 1,
+     "n_values": [
+      14,
+      16,
+      18,
+      20,
+      22,
+      24
+     ],
+     "values": [
+      0.0002515756387788898,
+      0.0008773956569316595,
+      0.0030147571648870197,
+      0.010134850046597421,
+      0.03340469999238849,
+      0.11227119993418455
+     ],
+     "unit": "seconds",
+     "alpha": 0.9995108966548584,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9701584136015898,
+      "alpha_vs_cost_over_log": 1.030672975223454,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "bottom-up dynamic programming",
+     "measure": "time",
+     "cost": "n",
+     "samples": 1,
+     "n_values": [
+      10000,
+      30000,
+      100000,
+      300000,
+      1000000
+     ],
+     "values": [
+      0.002243022227452861,
+      0.006724966689944267,
+      0.022403000155463815,
+      0.0672881999053061,
+      0.2252676000352949
+     ],
+     "unit": "seconds",
+     "alpha": 1.0008020528076533,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9199088488334989,
+      "alpha_vs_cost_over_log": 1.097226747688687,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "companion-matrix power",
+     "measure": "time",
+     "cost": "log(n)",
+     "samples": 1,
+     "n_values": [
+      256,
+      65536,
+      4294967296,
+      18446744073709551616,
+      340282366920938463463374607431768211456
+     ],
+     "values": [
+      5.5730970117694405e-05,
+      0.00012398025489584276,
+      0.0002620181812626588,
+      0.0005378297253234967,
+      0.0010108349961228669
+     ],
+     "unit": "seconds",
+     "alpha": 1.0478888000035216,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {}
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "synthetic/linear-recurrence-c1-1-1-1",
+   "id": "linear-recurrence-c1-1-1-1",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 22,
+    "algorithm_runs": 63,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "naive recursion (deliberately wasteful)",
+     "measure": "time",
+     "cost": "1.9275619755**n",
+     "samples": 1,
+     "n_values": [
+      13,
+      15,
+      17,
+      19,
+      21,
+      23
+     ],
+     "values": [
+      0.0001196259241781117,
+      0.00044824888722764123,
+      0.001696416661919405,
+      0.006231324980035424,
+      0.023269400000572205,
+      0.08661230001598597
+     ],
+     "unit": "seconds",
+     "alpha": 1.0029589388757754,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9734134095786658,
+      "alpha_vs_cost_over_log": 1.0343290706182404,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "bottom-up dynamic programming",
+     "measure": "time",
+     "cost": "n",
+     "samples": 1,
+     "n_values": [
+      10000,
+      30000,
+      100000,
+      300000,
+      1000000
+     ],
+     "values": [
+      0.002797600027406588,
+      0.008421600020180145,
+      0.02799980016425252,
+      0.08467660006135702,
+      0.2820508999284357
+     ],
+     "unit": "seconds",
+     "alpha": 1.001875007982185,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9208981050706077,
+      "alpha_vs_cost_over_log": 1.0983987739624923,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "companion-matrix power",
+     "measure": "time",
+     "cost": "log(n)",
+     "samples": 1,
+     "n_values": [
+      256,
+      65536,
+      4294967296,
+      18446744073709551616,
+      340282366920938463463374607431768211456
+     ],
+     "values": [
+      0.00010514899231993512,
+      0.00023778674686439783,
+      0.0005018342114788922,
+      0.0010363299981690944,
+      0.0021239800145849584
+     ],
+     "unit": "seconds",
+     "alpha": 1.0796269783533772,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {}
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  },
+  {
+   "path": "synthetic/linear-recurrence-c2-3",
+   "id": "linear-recurrence-c2-3",
+   "claimed": "V2",
+   "v1": {
+    "passed": true,
+    "instances": 29,
+    "algorithm_runs": 84,
+    "errors": []
+   },
+   "v2": [
+    {
+     "algorithm": "naive recursion (deliberately wasteful)",
+     "measure": "time",
+     "cost": "1.6180339887**n",
+     "samples": 1,
+     "n_values": [
+      18,
+      20,
+      22,
+      24,
+      26,
+      28,
+      30
+     ],
+     "values": [
+      0.0007384857162833214,
+      0.0019004090943119743,
+      0.0049440000439062715,
+      0.012926449999213219,
+      0.0338858999311924,
+      0.08880800008773804,
+      0.23409849987365305
+     ],
+     "unit": "seconds",
+     "alpha": 0.9978649009072379,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9706973043161898,
+      "alpha_vs_cost_over_log": 1.026581298197507,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "bottom-up dynamic programming",
+     "measure": "time",
+     "cost": "n",
+     "samples": 1,
+     "n_values": [
+      10000,
+      30000,
+      100000,
+      300000,
+      1000000
+     ],
+     "values": [
+      0.001786418195644563,
+      0.00535299995681271,
+      0.017851849901489913,
+      0.05354599980637431,
+      0.17895940016023815
+     ],
+     "unit": "seconds",
+     "alpha": 1.0003410080904114,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {
+      "alpha_vs_cost_times_log": 0.9194865497730177,
+      "alpha_vs_cost_over_log": 1.0967191767431896,
+      "resolves_log_factor": false
+     }
+    },
+    {
+     "algorithm": "companion-matrix power",
+     "measure": "time",
+     "cost": "log(n)",
+     "samples": 1,
+     "n_values": [
+      256,
+      65536,
+      4294967296,
+      18446744073709551616,
+      340282366920938463463374607431768211456
+     ],
+     "values": [
+      2.682116220770906e-05,
+      5.469385433067989e-05,
+      0.00011004444418681993,
+      0.00022199431656521153,
+      0.00043536818438124925
+     ],
+     "unit": "seconds",
+     "alpha": 1.0062656751886607,
+     "max_over_min": null,
+     "tolerance": 0.25,
+     "passed": true,
+     "rivals": [],
+     "diagnostics": {}
+    }
+   ],
+   "status": "OK",
+   "achieved": "V2",
+   "errors": [],
+   "notes": []
+  }
+ ]
+}
