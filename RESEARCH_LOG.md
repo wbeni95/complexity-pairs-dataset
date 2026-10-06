@@ -425,3 +425,49 @@ Ledger: [ledger/runs/20261006T030338Z.json](ledger/runs/20261006T030338Z.json), 
 ### RL-046 · VERIFIED · The overnight state also passes CI (independent environment)
 GitHub Actions runs 37407158461 (`7511ea9`) and 37407344397 (`834b66f`) succeeded in every job (validate, scaling, sources) on `ubuntu-latest` with Python 3.12.
 All 88 V2 claims, including the 11 new pairs, the 3 new T9 query-count fits and the 4 synthetic entries, were therefore reproduced on a second OS and Python version. Provenance: external (GitHub Actions).
+
+---
+
+## 2026-10-07 (day)
+
+### RL-047 · DECISION and VERIFIED · Discriminating V2 (rivals) and exact-count V2 for classical entries; Strassen raised to V2
+**Decision** (follows RL-040): `harness.scaling.rivals` lists cost expressions that the same measurements must **not** fit (|α − 1| > tolerance). A V2 claim with rivals therefore *excludes* the named slower or faster alternative, not just "fits the claim".
+Classical entries may also use `measure: "reported"` with exact operation counts produced by instrumentation. Implementations must stay unchanged and the count must come from the harness.
+
+**First use:** `pairs/matrix-multiplication-naive-vs-strassen`.
+- The harness counts every scalar multiplication through an instrumented number type, `CountingInt`, padding zeros included.
+- **Counts** on n = 32, 64, 128, 256: schoolbook exactly n³; Strassen (cutoff 16) exactly 7^(log₂(n/16))·16³ (28 672 / 200 704 / 1 404 928 / 9 834 496).
+- **Fits** at tolerance 0.02 (the counts are exact): α = 1.000 for both claims.
+- **Rivals:** Strassen's counts against n³ give α = 0.936, rejected. The schoolbook counts against n^log₂7 give α = 1.069, rejected.
+- **Products:** with counting entries, both implementations give the same products as plain integers for n ≤ 64 (console).
+
+The entry moved from V1 (RL-006) to V2.
+**Rationale:** RL-006 showed that timing cannot separate 3 from 2.807. Exact counts remove the noise, so a tight tolerance plus a rival makes the separation explicit. Additions are not counted.
+`tests/test_validate.py` has 2 new tests: a rival that also fits makes V2 fail; a rival that does not fit leaves V2 passing.
+
+### RL-048 · VERIFIED (measured) · Timing fits never resolve log factors; only exact counts do
+Every fit now carries an informational diagnostic: α against cost·log n and against cost/log n.
+In the recorded run (RL-050), 82 of the 90 V2 measurements had a computable diagnostic. The other 8 are constant costs or variants whose cost is degenerate over n_values.
+**Only 5 of the 82 resolve a log factor** (both variants outside the tolerance band), and all 5 are exact counts:
+- Bernstein–Vazirani, classical (α 0.601 / 2.58);
+- Grover, quantum (0.685 / 1.318);
+- Simon, quantum (0.653 / 3.146);
+- Strassen counts (0.926 / 1.087);
+- schoolbook counts (0.930 / 1.081).
+
+**None of the 77 timing fits at tolerance 0.25 resolves a log factor.** A timing-based V2 therefore means "growth consistent with the claim *up to logarithmic factors*". The README's level table now says so.
+**Follow-up IDEA:** move more entries to exact-count V2 with rivals (e.g. comparison counts for sorting, edge scans for matching), where the claim includes or excludes a log factor.
+
+### RL-049 · DECISION · Background execution and compiled kernels (by the user)
+1. **Background runs:** every run longer than a few seconds goes in the background with an explicit time budget and a completion signal. The maintainer does not watch it and stays available meanwhile. Timing-sensitive runs must not overlap CPU-heavy jobs.
+   A foreground recorded run was interrupted by the user to make this point. It had written no ledger file; the run was repeated in the background (RL-050).
+2. **Compiled kernels (C/C++, or single-file Rust):** allowed only if they build in seconds, as single-file programs in separate processes. Memory safety is treated as untrusted:
+   - bounds checks in test builds;
+   - differential tests against the Python reference, run once in the test suite, not on every run;
+   - every produced result re-verified by the exact Python verifier before it is saved or claimed.
+
+**Rationale (measured, RL-036):** finding is expensive and checking is cheap. Re-verifying all 77 saved schemes took 2.4 s, against about 5100 s of search, i.e. about 0.05%. A compiled kernel speeds up the 99.95% part, and the cheap exact check rules out false results from memory errors.
+
+### RL-050 · VERIFIED · Recorded run after adding rivals and exact-count V2
+Ledger: [ledger/runs/20261006T070542Z.json](ledger/runs/20261006T070542Z.json), base commit `83b12c3`, with the RL-047 changes uncommitted in the tree (`git_dirty` true), run in the background.
+**Result:** 54/54 entries pass their claimed level. All 90 V2 measurements pass, including the two count-based ones with rivals.

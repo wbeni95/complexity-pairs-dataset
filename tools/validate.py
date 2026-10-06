@@ -9,8 +9,10 @@ What it checks (see START_HERE.txt section 3 for the level definitions):
            runs every implementation on the harness battery and requires
            them to agree with each other (and with harness.check, if any)
   V2+      every implementation declares harness.scaling; with --scaling
-           the runtime is measured and log(time) is fitted against
-           log(cost(n)); the slope must be 1 +- tolerance
+           the runtime (or a reported exact count) is measured and fitted
+           against log(cost(n)); the slope must be 1 +- tolerance, and every
+           declared rival cost must NOT fit (discriminating V2). A log-factor
+           diagnostic is recorded for every fit (informational only)
   V3       verification.proofs must cite at least one complexity proof
 
 Levels are cumulative: an entry claiming V2 must also pass V1.
@@ -305,25 +307,53 @@ def run_v2(entry: dict, entry_dir: Path, verbose: bool, rec: dict | None = None)
             errors.append(f"V2: '{alg['name']}' measured a non-positive value")
             continue
         tol = sc.get("tolerance", 0.25)
+        ys = [math.log(v) for v in values]
+        rival_results, diagnostics = [], {}
         if constant:
             ratio = max(values) / min(values)
             ok = ratio <= 1 + tol
             summary = f"constant cost: max/min = {ratio:.3f} (tol {tol})"
         else:
-            alpha = fit_slope(xs, [math.log(v) for v in values])
+            alpha = fit_slope(xs, ys)
             ok = abs(alpha - 1) <= tol
             summary = f"alpha={alpha:.3f} (tol {tol})"
+            # Discriminating V2: every declared rival cost must FAIL to fit the same measurements.
+            for rival in sc.get("rivals", []):
+                rx = [math.log(eval_cost(rival, n)) for n in ns]
+                r_alpha = fit_slope(rx, ys) if max(rx) - min(rx) > 1e-12 else math.inf
+                rejected = abs(r_alpha - 1) > tol
+                rival_results.append({"cost": rival, "alpha": r_alpha, "rejected": rejected})
+                if not rejected:
+                    ok = False
+                    summary += f"; rival {rival!r} also fits (alpha={r_alpha:.3f}): claim not discriminated"
+            # Diagnostic only (never fails): could this fit tell the claimed cost from cost*log n or cost/log n?
+            if min(ns) >= 2:
+                lx = [math.log(math.log(n)) for n in ns]
+                up = [x + l for x, l in zip(xs, lx)]
+                down = [x - l for x, l in zip(xs, lx)]
+                # a variant whose cost is constant over n_values (e.g. log(n)/log(n)) cannot be fitted: skip it
+                a_up = fit_slope(up, ys) if max(up) - min(up) > 1e-12 else None
+                a_down = fit_slope(down, ys) if max(down) - min(down) > 1e-12 else None
+                if a_up is not None and a_down is not None:
+                    diagnostics = {"alpha_vs_cost_times_log": a_up, "alpha_vs_cost_over_log": a_down,
+                                   "resolves_log_factor": abs(a_up - 1) > tol and abs(a_down - 1) > tol}
         status = "ok" if ok else "FAIL"
         if verbose or not ok:
             unit = (lambda v: f"{v * 1e3:.3g}ms") if measure == "time" else (lambda v: f"{v:.4g}")
             detail = ", ".join(f"n={n}: {unit(v)}" for n, v in zip(ns, values))
             print(f"      V2 {alg['name']} [{measure}]: cost={sc['cost']}  {summary}  {status}  "
                   f"[{time.perf_counter() - t_start:.1f}s]  {detail}")
+            for rr in rival_results:
+                print(f"         rival {rr['cost']}: alpha={rr['alpha']:.3f} -> {'rejected' if rr['rejected'] else 'NOT rejected'}")
+            if diagnostics:
+                print(f"         diagnostic: alpha vs cost*log n = {diagnostics['alpha_vs_cost_times_log']:.3f}, "
+                      f"vs cost/log n = {diagnostics['alpha_vs_cost_over_log']:.3f} -> log factor "
+                      f"{'resolved' if diagnostics['resolves_log_factor'] else 'NOT resolved'} by this fit")
         measurements.append({
             "algorithm": alg["name"], "measure": measure, "cost": sc["cost"], "samples": samples,
             "n_values": ns, "values": values, "unit": "seconds" if measure == "time" else "count",
             "alpha": None if constant else alpha, "max_over_min": ratio if constant else None,
-            "tolerance": tol, "passed": ok,
+            "tolerance": tol, "passed": ok, "rivals": rival_results, "diagnostics": diagnostics,
         })
         if not ok:
             errors.append(f"V2: '{alg['name']}' {summary} vs claimed cost {sc['cost']!r}")

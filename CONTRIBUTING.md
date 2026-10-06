@@ -61,6 +61,20 @@ Give exact numbers and their provenance. For a run that changes a claim, attach 
 ad-hoc check you cite in `experiments/` as a deterministic script. Never delete or rewrite old log entries;
 supersede them with new ones.
 
+## Long runs and compiled code
+
+- **Long runs go in the background, with a time budget.** Validation with `--scaling`, recorded runs, searches and long
+  experiments are started detached, with an explicit budget (e.g. `--max-seconds`), and signal completion. Nobody sits
+  watching them, and the maintainer stays available while they run. Timing-sensitive runs (V2, `--record`) must not
+  overlap with CPU-heavy jobs.
+- **Compiled kernels (C/C++) are allowed only if they build in seconds.** They must come as small single-file programs
+  without heavy dependencies and run as separate processes; no shared memory with Python. They must also be treated
+  as untrusted for memory safety:
+  - bounds-checked array access in test builds, compiled with all warnings as errors;
+  - differential tests against the Python reference implementation (identical seeds give identical results on small runs);
+  - every result a compiled kernel produces is re-verified by the exact Python verifier before it is saved, logged or
+    claimed, so a memory error can at worst waste time, never create a false result.
+
 ## Honesty rules
 
 - Do not inflate levels. V2 means every implemented algorithm's scaling was measured and passed. If one

@@ -129,6 +129,20 @@ class ValidatorRejectsBadEntries(unittest.TestCase):
         path.write_text(json.dumps(entry), encoding="utf-8")
         self.assertFalse(self.run_validator(scaling=True, entry_dir=d, expect="vs claimed cost 'n'"))
 
+    def test_rival_that_also_fits_fails(self):
+        # phi**n vs a rival 1.7**n: alpha against the rival is ln(phi)/ln(1.7) ~ 0.91, inside 0.25 -> not discriminated.
+        def add_close_rival(entry):
+            entry["algorithms"][0]["harness"]["scaling"]["rivals"] = ["1.7**n"]
+        self.edit_entry(add_close_rival)
+        self.assertFalse(self.run_validator(scaling=True, expect="claim not discriminated"))
+
+    def test_rival_that_does_not_fit_passes(self):
+        # phi**n vs a rival 2**n: alpha against the rival is ln(phi)/ln(2) ~ 0.69 -> rejected, claim stands.
+        def add_far_rival(entry):
+            entry["algorithms"][0]["harness"]["scaling"]["rivals"] = ["2**n"]
+        self.edit_entry(add_far_rival)
+        self.assertTrue(self.run_validator(scaling=True))
+
     def test_t4_without_randomized_algorithm_fails(self):
         self.edit_entry(lambda e: e.update(secondary_tags=["T4"]))
         self.assertFalse(self.run_validator(expect="T4 needs"))

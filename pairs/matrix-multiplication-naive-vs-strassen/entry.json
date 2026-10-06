@@ -15,7 +15,18 @@
       "time_complexity": "Theta(n^3)",
       "space_complexity": "Theta(n^2)",
       "correctness": "Definition of the matrix product.",
-      "implementation": "implementations/naive.py:matmul_naive"
+      "implementation": "implementations/naive.py:matmul_naive",
+      "harness": {
+        "scaling": {
+          "cost": "n**3",
+          "n_values": [32, 64, 128, 256],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**log2(7)"
+          ]
+        }
+      }
     },
     {
       "name": "Strassen",
@@ -25,7 +36,18 @@
       "time_complexity": "Theta(n^(log2 7)) ~ Theta(n^2.807)",
       "space_complexity": "Theta(n^2)",
       "correctness": "Strassen 1969: the seven products combine to the four blocks of C by direct algebraic identity, valid over any ring. T(n) = 7T(n/2) + Theta(n^2) gives Theta(n^log2(7)).",
-      "implementation": "implementations/strassen.py:matmul_strassen"
+      "implementation": "implementations/strassen.py:matmul_strassen",
+      "harness": {
+        "scaling": {
+          "cost": "n**log2(7)",
+          "n_values": [32, 64, 128, 256],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**3"
+          ]
+        }
+      }
     }
   ],
   "pair_type": "T3",
@@ -61,9 +83,13 @@
     }
   ],
   "verification": {
-    "level": "V1",
-    "method": "Both implementations agree on random integer matrices for n = 0..10 and n = 17, 31, 40, 64 (above the recursion cutoff of 16), and pass an independent Freivalds-style check A(Bx) = Cx. Not raised to V2: the exponent gap (3 vs 2.807) is smaller than what pure-Python timing over feasible n (<= 256) resolves reliably; measured per-doubling ratios were ~7.3 (Strassen) vs ~7.8 (schoolbook).",
-    "artifacts": ["implementations/naive.py", "implementations/strassen.py", "harness.py"]
+    "level": "V2",
+    "method": "V1: both implementations agree on random integer matrices for n = 0..10 and n = 17, 31, 40, 64 (above the recursion cutoff of 16) and pass an independent Freivalds-style check A(Bx) = Cx. V2 (since 2026-10-07, RESEARCH_LOG RL-047): the measured quantity is the exact number of SCALAR MULTIPLICATIONS performed by the unchanged implementations, counted by an instrumented number type in the harness (padding zeros included). On n = 32, 64, 128, 256: schoolbook = n^3 exactly; Strassen = 7^(log2(n/16)) * 16^3 exactly. Each claim is fitted with tolerance 0.02 (the counts are exact, so no timing noise) and the other algorithm's cost is a declared rival that must NOT fit: alpha of Strassen's counts against n^3 is log2(7)/3 = 0.936, of the schoolbook counts against n^log2(7) is 3/log2(7) = 1.069, both outside the band. Wall-clock timing remains unable to separate the two (RL-006); additions are not counted.",
+    "artifacts": [
+      "implementations/naive.py",
+      "implementations/strassen.py",
+      "harness.py"
+    ]
   },
   "test_harness": {
     "module": "harness.py",

@@ -279,6 +279,13 @@
           "minimum": 1,
           "default": 1,
           "description": "Instances averaged per n (use > 1 for randomized algorithms)."
+        },
+        "rivals": {
+          "description": "Cost expressions the measurement must NOT fit (|alpha - 1| > tolerance). Makes V2 discriminating: e.g. Strassen claims n**log2(7) and lists n**3 as a rival.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

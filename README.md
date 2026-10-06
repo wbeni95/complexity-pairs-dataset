@@ -41,7 +41,7 @@ carries any of T1–T5, T8, T9.
 |---|---|---|
 | V0 | claimed: cited, not independently checked | folder `staging/` |
 | V1 | correct: ≥ 2 implementations agree with each other (and an oracle) on a test battery | runs every implementation |
-| V2 | scaling: measured growth matches the claimed cost | fits log(time), or log(reported operation count, e.g. oracle queries), against log(cost(n)); slope must be 1 ± tolerance |
+| V2 | scaling: measured growth matches the claimed cost | fits log(time), or log(an exact reported count: oracle queries, multiplications), against log(cost(n)); slope must be 1 ± tolerance, and declared rival costs must *not* fit. Timing fits are only conclusive up to log factors (RL-048) |
 | V3 | proven: complexity proof cited | requires `verification.proofs` |
 
 ## The dataset
@@ -72,7 +72,7 @@ carries any of T1–T5, T8, T9.
 | [Integer multiplication: schoolbook vs Karatsuba](pairs/integer-multiplication-schoolbook-vs-karatsuba) | T3 | V2 | schoolbook (long) multiplication: Theta(n^2) digit operations<br>Karatsuba: Theta(n^log2(3)) ~ Theta(n^1.585) digit operations |
 | [Counting inversions: all pairs vs merge sort](pairs/inversion-counting-quadratic-vs-merge) | T3 | V2 | all pairs: Theta(n^2)<br>merge-sort counting: Theta(n log n) |
 | [Longest palindromic substring: brute force vs expanding around centers vs Manacher](pairs/longest-palindromic-substring) | T3 | V2 | brute force (test every substring): Theta(n^3) worst case<br>expand around centers: Theta(n + R) where R = sum of the maximal palindrome radii over all centers<br>Manacher's algorithm: Theta(n) on every input |
-| [Matrix multiplication: schoolbook vs Strassen](pairs/matrix-multiplication-naive-vs-strassen) | T3 | V1 | schoolbook: Theta(n^3)<br>Strassen: Theta(n^(log2 7)) ~ Theta(n^2.807) |
+| [Matrix multiplication: schoolbook vs Strassen](pairs/matrix-multiplication-naive-vs-strassen) | T3 | V2 | schoolbook: Theta(n^3)<br>Strassen: Theta(n^(log2 7)) ~ Theta(n^2.807) |
 | [Maximum flow: Edmonds-Karp vs Dinic](pairs/max-flow-edmonds-karp-vs-dinic) | T3 | V1 | Edmonds-Karp: O(V E^2)<br>Dinic (blocking flows): O(V^2 E) |
 | [Maximum subarray sum: brute force vs running sums vs Kadane's scan](pairs/maximum-subarray) | T3 | V2 | brute force (sum every subarray): Theta(n^3) on every input<br>running sums: Theta(n^2) on every input<br>Kadane's algorithm (linear scan): Theta(n) |
 | [Polynomial multiplication over Z_p: schoolbook vs number-theoretic transform (FFT)](pairs/polynomial-multiplication-naive-vs-ntt) | T3 | V2 | schoolbook convolution: Theta(n^2)<br>number-theoretic transform (Cooley-Tukey over Z_p): Theta(n log n) |
