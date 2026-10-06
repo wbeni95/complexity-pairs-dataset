@@ -215,3 +215,8 @@ Ledger file: [ledger/runs/20261006T005329Z.json](ledger/runs/20261006T005329Z.js
 What these numbers do and do not show: a passing fit means the measured growth is *consistent with* the claimed
 cost over the measured range, within ±0.25 in the log-log slope. It does not prove the asymptotic bound (V3 is for
 proofs), and it cannot resolve log factors or exponent gaps smaller than the tolerance (see RL-006).
+
+### RL-022 · VERIFIED · Recorded run on the first commit; run-to-run stability
+Ledger file: [ledger/runs/20261006T005747Z.json](ledger/runs/20261006T005747Z.json), made at commit `d8ddc584a963a550bc6c8fa08be90deca53e3193` with a clean tree.
+- **Result:** 36/36 entries pass their claimed level. All 55 V2 measurements pass, with α from 0.924 to 1.128. V1 ran on 28 entries: 1830 instances, 3714 implementation runs.
+- **Stability against RL-021** (same code and machine, minutes apart): the largest change in a time-based α was 0.028 (fast doubling 1.100 → 1.128; inversion counting, all pairs, 1.043 → 1.015). All 5 query-count fits were **identical**, which confirms the reproducibility fix of RL-014.
