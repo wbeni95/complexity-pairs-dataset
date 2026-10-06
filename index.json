@@ -1,16 +1,16 @@
 {
   "schema": "schema/entry.schema.json",
   "counts": {
-    "entries": 36,
+    "entries": 40,
     "validated_pairs": 28,
     "open_problems_T6": 9,
     "proven_quantum_advantage_T9": 4,
-    "synthetic_T7": 0,
+    "synthetic_T7": 4,
     "with_quantum_algorithm": 6,
     "by_level": {
       "V0": 8,
       "V1": 3,
-      "V2": 25,
+      "V2": 29,
       "V3": 0
     },
     "by_type": {
@@ -20,7 +20,7 @@
       "T4": 1,
       "T5": 1,
       "T6": 8,
-      "T7": 0,
+      "T7": 4,
       "T8": 0,
       "T9": 3
     }
@@ -1164,6 +1164,138 @@
         }
       ],
       "sources": 4
+    },
+    {
+      "id": "linear-recurrence-c1-0-1",
+      "title": "Synthetic: linear recurrence a(n) = 1 a(n-1) + 1 a(n-3) (mod 2^64), naive vs DP vs matrix power",
+      "path": "synthetic/linear-recurrence-c1-0-1",
+      "location": "synthetic",
+      "pair_type": "T7",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": false,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "naive recursion (deliberately wasteful)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(lambda^n) calls, lambda = 1.4655712319 (largest real root of x^3 = x^2 + 1)",
+          "implemented": true
+        },
+        {
+          "name": "bottom-up dynamic programming",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(k n) word operations (k = 3)",
+          "implemented": true
+        },
+        {
+          "name": "companion-matrix power",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(k^3 log n) word operations (k = 3)",
+          "implemented": true
+        }
+      ],
+      "sources": 1
+    },
+    {
+      "id": "linear-recurrence-c1-1-1",
+      "title": "Synthetic: linear recurrence a(n) = 1 a(n-1) + 1 a(n-2) + 1 a(n-3) (mod 2^64), naive vs DP vs matrix power",
+      "path": "synthetic/linear-recurrence-c1-1-1",
+      "location": "synthetic",
+      "pair_type": "T7",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": false,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "naive recursion (deliberately wasteful)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(lambda^n) calls, lambda = 1.8392867552 (largest real root of x^3 = x^2 + x + 1)",
+          "implemented": true
+        },
+        {
+          "name": "bottom-up dynamic programming",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(k n) word operations (k = 3)",
+          "implemented": true
+        },
+        {
+          "name": "companion-matrix power",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(k^3 log n) word operations (k = 3)",
+          "implemented": true
+        }
+      ],
+      "sources": 1
+    },
+    {
+      "id": "linear-recurrence-c1-1-1-1",
+      "title": "Synthetic: linear recurrence a(n) = 1 a(n-1) + 1 a(n-2) + 1 a(n-3) + 1 a(n-4) (mod 2^64), naive vs DP vs matrix power",
+      "path": "synthetic/linear-recurrence-c1-1-1-1",
+      "location": "synthetic",
+      "pair_type": "T7",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": false,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "naive recursion (deliberately wasteful)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(lambda^n) calls, lambda = 1.9275619755 (largest real root of x^4 = x^3 + x^2 + x + 1)",
+          "implemented": true
+        },
+        {
+          "name": "bottom-up dynamic programming",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(k n) word operations (k = 4)",
+          "implemented": true
+        },
+        {
+          "name": "companion-matrix power",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(k^3 log n) word operations (k = 4)",
+          "implemented": true
+        }
+      ],
+      "sources": 1
+    },
+    {
+      "id": "linear-recurrence-c2-3",
+      "title": "Synthetic: linear recurrence a(n) = 2 a(n-1) + 3 a(n-2) (mod 2^64), naive vs DP vs matrix power",
+      "path": "synthetic/linear-recurrence-c2-3",
+      "location": "synthetic",
+      "pair_type": "T7",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": false,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "naive recursion (deliberately wasteful)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(lambda^n) calls, lambda = 1.6180339887 (largest real root of x^2 = x + 1)",
+          "implemented": true
+        },
+        {
+          "name": "bottom-up dynamic programming",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(k n) word operations (k = 2)",
+          "implemented": true
+        },
+        {
+          "name": "companion-matrix power",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(k^3 log n) word operations (k = 2)",
+          "implemented": true
+        }
+      ],
+      "sources": 1
     }
   ]
 }

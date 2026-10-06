@@ -50,7 +50,11 @@ This is research, so every change to what the dataset claims leaves a trace. Add
 - add an entry or raise or lower a level (VERIFIED / INCONCLUSIVE);
 - find that a claim, tag, citation or implementation was wrong (REFUTED / CORRECTED, recording the old state);
 - change methodology (DECISION);
-- run a search that finds nothing (NULL, with the exact scope searched).
+- run a search that finds nothing (NULL, with the exact scope searched);
+- get close but not all the way (NEAR-MISS, with the numbers), or have an untested hypothesis worth keeping (IDEA).
+
+Keep every script that produced or attempted a result, failed ones included, and say in its docstring what
+happened. Scripts that manufacture candidate pairs belong in `generators/` (see generators/README.md).
 
 Give exact numbers and their provenance. For a run that changes a claim, attach a recorded run
 (`python tools/validate.py <entries> --scaling --record`) and commit the file it writes in `ledger/runs/`. Put any

@@ -14,6 +14,11 @@ edited after the fact except to fix typos. A later finding gets a new entry that
 | INCONCLUSIVE | Tested, but the evidence cannot decide. The claim is not raised. |
 | DECISION | A methodological or policy choice that changes what counts as evidence. |
 | NULL | A search found nothing within a stated scope. This is never evidence of impossibility (START_HERE section 6). |
+| NEAR-MISS | Something almost worked: how close (numbers), why it fell short, and what might fix it. Kept because near-misses often point to the next attempt. |
+| IDEA | A hypothesis or direction not yet tested, with what motivates it (evidence or literature). Dropped directions are recorded too, with the concrete reason. |
+
+Entries may carry a **Rationale:** line giving the considerations behind a decision or an attempt, including
+alternatives that were rejected and why, so that later work can reuse or revisit them.
 
 ## Provenance labels
 
@@ -228,3 +233,35 @@ GitHub Actions run 37397178645 (push of `29202a0`; runner `ubuntu-latest`; Pytho
 - `sources`: every DOI / arXiv id.
 
 This is the first time all V2 fits were reproduced on a different OS and Python version from the maintainer's machine (Windows, CPython 3.14.2). Provenance: external (GitHub Actions). The per-job logs are kept by GitHub, not in this repository.
+
+### RL-024 · DECISION · Near-misses, ideas and pair generators are kept (user request)
+Two entry types were added: NEAR-MISS (with the numbers) and IDEA (with what motivates it), plus an optional **Rationale:** line.
+Every script that produced or attempted a result is kept, including failed attempts.
+Scripts that manufacture candidate pairs live in `generators/`, under a rule that separates two classes:
+- **Mechanical transformations** (un-memoising, bloating) produce T7 synthetic entries, which are never counted.
+- **Searches with an exact verifier** count only if they beat the best known algorithm. A rediscovery is a pipeline check.
+
+**Rationale:** START_HERE section 5 warns that training only on bloated pairs teaches "un-bloating the obvious". Keeping the generators, labelled honestly, preserves their value as infrastructure without inflating the headline count.
+
+### RL-025 · VERIFIED · First pair generator: linear recurrences → 4 synthetic (T7) entries at V2
+`generators/linear_recurrence.py` turns coefficients c into a full entry: naive recursion, DP and companion-matrix power, with cost claims derived from the specification.
+The naive cost is λⁿ, where λ is the largest real root of xᵏ = Σ_{i∈S} xᵏ⁻ⁱ for the support S of c, computed by bisection. The V2 sizes are chosen automatically.
+
+Generated and validated (console; validator `--scaling`):
+
+| Entry | λ | α naive | α DP | α matrix |
+|---|---|---|---|---|
+| synthetic/linear-recurrence-c1-1-1 | 1.8392867552 | 0.999 | 0.998 | 1.050 |
+| synthetic/linear-recurrence-c1-1-1-1 | 1.9275619755 | 1.001 | 1.000 | 1.084 |
+| synthetic/linear-recurrence-c1-0-1 | 1.4655712319 | 1.002 | 1.000 | 1.065 |
+| synthetic/linear-recurrence-c2-3 | 1.6180339887 | 1.001 | 0.995 | 1.008 |
+
+The λ prediction holds to within 0.002 in every case. This also confirms the claim that the naive call count depends only on *which* coefficients are nonzero: c = (2, 3) has the same λ = φ as Fibonacci.
+`tests/test_generators.py` (5 tests) checks λ against known constants (φ; tribonacci 1.839286755214161), the characteristic-polynomial residual, rejection of non-exponential supports, agreement of the generated code with an independent reference sequence, and the T7 tagging.
+
+### RL-026 · CORRECTED · Process: an instruction phrasing stopped three overnight agents
+Four background agents were started (pattern mining, classical entries, quantum entries, search environment). The maintainer then sent each one an addendum asking it to document "the reasoning behind" its choices.
+Three of the four terminated with an API safeguard error labelled `reasoning_extraction`, right after receiving the addendum. Their partial output was one empty directory, which was removed; no files were damaged.
+The three were relaunched with the same mandates, and the documentation request was rephrased as decision logs, near-miss records and open ideas.
+
+**Lesson:** ask agents for *documentation of decisions and evidence*, not for their internal reasoning.
