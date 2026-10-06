@@ -1,0 +1,5307 @@
+{
+ "bilinear": {
+  "candidates": 260,
+  "clusters": [
+   {
+    "cluster": "bilinear:2x2x2:m0:r0",
+    "n": 7,
+    "unique": 1,
+    "verdicts": {
+     "INVALID": 7
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x2:m1:r1",
+    "n": 6,
+    "unique": 2,
+    "verdicts": {
+     "INVALID": 6
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x2:m2:r1",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": null,
+     "fast_alpha": null,
+     "fast_claim": "1**n",
+     "fast_local": [
+      null,
+      null
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 3,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x2:m2:r2",
+    "n": 13,
+    "nearness": {
+     "mean_closeness": 0.8232,
+     "mean_exact_rate": 0.5684,
+     "worst_closeness": 0.25
+    },
+    "unique": 5,
+    "verdicts": {
+     "NEAR-MISS": 9,
+     "WRONG": 4
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x2:m3:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6309,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "5/5",
+     "slow_alpha": 1.0,
+     "slow_claim": "3**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 5,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 5
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x2:m3:r3",
+    "n": 4,
+    "nearness": {
+     "mean_closeness": 0.7778,
+     "mean_exact_rate": 0.4028,
+     "worst_closeness": 0.25
+    },
+    "unique": 2,
+    "verdicts": {
+     "NEAR-MISS": 2,
+     "WRONG": 2
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x2:m4:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.5,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x2:m4:r3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.7925,
+     "fast_alpha": 1.0,
+     "fast_claim": "3**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "5/5",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 5,
+    "unique": 4,
+    "verdicts": {
+     "EXACT": 5
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x3:m0:r0",
+    "n": 3,
+    "unique": 1,
+    "verdicts": {
+     "INVALID": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x3:m1:r1",
+    "n": 3,
+    "unique": 2,
+    "verdicts": {
+     "INVALID": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x3:m2:r1",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": null,
+     "fast_alpha": null,
+     "fast_claim": "1**n",
+     "fast_local": [
+      null,
+      null
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 2,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x3:m2:r2",
+    "n": 5,
+    "nearness": {
+     "mean_closeness": 0.8457,
+     "mean_exact_rate": 0.4889,
+     "worst_closeness": 0.2593
+    },
+    "unique": 4,
+    "verdicts": {
+     "NEAR-MISS": 3,
+     "WRONG": 2
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x3:m3:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6309,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "5/5",
+     "slow_alpha": 1.0,
+     "slow_claim": "3**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 5,
+    "unique": 4,
+    "verdicts": {
+     "EXACT": 5
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x3:m3:r3",
+    "n": 6,
+    "nearness": {
+     "mean_closeness": 0.8824,
+     "mean_exact_rate": 0.4074,
+     "worst_closeness": 0.4815
+    },
+    "unique": 4,
+    "verdicts": {
+     "NEAR-MISS": 3,
+     "WRONG": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x3:m4:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.5,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 3,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x3:m4:r3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.7925,
+     "fast_alpha": 1.0,
+     "fast_claim": "3**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "7/7",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 7,
+    "unique": 6,
+    "verdicts": {
+     "EXACT": 7
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x4:m0:r0",
+    "n": 2,
+    "unique": 1,
+    "verdicts": {
+     "INVALID": 2
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x4:m1:r1",
+    "n": 3,
+    "unique": 1,
+    "verdicts": {
+     "INVALID": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x4:m2:r1",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": null,
+     "fast_alpha": null,
+     "fast_claim": "1**n",
+     "fast_local": [
+      null,
+      null
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x4:m2:r2",
+    "n": 14,
+    "nearness": {
+     "mean_closeness": 0.9459,
+     "mean_exact_rate": 0.5397,
+     "worst_closeness": 0.5
+    },
+    "unique": 6,
+    "verdicts": {
+     "NEAR-MISS": 14
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x4:m3:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6309,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "5/5",
+     "slow_alpha": 1.0,
+     "slow_claim": "3**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 5,
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 5
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x4:m3:r3",
+    "n": 14,
+    "nearness": {
+     "mean_closeness": 0.8952,
+     "mean_exact_rate": 0.4047,
+     "worst_closeness": 0.5625
+    },
+    "unique": 11,
+    "verdicts": {
+     "NEAR-MISS": 8,
+     "WRONG": 6
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x4:m4:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.5,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x4:m4:r3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.7925,
+     "fast_alpha": 1.0,
+     "fast_claim": "3**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "13/13",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 13,
+    "unique": 13,
+    "verdicts": {
+     "EXACT": 13
+    }
+   },
+   {
+    "cluster": "bilinear:2x2x4:m4:r4",
+    "n": 10,
+    "nearness": {
+     "mean_closeness": 0.8759,
+     "mean_exact_rate": 0.3778,
+     "worst_closeness": 0.4375
+    },
+    "unique": 8,
+    "verdicts": {
+     "NEAR-MISS": 1,
+     "WRONG": 9
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x2:m0:r0",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "INVALID": 1
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x2:m1:r1",
+    "n": 3,
+    "unique": 1,
+    "verdicts": {
+     "INVALID": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x2:m2:r1",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": null,
+     "fast_alpha": null,
+     "fast_claim": "1**n",
+     "fast_local": [
+      null,
+      null
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 2,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x2:m2:r2",
+    "n": 5,
+    "nearness": {
+     "mean_closeness": 0.8097,
+     "mean_exact_rate": 0.5445,
+     "worst_closeness": 0.25
+    },
+    "unique": 4,
+    "verdicts": {
+     "NEAR-MISS": 5
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x2:m3:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6309,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "5/5",
+     "slow_alpha": 1.0,
+     "slow_claim": "3**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 5,
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 5
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x2:m3:r3",
+    "n": 3,
+    "nearness": {
+     "mean_closeness": 0.7361,
+     "mean_exact_rate": 0.2963,
+     "worst_closeness": 0.25
+    },
+    "unique": 3,
+    "verdicts": {
+     "WRONG": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x2:m4:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.5,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 4,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 4
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x2:m4:r3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.7925,
+     "fast_alpha": 1.0,
+     "fast_claim": "3**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "5/5",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 5,
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 5
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x2:m5:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.4307,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0,
+     "slow_claim": "5**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x2:m5:r3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6826,
+     "fast_alpha": 1.0,
+     "fast_claim": "3**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0,
+     "slow_claim": "5**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x2:m6:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.3869,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0,
+     "slow_claim": "6**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x2:m6:r3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6131,
+     "fast_alpha": 1.0,
+     "fast_claim": "3**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0,
+     "slow_claim": "6**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x3:m1:r1",
+    "n": 3,
+    "unique": 1,
+    "verdicts": {
+     "INVALID": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x3:m2:r2",
+    "n": 5,
+    "nearness": {
+     "mean_closeness": 0.914,
+     "mean_exact_rate": 0.5444,
+     "worst_closeness": 0.3333
+    },
+    "unique": 4,
+    "verdicts": {
+     "NEAR-MISS": 4,
+     "WRONG": 1
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x3:m3:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6309,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 1.0,
+     "slow_claim": "3**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 4,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 4
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x3:m3:r3",
+    "n": 5,
+    "nearness": {
+     "mean_closeness": 0.8844,
+     "mean_exact_rate": 0.4556,
+     "worst_closeness": 0.5556
+    },
+    "unique": 5,
+    "verdicts": {
+     "NEAR-MISS": 2,
+     "WRONG": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x3:m4:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.5,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x3:m4:r3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.7925,
+     "fast_alpha": 1.0,
+     "fast_claim": "3**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "5/5",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 5,
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 5
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x3:m4:r4",
+    "n": 1,
+    "nearness": {
+     "mean_closeness": 0.8786,
+     "mean_exact_rate": 0.5,
+     "worst_closeness": 0.5185
+    },
+    "unique": 1,
+    "verdicts": {
+     "NEAR-MISS": 1
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x3:m5:r3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6826,
+     "fast_alpha": 1.0,
+     "fast_claim": "3**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0,
+     "slow_claim": "5**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x3:m5:r4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.8614,
+     "fast_alpha": 1.0,
+     "fast_claim": "4**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "7/7",
+     "slow_alpha": 1.0,
+     "slow_claim": "5**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 7,
+    "unique": 7,
+    "verdicts": {
+     "EXACT": 7
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x3:m6:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.3869,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0,
+     "slow_claim": "6**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x3:m6:r3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6131,
+     "fast_alpha": 1.0,
+     "fast_claim": "3**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0,
+     "slow_claim": "6**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "bilinear:2x3x3:m6:r4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.7737,
+     "fast_alpha": 1.0,
+     "fast_claim": "4**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0,
+     "slow_claim": "6**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "bilinear:3x2x2:m0:r0",
+    "n": 3,
+    "unique": 1,
+    "verdicts": {
+     "INVALID": 3
+    }
+   },
+   {
+    "cluster": "bilinear:3x2x2:m1:r1",
+    "n": 3,
+    "unique": 1,
+    "verdicts": {
+     "INVALID": 3
+    }
+   },
+   {
+    "cluster": "bilinear:3x2x2:m2:r1",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": null,
+     "fast_alpha": null,
+     "fast_claim": "1**n",
+     "fast_local": [
+      null,
+      null
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "bilinear:3x2x2:m2:r2",
+    "n": 5,
+    "nearness": {
+     "mean_closeness": 0.8792,
+     "mean_exact_rate": 0.7111,
+     "worst_closeness": 0.25
+    },
+    "unique": 3,
+    "verdicts": {
+     "NEAR-MISS": 5
+    }
+   },
+   {
+    "cluster": "bilinear:3x2x2:m3:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6309,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "7/7",
+     "slow_alpha": 1.0,
+     "slow_claim": "3**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 7,
+    "unique": 6,
+    "verdicts": {
+     "EXACT": 7
+    }
+   },
+   {
+    "cluster": "bilinear:3x2x2:m3:r3",
+    "n": 7,
+    "nearness": {
+     "mean_closeness": 0.746,
+     "mean_exact_rate": 0.3809,
+     "worst_closeness": 0.25
+    },
+    "unique": 4,
+    "verdicts": {
+     "NEAR-MISS": 1,
+     "WRONG": 6
+    }
+   },
+   {
+    "cluster": "bilinear:3x2x2:m4:r2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.5,
+     "fast_alpha": 1.0,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "bilinear:3x2x2:m4:r3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.7925,
+     "fast_alpha": 1.0,
+     "fast_claim": "3**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "5/5",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 5,
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 5
+    }
+   },
+   {
+    "cluster": "bilinear:3x2x2:m5:r3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6826,
+     "fast_alpha": 1.0,
+     "fast_claim": "3**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 1.0,
+     "slow_claim": "5**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 4,
+    "unique": 4,
+    "verdicts": {
+     "EXACT": 4
+    }
+   },
+   {
+    "cluster": "bilinear:3x2x2:m6:r3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6131,
+     "fast_alpha": 1.0,
+     "fast_claim": "3**n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 1.0,
+     "slow_claim": "6**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 4,
+    "unique": 4,
+    "verdicts": {
+     "EXACT": 4
+    }
+   }
+  ],
+  "exact_without_precondition": 0,
+  "precondition_precision": 1.0,
+  "precondition_recall_of_exact": 1.0,
+  "unique": 189,
+  "verdicts": {
+   "EXACT": 126,
+   "INVALID": 37,
+   "NEAR-MISS": 58,
+   "WRONG": 39
+  }
+ },
+ "convolution": {
+  "candidates": 300,
+  "clusters": [
+   {
+    "cluster": "conv:and:or:exact-structure",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.5961,
+     "fast_alpha": 0.9825,
+     "fast_claim": "n*2**n",
+     "fast_local": [
+      0.9526,
+      0.9939
+     ],
+     "resolved_fraction": "8/8",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 8,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 8
+    }
+   },
+   {
+    "cluster": "conv:cyclic:cyclic:exact-structure",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.5993,
+     "fast_alpha": 0.9879,
+     "fast_claim": "n*2**n",
+     "fast_local": [
+      0.9666,
+      0.9958
+     ],
+     "resolved_fraction": "31/31",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 31,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 31
+    }
+   },
+   {
+    "cluster": "conv:latin:cyclic:no-structure",
+    "n": 7,
+    "nearness": {
+     "mean_closeness": 0.2143,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 5,
+    "verdicts": {
+     "WRONG": 7
+    }
+   },
+   {
+    "cluster": "conv:latin:max:no-structure",
+    "n": 1,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 1,
+    "verdicts": {
+     "WRONG": 1
+    }
+   },
+   {
+    "cluster": "conv:latin:prod:no-structure",
+    "n": 4,
+    "nearness": {
+     "mean_closeness": 0.0625,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 4,
+    "verdicts": {
+     "WRONG": 4
+    }
+   },
+   {
+    "cluster": "conv:latin:sat:no-structure",
+    "n": 5,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 4,
+    "verdicts": {
+     "WRONG": 5
+    }
+   },
+   {
+    "cluster": "conv:latin:xor:no-structure",
+    "n": 5,
+    "nearness": {
+     "mean_closeness": 0.15,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 3,
+    "verdicts": {
+     "WRONG": 5
+    }
+   },
+   {
+    "cluster": "conv:max:max:exact-structure",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.506,
+     "fast_alpha": 1.0119,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0003,
+      1.0728
+     ],
+     "resolved_fraction": "10/10",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 10,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 10
+    }
+   },
+   {
+    "cluster": "conv:min:max:exact-structure",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.506,
+     "fast_alpha": 1.0119,
+     "fast_claim": "2**n",
+     "fast_local": [
+      1.0003,
+      1.0728
+     ],
+     "resolved_fraction": "12/12",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 12,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 12
+    }
+   },
+   {
+    "cluster": "conv:or:or:exact-structure",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.5961,
+     "fast_alpha": 0.9825,
+     "fast_claim": "n*2**n",
+     "fast_local": [
+      0.9526,
+      0.9939
+     ],
+     "resolved_fraction": "15/15",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 15,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 15
+    }
+   },
+   {
+    "cluster": "conv:perturbed_cyclic:cyclic:no-structure",
+    "n": 13,
+    "nearness": {
+     "mean_closeness": 0.4135,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 13,
+    "verdicts": {
+     "WRONG": 13
+    }
+   },
+   {
+    "cluster": "conv:perturbed_cyclic:prod:no-structure",
+    "n": 1,
+    "nearness": {
+     "mean_closeness": 0.125,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.125
+    },
+    "unique": 1,
+    "verdicts": {
+     "WRONG": 1
+    }
+   },
+   {
+    "cluster": "conv:perturbed_or:max:no-structure",
+    "n": 10,
+    "nearness": {
+     "mean_closeness": 0.0875,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 10,
+    "verdicts": {
+     "WRONG": 10
+    }
+   },
+   {
+    "cluster": "conv:perturbed_or:or:no-structure",
+    "n": 9,
+    "nearness": {
+     "mean_closeness": 0.5694,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.125
+    },
+    "unique": 9,
+    "verdicts": {
+     "WRONG": 9
+    }
+   },
+   {
+    "cluster": "conv:perturbed_xor:max:no-structure",
+    "n": 4,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 4,
+    "verdicts": {
+     "WRONG": 4
+    }
+   },
+   {
+    "cluster": "conv:perturbed_xor:prod:no-structure",
+    "n": 2,
+    "nearness": {
+     "mean_closeness": 0.125,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 2,
+    "verdicts": {
+     "WRONG": 2
+    }
+   },
+   {
+    "cluster": "conv:perturbed_xor:xor:no-structure",
+    "n": 27,
+    "nearness": {
+     "mean_closeness": 0.4722,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.125
+    },
+    "unique": 22,
+    "verdicts": {
+     "WRONG": 27
+    }
+   },
+   {
+    "cluster": "conv:prod:prod:exact-structure",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.601,
+     "fast_alpha": 0.9907,
+     "fast_claim": "n*2**n",
+     "fast_local": [
+      0.9742,
+      0.9969
+     ],
+     "resolved_fraction": "13/13",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 13,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 13
+    }
+   },
+   {
+    "cluster": "conv:random:cyclic:no-structure",
+    "n": 3,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 3,
+    "verdicts": {
+     "WRONG": 3
+    }
+   },
+   {
+    "cluster": "conv:random:max:no-structure",
+    "n": 15,
+    "nearness": {
+     "mean_closeness": 0.0167,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 15,
+    "verdicts": {
+     "WRONG": 15
+    }
+   },
+   {
+    "cluster": "conv:random:prod:no-structure",
+    "n": 2,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 2,
+    "verdicts": {
+     "WRONG": 2
+    }
+   },
+   {
+    "cluster": "conv:random:sat:no-structure",
+    "n": 3,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 3,
+    "verdicts": {
+     "WRONG": 3
+    }
+   },
+   {
+    "cluster": "conv:random:xor:no-structure",
+    "n": 3,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 3,
+    "verdicts": {
+     "WRONG": 3
+    }
+   },
+   {
+    "cluster": "conv:random_comm:cyclic:no-structure",
+    "n": 7,
+    "nearness": {
+     "mean_closeness": 0.0357,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 7,
+    "verdicts": {
+     "WRONG": 7
+    }
+   },
+   {
+    "cluster": "conv:random_comm:max:no-structure",
+    "n": 18,
+    "nearness": {
+     "mean_closeness": 0.0278,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 18,
+    "verdicts": {
+     "WRONG": 18
+    }
+   },
+   {
+    "cluster": "conv:random_comm:or:no-structure",
+    "n": 1,
+    "nearness": {
+     "mean_closeness": 0.25,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.25
+    },
+    "unique": 1,
+    "verdicts": {
+     "WRONG": 1
+    }
+   },
+   {
+    "cluster": "conv:random_comm:prod:no-structure",
+    "n": 4,
+    "nearness": {
+     "mean_closeness": 0.0625,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 4,
+    "verdicts": {
+     "WRONG": 4
+    }
+   },
+   {
+    "cluster": "conv:random_comm:sat:no-structure",
+    "n": 1,
+    "nearness": {
+     "mean_closeness": 0.25,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.25
+    },
+    "unique": 1,
+    "verdicts": {
+     "WRONG": 1
+    }
+   },
+   {
+    "cluster": "conv:random_comm:xor:no-structure",
+    "n": 1,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 1,
+    "verdicts": {
+     "WRONG": 1
+    }
+   },
+   {
+    "cluster": "conv:sat:sat:exact-structure",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.5851,
+     "fast_alpha": 0.9643,
+     "fast_claim": "n*2**n",
+     "fast_local": [
+      0.909,
+      0.9867
+     ],
+     "resolved_fraction": "17/17",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 17,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 17
+    }
+   },
+   {
+    "cluster": "conv:sub:prod:no-structure",
+    "n": 8,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 1,
+    "verdicts": {
+     "WRONG": 8
+    }
+   },
+   {
+    "cluster": "conv:sub:xor:no-structure",
+    "n": 8,
+    "nearness": {
+     "mean_closeness": 0.4688,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.25
+    },
+    "unique": 2,
+    "verdicts": {
+     "WRONG": 8
+    }
+   },
+   {
+    "cluster": "conv:xor:xor:exact-structure",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.5961,
+     "fast_alpha": 0.9825,
+     "fast_claim": "n*2**n",
+     "fast_local": [
+      0.9526,
+      0.9939
+     ],
+     "resolved_fraction": "32/32",
+     "slow_alpha": 1.0,
+     "slow_claim": "4**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 32,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 32
+    }
+   }
+  ],
+  "exact_without_precondition": 0,
+  "precondition_precision": 1.0,
+  "precondition_recall_of_exact": 1.0,
+  "unique": 154,
+  "verdicts": {
+   "EXACT": 138,
+   "WRONG": 162
+  }
+ },
+ "greedy": {
+  "candidates": 260,
+  "clusters": [
+   {
+    "cluster": "greedy:basis_removed:matroid",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0544,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "8/8",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 8,
+    "unique": 6,
+    "verdicts": {
+     "EXACT": 8
+    }
+   },
+   {
+    "cluster": "greedy:basis_removed:non-matroid",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0544,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 13,
+    "nearness": {
+     "mean_closeness": 0.9876,
+     "mean_exact_rate": 0.9389,
+     "worst_closeness": 0.5
+    },
+    "unique": 13,
+    "verdicts": {
+     "EXACT": 4,
+     "NEAR-MISS": 9
+    }
+   },
+   {
+    "cluster": "greedy:downclosure:matroid",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0544,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "13/13",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 13,
+    "unique": 10,
+    "verdicts": {
+     "EXACT": 13
+    }
+   },
+   {
+    "cluster": "greedy:downclosure:non-matroid",
+    "n": 9,
+    "nearness": {
+     "mean_closeness": 0.9525,
+     "mean_exact_rate": 0.8222,
+     "worst_closeness": 0.2857
+    },
+    "unique": 9,
+    "verdicts": {
+     "NEAR-MISS": 9
+    }
+   },
+   {
+    "cluster": "greedy:graphic:matroid",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0544,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "33/33",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 33,
+    "unique": 24,
+    "verdicts": {
+     "EXACT": 33
+    }
+   },
+   {
+    "cluster": "greedy:indset:matroid",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0544,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "greedy:indset:non-matroid",
+    "n": 23,
+    "nearness": {
+     "mean_closeness": 0.9734,
+     "mean_exact_rate": 0.8804,
+     "worst_closeness": 0.3333
+    },
+    "unique": 20,
+    "verdicts": {
+     "NEAR-MISS": 23
+    }
+   },
+   {
+    "cluster": "greedy:knapsack:matroid",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0544,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "6/6",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 6,
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 6
+    }
+   },
+   {
+    "cluster": "greedy:knapsack:non-matroid",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0544,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 13,
+    "nearness": {
+     "mean_closeness": 0.9745,
+     "mean_exact_rate": 0.8563,
+     "worst_closeness": 0.4286
+    },
+    "unique": 12,
+    "verdicts": {
+     "EXACT": 1,
+     "NEAR-MISS": 12
+    }
+   },
+   {
+    "cluster": "greedy:linear:matroid",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0544,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "31/31",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 31,
+    "unique": 25,
+    "verdicts": {
+     "EXACT": 31
+    }
+   },
+   {
+    "cluster": "greedy:matching:non-matroid",
+    "n": 23,
+    "nearness": {
+     "mean_closeness": 0.9551,
+     "mean_exact_rate": 0.8217,
+     "worst_closeness": 0.5
+    },
+    "unique": 12,
+    "verdicts": {
+     "NEAR-MISS": 23
+    }
+   },
+   {
+    "cluster": "greedy:partition:matroid",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0544,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "34/34",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 34,
+    "unique": 23,
+    "verdicts": {
+     "EXACT": 34
+    }
+   },
+   {
+    "cluster": "greedy:two_partition:matroid",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0544,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "15/15",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 15,
+    "unique": 8,
+    "verdicts": {
+     "EXACT": 15
+    }
+   },
+   {
+    "cluster": "greedy:two_partition:non-matroid",
+    "n": 2,
+    "nearness": {
+     "mean_closeness": 0.9872,
+     "mean_exact_rate": 0.9375,
+     "worst_closeness": 0.625
+    },
+    "unique": 2,
+    "verdicts": {
+     "NEAR-MISS": 2
+    }
+   },
+   {
+    "cluster": "greedy:uniform:matroid",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0544,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "34/34",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 34,
+    "unique": 15,
+    "verdicts": {
+     "EXACT": 34
+    }
+   }
+  ],
+  "exact_without_precondition": 5,
+  "precondition_precision": 1.0,
+  "precondition_recall_of_exact": 0.9725,
+  "unique": 153,
+  "verdicts": {
+   "EXACT": 182,
+   "NEAR-MISS": 78
+  }
+ },
+ "knuth": {
+  "candidates": 260,
+  "clusters": [
+   {
+    "cluster": "knuth:bst",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6869,
+     "fast_alpha": 1.0106,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.999,
+      1.0256
+     ],
+     "resolved_fraction": "36/36",
+     "slow_alpha": 1.0,
+     "slow_claim": "n*(n+1)*(n+2)/6",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 36,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 36
+    }
+   },
+   {
+    "cluster": "knuth:concave_len",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6798,
+     "fast_alpha": 1.0,
+     "fast_claim": "n**2",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "36/36",
+     "slow_alpha": 1.0,
+     "slow_claim": "n*(n+1)*(n+2)/6",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 36,
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 36
+    }
+   },
+   {
+    "cluster": "knuth:convex_len",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6798,
+     "fast_alpha": 1.0,
+     "fast_claim": "n**2",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "24/24",
+     "slow_alpha": 1.0,
+     "slow_claim": "n*(n+1)*(n+2)/6",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 24,
+    "unique": 14,
+    "verdicts": {
+     "EXACT": 24
+    }
+   },
+   {
+    "cluster": "knuth:monotone_rand",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6822,
+     "fast_alpha": 1.0036,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9828,
+      1.0176
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0,
+     "slow_claim": "n*(n+1)*(n+2)/6",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 42,
+    "nearness": {
+     "mean_closeness": 0.9982,
+     "mean_exact_rate": 0.9017,
+     "worst_closeness": 0.9123
+    },
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 2,
+     "NEAR-MISS": 40
+    }
+   },
+   {
+    "cluster": "knuth:perturbed",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6781,
+     "fast_alpha": 0.9976,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9865,
+      1.0065
+     ],
+     "resolved_fraction": "5/5",
+     "slow_alpha": 1.0,
+     "slow_claim": "n*(n+1)*(n+2)/6",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 32,
+    "nearness": {
+     "mean_closeness": 0.9713,
+     "mean_exact_rate": 0.8481,
+     "worst_closeness": 0.0
+    },
+    "unique": 24,
+    "verdicts": {
+     "EXACT": 5,
+     "NEAR-MISS": 27
+    }
+   },
+   {
+    "cluster": "knuth:random",
+    "n": 30,
+    "nearness": {
+     "mean_closeness": 0.598,
+     "mean_exact_rate": 0.1011,
+     "worst_closeness": 0.0
+    },
+    "unique": 3,
+    "verdicts": {
+     "WRONG": 30
+    }
+   },
+   {
+    "cluster": "knuth:subint",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.6747,
+     "fast_alpha": 0.9925,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9052,
+      1.0242
+     ],
+     "resolved_fraction": "19/19",
+     "slow_alpha": 1.0,
+     "slow_claim": "n*(n+1)*(n+2)/6",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 19,
+    "unique": 6,
+    "verdicts": {
+     "EXACT": 19
+    }
+   },
+   {
+    "cluster": "knuth:subint_lin",
+    "n": 41,
+    "nearness": {
+     "mean_closeness": 0.8449,
+     "mean_exact_rate": 0.3016,
+     "worst_closeness": 0.0
+    },
+    "unique": 18,
+    "verdicts": {
+     "NEAR-MISS": 13,
+     "WRONG": 28
+    }
+   }
+  ],
+  "exact_without_precondition": 43,
+  "precondition_precision": 1.0,
+  "precondition_recall_of_exact": 0.6475,
+  "unique": 76,
+  "verdicts": {
+   "EXACT": 122,
+   "NEAR-MISS": 80,
+   "WRONG": 58
+  }
+ },
+ "magma_power": {
+  "candidates": 320,
+  "clusters": [
+   {
+    "cluster": "magma:assoc:comm",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0314,
+     "fast_alpha": 1.0,
+     "fast_claim": "n - 1",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "69/69",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n - 2",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 69,
+    "unique": 15,
+    "verdicts": {
+     "EXACT": 69
+    }
+   },
+   {
+    "cluster": "magma:assoc:noncomm",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0314,
+     "fast_alpha": 1.0,
+     "fast_claim": "n - 1",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "53/53",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n - 2",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 53,
+    "unique": 20,
+    "verdicts": {
+     "EXACT": 53
+    }
+   },
+   {
+    "cluster": "magma:none:comm",
+    "n": 31,
+    "nearness": {
+     "mean_closeness": 0.5785,
+     "mean_exact_rate": 0.5785,
+     "worst_closeness": 0.0
+    },
+    "unique": 25,
+    "verdicts": {
+     "NEAR-MISS": 20,
+     "WRONG": 11
+    }
+   },
+   {
+    "cluster": "magma:none:noncomm",
+    "n": 70,
+    "nearness": {
+     "mean_closeness": 0.6374,
+     "mean_exact_rate": 0.6374,
+     "worst_closeness": 0.0
+    },
+    "unique": 65,
+    "verdicts": {
+     "NEAR-MISS": 58,
+     "WRONG": 12
+    }
+   },
+   {
+    "cluster": "magma:power-assoc:comm",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0314,
+     "fast_alpha": 1.0,
+     "fast_claim": "n - 1",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "24/24",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n - 2",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 24,
+    "unique": 18,
+    "verdicts": {
+     "EXACT": 24
+    }
+   },
+   {
+    "cluster": "magma:power-assoc:noncomm",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0314,
+     "fast_alpha": 1.0,
+     "fast_claim": "n - 1",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "39/39",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n - 2",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 39,
+    "unique": 39,
+    "verdicts": {
+     "EXACT": 39
+    }
+   },
+   {
+    "cluster": "magma:square-cond:comm",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0314,
+     "fast_alpha": 1.0,
+     "fast_claim": "n - 1",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n - 2",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "magma:square-cond:noncomm",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0314,
+     "fast_alpha": 1.0,
+     "fast_claim": "n - 1",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "33/33",
+     "slow_alpha": 1.0,
+     "slow_claim": "2**n - 2",
+     "slow_local": [
+      1.0,
+      1.0
+     ]
+    },
+    "n": 33,
+    "unique": 16,
+    "verdicts": {
+     "EXACT": 33
+    }
+   }
+  ],
+  "exact_without_precondition": 97,
+  "precondition_precision": 1.0,
+  "precondition_recall_of_exact": 0.5571,
+  "unique": 199,
+  "verdicts": {
+   "EXACT": 219,
+   "NEAR-MISS": 78,
+   "WRONG": 23
+  }
+ },
+ "memo": {
+  "candidates": 300,
+  "clusters": [
+   {
+    "cluster": "compress1d:nopre:s1+s1+s4",
+    "n": 1,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 1,
+    "verdicts": {
+     "WRONG": 1
+    }
+   },
+   {
+    "cluster": "compress1d:nopre:s1+s2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.6180339887**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "compress1d:nopre:s1+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.4655712319**n",
+     "slow_local": [
+      1.0,
+      1.0016
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "compress1d:nopre:s1+s3+s3",
+    "n": 1,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 1,
+    "verdicts": {
+     "WRONG": 1
+    }
+   },
+   {
+    "cluster": "compress1d:nopre:s1+s4",
+    "n": 2,
+    "nearness": {
+     "mean_closeness": 0.3889,
+     "mean_exact_rate": 0.3889,
+     "worst_closeness": 0.0
+    },
+    "unique": 2,
+    "verdicts": {
+     "NEAR-MISS": 1,
+     "WRONG": 1
+    }
+   },
+   {
+    "cluster": "compress1d:nopre:s1+s4+s4",
+    "n": 1,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 1,
+    "verdicts": {
+     "WRONG": 1
+    }
+   },
+   {
+    "cluster": "compress1d:nopre:s2+s3",
+    "n": 5,
+    "nearness": {
+     "mean_closeness": 0.1333,
+     "mean_exact_rate": 0.1333,
+     "worst_closeness": 0.0
+    },
+    "unique": 5,
+    "verdicts": {
+     "WRONG": 5
+    }
+   },
+   {
+    "cluster": "compress1d:nopre:s2+s3+s3",
+    "n": 2,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 2,
+    "verdicts": {
+     "WRONG": 2
+    }
+   },
+   {
+    "cluster": "compress1d:nopre:s2+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.2720196495**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 2,
+    "nearness": {
+     "mean_closeness": 0.0556,
+     "mean_exact_rate": 0.0556,
+     "worst_closeness": 0.0
+    },
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 1,
+     "WRONG": 1
+    }
+   },
+   {
+    "cluster": "compress1d:nopre:s3+s3+s4",
+    "n": 2,
+    "nearness": {
+     "mean_closeness": 0.0278,
+     "mean_exact_rate": 0.0278,
+     "worst_closeness": 0.0
+    },
+    "unique": 2,
+    "verdicts": {
+     "WRONG": 2
+    }
+   },
+   {
+    "cluster": "compress1d:nopre:s3+s4+s4",
+    "n": 2,
+    "nearness": {
+     "mean_closeness": 0.0,
+     "mean_exact_rate": 0.0,
+     "worst_closeness": 0.0
+    },
+    "unique": 2,
+    "verdicts": {
+     "WRONG": 2
+    }
+   },
+   {
+    "cluster": "compress1d:nopre:s4+s4",
+    "n": 2,
+    "nearness": {
+     "mean_closeness": 0.0278,
+     "mean_exact_rate": 0.0278,
+     "worst_closeness": 0.0
+    },
+    "unique": 2,
+    "verdicts": {
+     "WRONG": 2
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s1+s1",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9997,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9993,
+      0.9999
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0003,
+     "slow_claim": "2.0000000000**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s1+s1+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0001,
+     "slow_claim": "2.2055694304**n",
+     "slow_local": [
+      1.0,
+      1.0005
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s1+s2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.6180339887**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 4,
+    "unique": 4,
+    "verdicts": {
+     "EXACT": 4
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s1+s2+s2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0003,
+     "slow_claim": "2.0000000000**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s1+s2+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9999,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0,
+     "slow_claim": "1.8392867552**n",
+     "slow_local": [
+      1.0,
+      1.0001
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s1+s2+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0001,
+     "slow_claim": "1.7548776662**n",
+     "slow_local": [
+      1.0,
+      1.0004
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s1+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "7/7",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.4655712319**n",
+     "slow_local": [
+      1.0,
+      1.0016
+     ]
+    },
+    "n": 7,
+    "unique": 7,
+    "verdicts": {
+     "EXACT": 7
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s1+s3+s4",
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s1+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 1.0004,
+     "slow_claim": "1.3802775691**n",
+     "slow_local": [
+      1.0,
+      1.0016
+     ]
+    },
+    "n": 4,
+    "unique": 4,
+    "verdicts": {
+     "EXACT": 4
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s1+s4+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 0.999,
+     "slow_claim": "1.5436890127**n",
+     "slow_local": [
+      0.9873,
+      1.0037
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s2+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "8/8",
+     "slow_alpha": 1.0004,
+     "slow_claim": "1.3247179572**n",
+     "slow_local": [
+      1.0,
+      1.0018
+     ]
+    },
+    "n": 8,
+    "unique": 8,
+    "verdicts": {
+     "EXACT": 8
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s2+s3+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0,
+     "slow_claim": "1.4655712319**n",
+     "slow_local": [
+      0.9999,
+      1.0001
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s2+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.2720196495**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s3+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9997,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9993,
+      0.9999
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.2599210499**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s3+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 1.0001,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0001
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 0.9998,
+     "slow_claim": "1.2207440846**n",
+     "slow_local": [
+      0.9979,
+      1.0007
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s3+s4+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0,
+     "fast_alpha": 1.0001,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0001
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0066,
+     "slow_claim": "1.3532099642**n",
+     "slow_local": [
+      0.9837,
+      1.0244
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "compress1d:pre:s4+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9997,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9993,
+      0.9999
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.1892071150**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo1d:div:h",
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "INVALID": 3
+    }
+   },
+   {
+    "cluster": "memo1d:div:h+h",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0556,
+     "fast_alpha": 0.9988,
+     "fast_claim": "log(n)",
+     "fast_local": [
+      0.8879,
+      1.0451
+     ],
+     "resolved_fraction": "0/3",
+     "slow_alpha": 1.0003,
+     "slow_claim": "n**1.0000000000",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo1d:div:h+h+h",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.035,
+     "fast_alpha": 0.9988,
+     "fast_claim": "log(n)",
+     "fast_local": [
+      0.8879,
+      1.0451
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0002,
+     "slow_claim": "n**1.5849625007",
+     "slow_local": [
+      1.0,
+      1.0008
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:div:h+h+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0811,
+     "fast_alpha": 0.9888,
+     "fast_claim": "log(n)**2",
+     "fast_local": [
+      0.943,
+      1.0444
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 0.9804,
+     "slow_claim": "n**1.3646005647",
+     "slow_local": [
+      0.9528,
+      1.0006
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:div:h+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.1405,
+     "fast_alpha": 0.9888,
+     "fast_claim": "log(n)**2",
+     "fast_local": [
+      0.943,
+      1.0444
+     ],
+     "resolved_fraction": "18/18",
+     "slow_alpha": 0.9954,
+     "slow_claim": "n**0.7878849110",
+     "slow_local": [
+      0.9806,
+      1.0269
+     ]
+    },
+    "n": 18,
+    "unique": 18,
+    "verdicts": {
+     "EXACT": 18
+    }
+   },
+   {
+    "cluster": "memo1d:div:h+t+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0948,
+     "fast_alpha": 0.9888,
+     "fast_claim": "log(n)**2",
+     "fast_local": [
+      0.943,
+      1.0444
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0092,
+     "slow_claim": "n**1.1672889533",
+     "slow_local": [
+      0.9609,
+      1.0431
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:div:t",
+    "n": 7,
+    "unique": 6,
+    "verdicts": {
+     "INVALID": 7
+    }
+   },
+   {
+    "cluster": "memo1d:div:t+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.084,
+     "fast_alpha": 0.9519,
+     "fast_claim": "log(n)",
+     "fast_local": [
+      0.8848,
+      1.1136
+     ],
+     "resolved_fraction": "5/5",
+     "slow_alpha": 1.0089,
+     "slow_claim": "n**0.6309297536",
+     "slow_local": [
+      0.7926,
+      1.0578
+     ]
+    },
+    "n": 5,
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 5
+    }
+   },
+   {
+    "cluster": "memo1d:div:t+t+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.053,
+     "fast_alpha": 0.9519,
+     "fast_claim": "log(n)",
+     "fast_local": [
+      0.8848,
+      1.1136
+     ],
+     "resolved_fraction": "0/3",
+     "slow_alpha": 0.9964,
+     "slow_claim": "n**1.0000000000",
+     "slow_local": [
+      0.7925,
+      1.5851
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+h+s2+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "0/1",
+     "slow_alpha": 1.054,
+     "slow_claim": "1.2720196495**n",
+     "slow_local": [
+      1.0152,
+      1.1261
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+h+s3",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+h+s4+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "0/1",
+     "slow_alpha": 1.0695,
+     "slow_claim": "1.1892071150**n",
+     "slow_local": [
+      1.0174,
+      1.1525
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s1",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s1+s2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0223,
+     "slow_claim": "1.6180339887**n",
+     "slow_local": [
+      1.005,
+      1.0473
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s1+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.023,
+     "slow_claim": "1.4655712319**n",
+     "slow_local": [
+      1.0052,
+      1.0604
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s1+s3+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0309,
+     "slow_claim": "1.4655712319**n",
+     "slow_local": [
+      1.0077,
+      1.074
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s1+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0252,
+     "slow_claim": "1.3802775691**n",
+     "slow_local": [
+      1.0056,
+      1.0638
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s1+s4+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0318,
+     "slow_claim": "1.3802775691**n",
+     "slow_local": [
+      1.0069,
+      1.0837
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s1+t",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s2",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s2+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0256,
+     "slow_claim": "1.3247179572**n",
+     "slow_local": [
+      1.0055,
+      1.0567
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s2+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0223,
+     "slow_claim": "1.2720196495**n",
+     "slow_local": [
+      1.005,
+      1.0473
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s2+t",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s3",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s3+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      0.9999
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.028,
+     "slow_claim": "1.2599210499**n",
+     "slow_local": [
+      1.0074,
+      1.0667
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s3+s4+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 1.0001,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0001
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0226,
+     "slow_claim": "1.2207440846**n",
+     "slow_local": [
+      1.0072,
+      1.0453
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s4",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:h+s4+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.028,
+     "slow_claim": "1.1892071150**n",
+     "slow_local": [
+      1.0074,
+      1.0667
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:s1+s2+t+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0114,
+     "slow_claim": "1.6180339887**n",
+     "slow_local": [
+      1.0018,
+      1.0327
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:s1+s3+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0053,
+     "slow_claim": "1.4655712319**n",
+     "slow_local": [
+      1.0005,
+      1.0175
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:s2+s4+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9995,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0064,
+     "slow_claim": "1.2720196495**n",
+     "slow_local": [
+      1.0006,
+      1.0202
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:s2+t",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:s2+t+t",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:s3+s3+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9997,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      0.9999
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0061,
+     "slow_claim": "1.2599210499**n",
+     "slow_local": [
+      1.001,
+      1.0173
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:s3+s3+t+t",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9997,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      0.9999
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0158,
+     "slow_claim": "1.2599210499**n",
+     "slow_local": [
+      1.0023,
+      1.0366
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:s3+t",
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:mixed:s4+t",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1",
+    "n": 7,
+    "unique": 6,
+    "verdicts": {
+     "INVALID": 7
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1+s1",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9997,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9993,
+      0.9999
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0003,
+     "slow_claim": "2.0000000000**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1+s1+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0001,
+     "slow_claim": "2.2055694304**n",
+     "slow_local": [
+      1.0,
+      1.0005
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1+s1+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0,
+     "slow_claim": "2.1069193404**n",
+     "slow_local": [
+      1.0,
+      1.0001
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1+s2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.6180339887**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1+s2+s2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0003,
+     "slow_claim": "2.0000000000**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1+s2+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9999,
+      1.0
+     ],
+     "resolved_fraction": "5/5",
+     "slow_alpha": 1.0,
+     "slow_claim": "1.8392867552**n",
+     "slow_local": [
+      1.0,
+      1.0001
+     ]
+    },
+    "n": 5,
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 5
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1+s2+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "6/6",
+     "slow_alpha": 1.0001,
+     "slow_claim": "1.7548776662**n",
+     "slow_local": [
+      1.0,
+      1.0004
+     ]
+    },
+    "n": 6,
+    "unique": 6,
+    "verdicts": {
+     "EXACT": 6
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.4655712319**n",
+     "slow_local": [
+      1.0,
+      1.0016
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1+s3+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0005,
+     "slow_claim": "1.6956207696**n",
+     "slow_local": [
+      0.9995,
+      1.0055
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1+s3+s4",
+    "n": 4,
+    "unique": 4,
+    "verdicts": {
+     "EXACT": 4
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0004,
+     "slow_claim": "1.3802775691**n",
+     "slow_local": [
+      1.0,
+      1.0016
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s1+s4+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9999,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9998,
+      1.0
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 0.999,
+     "slow_claim": "1.5436890127**n",
+     "slow_local": [
+      0.9873,
+      1.0037
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s2",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "INVALID": 1
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s2+s2",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9997,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9993,
+      0.9999
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.4142135624**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s2+s2+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 0.9999,
+     "slow_claim": "1.6180339887**n",
+     "slow_local": [
+      0.9994,
+      1.0
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s2+s2+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 1.0002,
+     "slow_claim": "1.5537739740**n",
+     "slow_local": [
+      1.0,
+      1.0009
+     ]
+    },
+    "n": 4,
+    "unique": 4,
+    "verdicts": {
+     "EXACT": 4
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s2+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 1.0004,
+     "slow_claim": "1.3247179572**n",
+     "slow_local": [
+      1.0,
+      1.0018
+     ]
+    },
+    "n": 4,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 4
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s2+s3+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0,
+     "fast_alpha": 1.0,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0,
+     "slow_claim": "1.4655712319**n",
+     "slow_local": [
+      0.9999,
+      1.0001
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s2+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.2720196495**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 4,
+    "unique": 4,
+    "verdicts": {
+     "EXACT": 4
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s2+s4+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 0.9998,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9996,
+      1.0
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.4142135624**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s3",
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "INVALID": 3
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s3+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9997,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9993,
+      0.9999
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.2599210499**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s3+s3+s3",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9997,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9993,
+      0.9999
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0002,
+     "slow_claim": "1.4422495703**n",
+     "slow_local": [
+      1.0,
+      1.0008
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s3+s3+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0,
+     "fast_alpha": 1.0001,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0001
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0014,
+     "slow_claim": "1.3953369945**n",
+     "slow_local": [
+      0.9683,
+      1.0457
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s3+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0001,
+     "fast_alpha": 1.0001,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0001
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 0.9998,
+     "slow_claim": "1.2207440846**n",
+     "slow_local": [
+      0.9979,
+      1.0007
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s3+s4+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0,
+     "fast_alpha": 1.0001,
+     "fast_claim": "n",
+     "fast_local": [
+      1.0,
+      1.0001
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0066,
+     "slow_claim": "1.3532099642**n",
+     "slow_local": [
+      0.9837,
+      1.0244
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s4",
+    "n": 4,
+    "unique": 4,
+    "verdicts": {
+     "INVALID": 4
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s4+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9997,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9993,
+      0.9999
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.1892071150**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo1d:sub:s4+s4+s4",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0002,
+     "fast_alpha": 0.9997,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9993,
+      0.9999
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0002,
+     "slow_claim": "1.3160740130**n",
+     "slow_local": [
+      1.0,
+      1.0008
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(0,2),(1,0),(2,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0186,
+     "fast_alpha": 0.9773,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9625,
+      0.9892
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 0.9919,
+     "slow_claim": "6.2623026261**n/sqrt(n)",
+     "slow_local": [
+      0.9889,
+      0.9943
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(0,2),(1,0)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0202,
+     "fast_alpha": 0.9765,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9606,
+      0.9891
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 0.9956,
+     "slow_claim": "5.4000000000**n/sqrt(n)",
+     "slow_local": [
+      0.9948,
+      0.9967
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(0,2),(1,1),(2,0)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0213,
+     "fast_alpha": 0.9831,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9722,
+      0.9919
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 0.9905,
+     "slow_claim": "4.9892756967**n/sqrt(n)",
+     "slow_local": [
+      0.9762,
+      1.0004
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(0,2),(1,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0381,
+     "fast_alpha": 0.9662,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9441,
+      0.9839
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0002,
+     "slow_claim": "2.4142135624**n",
+     "slow_local": [
+      1.0,
+      1.0009
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(0,2),(1,2),(2,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.034,
+     "fast_alpha": 0.9835,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9717,
+      0.9926
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0119,
+     "slow_claim": "2.7320508076**n",
+     "slow_local": [
+      0.9897,
+      1.0429
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(0,2),(1,2)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0478,
+     "fast_alpha": 0.9514,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9175,
+      0.978
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0003,
+     "slow_claim": "2.0000000000**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(0,2),(2,0)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0256,
+     "fast_alpha": 0.9662,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9441,
+      0.9839
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 0.9624,
+     "slow_claim": "3.7467589118**n/sqrt(n)",
+     "slow_local": [
+      0.616,
+      1.3647
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(0,2)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0352,
+     "fast_alpha": 0.9749,
+     "fast_claim": "n",
+     "fast_local": [
+      0.9569,
+      0.9889
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.6180339887**n",
+     "slow_local": [
+      1.0,
+      1.0014
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(1,0),(1,1),(1,2)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0182,
+     "fast_alpha": 0.9757,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9588,
+      0.989
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.003,
+     "slow_claim": "6.4641016151**n/sqrt(n)",
+     "slow_local": [
+      1.0025,
+      1.0036
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(1,0),(1,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0193,
+     "fast_alpha": 0.9749,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9569,
+      0.9889
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0026,
+     "slow_claim": "5.8284271247**n/sqrt(n)",
+     "slow_local": [
+      1.0017,
+      1.004
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(1,0)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0246,
+     "fast_alpha": 0.9757,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9588,
+      0.989
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0024,
+     "slow_claim": "4.0000000000**n/sqrt(n)",
+     "slow_local": [
+      1.0013,
+      1.0043
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(1,1),(1,2),(2,0)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0225,
+     "fast_alpha": 0.9831,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9722,
+      0.9919
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 0.9962,
+     "slow_claim": "4.5801900860**n/sqrt(n)",
+     "slow_local": [
+      0.9953,
+      0.9968
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(1,1),(1,2),(2,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0284,
+     "fast_alpha": 0.9768,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9612,
+      0.9892
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 0.9976,
+     "slow_claim": "3.3027756377**n",
+     "slow_local": [
+      0.995,
+      0.9998
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(1,1),(1,2)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0381,
+     "fast_alpha": 0.9662,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9441,
+      0.9839
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0002,
+     "slow_claim": "2.4142135624**n",
+     "slow_local": [
+      1.0,
+      1.0009
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(1,1),(2,0)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0247,
+     "fast_alpha": 0.9815,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9684,
+      0.9917
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0,
+     "slow_claim": "4.0000000000**n/sqrt(n)",
+     "slow_local": [
+      0.9989,
+      1.0006
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(1,1),(2,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.031,
+     "fast_alpha": 0.9747,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9563,
+      0.9888
+     ],
+     "resolved_fraction": "0/1",
+     "slow_alpha": 1.058,
+     "slow_claim": "3.0000000000**n/sqrt(n)",
+     "slow_local": [
+      1.0453,
+      1.0743
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(1,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0483,
+     "fast_alpha": 0.9632,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9372,
+      0.9834
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0003,
+     "slow_claim": "2.0000000000**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(1,2),(2,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0388,
+     "fast_alpha": 0.9846,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9743,
+      0.9928
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.003,
+     "slow_claim": "2.4142135624**n",
+     "slow_local": [
+      0.9923,
+      1.0067
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(1,2)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.069,
+     "fast_alpha": 0.9542,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.924,
+      0.9785
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.6180339887**n",
+     "slow_local": [
+      1.0,
+      1.0014
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(2,0),(2,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.028,
+     "fast_alpha": 0.9632,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9372,
+      0.9834
+     ],
+     "resolved_fraction": "0/3",
+     "slow_alpha": 0.9488,
+     "slow_claim": "3.3301906768**n/sqrt(n)",
+     "slow_local": [
+      0.3752,
+      1.6267
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(2,0)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0354,
+     "fast_alpha": 0.9647,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9407,
+      0.9837
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 0.9511,
+     "slow_claim": "2.5980762114**n/sqrt(n)",
+     "slow_local": [
+      0.4108,
+      1.5914
+     ]
+    },
+    "n": 4,
+    "unique": 4,
+    "verdicts": {
+     "EXACT": 4
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1),(2,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0487,
+     "fast_alpha": 0.9592,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9305,
+      0.9816
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 1.0143,
+     "slow_claim": "2.0000000000**n/sqrt(n)",
+     "slow_local": [
+      0.7499,
+      1.0723
+     ]
+    },
+    "n": 4,
+    "unique": 4,
+    "verdicts": {
+     "EXACT": 4
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,1)]",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "INVALID": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,2),(1,1),(1,2)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0489,
+     "fast_alpha": 0.9757,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9588,
+      0.989
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0003,
+     "slow_claim": "2.0000000000**n",
+     "slow_local": [
+      1.0,
+      1.0011
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,2),(1,1),(2,0)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0311,
+     "fast_alpha": 0.9757,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9588,
+      0.989
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 0.9969,
+     "slow_claim": "3.0000000000**n/sqrt(n)",
+     "slow_local": [
+      0.9946,
+      0.9988
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,2),(1,1),(2,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0395,
+     "fast_alpha": 0.9927,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9881,
+      0.9964
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0352,
+     "slow_claim": "2.4096644136**n/sqrt(n)",
+     "slow_local": [
+      1.0269,
+      1.0397
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,2),(1,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.069,
+     "fast_alpha": 0.9542,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.924,
+      0.9785
+     ],
+     "resolved_fraction": "4/4",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.6180339887**n",
+     "slow_local": [
+      1.0,
+      1.0014
+     ]
+    },
+    "n": 4,
+    "unique": 4,
+    "verdicts": {
+     "EXACT": 4
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,2),(1,2),(2,0)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0358,
+     "fast_alpha": 0.9757,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9588,
+      0.989
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0002,
+     "slow_claim": "2.5980762114**n/sqrt(n)",
+     "slow_local": [
+      0.4294,
+      1.5688
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,2),(1,2),(2,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0507,
+     "fast_alpha": 1.0156,
+     "fast_claim": "n**2",
+     "fast_local": [
+      1.0073,
+      1.0259
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0043,
+     "slow_claim": "2.0000000000**n",
+     "slow_local": [
+      0.9892,
+      1.0315
+     ]
+    },
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "EXACT": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,2),(1,2)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0935,
+     "fast_alpha": 0.93,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.8828,
+      0.9675
+     ],
+     "resolved_fraction": "0/3",
+     "slow_alpha": 0.9931,
+     "slow_claim": "1.4142135624**n",
+     "slow_local": [
+      0.6667,
+      1.3335
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,2),(2,0)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0484,
+     "fast_alpha": 0.9542,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.924,
+      0.9785
+     ],
+     "resolved_fraction": "0/2",
+     "slow_alpha": 0.8604,
+     "slow_claim": "2.0000000000**n/sqrt(n)",
+     "slow_local": [
+      0.0,
+      1.0043
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,2),(2,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.069,
+     "fast_alpha": 0.9542,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.924,
+      0.9785
+     ],
+     "resolved_fraction": "2/2",
+     "slow_alpha": 1.0078,
+     "slow_claim": "1.6180339887**n",
+     "slow_local": [
+      0.9316,
+      1.0652
+     ]
+    },
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "EXACT": 2
+    }
+   },
+   {
+    "cluster": "memo2d:[(0,2)]",
+    "n": 2,
+    "unique": 2,
+    "verdicts": {
+     "INVALID": 2
+    }
+   },
+   {
+    "cluster": "memo2d:[(1,1),(1,2),(2,1)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.0408,
+     "fast_alpha": 0.9757,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.9588,
+      0.989
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0239,
+     "slow_claim": "2.3145962123**n/sqrt(n)",
+     "slow_local": [
+      1.0166,
+      1.0385
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo2d:[(1,1),(1,2)]",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.069,
+     "fast_alpha": 0.9542,
+     "fast_claim": "n**2",
+     "fast_local": [
+      0.924,
+      0.9785
+     ],
+     "resolved_fraction": "3/3",
+     "slow_alpha": 1.0003,
+     "slow_claim": "1.6180339887**n",
+     "slow_local": [
+      1.0,
+      1.0014
+     ]
+    },
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 3
+    }
+   },
+   {
+    "cluster": "memo2d:[(1,1)]",
+    "n": 1,
+    "unique": 1,
+    "verdicts": {
+     "INVALID": 1
+    }
+   },
+   {
+    "cluster": "memo2d:[(1,2)]",
+    "n": 3,
+    "unique": 3,
+    "verdicts": {
+     "INVALID": 3
+    }
+   }
+  ],
+  "exact_without_precondition": 4,
+  "precondition_precision": 1.0,
+  "precondition_recall_of_exact": 0.9839,
+  "unique": 297,
+  "verdicts": {
+   "EXACT": 249,
+   "INVALID": 32,
+   "NEAR-MISS": 1,
+   "WRONG": 18
+  }
+ },
+ "mitm": {
+  "candidates": 220,
+  "clusters": [
+   {
+    "cluster": "mitm:add:group",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.4819,
+     "fast_alpha": 0.9637,
+     "fast_claim": "2**(n/2)",
+     "fast_local": [
+      0.8515,
+      0.9991
+     ],
+     "resolved_fraction": "32/32",
+     "slow_alpha": 1.0005,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0021
+     ]
+    },
+    "n": 32,
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 32
+    }
+   },
+   {
+    "cluster": "mitm:add_inter:group",
+    "n": 33,
+    "nearness": {
+     "mean_closeness": 0.9156,
+     "mean_exact_rate": 0.254,
+     "worst_closeness": 0.0
+    },
+    "unique": 17,
+    "verdicts": {
+     "NEAR-MISS": 23,
+     "WRONG": 10
+    }
+   },
+   {
+    "cluster": "mitm:add_inter_local:group",
+    "n": 37,
+    "unique": 19,
+    "verdicts": {
+     "EXACT": 37
+    }
+   },
+   {
+    "cluster": "mitm:addsat:non-group",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.4885,
+     "fast_alpha": 0.977,
+     "fast_claim": "2**(n/2)",
+     "fast_local": [
+      0.8849,
+      0.9988
+     ],
+     "resolved_fraction": "1/1",
+     "slow_alpha": 1.0005,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0021
+     ]
+    },
+    "n": 9,
+    "nearness": {
+     "mean_closeness": 0.8936,
+     "mean_exact_rate": 0.8792,
+     "worst_closeness": 0.0309
+    },
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 1,
+     "NEAR-MISS": 8
+    }
+   },
+   {
+    "cluster": "mitm:max:non-group",
+    "n": 18,
+    "nearness": {
+     "mean_closeness": 0.8387,
+     "mean_exact_rate": 0.7704,
+     "worst_closeness": 0.0156
+    },
+    "unique": 5,
+    "verdicts": {
+     "NEAR-MISS": 18
+    }
+   },
+   {
+    "cluster": "mitm:mul_comp:non-group",
+    "n": 19,
+    "nearness": {
+     "mean_closeness": 0.8418,
+     "mean_exact_rate": 0.6719,
+     "worst_closeness": 0.0
+    },
+    "unique": 6,
+    "verdicts": {
+     "NEAR-MISS": 19
+    }
+   },
+   {
+    "cluster": "mitm:mul_unit:group",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.4964,
+     "fast_alpha": 0.9928,
+     "fast_claim": "2**(n/2)",
+     "fast_local": [
+      0.9675,
+      0.9999
+     ],
+     "resolved_fraction": "25/25",
+     "slow_alpha": 1.0005,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0021
+     ]
+    },
+    "n": 25,
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 25
+    }
+   },
+   {
+    "cluster": "mitm:mul_zero:non-group",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.4854,
+     "fast_alpha": 0.9708,
+     "fast_claim": "2**(n/2)",
+     "fast_local": [
+      0.9088,
+      0.9991
+     ],
+     "resolved_fraction": "8/8",
+     "slow_alpha": 1.0005,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0021
+     ]
+    },
+    "n": 25,
+    "nearness": {
+     "mean_closeness": 0.957,
+     "mean_exact_rate": 0.9284,
+     "worst_closeness": 0.0
+    },
+    "unique": 5,
+    "verdicts": {
+     "EXACT": 8,
+     "NEAR-MISS": 17
+    }
+   },
+   {
+    "cluster": "mitm:xor:group",
+    "exponent": {
+     "cross_alpha_fast_vs_slow_claim": 0.4954,
+     "fast_alpha": 0.9908,
+     "fast_claim": "2**(n/2)",
+     "fast_local": [
+      0.9754,
+      0.9996
+     ],
+     "resolved_fraction": "22/22",
+     "slow_alpha": 1.0005,
+     "slow_claim": "2**n",
+     "slow_local": [
+      1.0,
+      1.0021
+     ]
+    },
+    "n": 22,
+    "unique": 3,
+    "verdicts": {
+     "EXACT": 22
+    }
+   }
+  ],
+  "exact_without_precondition": 9,
+  "precondition_precision": 1.0,
+  "precondition_recall_of_exact": 0.928,
+  "unique": 70,
+  "verdicts": {
+   "EXACT": 125,
+   "NEAR-MISS": 85,
+   "WRONG": 10
+  }
+ }
+}

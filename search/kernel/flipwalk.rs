@@ -15,10 +15,15 @@
 //! sweep settles the rest), and leaves at once (restart or plus transition, by the same rule as at a plateau)
 //! instead of idling until the plateau. --dead-end 0 reproduces the earlier kernel's trajectories exactly.
 //!
+//! Full reduction (--full-reduce 1; default 0 = the earlier kernel, research/2026-10-06d_exotic_formats.md): besides
+//! merging two terms that share two factors, the reduction also removes a term whenever the terms sharing one
+//! factor with it have linearly dependent factors in a second position (Kauers-Moosbauer's general reduction):
+//! f(x)x_g(x)y_g with x_g = sum_{s in S} x_s equals sum_s f(x)x_s(x)y_g, which is absorbed into the terms s.
+//!
 //! Input file (--input): first line r, then r lines "a b c" (decimal u64 bitmasks).
 //! Output (stdout): "IMPROVED <rank> <step> <seconds>" lines, then
 //!                  "STATS steps=<s> seconds=<t> flips=<f> rejected_weight=<w> plus=<p> restarts=<q>
-//!                   dead_ends=<d>" (one line),
+//!                   dead_ends=<d> dep_reductions=<e>" (one line),
 //!                  "BEST <r>", then r lines "a b c".
 //! Exit codes: 0 ok, 2 bad arguments or input. A panic (e.g. an out-of-range index) exits with 101 and
 //! never writes memory out of bounds: safe Rust checks every index.
@@ -56,6 +61,7 @@ struct Params {
     max_weight: u32,
     target_rank: usize,
     dead_end: bool,
+    full_reduce: bool,
 }
 
 #[derive(Default)]
@@ -65,6 +71,7 @@ struct Counters {
     plus: u64,
     restarts: u64,
     dead_ends: u64, // steps at which a dead end was detected (each triggers one restart or plus attempt)
+    dep_reductions: u64, // terms removed by the linear-dependence reduction (--full-reduce 1)
 }
 
 fn has_zero(t: &Term) -> bool {
@@ -115,10 +122,75 @@ fn shift_after_remove(work: &mut [usize], removed: usize) {
     }
 }
 
-/// Remove zero terms and merge terms sharing two factors, starting from the touched indices.
-/// Deterministic LIFO worklist (mirrored exactly by kernel_reference.reduce).
-fn reduce(terms: &mut Vec<Term>, touched: &[usize]) {
+/// Linear-dependence reduction at term t (--full-reduce 1). For each position p (0, 1, 2) and each other position
+/// q = p+1, p+2 (mod 3): the terms sharing factor p with term t (t included, in index order) are tested for a linear
+/// dependence of their factors at q over GF(2), by elimination in index order. If the vector of member g reduces to
+/// zero, x_g = sum_{s in S} x_s, so f(x)x_g(x)y_g = sum_s f(x)x_s(x)y_g: y_g is added to the factor at the remaining
+/// position o of every s in S (in index order) and term g is removed. Returns (removed, changed) or None.
+/// Groups of fewer than 3 terms are skipped (two vectors are dependent only if equal, which the merge rule covers).
+fn dependency_reduction(terms: &mut Vec<Term>, t: usize) -> Option<(usize, Vec<usize>)> {
+    let r = terms.len();
+    for p in 0..3 {
+        let key = terms[t][p];
+        // Count first (no allocation): most groups have fewer than 3 members and are skipped at once.
+        let size = terms.iter().filter(|t| t[p] == key).count();
+        if size < 3 || size > 64 {
+            continue;
+        }
+        let mut members = [0usize; 64];
+        let mut len = 0;
+        for q in 0..r {
+            if terms[q][p] == key {
+                members[len] = q;
+                len += 1;
+            }
+        }
+        let group = &members[..len];
+        for d in 1..3 {
+            let q = (p + d) % 3;
+            let o = (p + 3 - d) % 3;
+            let mut basis: [(u64, u64); 64] = [(0, 0); 64]; // indexed by pivot bit: (vector, mask of members)
+            for (g, &idx) in group.iter().enumerate() {
+                let mut v = terms[idx][q];
+                let mut mask: u64 = 1u64 << g;
+                let mut inserted = false;
+                for bit in (0..64).rev() {
+                    if (v >> bit) & 1 == 0 {
+                        continue;
+                    }
+                    if basis[bit].0 == 0 {
+                        basis[bit] = (v, mask);
+                        inserted = true;
+                        break;
+                    }
+                    v ^= basis[bit].0;
+                    mask ^= basis[bit].1;
+                }
+                if !inserted {
+                    let y = terms[idx][o];
+                    let mut changed: Vec<usize> = Vec::new();
+                    for (h, &other) in group.iter().enumerate() {
+                        if h != g && (mask >> h) & 1 == 1 {
+                            terms[other][o] ^= y;
+                            changed.push(other);
+                        }
+                    }
+                    terms.remove(idx);
+                    return Some((idx, changed));
+                }
+            }
+        }
+    }
+    None
+}
+
+/// Remove zero terms and merge terms sharing two factors, starting from the touched indices; with `full`, also
+/// apply the linear-dependence reduction to every term that has no merge partner.
+/// Deterministic LIFO worklist (mirrored exactly by kernel_reference.reduce). Returns the number of terms removed
+/// by the linear-dependence reduction.
+fn reduce(terms: &mut Vec<Term>, touched: &[usize], full: bool) -> u64 {
     let mut work: Vec<usize> = touched.to_vec();
+    let mut deps: u64 = 0;
     while let Some(t) = work.pop() {
         if t >= terms.len() {
             continue;
@@ -128,6 +200,7 @@ fn reduce(terms: &mut Vec<Term>, touched: &[usize]) {
             shift_after_remove(&mut work, t);
             continue;
         }
+        let mut merged = false;
         for q in 0..terms.len() {
             if q == t {
                 continue;
@@ -146,9 +219,23 @@ fn reduce(terms: &mut Vec<Term>, touched: &[usize]) {
             terms.remove(t);
             shift_after_remove(&mut work, t);
             work.push(if q > t { q - 1 } else { q });
+            merged = true;
             break;
         }
+        if full && !merged {
+            if let Some((removed, changed)) = dependency_reduction(terms, t) {
+                deps += 1;
+                shift_after_remove(&mut work, removed);
+                if t != removed && !changed.contains(&t) {
+                    work.push(if t > removed { t - 1 } else { t });
+                }
+                for c in changed {
+                    work.push(if c > removed { c - 1 } else { c });
+                }
+            }
+        }
     }
+    deps
 }
 
 /// Rank-increasing move to leave a plateau (over GF(2)):
@@ -156,7 +243,7 @@ fn reduce(terms: &mut Vec<Term>, touched: &[usize]) {
 /// (the cross terms a'(x)b(x)c and a'(x)b(x)c' each appear twice and cancel). Requires a != a', b != b',
 /// c != c', so that no new term is zero and no two of the three share two factors; otherwise the
 /// reduction would merge them straight back (RESEARCH_LOG RL-052: the first version did exactly that).
-fn plus_transition(terms: &mut Vec<Term>, rng: &mut SplitMix64, cap: u32) -> bool {
+fn plus_transition(terms: &mut Vec<Term>, rng: &mut SplitMix64, cap: u32, full: bool, cnt: &mut Counters) -> bool {
     let r = terms.len();
     if r < 2 {
         return false;
@@ -180,7 +267,7 @@ fn plus_transition(terms: &mut Vec<Term>, rng: &mut SplitMix64, cap: u32) -> boo
     terms[j] = t2;
     terms.push(t3);
     let last = terms.len() - 1;
-    reduce(terms, &[i, j, last]);
+    cnt.dep_reductions += reduce(terms, &[i, j, last], full);
     true
 }
 
@@ -223,7 +310,7 @@ fn walk(start: Vec<Term>, prm: &Params, out: &mut String) -> (Vec<Term>, u64, f6
                 let j = cands[rng.below(cands.len())];
                 if flip(&mut terms, i, j, p, prm.max_weight) {
                     cnt.flips += 1;
-                    reduce(&mut terms, &[i, j]);
+                    cnt.dep_reductions += reduce(&mut terms, &[i, j], prm.full_reduce);
                     epoch += 1;
                     unmatched = 0;
                 } else {
@@ -275,7 +362,7 @@ fn walk(start: Vec<Term>, prm: &Params, out: &mut String) -> (Vec<Term>, u64, f6
                 cnt.restarts += 1;
                 epoch += 1;
                 unmatched = 0;
-            } else if plus_transition(&mut terms, &mut rng, prm.max_weight) {
+            } else if plus_transition(&mut terms, &mut rng, prm.max_weight, prm.full_reduce, &mut cnt) {
                 cnt.plus += 1;
                 epoch += 1;
                 unmatched = 0;
@@ -295,7 +382,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let mut input: Option<String> = None;
     let mut prm = Params { seed: 1, max_steps: 1_000_000, max_seconds: 60.0, plateau: 50_000, slack: 3,
-                           max_weight: 0, target_rank: 0, dead_end: true };
+                           max_weight: 0, target_rank: 0, dead_end: true, full_reduce: false };
     let mut k = 1;
     while k < args.len() {
         let val = args.get(k + 1).unwrap_or_else(|| fail("missing value after flag"));
@@ -313,6 +400,13 @@ fn main() {
                     "0" => false,
                     "1" => true,
                     _ => fail("bad --dead-end (0 or 1)"),
+                }
+            }
+            "--full-reduce" => {
+                prm.full_reduce = match val.as_str() {
+                    "0" => false,
+                    "1" => true,
+                    _ => fail("bad --full-reduce (0 or 1)"),
                 }
             }
             other => fail(&format!("unknown flag {}", other)),
@@ -340,8 +434,9 @@ fn main() {
     }
     let mut out = String::new();
     let (best, steps, secs, cnt) = walk(start, &prm, &mut out);
-    out.push_str(&format!("STATS steps={} seconds={:.3} flips={} rejected_weight={} plus={} restarts={} dead_ends={}\n",
-                          steps, secs, cnt.flips, cnt.rejected_weight, cnt.plus, cnt.restarts, cnt.dead_ends));
+    out.push_str(&format!("STATS steps={} seconds={:.3} flips={} rejected_weight={} plus={} restarts={} dead_ends={} dep_reductions={}\n",
+                          steps, secs, cnt.flips, cnt.rejected_weight, cnt.plus, cnt.restarts, cnt.dead_ends,
+                          cnt.dep_reductions));
     out.push_str(&format!("BEST {}\n", best.len()));
     for t in &best {
         out.push_str(&format!("{} {} {}\n", t[0], t[1], t[2]));

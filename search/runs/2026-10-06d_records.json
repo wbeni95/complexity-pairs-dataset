@@ -1,0 +1,7342 @@
+{
+ "date": "2026-10-06 14:32:56",
+ "sha256": {
+  "KM": "36c64abe697f306b9329ccb3805f405861b57418f9c8867b4b8eb63b4b1e1ca7",
+  "KW": "44f701c0310a68e5b8649ed3385a0e59ac6789092b3ed35014d5fe767710e07d",
+  "AIH": "0ca59af7d60d910e0ef7ed1ca94cffda75fae807f5b2e40b37c0010a48c80b89",
+  "MP": "a4ab88d4ea5c6b61d59fe4be161b890a825df573ce38ea028506c8f9542a3bc7",
+  "AT": "70f09f349d8d2874ef0e0e089459c7320f5aa3eef277df5ffa67f573709db2da",
+  "CAT": "d16e4a7927961cb115e4999322931bd681001bb9b0816c8e7ede6555db7f840f",
+  "MMC": "475c05d2a8c0503925aa1814f5d0b7d3bdcde1390e25b474789d1cb5cae21c30",
+  "PER": "c7fbeb5eac485f3af979f68248a88b88c18fdd22f23ef3f80e8534a0214b378e"
+ },
+ "urls": {
+  "KM": "https://codeload.github.com/jakobmoosbauer/flips/zip/e31a0a0f0d2577cee5da047ca7dcae0c61992e40",
+  "KW": "https://codeload.github.com/mkauers/matrix-multiplication/zip/12c26b29a5458e173813911fb4f2c2865fba841e",
+  "AIH": "https://codeload.github.com/Yamato-Arai/adap/zip/fe7b20408a329815c0431115b5d1861f2b564a65",
+  "MP": "https://codeload.github.com/jakobmoosbauer/symmetric-flips/zip/3e2d4dd8acf831ef65c7c6b13ed787330e1e3483",
+  "AT": "https://raw.githubusercontent.com/google-deepmind/alphatensor/1949163da3bef7e3eb268a3ac015fd1c2dbfc767/algorithms/factorizations_f2.npz",
+  "CAT": "https://fmm.univ-lille.fr/",
+  "MMC": "https://solven.eu/matmulcatalog/catalog.json",
+  "PER": "https://raw.githubusercontent.com/dronperminov/FastMatrixMultiplication/64f58a5e40806bc47847b11dd8aceec043fa895d/schemes/status.json"
+ },
+ "records": [
+  {
+   "source": "KM",
+   "file": "solutions/223-11-mod0.exp",
+   "format": [
+    2,
+    2,
+    3
+   ],
+   "terms_in_file": 11,
+   "c_convention": "(k,i)",
+   "gf2_rank": 11,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/224-14-mod0.exp",
+   "format": [
+    2,
+    2,
+    4
+   ],
+   "terms_in_file": 14,
+   "c_convention": "(k,i)",
+   "gf2_rank": 14,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/225-18-mod0.exp",
+   "format": [
+    2,
+    2,
+    5
+   ],
+   "terms_in_file": 18,
+   "c_convention": "(k,i)",
+   "gf2_rank": 18,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/226-21-mod2.exp",
+   "format": [
+    2,
+    2,
+    6
+   ],
+   "terms_in_file": 21,
+   "c_convention": "(k,i)",
+   "gf2_rank": 21,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/233-15-mod0.exp",
+   "format": [
+    2,
+    3,
+    3
+   ],
+   "terms_in_file": 15,
+   "c_convention": "(k,i)",
+   "gf2_rank": 15,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/234-20-mod0.exp",
+   "format": [
+    2,
+    3,
+    4
+   ],
+   "terms_in_file": 20,
+   "c_convention": "(k,i)",
+   "gf2_rank": 20,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/235-25-mod0.exp",
+   "format": [
+    2,
+    3,
+    5
+   ],
+   "terms_in_file": 25,
+   "c_convention": "(k,i)",
+   "gf2_rank": 25,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/236-30-mod2.exp",
+   "format": [
+    2,
+    3,
+    6
+   ],
+   "terms_in_file": 30,
+   "c_convention": "(k,i)",
+   "gf2_rank": 30,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/244-26-mod0.exp",
+   "format": [
+    2,
+    4,
+    4
+   ],
+   "terms_in_file": 26,
+   "c_convention": "(k,i)",
+   "gf2_rank": 26,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/245-33-mod0.exp",
+   "format": [
+    2,
+    4,
+    5
+   ],
+   "terms_in_file": 33,
+   "c_convention": "(k,i)",
+   "gf2_rank": 33,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/246-39-mod2.exp",
+   "format": [
+    2,
+    4,
+    6
+   ],
+   "terms_in_file": 39,
+   "c_convention": "(k,i)",
+   "gf2_rank": 39,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/255-40-mod0.exp",
+   "format": [
+    2,
+    5,
+    5
+   ],
+   "terms_in_file": 40,
+   "c_convention": "(k,i)",
+   "gf2_rank": 40,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/256-48-mod2.exp",
+   "format": [
+    2,
+    5,
+    6
+   ],
+   "terms_in_file": 48,
+   "c_convention": "(k,i)",
+   "gf2_rank": 48,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/266-56-mod2.exp",
+   "format": [
+    2,
+    6,
+    6
+   ],
+   "terms_in_file": 56,
+   "c_convention": "(k,i)",
+   "gf2_rank": 56,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/334-29-mod0.exp",
+   "format": [
+    3,
+    3,
+    4
+   ],
+   "terms_in_file": 29,
+   "c_convention": "(k,i)",
+   "gf2_rank": 29,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/335-36-mod0.exp",
+   "format": [
+    3,
+    3,
+    5
+   ],
+   "terms_in_file": 36,
+   "c_convention": "(k,i)",
+   "gf2_rank": 36,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/336-42-mod2.exp",
+   "format": [
+    3,
+    3,
+    6
+   ],
+   "terms_in_file": 42,
+   "c_convention": "(k,i)",
+   "gf2_rank": 42,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/344-38-mod0.exp",
+   "format": [
+    3,
+    4,
+    4
+   ],
+   "terms_in_file": 38,
+   "c_convention": "(k,i)",
+   "gf2_rank": 38,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/345-47-mod0.exp",
+   "format": [
+    3,
+    4,
+    5
+   ],
+   "terms_in_file": 47,
+   "c_convention": "(k,i)",
+   "gf2_rank": 47,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/346-56-mod2.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 56,
+   "c_convention": "(k,i)",
+   "gf2_rank": 56,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/355-58-mod0.exp",
+   "format": [
+    3,
+    5,
+    5
+   ],
+   "terms_in_file": 58,
+   "c_convention": "(k,i)",
+   "gf2_rank": 58,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/356-71-mod2.exp",
+   "format": [
+    3,
+    5,
+    6
+   ],
+   "terms_in_file": 71,
+   "c_convention": "(k,i)",
+   "gf2_rank": 71,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/366-85-mod2.exp",
+   "format": [
+    3,
+    6,
+    6
+   ],
+   "terms_in_file": 86,
+   "c_convention": "(k,i)",
+   "gf2_rank": 86,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/444-47-mod2.exp",
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "terms_in_file": 47,
+   "c_convention": "(k,i)",
+   "gf2_rank": 47,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/444-49-mod0.exp",
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "terms_in_file": 49,
+   "c_convention": "(k,i)",
+   "gf2_rank": 49,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/445-60-mod2.exp",
+   "format": [
+    4,
+    4,
+    5
+   ],
+   "terms_in_file": 60,
+   "c_convention": "(k,i)",
+   "gf2_rank": 60,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/445-62-mod0.exp",
+   "format": [
+    4,
+    4,
+    5
+   ],
+   "terms_in_file": 62,
+   "c_convention": "(k,i)",
+   "gf2_rank": 62,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/446-74-mod2.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 74,
+   "c_convention": "(k,i)",
+   "gf2_rank": 74,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/455-76-mod0.exp",
+   "format": [
+    4,
+    5,
+    5
+   ],
+   "terms_in_file": 76,
+   "c_convention": "(k,i)",
+   "gf2_rank": 76,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/456-93-mod2.exp",
+   "format": [
+    4,
+    5,
+    6
+   ],
+   "terms_in_file": 93,
+   "c_convention": "(k,i)",
+   "gf2_rank": 93,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/466-116-mod2.exp",
+   "format": [
+    4,
+    6,
+    6
+   ],
+   "terms_in_file": 116,
+   "c_convention": "(k,i)",
+   "gf2_rank": 116,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/555-95-mod2.exp",
+   "format": [
+    5,
+    5,
+    5
+   ],
+   "terms_in_file": 95,
+   "c_convention": "(k,i)",
+   "gf2_rank": 95,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/555-97-mod0.exp",
+   "format": [
+    5,
+    5,
+    5
+   ],
+   "terms_in_file": 97,
+   "c_convention": "(k,i)",
+   "gf2_rank": 97,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/555-97-mod0a.exp",
+   "format": [
+    5,
+    5,
+    5
+   ],
+   "terms_in_file": 97,
+   "c_convention": "(k,i)",
+   "gf2_rank": 97,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KM",
+   "file": "solutions/556-116-mod2.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 116,
+   "c_convention": "(k,i)",
+   "gf2_rank": 116,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/566-144-mod2.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 144,
+   "c_convention": "(k,i)",
+   "gf2_rank": 144,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KM",
+   "file": "solutions/666-164-mod2.exp",
+   "format": [
+    6,
+    6,
+    6
+   ],
+   "terms_in_file": 164,
+   "c_convention": "(k,i)",
+   "gf2_rank": 164,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "KW",
+   "file": "346/k077f44c8da3ab7d.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k090f70685cdf49c.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k09db60f3ea5fdd8.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k09f1507ff8a3dd8.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k0c05b634bf48092.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k0fbafe5b4257013.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k10705f157ee5820e.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k10cc884e971fe9e1.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k118339c2f97c96ff.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k118842dbb3f3c8b3.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k11949c4db42b0000.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k119f9e08fd2cf03d.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k11a02046327b6c9f.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k11cc5bcf220f6d17.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k120de95665101bce.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k121761c9fceb6f0b.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "346/k12467b5def245d55.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k12948aa2f4c6da37.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "346/k12bfb7e8305d9c0b.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k14343d077c85a1ae.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k146f4995cd6cbacb.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k14af9e69c97a505d.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "346/k1530ab1ce7d86822.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "346/k15b0ac2adb51b014.exp",
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "terms_in_file": 54,
+   "c_convention": "(k,i)",
+   "gf2_rank": 54,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "446/k0a44a47e90f9bce.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "446/k0a78a16f1a13ad0.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k0ac013b97cb3ae5.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "446/k0cef5a8da5b948d.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "446/k106c3c98686efa3.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "446/k113618635a7ef3c2.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k11586b2014a3ab74.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k1201dab279eff920.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k16a37de3456570e8.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k1809fb5e09be7aa3.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "446/k1843299ea43a687c.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "446/k1b9092ce269441dc.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k1b96b40172369c8.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k1df776d0290b7a14.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k1f76f93ca93bfd8e.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k1fb2cfd2119148b0.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k1fb32a8b92152355.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k1fd27477c4c5acaf.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k2013001b10ccbf2.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k2653f06b4f95d8ac.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "446/k29ce58f2d13a8a58.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k2bfedd335520d9b1.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "446/k2c35b62693e72ff0.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k2c98984314d5982c.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k2dc2e17646b1ba08.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "446/k2e672aeb8880abfa.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k2e93c0a341ead26a.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k30331a1409ff0153.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k306974e39d83cc0e.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k30bcc7a6337c15cf.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k32b8f23f55b0089.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k33100f4669920940.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k33624afcded122de.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k33ce7a902cbe2b1b.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "446/k3512da5fed5d176c.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "446/k37365760ef9174ca.exp",
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "456/k0e7ba384e845ae2.exp",
+   "format": [
+    4,
+    5,
+    6
+   ],
+   "terms_in_file": 90,
+   "c_convention": "(k,i)",
+   "gf2_rank": 90,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "456/k10a71931bb1ea589.exp",
+   "format": [
+    4,
+    5,
+    6
+   ],
+   "terms_in_file": 90,
+   "c_convention": "(k,i)",
+   "gf2_rank": 90,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "466/k14ab186def1b9333.exp",
+   "format": [
+    4,
+    6,
+    6
+   ],
+   "terms_in_file": 106,
+   "c_convention": "(k,i)",
+   "gf2_rank": 106,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k0005554e963ccfc.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k009382f7fb3375b.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k00a0767cfc48832.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k011620e4ace0f37.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k028169bd0eb3ab3.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k0350b2a8f6a297f.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k03ff46ef9048539.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k048453dce84a10d.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k048c0bf13db221f.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k0508a2b672b324b.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k05f8b031f7d9340.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k077fd613caa7c26.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k0abe5cd2d168d1c.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k0ca4e937ce69955.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k100ebb15f3492dd2.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1013c500a16babb1.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1032c56b08872683.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1079a9b82b2d8e60.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k107c43cedd1ad9f6.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1084f23a5b635d39.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k109d5b5bb1438ffb.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k10b42b5d2e02a20f.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k10c1abf3cd832511.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k10e141035c40bb53.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1141e1fcd6699264.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k11ae01fc04480415.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k11c4575396d314d2.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k11d0e75069854b1e.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k11ecb5742c36f76a.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k120920e2d91bc448.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1218912eb59f2659.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k123381d6b0f44691.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1264a1debaa85a98.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k12a1006d4885e68c.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k12b09b569a7a3f3c.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k133f527a2758c5eb.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k13d2e4e3acc61fb2.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k146d316af5c2ca7f.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k14a601c9b129bf53.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k14b2b89a86a184b4.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k14ddf5e0cb501dea.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k14f9874346fc6085.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k151bce115a384bf8.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k155d1cdea90044f4.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k15715c0f8f206ed9.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k162a0c49b83e0060.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k16b2f15e84d5fa1d.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k16bf667702d371b9.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k16f9285d74810aa8.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k174c22b973891a91.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k17804001e5373812.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1796a65d4444822.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k17b3b78b69036417.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k187ce78126354f2f.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k187de54cb3824bdc.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1889bc0a1600cd0d.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k18c5b74df4ac7157.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k196b91118aa709bb.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k19a196c1794f4a85.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1a0e328a2fc73c01.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1a808399259453b9.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1a93ee4a49e5d2a9.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1adf004fbc0561f1.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1afb25ead1fca016.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1afb3ecc52336170.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1b84bbe25f9a6b19.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1be2674766068930.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1c001086d9989ca7.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1c7125deedaa4a0e.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1c8123330acad468.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1ca3850305fc34d4.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1cb490e8b3da1032.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1cbbb75091057db1.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1cc47c54b9ca2125.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1ccc1941172dc99e.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1cfb9e21fcf122f0.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1d295abb41d9f48f.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1d3cda6c13520561.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1d91fd47a1891352.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1da32e8346abd215.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1db581c4f4d954b6.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1e568603be2fce14.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1e6e5f5ca165ca80.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1e82cbb25c44a8fe.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1e8cfba3a57874ed.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1e998c254c63008e.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1f6b4e4535d78acb.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k1fa331f7e1afaa8a.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1fa3eed710ff7d2d.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1fad2178eed2555f.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k1fee95060eea62ae.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k20108af0f424f8f8.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k203216da6e9e6098.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k203678a67100ce62.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k210ede5d5c325f42.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k217e05eb549bc60b.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k21ad090bc859b351.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k21c2ba3479bff1a1.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k2246a6a8049b1c35.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k228291af024195c9.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k228f777ebe0de95a.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k22d7bd9b05238f86.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k22de36067b91e385.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k22fb86e1c05e45c5.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k23584a1e402aaa55.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k238c3aada4c605da.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k240279f5d44a45bd.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k241fbfab3d06dd2a.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k24245061b3239187.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k245894712365dc45.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k24b1666c62c7b8ec.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k25a70c936e64460c.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k25d07561e21792d4.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k25e972c00de7590d.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2618535761d98db4.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k263b7b9af08531e2.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2650b1ef9d1ca893.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k271751f33b83a760.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2725c852dbf5d48c.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2784a649c4e9fb0d.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k27bd8a8b79fce20.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k27c1d0a1901c1c53.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k27f411a20f343a66.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k282236a484a7971c.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2833e6429981ee6e.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k285a1c0b0a756e9a.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k289ba8f8810641da.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k28ec487c69c1dbaf.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k2900b858791d9fa4.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k292dba6e29edf7fd.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k29c3918275ef8fbb.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k29d1f2c9955dd00e.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2a0a5c46284faa5d.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k2a1c7440195f08e8.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2a4fc23179fe8a5c.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k2a9fb670e1a16370.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2abd6f3f6d454907.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2b23fb8f301142db.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k2b3885098a7b93b8.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2b43317c892706d0.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2b478d0c42899b5e.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2b7ae10c171d1e59.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2b90775d29fc670d.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2b924691dc1073e1.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2ba4c30c044c08b9.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2c1b878bb3d7ae21.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2c36d90bf45a2c91.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2c4f98c9a0bd2cba.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2cbc1fce6df76a14.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2d19c6854cd8d00e.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2d474185ba5811e0.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2daf1fe2dac1b334.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k2dc6b2fca47f3d21.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2deb93e5ba365dea.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2e9320707b106662.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2eafb6c6db501aec.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2eba341c294696ee.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2ee6f3961dee38d3.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k2ef9217e04f45f98.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k3064bdab975b7f11.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k307876dfbba220e4.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k30a8c53bc6045861.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k30fc04ee3bc303d0.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k3123a310f1c7079a.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k316687e37ab96f2.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k317d1ffa02884dd2.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "556/k31a88df02a6f2b0d.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k31b3829b1f69b286.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "556/k31ba94b9763401eb.exp",
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "terms_in_file": 110,
+   "c_convention": "(k,i)",
+   "gf2_rank": 110,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k001f6128623bae0.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k004c29fd0796700.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k00a896503266bf0.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k01e7bf0049890a3.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k01f0b562b68723b.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k0509a6e03870104.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k055c3e6ffa8c421.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k06c35d124f01783.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k077d615630f5d56.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k0883539cffa63fe.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k0936c79ec9f1810.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k0b5308ce2fdefd1.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k0c0627a6162ff95.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k0d2666dce7bebf3.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k0f32a1c4d9c191a.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k100bfb89a2dbe919.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k102d8498a73abb5d.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k1044104701e80e70.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k10687f7c9325eb0b.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k1078896ce1f23f81.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k10c786b9109095c4.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k10d212793c132651.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k10db8062a124e2f2.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k10e57ddb72595367.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k10e64344e571d65.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k10ec4416c67029e8.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k10fd1c2d78397ca0.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k110ca4295c8342bc.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k1128dfbabc1b582e.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k112996df019c0595.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k113841baac0c61dd.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k1153826d09c90bd7.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k117afbea76e87d4f.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k11a8522323880128.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k11b3948e4b000b64.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k11d395e5edd444e8.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k1204d4d2b3ccea5c.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k121634fe757ab8aa.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k122672c8e51ccc01.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k12409e067dfb997d.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k124c21f7e23b3ee5.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k12563919c765a2c7.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k12599173b27b083d.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k126f97ebdf123e51.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k1278f0ae7f42aaab.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k127b8681aa25c82c.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k1285645a23711812.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k12964db575082de6.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k12a1a259c2f7cdde.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k12a3dffa0ef61ecd.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k12ccbb5644840304.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k12ce601194bfebb6.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k12d2d5535613b5cc.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k12f48d5b3cc007dd.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k131277ca689b9cd8.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k1319f76da01875fa.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k13683c97597ffc9a.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k136968893ec58618.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k136c2dc689ed8e2c.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k136eca5ee3b622d.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k136faffa3ee4a319.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k138ed87da0d87721.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k139d5d920af863fc.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k13a429ce62c0727b.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k13dc31bc74c89bff.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k13e3bf666736560b.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k13e80b2f5a27c374.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k142193f4973685d3.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k1599625d8dc766ee.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k15e3359cc34e88e.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k163158fa704cd8ac.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k166d8ed477e7a02d.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k16a2ee144f7faf5a.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k17dd11131d1a916a.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k197d0eb2061a77c0.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": false
+  },
+  {
+   "source": "KW",
+   "file": "566/k199ef1f308c8fab5.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": false,
+   "valid_over_Q": true
+  },
+  {
+   "source": "KW",
+   "file": "566/k1c9e86d7e46266b0.exp",
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "terms_in_file": 130,
+   "c_convention": "(k,i)",
+   "gf2_rank": 130,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "AIH",
+   "file": "data/455_73.m",
+   "format": [
+    4,
+    5,
+    5
+   ],
+   "terms_in_file": 73,
+   "c_convention": "(k,i)",
+   "gf2_rank": 73,
+   "gf2_verifier": "verify+verify_explicit",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "AIH",
+   "file": "data/555_94.m",
+   "format": [
+    5,
+    5,
+    5
+   ],
+   "terms_in_file": 94,
+   "c_convention": "(k,i)",
+   "gf2_rank": 94,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "MP",
+   "file": "schemes/555m93.txt",
+   "format": [
+    5,
+    5,
+    5
+   ],
+   "terms_in_file": 93,
+   "c_convention": "(k,i)",
+   "gf2_rank": 93,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "MP",
+   "file": "schemes/555m93_lifted.txt",
+   "format": [
+    5,
+    5,
+    5
+   ],
+   "terms_in_file": 93,
+   "c_convention": "(k,i)",
+   "gf2_rank": 93,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "MP",
+   "file": "schemes/666m153.txt",
+   "format": [
+    6,
+    6,
+    6
+   ],
+   "terms_in_file": 153,
+   "c_convention": "(k,i)",
+   "gf2_rank": 153,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": null
+  },
+  {
+   "source": "MP",
+   "file": "schemes/666m153_lifted.txt",
+   "format": [
+    6,
+    6,
+    6
+   ],
+   "terms_in_file": 153,
+   "c_convention": "(k,i)",
+   "gf2_rank": 153,
+   "gf2_verifier": "verify",
+   "integer_coefficients": true,
+   "valid_over_Q": true
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:2,2,2.npy",
+   "format": [
+    2,
+    2,
+    2
+   ],
+   "terms_in_file": 7,
+   "gf2_rank": 7,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:2,2,3.npy",
+   "format": [
+    2,
+    2,
+    3
+   ],
+   "terms_in_file": 11,
+   "gf2_rank": 11,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:2,2,4.npy",
+   "format": [
+    2,
+    2,
+    4
+   ],
+   "terms_in_file": 14,
+   "gf2_rank": 14,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:2,2,5.npy",
+   "format": [
+    2,
+    2,
+    5
+   ],
+   "terms_in_file": 18,
+   "gf2_rank": 18,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:2,3,3.npy",
+   "format": [
+    2,
+    3,
+    3
+   ],
+   "terms_in_file": 15,
+   "gf2_rank": 15,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:2,3,4.npy",
+   "format": [
+    2,
+    3,
+    4
+   ],
+   "terms_in_file": 20,
+   "gf2_rank": 20,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:2,3,5.npy",
+   "format": [
+    2,
+    3,
+    5
+   ],
+   "terms_in_file": 25,
+   "gf2_rank": 25,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:2,4,4.npy",
+   "format": [
+    2,
+    4,
+    4
+   ],
+   "terms_in_file": 26,
+   "gf2_rank": 26,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:2,4,5.npy",
+   "format": [
+    2,
+    4,
+    5
+   ],
+   "terms_in_file": 33,
+   "gf2_rank": 33,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:2,5,5.npy",
+   "format": [
+    2,
+    5,
+    5
+   ],
+   "terms_in_file": 40,
+   "gf2_rank": 40,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:3,3,3.npy",
+   "format": [
+    3,
+    3,
+    3
+   ],
+   "terms_in_file": 23,
+   "gf2_rank": 23,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:3,3,4.npy",
+   "format": [
+    3,
+    3,
+    4
+   ],
+   "terms_in_file": 29,
+   "gf2_rank": 29,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:3,3,5.npy",
+   "format": [
+    3,
+    3,
+    5
+   ],
+   "terms_in_file": 36,
+   "gf2_rank": 36,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:3,4,4.npy",
+   "format": [
+    3,
+    4,
+    4
+   ],
+   "terms_in_file": 38,
+   "gf2_rank": 38,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:3,4,5.npy",
+   "format": [
+    3,
+    4,
+    5
+   ],
+   "terms_in_file": 47,
+   "gf2_rank": 47,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:3,5,5.npy",
+   "format": [
+    3,
+    5,
+    5
+   ],
+   "terms_in_file": 58,
+   "gf2_rank": 58,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:4,4,4.npy",
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "terms_in_file": 47,
+   "gf2_rank": 47,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:4,4,5.npy",
+   "format": [
+    4,
+    4,
+    5
+   ],
+   "terms_in_file": 63,
+   "gf2_rank": 63,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:4,5,5.npy",
+   "format": [
+    4,
+    5,
+    5
+   ],
+   "terms_in_file": 76,
+   "gf2_rank": 76,
+   "gf2_verifier": "verify+verify_explicit"
+  },
+  {
+   "source": "AT",
+   "file": "factorizations_f2.npz:5,5,5.npy",
+   "format": [
+    5,
+    5,
+    5
+   ],
+   "terms_in_file": 96,
+   "gf2_rank": 96,
+   "gf2_verifier": "verify"
+  }
+ ],
+ "table": [
+  {
+   "format": [
+    2,
+    2,
+    2
+   ],
+   "naive": 8,
+   "gf2_verified_here": 7,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:2,2,2.npy"
+   ],
+   "gf2_best_incl_claims": 7,
+   "mmc_F2": [
+    7,
+    "derived"
+   ],
+   "mmc_Z": [
+    7,
+    "derived"
+   ],
+   "mmc_Q": [
+    7,
+    "derived"
+   ],
+   "perminov": {
+    "ZT": 7,
+    "Z": 7,
+    "Q": 7
+   },
+   "catalogue": [
+    7,
+    "2x2x2",
+    "Strassen 1969 [ DOI ]"
+   ],
+   "Q_verified_here": null,
+   "Z_verified_here": null,
+   "general_best": 7,
+   "lower_flattening": 4,
+   "lower_recalled": [
+    7,
+    "Winograd 1971; Hopcroft-Kerr 1971 [recalled]; over GF(2) also our exhaustive check (RL-036)"
+   ],
+   "threshold_beat_log2_7": 6,
+   "exponent_at_gf2_best": 2.80735
+  },
+  {
+   "format": [
+    2,
+    2,
+    3
+   ],
+   "naive": 12,
+   "gf2_verified_here": 11,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:2,2,3.npy",
+    "KM:223-11-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 11,
+   "mmc_F2": [
+    11,
+    "unknown"
+   ],
+   "mmc_Z": [
+    11,
+    "unknown"
+   ],
+   "mmc_Q": [
+    11,
+    "unknown"
+   ],
+   "perminov": {
+    "ZT": 11,
+    "Z": 11,
+    "Q": 11
+   },
+   "catalogue": null,
+   "Q_verified_here": 11,
+   "Z_verified_here": 11,
+   "general_best": 11,
+   "lower_flattening": 6,
+   "lower_recalled": [
+    11,
+    "Alekseyev 1985 [recalled]"
+   ],
+   "threshold_beat_log2_7": 10,
+   "exponent_at_gf2_best": 2.89495
+  },
+  {
+   "format": [
+    2,
+    2,
+    4
+   ],
+   "naive": 16,
+   "gf2_verified_here": 14,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:2,2,4.npy",
+    "KM:224-14-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 14,
+   "mmc_F2": [
+    14,
+    "unknown"
+   ],
+   "mmc_Z": [
+    14,
+    "unknown"
+   ],
+   "mmc_Q": [
+    14,
+    "unknown"
+   ],
+   "perminov": {
+    "ZT": 14,
+    "Z": 14,
+    "Q": 14
+   },
+   "catalogue": null,
+   "Q_verified_here": 14,
+   "Z_verified_here": 14,
+   "general_best": 14,
+   "lower_flattening": 8,
+   "lower_recalled": [
+    14,
+    "Alekseev-Smirnov 2013 [recalled]"
+   ],
+   "threshold_beat_log2_7": 13,
+   "exponent_at_gf2_best": 2.85552
+  },
+  {
+   "format": [
+    2,
+    2,
+    5
+   ],
+   "naive": 20,
+   "gf2_verified_here": 18,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:2,2,5.npy",
+    "KM:225-18-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 18,
+   "mmc_F2": [
+    18,
+    "unknown"
+   ],
+   "mmc_Z": [
+    18,
+    "unknown"
+   ],
+   "mmc_Q": [
+    18,
+    "unknown"
+   ],
+   "perminov": {
+    "ZT": 18,
+    "Z": 18,
+    "Q": 18
+   },
+   "catalogue": null,
+   "Q_verified_here": 18,
+   "Z_verified_here": 18,
+   "general_best": 18,
+   "lower_flattening": 10,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 16,
+   "exponent_at_gf2_best": 2.89449
+  },
+  {
+   "format": [
+    2,
+    2,
+    6
+   ],
+   "naive": 24,
+   "gf2_verified_here": 21,
+   "gf2_verified_sources": [
+    "KM:226-21-mod2.exp"
+   ],
+   "gf2_best_incl_claims": 21,
+   "mmc_F2": [
+    21,
+    "unknown"
+   ],
+   "mmc_Z": [
+    21,
+    "unknown"
+   ],
+   "mmc_Q": [
+    21,
+    "unknown"
+   ],
+   "perminov": {
+    "ZT": 21,
+    "Z": 21,
+    "Q": 21
+   },
+   "catalogue": null,
+   "Q_verified_here": null,
+   "Z_verified_here": null,
+   "general_best": 21,
+   "lower_flattening": 12,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 19,
+   "exponent_at_gf2_best": 2.87395
+  },
+  {
+   "format": [
+    2,
+    3,
+    3
+   ],
+   "naive": 18,
+   "gf2_verified_here": 15,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:2,3,3.npy",
+    "KM:233-15-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 15,
+   "mmc_F2": [
+    15,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Z": [
+    15,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Q": [
+    15,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "perminov": {
+    "ZT": 15,
+    "Z": 15,
+    "Q": 15
+   },
+   "catalogue": [
+    15,
+    "2x3x3",
+    "Hopcroft and Kerr 1971 [ DOI ]"
+   ],
+   "Q_verified_here": 15,
+   "Z_verified_here": 15,
+   "general_best": 15,
+   "lower_flattening": 9,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 14,
+   "exponent_at_gf2_best": 2.81076
+  },
+  {
+   "format": [
+    2,
+    3,
+    4
+   ],
+   "naive": 24,
+   "gf2_verified_here": 20,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:2,3,4.npy",
+    "KM:234-20-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 20,
+   "mmc_F2": [
+    20,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Z": [
+    20,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Q": [
+    20,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "perminov": {
+    "ZT": 20,
+    "Z": 20,
+    "Q": 20
+   },
+   "catalogue": [
+    20,
+    "2x3x4",
+    "Hopcroft and Kerr 1971 [ DOI ]"
+   ],
+   "Q_verified_here": 20,
+   "Z_verified_here": 20,
+   "general_best": 20,
+   "lower_flattening": 12,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 19,
+   "exponent_at_gf2_best": 2.82789
+  },
+  {
+   "format": [
+    2,
+    3,
+    5
+   ],
+   "naive": 30,
+   "gf2_verified_here": 25,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:2,3,5.npy",
+    "KM:235-25-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 25,
+   "mmc_F2": [
+    25,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Z": [
+    25,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Q": [
+    25,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "perminov": {
+    "ZT": 25,
+    "Z": 25,
+    "Q": 25
+   },
+   "catalogue": [
+    25,
+    "2x3x5",
+    "Hopcroft and Kerr 1971 [ DOI ]"
+   ],
+   "Q_verified_here": 25,
+   "Z_verified_here": 25,
+   "general_best": 25,
+   "lower_flattening": 15,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 24,
+   "exponent_at_gf2_best": 2.83918
+  },
+  {
+   "format": [
+    2,
+    3,
+    6
+   ],
+   "naive": 36,
+   "gf2_verified_here": 30,
+   "gf2_verified_sources": [
+    "KM:236-30-mod2.exp"
+   ],
+   "gf2_best_incl_claims": 30,
+   "mmc_F2": [
+    30,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Z": [
+    30,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Q": [
+    30,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "perminov": {
+    "ZT": 30,
+    "Z": 30,
+    "Q": 30
+   },
+   "catalogue": [
+    30,
+    "2x3x6",
+    "&lang;1&times;1&times;2:2&rang; &otimes; &lang;2&times;3&times;3:15&rang;"
+   ],
+   "Q_verified_here": null,
+   "Z_verified_here": null,
+   "general_best": 30,
+   "lower_flattening": 18,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 28,
+   "exponent_at_gf2_best": 2.84737
+  },
+  {
+   "format": [
+    2,
+    4,
+    4
+   ],
+   "naive": 32,
+   "gf2_verified_here": 26,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:2,4,4.npy",
+    "KM:244-26-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 26,
+   "mmc_F2": [
+    26,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Z": [
+    26,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Q": [
+    26,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "perminov": {
+    "ZT": 26,
+    "Z": 26,
+    "Q": 26
+   },
+   "catalogue": [
+    26,
+    "2x4x4",
+    "Hopcroft and Kerr 1971 [ DOI ]"
+   ],
+   "Q_verified_here": 26,
+   "Z_verified_here": 26,
+   "general_best": 26,
+   "lower_flattening": 16,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 25,
+   "exponent_at_gf2_best": 2.82026
+  },
+  {
+   "format": [
+    2,
+    4,
+    5
+   ],
+   "naive": 40,
+   "gf2_verified_here": 33,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:2,4,5.npy",
+    "KM:245-33-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 33,
+   "mmc_F2": [
+    33,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Z": [
+    33,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Q": [
+    32,
+    "unknown"
+   ],
+   "perminov": {
+    "Z": 33,
+    "Q": 32,
+    "ZT": 33
+   },
+   "catalogue": [
+    32,
+    "2x4x5",
+    "Novikov et ali (AlphaEvolve 2025) [ pdf ]"
+   ],
+   "Q_verified_here": 33,
+   "Z_verified_here": 33,
+   "general_best": 32,
+   "lower_flattening": 20,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 31,
+   "exponent_at_gf2_best": 2.84355
+  },
+  {
+   "format": [
+    2,
+    4,
+    6
+   ],
+   "naive": 48,
+   "gf2_verified_here": 39,
+   "gf2_verified_sources": [
+    "KM:246-39-mod2.exp"
+   ],
+   "gf2_best_incl_claims": 39,
+   "mmc_F2": [
+    39,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Z": [
+    39,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "mmc_Q": [
+    39,
+    "Hopcroft-Kerr 1971 (constructive, this work)"
+   ],
+   "perminov": {
+    "Z": 39,
+    "Q": 39,
+    "ZT": 39
+   },
+   "catalogue": [
+    39,
+    "2x4x6",
+    "Hopcroft and Kerr 1971 [ DOI ]"
+   ],
+   "Q_verified_here": null,
+   "Z_verified_here": null,
+   "general_best": 39,
+   "lower_flattening": 24,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 37,
+   "exponent_at_gf2_best": 2.83909
+  },
+  {
+   "format": [
+    2,
+    5,
+    5
+   ],
+   "naive": 50,
+   "gf2_verified_here": 40,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:2,5,5.npy",
+    "KM:255-40-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 40,
+   "mmc_F2": [
+    40,
+    "Hopcroft 1971"
+   ],
+   "mmc_Z": [
+    40,
+    "Hopcroft 1971"
+   ],
+   "mmc_Q": [
+    40,
+    "Hopcroft 1971"
+   ],
+   "perminov": {
+    "ZT": 40,
+    "Z": 40,
+    "Q": 40
+   },
+   "catalogue": [
+    40,
+    "2x5x5",
+    "Hopcroft and Kerr 1971 [ DOI ]"
+   ],
+   "Q_verified_here": 40,
+   "Z_verified_here": 40,
+   "general_best": 40,
+   "lower_flattening": 25,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 38,
+   "exponent_at_gf2_best": 2.82888
+  },
+  {
+   "format": [
+    2,
+    5,
+    6
+   ],
+   "naive": 60,
+   "gf2_verified_here": 48,
+   "gf2_verified_sources": [
+    "KM:256-48-mod2.exp"
+   ],
+   "gf2_best_incl_claims": 47,
+   "mmc_F2": [
+    47,
+    "unknown"
+   ],
+   "mmc_Z": [
+    47,
+    "unknown"
+   ],
+   "mmc_Q": [
+    47,
+    "unknown"
+   ],
+   "perminov": {
+    "ZT": 47,
+    "Z": 47,
+    "Q": 47
+   },
+   "catalogue": [
+    47,
+    "2x5x6",
+    "Novikov et ali (AlphaEvolve 2025) [ pdf ]"
+   ],
+   "Q_verified_here": null,
+   "Z_verified_here": null,
+   "general_best": 47,
+   "lower_flattening": 30,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 46,
+   "exponent_at_gf2_best": 2.82107
+  },
+  {
+   "format": [
+    2,
+    6,
+    6
+   ],
+   "naive": 72,
+   "gf2_verified_here": 56,
+   "gf2_verified_sources": [
+    "KM:266-56-mod2.exp"
+   ],
+   "gf2_best_incl_claims": 56,
+   "mmc_F2": [
+    56,
+    "Kauers-Moosbauer 2023"
+   ],
+   "mmc_Z": [
+    56,
+    "Kauers-Moosbauer 2023"
+   ],
+   "mmc_Q": [
+    56,
+    "Kauers-Moosbauer 2023"
+   ],
+   "perminov": {
+    "Z": 56,
+    "Q": 56,
+    "ZT": 56
+   },
+   "catalogue": [
+    56,
+    "2x6x6",
+    "Kauers and Moosbauer 2023 [ arXiv ]"
+   ],
+   "Q_verified_here": null,
+   "Z_verified_here": null,
+   "general_best": 56,
+   "lower_flattening": 36,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 54,
+   "exponent_at_gf2_best": 2.82371
+  },
+  {
+   "format": [
+    3,
+    3,
+    3
+   ],
+   "naive": 27,
+   "gf2_verified_here": 23,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:3,3,3.npy"
+   ],
+   "gf2_best_incl_claims": 23,
+   "mmc_F2": [
+    23,
+    "Laderman_1976"
+   ],
+   "mmc_Z": [
+    23,
+    "Laderman_1976"
+   ],
+   "mmc_Q": [
+    23,
+    "Laderman_1976"
+   ],
+   "perminov": {
+    "Z": 23,
+    "Q": 23,
+    "ZT": 23
+   },
+   "catalogue": [
+    23,
+    "3x3x3",
+    "Laderman 1976 [ DOI ]"
+   ],
+   "Q_verified_here": null,
+   "Z_verified_here": null,
+   "general_best": 23,
+   "lower_flattening": 9,
+   "lower_recalled": [
+    19,
+    "Blaser 2003, doi:10.1016/S0885-064X(02)00007-9 [DOI OK, value recalled]"
+   ],
+   "threshold_beat_log2_7": 21,
+   "exponent_at_gf2_best": 2.85405
+  },
+  {
+   "format": [
+    3,
+    3,
+    4
+   ],
+   "naive": 36,
+   "gf2_verified_here": 29,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:3,3,4.npy",
+    "KM:334-29-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 29,
+   "mmc_F2": [
+    29,
+    "unknown"
+   ],
+   "mmc_Z": [
+    29,
+    "unknown"
+   ],
+   "mmc_Q": [
+    29,
+    "unknown"
+   ],
+   "perminov": {
+    "Z": 29,
+    "Q": 29,
+    "ZT": 29
+   },
+   "catalogue": [
+    29,
+    "3x3x4",
+    "Smirnov 2013 [ DOI ]"
+   ],
+   "Q_verified_here": 29,
+   "Z_verified_here": 29,
+   "general_best": 29,
+   "lower_flattening": 12,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 28,
+   "exponent_at_gf2_best": 2.81899
+  },
+  {
+   "format": [
+    3,
+    3,
+    5
+   ],
+   "naive": 45,
+   "gf2_verified_here": 36,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:3,3,5.npy",
+    "KM:335-36-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 36,
+   "mmc_F2": [
+    36,
+    "unknown"
+   ],
+   "mmc_Z": [
+    36,
+    "unknown"
+   ],
+   "mmc_Q": [
+    36,
+    "unknown"
+   ],
+   "perminov": {
+    "Z": 36,
+    "Q": 36,
+    "ZT": 36
+   },
+   "catalogue": [
+    36,
+    "3x3x5",
+    "Smirnov 2013 [ DOI ]"
+   ],
+   "Q_verified_here": 36,
+   "Z_verified_here": 36,
+   "general_best": 36,
+   "lower_flattening": 15,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 35,
+   "exponent_at_gf2_best": 2.82414
+  },
+  {
+   "format": [
+    3,
+    3,
+    6
+   ],
+   "naive": 54,
+   "gf2_verified_here": 42,
+   "gf2_verified_sources": [
+    "KM:336-42-mod2.exp"
+   ],
+   "gf2_best_incl_claims": 42,
+   "mmc_F2": [
+    42,
+    "Kauers-Moosbauer 2023"
+   ],
+   "mmc_Z": [
+    42,
+    "Kauers-Moosbauer 2023"
+   ],
+   "mmc_Q": [
+    40,
+    "unknown"
+   ],
+   "perminov": {
+    "Z": 42,
+    "Q": 40,
+    "ZT": 42
+   },
+   "catalogue": [
+    40,
+    "3x3x6",
+    "Smirnov 2013 [ DOI ]"
+   ],
+   "Q_verified_here": null,
+   "Z_verified_here": null,
+   "general_best": 40,
+   "lower_flattening": 18,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 41,
+   "exponent_at_gf2_best": 2.81099
+  },
+  {
+   "format": [
+    3,
+    4,
+    4
+   ],
+   "naive": 48,
+   "gf2_verified_here": 38,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:3,4,4.npy",
+    "KM:344-38-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 38,
+   "mmc_F2": [
+    38,
+    "Smirnov 2013"
+   ],
+   "mmc_Z": [
+    38,
+    "Smirnov 2013"
+   ],
+   "mmc_Q": [
+    38,
+    "Smirnov 2013"
+   ],
+   "perminov": {
+    "Z": 38,
+    "Q": 38,
+    "ZT": 38
+   },
+   "catalogue": [
+    38,
+    "3x4x4",
+    "Smirnov 2013 [ DOI ]"
+   ],
+   "Q_verified_here": 38,
+   "Z_verified_here": 38,
+   "general_best": 38,
+   "lower_flattening": 16,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 37,
+   "exponent_at_gf2_best": 2.81896
+  },
+  {
+   "format": [
+    3,
+    4,
+    5
+   ],
+   "naive": 60,
+   "gf2_verified_here": 47,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:3,4,5.npy",
+    "KM:345-47-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 47,
+   "mmc_F2": [
+    47,
+    "unknown"
+   ],
+   "mmc_Z": [
+    47,
+    "unknown"
+   ],
+   "mmc_Q": [
+    47,
+    "unknown"
+   ],
+   "perminov": {
+    "Z": 47,
+    "Q": 47,
+    "ZT": 47
+   },
+   "catalogue": [
+    47,
+    "3x4x5",
+    "Fawzi et ali 2022 [ DOI ]"
+   ],
+   "Q_verified_here": 47,
+   "Z_verified_here": 47,
+   "general_best": 47,
+   "lower_flattening": 20,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 46,
+   "exponent_at_gf2_best": 2.82107
+  },
+  {
+   "format": [
+    3,
+    4,
+    6
+   ],
+   "naive": 72,
+   "gf2_verified_here": 54,
+   "gf2_verified_sources": [
+    "KW:k077f44c8da3ab7d.exp",
+    "KW:k090f70685cdf49c.exp",
+    "KW:k09db60f3ea5fdd8.exp",
+    "KW:k09f1507ff8a3dd8.exp",
+    "KW:k0c05b634bf48092.exp",
+    "KW:k0fbafe5b4257013.exp",
+    "KW:k10705f157ee5820e.exp",
+    "KW:k10cc884e971fe9e1.exp",
+    "KW:k118339c2f97c96ff.exp",
+    "KW:k118842dbb3f3c8b3.exp",
+    "KW:k11949c4db42b0000.exp",
+    "KW:k119f9e08fd2cf03d.exp",
+    "KW:k11a02046327b6c9f.exp",
+    "KW:k11cc5bcf220f6d17.exp",
+    "KW:k120de95665101bce.exp",
+    "KW:k121761c9fceb6f0b.exp",
+    "KW:k12467b5def245d55.exp",
+    "KW:k12948aa2f4c6da37.exp",
+    "KW:k12bfb7e8305d9c0b.exp",
+    "KW:k14343d077c85a1ae.exp",
+    "KW:k146f4995cd6cbacb.exp",
+    "KW:k14af9e69c97a505d.exp",
+    "KW:k1530ab1ce7d86822.exp",
+    "KW:k15b0ac2adb51b014.exp"
+   ],
+   "gf2_best_incl_claims": 54,
+   "mmc_F2": [
+    54,
+    "Kauers & Wood 2025"
+   ],
+   "mmc_Z": [
+    54,
+    "Kauers & Wood 2025"
+   ],
+   "mmc_Q": [
+    54,
+    "unknown"
+   ],
+   "perminov": {
+    "Z": 54,
+    "Q": 54,
+    "ZT": 54
+   },
+   "catalogue": [
+    54,
+    "3x4x6",
+    "Novikov et ali (AlphaEvolve 2025) [ pdf ]"
+   ],
+   "Q_verified_here": 54,
+   "Z_verified_here": 54,
+   "general_best": 54,
+   "lower_flattening": 24,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 54,
+   "exponent_at_gf2_best": 2.7982
+  },
+  {
+   "format": [
+    3,
+    5,
+    5
+   ],
+   "naive": 75,
+   "gf2_verified_here": 58,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:3,5,5.npy",
+    "KM:355-58-mod0.exp"
+   ],
+   "gf2_best_incl_claims": 58,
+   "mmc_F2": [
+    58,
+    "unknown"
+   ],
+   "mmc_Z": [
+    58,
+    "unknown"
+   ],
+   "mmc_Q": [
+    58,
+    "unknown"
+   ],
+   "perminov": {
+    "ZT": 58,
+    "Z": 58,
+    "Q": 58
+   },
+   "catalogue": [
+    58,
+    "3x5x5",
+    "Sedoglavic and Smirnov 2021 [ DOI ]"
+   ],
+   "Q_verified_here": 58,
+   "Z_verified_here": 58,
+   "general_best": 58,
+   "lower_flattening": 25,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 56,
+   "exponent_at_gf2_best": 2.82139
+  },
+  {
+   "format": [
+    3,
+    5,
+    6
+   ],
+   "naive": 90,
+   "gf2_verified_here": 71,
+   "gf2_verified_sources": [
+    "KM:356-71-mod2.exp"
+   ],
+   "gf2_best_incl_claims": 68,
+   "mmc_F2": [
+    68,
+    "unknown"
+   ],
+   "mmc_Z": [
+    68,
+    "unknown"
+   ],
+   "mmc_Q": [
+    68,
+    "unknown"
+   ],
+   "perminov": {
+    "Z": 68,
+    "Q": 68,
+    "ZT": 68
+   },
+   "catalogue": [
+    68,
+    "3x5x6",
+    "Novikov et ali (AlphaEvolve 2025) [ pdf ]"
+   ],
+   "Q_verified_here": null,
+   "Z_verified_here": null,
+   "general_best": 68,
+   "lower_flattening": 30,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 67,
+   "exponent_at_gf2_best": 2.81312
+  },
+  {
+   "format": [
+    3,
+    6,
+    6
+   ],
+   "naive": 108,
+   "gf2_verified_here": 86,
+   "gf2_verified_sources": [
+    "KM:366-85-mod2.exp"
+   ],
+   "gf2_best_incl_claims": 82,
+   "mmc_F2": [
+    82,
+    "Perminov 2023"
+   ],
+   "mmc_Z": [
+    82,
+    "Perminov 2023"
+   ],
+   "mmc_Q": [
+    80,
+    "unknown"
+   ],
+   "perminov": {
+    "Q": 80,
+    "ZT": 82,
+    "Z": 82
+   },
+   "catalogue": [
+    80,
+    "3x6x6",
+    "&lang;1&times;2&times;1:2&rang; &otimes; &lang;3&times;3&times;6:40&rang;"
+   ],
+   "Q_verified_here": null,
+   "Z_verified_here": null,
+   "general_best": 80,
+   "lower_flattening": 36,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 79,
+   "exponent_at_gf2_best": 2.82353
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "naive": 64,
+   "gf2_verified_here": 47,
+   "gf2_verified_sources": [
+    "AT:factorizations_f2.npz:4,4,4.npy",
+    "KM:444-47-mod2.exp"
+   ],
+   "gf2_best_incl_claims": 47,
+   "mmc_F2": [
+    47,
+    "AlphaTensor"
+   ],
+   "mmc_Z": [
+    49,
+    "unknown"
+   ],
+   "mmc_Q": [
+    48,
+    "Dumas-Pernet-Sedoglavic 2025"
+   ],
+   "perminov": {
+    "ZT": 49,
+    "Z": 49,
+    "Q": 48
+   },
+   "catalogue": [
+    48,
+    "4x4x4",
+    "Novikov et ali (AlphaEvolve 2025) [ pdf ]"
+   ],
+   "Q_verified_here": 49,
+   "Z_verified_here": 49,
+   "general_best": 48,
+   "lower_flattening": 16,
+   "lower_recalled": [
+    28,
+    "Blaser 1999 (5/2)n^2 - 3n, doi:10.1109/SFFCS.1999.814576 [title OK, lower-order term recalled]"
+   ],
+   "threshold_beat_log2_7": 48,
+   "exponent_at_gf2_best": 2.77729
+  },
+  {
+   "format": [
+    4,
+    4,
+    5
+   ],
+   "naive": 80,
+   "gf2_verified_here": 60,
+   "gf2_verified_sources": [
+    "KM:445-60-mod2.exp"
+   ],
+   "gf2_best_incl_claims": 60,
+   "mmc_F2": [
+    60,
+    "Kauers-Moosbauer 2023"
+   ],
+   "mmc_Z": [
+    61,
+    "unknown"
+   ],
+   "mmc_Q": [
+    61,
+    "unknown"
+   ],
+   "perminov": {
+    "ZT": 61,
+    "Z": 61,
+    "Q": 61
+   },
+   "catalogue": [
+    61,
+    "4x4x5",
+    "Novikov et ali (AlphaEvolve 2025) [ pdf ]"
+   ],
+   "Q_verified_here": 62,
+   "Z_verified_here": 62,
+   "general_best": 61,
+   "lower_flattening": 20,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 60,
+   "exponent_at_gf2_best": 2.80305
+  },
+  {
+   "format": [
+    4,
+    4,
+    6
+   ],
+   "naive": 96,
+   "gf2_verified_here": 73,
+   "gf2_verified_sources": [
+    "KW:k0a44a47e90f9bce.exp",
+    "KW:k0a78a16f1a13ad0.exp",
+    "KW:k0ac013b97cb3ae5.exp",
+    "KW:k0cef5a8da5b948d.exp",
+    "KW:k106c3c98686efa3.exp",
+    "KW:k113618635a7ef3c2.exp",
+    "KW:k11586b2014a3ab74.exp",
+    "KW:k1201dab279eff920.exp",
+    "KW:k16a37de3456570e8.exp",
+    "KW:k1809fb5e09be7aa3.exp",
+    "KW:k1843299ea43a687c.exp",
+    "KW:k1b9092ce269441dc.exp",
+    "KW:k1b96b40172369c8.exp",
+    "KW:k1df776d0290b7a14.exp",
+    "KW:k1f76f93ca93bfd8e.exp",
+    "KW:k1fb2cfd2119148b0.exp",
+    "KW:k1fb32a8b92152355.exp",
+    "KW:k1fd27477c4c5acaf.exp",
+    "KW:k2013001b10ccbf2.exp",
+    "KW:k2653f06b4f95d8ac.exp",
+    "KW:k29ce58f2d13a8a58.exp",
+    "KW:k2bfedd335520d9b1.exp",
+    "KW:k2c35b62693e72ff0.exp",
+    "KW:k2c98984314d5982c.exp",
+    "KW:k2dc2e17646b1ba08.exp",
+    "KW:k2e672aeb8880abfa.exp",
+    "KW:k2e93c0a341ead26a.exp",
+    "KW:k30331a1409ff0153.exp",
+    "KW:k306974e39d83cc0e.exp",
+    "KW:k30bcc7a6337c15cf.exp",
+    "KW:k32b8f23f55b0089.exp",
+    "KW:k33100f4669920940.exp",
+    "KW:k33624afcded122de.exp",
+    "KW:k33ce7a902cbe2b1b.exp",
+    "KW:k3512da5fed5d176c.exp",
+    "KW:k37365760ef9174ca.exp"
+   ],
+   "gf2_best_incl_claims": 73,
+   "mmc_F2": [
+    73,
+    "Kauers & Wood 2025"
+   ],
+   "mmc_Z": [
+    73,
+    "Kauers & Wood 2025"
+   ],
+   "mmc_Q": [
+    73,
+    "Kauers & Wood 2025"
+   ],
+   "perminov": {
+    "Z": 73,
+    "Q": 73,
+    "ZT": 73
+   },
+   "catalogue": [
+    73,
+    "4x4x6",
+    "Smirnov 2023 [ ]"
+   ],
+   "Q_verified_here": 73,
+   "Z_verified_here": 73,
+   "general_best": 73,
+   "lower_flattening": 24,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 71,
+   "exponent_at_gf2_best": 2.81998
+  },
+  {
+   "format": [
+    4,
+    5,
+    5
+   ],
+   "naive": 100,
+   "gf2_verified_here": 73,
+   "gf2_verified_sources": [
+    "AIH:455_73.m"
+   ],
+   "gf2_best_incl_claims": 73,
+   "mmc_F2": [
+    76,
+    "unknown"
+   ],
+   "mmc_Z": [
+    76,
+    "unknown"
+   ],
+   "mmc_Q": [
+    76,
+    "unknown"
+   ],
+   "perminov": {
+    "ZT": 76,
+    "Z": 76,
+    "Q": 76
+   },
+   "catalogue": [
+    76,
+    "4x5x5",
+    "Fawzi et ali 2022 [ DOI ]"
+   ],
+   "Q_verified_here": 76,
+   "Z_verified_here": 76,
+   "general_best": 76,
+   "lower_flattening": 25,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 74,
+   "exponent_at_gf2_best": 2.79498
+  },
+  {
+   "format": [
+    4,
+    5,
+    6
+   ],
+   "naive": 120,
+   "gf2_verified_here": 90,
+   "gf2_verified_sources": [
+    "KW:k0e7ba384e845ae2.exp",
+    "KW:k10a71931bb1ea589.exp"
+   ],
+   "gf2_best_incl_claims": 90,
+   "mmc_F2": [
+    90,
+    "AlphaEvolve"
+   ],
+   "mmc_Z": [
+    90,
+    "AlphaEvolve"
+   ],
+   "mmc_Q": [
+    90,
+    "AlphaEvolve"
+   ],
+   "perminov": {
+    "Z": 90,
+    "Q": 90,
+    "ZT": 90
+   },
+   "catalogue": [
+    90,
+    "4x5x6",
+    "Kauers and Wood 2025 [ arXiv ]"
+   ],
+   "Q_verified_here": 90,
+   "Z_verified_here": 90,
+   "general_best": 90,
+   "lower_flattening": 30,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 88,
+   "exponent_at_gf2_best": 2.81973
+  },
+  {
+   "format": [
+    4,
+    6,
+    6
+   ],
+   "naive": 144,
+   "gf2_verified_here": 106,
+   "gf2_verified_sources": [
+    "KW:k14ab186def1b9333.exp"
+   ],
+   "gf2_best_incl_claims": 105,
+   "mmc_F2": [
+    105,
+    "unknown"
+   ],
+   "mmc_Z": [
+    105,
+    "unknown"
+   ],
+   "mmc_Q": [
+    105,
+    "unknown"
+   ],
+   "perminov": {
+    "Z": 105,
+    "Q": 105,
+    "ZT": 105
+   },
+   "catalogue": [
+    105,
+    "4x6x6",
+    "&lang;2&times;2&times;2:7&rang; &otimes; &lang;2&times;3&times;3:15&rang;"
+   ],
+   "Q_verified_here": 106,
+   "Z_verified_here": 106,
+   "general_best": 105,
+   "lower_flattening": 36,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 104,
+   "exponent_at_gf2_best": 2.80934
+  },
+  {
+   "format": [
+    5,
+    5,
+    5
+   ],
+   "naive": 125,
+   "gf2_verified_here": 93,
+   "gf2_verified_sources": [
+    "MP:555m93.txt",
+    "MP:555m93_lifted.txt"
+   ],
+   "gf2_best_incl_claims": 93,
+   "mmc_F2": [
+    93,
+    "AlphaEvolve 2025"
+   ],
+   "mmc_Z": [
+    93,
+    "AlphaEvolve 2025"
+   ],
+   "mmc_Q": [
+    93,
+    "AlphaEvolve 2025"
+   ],
+   "perminov": {
+    "ZT": 93,
+    "Z": 93,
+    "Q": 93
+   },
+   "catalogue": [
+    93,
+    "5x5x5",
+    "Moosbauer and Poole 2025 [ arXiv ]"
+   ],
+   "Q_verified_here": 93,
+   "Z_verified_here": 93,
+   "general_best": 93,
+   "lower_flattening": 25,
+   "lower_recalled": [
+    48,
+    "Blaser 1999 (5/2)n^2 - 3n [recalled]"
+   ],
+   "threshold_beat_log2_7": 91,
+   "exponent_at_gf2_best": 2.81626
+  },
+  {
+   "format": [
+    5,
+    5,
+    6
+   ],
+   "naive": 150,
+   "gf2_verified_here": 110,
+   "gf2_verified_sources": [
+    "KW:k0005554e963ccfc.exp",
+    "KW:k009382f7fb3375b.exp",
+    "KW:k00a0767cfc48832.exp",
+    "KW:k011620e4ace0f37.exp",
+    "KW:k028169bd0eb3ab3.exp",
+    "KW:k0350b2a8f6a297f.exp",
+    "KW:k03ff46ef9048539.exp",
+    "KW:k048453dce84a10d.exp",
+    "KW:k048c0bf13db221f.exp",
+    "KW:k0508a2b672b324b.exp",
+    "KW:k05f8b031f7d9340.exp",
+    "KW:k077fd613caa7c26.exp",
+    "KW:k0abe5cd2d168d1c.exp",
+    "KW:k0ca4e937ce69955.exp",
+    "KW:k100ebb15f3492dd2.exp",
+    "KW:k1013c500a16babb1.exp",
+    "KW:k1032c56b08872683.exp",
+    "KW:k1079a9b82b2d8e60.exp",
+    "KW:k107c43cedd1ad9f6.exp",
+    "KW:k1084f23a5b635d39.exp",
+    "KW:k109d5b5bb1438ffb.exp",
+    "KW:k10b42b5d2e02a20f.exp",
+    "KW:k10c1abf3cd832511.exp",
+    "KW:k10e141035c40bb53.exp",
+    "KW:k1141e1fcd6699264.exp",
+    "KW:k11ae01fc04480415.exp",
+    "KW:k11c4575396d314d2.exp",
+    "KW:k11d0e75069854b1e.exp",
+    "KW:k11ecb5742c36f76a.exp",
+    "KW:k120920e2d91bc448.exp",
+    "KW:k1218912eb59f2659.exp",
+    "KW:k123381d6b0f44691.exp",
+    "KW:k1264a1debaa85a98.exp",
+    "KW:k12a1006d4885e68c.exp",
+    "KW:k12b09b569a7a3f3c.exp",
+    "KW:k133f527a2758c5eb.exp",
+    "KW:k13d2e4e3acc61fb2.exp",
+    "KW:k146d316af5c2ca7f.exp",
+    "KW:k14a601c9b129bf53.exp",
+    "KW:k14b2b89a86a184b4.exp",
+    "KW:k14ddf5e0cb501dea.exp",
+    "KW:k14f9874346fc6085.exp",
+    "KW:k151bce115a384bf8.exp",
+    "KW:k155d1cdea90044f4.exp",
+    "KW:k15715c0f8f206ed9.exp",
+    "KW:k162a0c49b83e0060.exp",
+    "KW:k16b2f15e84d5fa1d.exp",
+    "KW:k16bf667702d371b9.exp",
+    "KW:k16f9285d74810aa8.exp",
+    "KW:k174c22b973891a91.exp",
+    "KW:k17804001e5373812.exp",
+    "KW:k1796a65d4444822.exp",
+    "KW:k17b3b78b69036417.exp",
+    "KW:k187ce78126354f2f.exp",
+    "KW:k187de54cb3824bdc.exp",
+    "KW:k1889bc0a1600cd0d.exp",
+    "KW:k18c5b74df4ac7157.exp",
+    "KW:k196b91118aa709bb.exp",
+    "KW:k19a196c1794f4a85.exp",
+    "KW:k1a0e328a2fc73c01.exp",
+    "KW:k1a808399259453b9.exp",
+    "KW:k1a93ee4a49e5d2a9.exp",
+    "KW:k1adf004fbc0561f1.exp",
+    "KW:k1afb25ead1fca016.exp",
+    "KW:k1afb3ecc52336170.exp",
+    "KW:k1b84bbe25f9a6b19.exp",
+    "KW:k1be2674766068930.exp",
+    "KW:k1c001086d9989ca7.exp",
+    "KW:k1c7125deedaa4a0e.exp",
+    "KW:k1c8123330acad468.exp",
+    "KW:k1ca3850305fc34d4.exp",
+    "KW:k1cb490e8b3da1032.exp",
+    "KW:k1cbbb75091057db1.exp",
+    "KW:k1cc47c54b9ca2125.exp",
+    "KW:k1ccc1941172dc99e.exp",
+    "KW:k1cfb9e21fcf122f0.exp",
+    "KW:k1d295abb41d9f48f.exp",
+    "KW:k1d3cda6c13520561.exp",
+    "KW:k1d91fd47a1891352.exp",
+    "KW:k1da32e8346abd215.exp",
+    "KW:k1db581c4f4d954b6.exp",
+    "KW:k1e568603be2fce14.exp",
+    "KW:k1e6e5f5ca165ca80.exp",
+    "KW:k1e82cbb25c44a8fe.exp",
+    "KW:k1e8cfba3a57874ed.exp",
+    "KW:k1e998c254c63008e.exp",
+    "KW:k1f6b4e4535d78acb.exp",
+    "KW:k1fa331f7e1afaa8a.exp",
+    "KW:k1fa3eed710ff7d2d.exp",
+    "KW:k1fad2178eed2555f.exp",
+    "KW:k1fee95060eea62ae.exp",
+    "KW:k20108af0f424f8f8.exp",
+    "KW:k203216da6e9e6098.exp",
+    "KW:k203678a67100ce62.exp",
+    "KW:k210ede5d5c325f42.exp",
+    "KW:k217e05eb549bc60b.exp",
+    "KW:k21ad090bc859b351.exp",
+    "KW:k21c2ba3479bff1a1.exp",
+    "KW:k2246a6a8049b1c35.exp",
+    "KW:k228291af024195c9.exp",
+    "KW:k228f777ebe0de95a.exp",
+    "KW:k22d7bd9b05238f86.exp",
+    "KW:k22de36067b91e385.exp",
+    "KW:k22fb86e1c05e45c5.exp",
+    "KW:k23584a1e402aaa55.exp",
+    "KW:k238c3aada4c605da.exp",
+    "KW:k240279f5d44a45bd.exp",
+    "KW:k241fbfab3d06dd2a.exp",
+    "KW:k24245061b3239187.exp",
+    "KW:k245894712365dc45.exp",
+    "KW:k24b1666c62c7b8ec.exp",
+    "KW:k25a70c936e64460c.exp",
+    "KW:k25d07561e21792d4.exp",
+    "KW:k25e972c00de7590d.exp",
+    "KW:k2618535761d98db4.exp",
+    "KW:k263b7b9af08531e2.exp",
+    "KW:k2650b1ef9d1ca893.exp",
+    "KW:k271751f33b83a760.exp",
+    "KW:k2725c852dbf5d48c.exp",
+    "KW:k2784a649c4e9fb0d.exp",
+    "KW:k27bd8a8b79fce20.exp",
+    "KW:k27c1d0a1901c1c53.exp",
+    "KW:k27f411a20f343a66.exp",
+    "KW:k282236a484a7971c.exp",
+    "KW:k2833e6429981ee6e.exp",
+    "KW:k285a1c0b0a756e9a.exp",
+    "KW:k289ba8f8810641da.exp",
+    "KW:k28ec487c69c1dbaf.exp",
+    "KW:k2900b858791d9fa4.exp",
+    "KW:k292dba6e29edf7fd.exp",
+    "KW:k29c3918275ef8fbb.exp",
+    "KW:k29d1f2c9955dd00e.exp",
+    "KW:k2a0a5c46284faa5d.exp",
+    "KW:k2a1c7440195f08e8.exp",
+    "KW:k2a4fc23179fe8a5c.exp",
+    "KW:k2a9fb670e1a16370.exp",
+    "KW:k2abd6f3f6d454907.exp",
+    "KW:k2b23fb8f301142db.exp",
+    "KW:k2b3885098a7b93b8.exp",
+    "KW:k2b43317c892706d0.exp",
+    "KW:k2b478d0c42899b5e.exp",
+    "KW:k2b7ae10c171d1e59.exp",
+    "KW:k2b90775d29fc670d.exp",
+    "KW:k2b924691dc1073e1.exp",
+    "KW:k2ba4c30c044c08b9.exp",
+    "KW:k2c1b878bb3d7ae21.exp",
+    "KW:k2c36d90bf45a2c91.exp",
+    "KW:k2c4f98c9a0bd2cba.exp",
+    "KW:k2cbc1fce6df76a14.exp",
+    "KW:k2d19c6854cd8d00e.exp",
+    "KW:k2d474185ba5811e0.exp",
+    "KW:k2daf1fe2dac1b334.exp",
+    "KW:k2dc6b2fca47f3d21.exp",
+    "KW:k2deb93e5ba365dea.exp",
+    "KW:k2e9320707b106662.exp",
+    "KW:k2eafb6c6db501aec.exp",
+    "KW:k2eba341c294696ee.exp",
+    "KW:k2ee6f3961dee38d3.exp",
+    "KW:k2ef9217e04f45f98.exp",
+    "KW:k3064bdab975b7f11.exp",
+    "KW:k307876dfbba220e4.exp",
+    "KW:k30a8c53bc6045861.exp",
+    "KW:k30fc04ee3bc303d0.exp",
+    "KW:k3123a310f1c7079a.exp",
+    "KW:k316687e37ab96f2.exp",
+    "KW:k317d1ffa02884dd2.exp",
+    "KW:k31a88df02a6f2b0d.exp",
+    "KW:k31b3829b1f69b286.exp",
+    "KW:k31ba94b9763401eb.exp"
+   ],
+   "gf2_best_incl_claims": 110,
+   "mmc_F2": [
+    110,
+    "unknown"
+   ],
+   "mmc_Z": [
+    110,
+    "unknown"
+   ],
+   "mmc_Q": [
+    110,
+    "unknown"
+   ],
+   "perminov": {
+    "Z": 110,
+    "Q": 110,
+    "ZT": 110
+   },
+   "catalogue": [
+    110,
+    "5x5x6",
+    "Kauers and Wood 2025 [ arXiv ]"
+   ],
+   "Q_verified_here": 110,
+   "Z_verified_here": 110,
+   "general_best": 110,
+   "lower_flattening": 30,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 108,
+   "exponent_at_gf2_best": 2.8143
+  },
+  {
+   "format": [
+    5,
+    6,
+    6
+   ],
+   "naive": 180,
+   "gf2_verified_here": 130,
+   "gf2_verified_sources": [
+    "KW:k001f6128623bae0.exp",
+    "KW:k004c29fd0796700.exp",
+    "KW:k00a896503266bf0.exp",
+    "KW:k01e7bf0049890a3.exp",
+    "KW:k01f0b562b68723b.exp",
+    "KW:k0509a6e03870104.exp",
+    "KW:k055c3e6ffa8c421.exp",
+    "KW:k06c35d124f01783.exp",
+    "KW:k077d615630f5d56.exp",
+    "KW:k0883539cffa63fe.exp",
+    "KW:k0936c79ec9f1810.exp",
+    "KW:k0b5308ce2fdefd1.exp",
+    "KW:k0c0627a6162ff95.exp",
+    "KW:k0d2666dce7bebf3.exp",
+    "KW:k0f32a1c4d9c191a.exp",
+    "KW:k100bfb89a2dbe919.exp",
+    "KW:k102d8498a73abb5d.exp",
+    "KW:k1044104701e80e70.exp",
+    "KW:k10687f7c9325eb0b.exp",
+    "KW:k1078896ce1f23f81.exp",
+    "KW:k10c786b9109095c4.exp",
+    "KW:k10d212793c132651.exp",
+    "KW:k10db8062a124e2f2.exp",
+    "KW:k10e57ddb72595367.exp",
+    "KW:k10e64344e571d65.exp",
+    "KW:k10ec4416c67029e8.exp",
+    "KW:k10fd1c2d78397ca0.exp",
+    "KW:k110ca4295c8342bc.exp",
+    "KW:k1128dfbabc1b582e.exp",
+    "KW:k112996df019c0595.exp",
+    "KW:k113841baac0c61dd.exp",
+    "KW:k1153826d09c90bd7.exp",
+    "KW:k117afbea76e87d4f.exp",
+    "KW:k11a8522323880128.exp",
+    "KW:k11b3948e4b000b64.exp",
+    "KW:k11d395e5edd444e8.exp",
+    "KW:k1204d4d2b3ccea5c.exp",
+    "KW:k121634fe757ab8aa.exp",
+    "KW:k122672c8e51ccc01.exp",
+    "KW:k12409e067dfb997d.exp",
+    "KW:k124c21f7e23b3ee5.exp",
+    "KW:k12563919c765a2c7.exp",
+    "KW:k12599173b27b083d.exp",
+    "KW:k126f97ebdf123e51.exp",
+    "KW:k1278f0ae7f42aaab.exp",
+    "KW:k127b8681aa25c82c.exp",
+    "KW:k1285645a23711812.exp",
+    "KW:k12964db575082de6.exp",
+    "KW:k12a1a259c2f7cdde.exp",
+    "KW:k12a3dffa0ef61ecd.exp",
+    "KW:k12ccbb5644840304.exp",
+    "KW:k12ce601194bfebb6.exp",
+    "KW:k12d2d5535613b5cc.exp",
+    "KW:k12f48d5b3cc007dd.exp",
+    "KW:k131277ca689b9cd8.exp",
+    "KW:k1319f76da01875fa.exp",
+    "KW:k13683c97597ffc9a.exp",
+    "KW:k136968893ec58618.exp",
+    "KW:k136c2dc689ed8e2c.exp",
+    "KW:k136eca5ee3b622d.exp",
+    "KW:k136faffa3ee4a319.exp",
+    "KW:k138ed87da0d87721.exp",
+    "KW:k139d5d920af863fc.exp",
+    "KW:k13a429ce62c0727b.exp",
+    "KW:k13dc31bc74c89bff.exp",
+    "KW:k13e3bf666736560b.exp",
+    "KW:k13e80b2f5a27c374.exp",
+    "KW:k142193f4973685d3.exp",
+    "KW:k1599625d8dc766ee.exp",
+    "KW:k15e3359cc34e88e.exp",
+    "KW:k163158fa704cd8ac.exp",
+    "KW:k166d8ed477e7a02d.exp",
+    "KW:k16a2ee144f7faf5a.exp",
+    "KW:k17dd11131d1a916a.exp",
+    "KW:k197d0eb2061a77c0.exp",
+    "KW:k199ef1f308c8fab5.exp",
+    "KW:k1c9e86d7e46266b0.exp"
+   ],
+   "gf2_best_incl_claims": 130,
+   "mmc_F2": [
+    130,
+    "Kauers & Wood 2025"
+   ],
+   "mmc_Z": [
+    130,
+    "Kauers & Wood 2025"
+   ],
+   "mmc_Q": [
+    130,
+    "Kauers & Wood 2025"
+   ],
+   "perminov": {
+    "Q": 130,
+    "Z": 130,
+    "ZT": 130
+   },
+   "catalogue": [
+    130,
+    "5x6x6",
+    "Kauers and Wood 2025 [ arXiv ]"
+   ],
+   "Q_verified_here": 130,
+   "Z_verified_here": 130,
+   "general_best": 130,
+   "lower_flattening": 36,
+   "lower_recalled": null,
+   "threshold_beat_log2_7": 128,
+   "exponent_at_gf2_best": 2.812
+  },
+  {
+   "format": [
+    6,
+    6,
+    6
+   ],
+   "naive": 216,
+   "gf2_verified_here": 153,
+   "gf2_verified_sources": [
+    "MP:666m153.txt",
+    "MP:666m153_lifted.txt"
+   ],
+   "gf2_best_incl_claims": 153,
+   "mmc_F2": [
+    153,
+    "Moosbauer-Poole 2025"
+   ],
+   "mmc_Z": [
+    153,
+    "Moosbauer-Poole 2025"
+   ],
+   "mmc_Q": [
+    153,
+    "Moosbauer-Poole 2025"
+   ],
+   "perminov": {
+    "Z": 153,
+    "Q": 153,
+    "ZT": 153
+   },
+   "catalogue": [
+    153,
+    "6x6x6",
+    "Moosbauer and Poole 2025 [ arXiv ]"
+   ],
+   "Q_verified_here": 153,
+   "Z_verified_here": 153,
+   "general_best": 153,
+   "lower_flattening": 36,
+   "lower_recalled": [
+    72,
+    "Blaser 1999 (5/2)n^2 - 3n [recalled]"
+   ],
+   "threshold_beat_log2_7": 152,
+   "exponent_at_gf2_best": 2.80754
+  }
+ ]
+}

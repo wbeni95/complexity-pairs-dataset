@@ -1,0 +1,162 @@
+{
+ "format": [
+  2,
+  2,
+  5
+ ],
+ "field": "GF(2)",
+ "rank": 18,
+ "convention": "T<n,m,p> = sum a_ij (x) b_jk (x) c_ki over GF(2); alpha bit i*m+j, beta bit j*p+k, gamma bit k*n+i (gamma[k][i] = coefficient of the product in C[i][k])",
+ "status": "matches best known",
+ "best_known_rank": 18,
+ "provenance": {
+  "kernel": "search/kernel/flipwalk.rs",
+  "kernel_sha256": "6933efafc6752311bf7e800b129abc04bbd76e688100f66bd4a03ea6c6f16e00",
+  "arm": "lib",
+  "start": "standard",
+  "seed": 3,
+  "stats": {
+   "steps": 9120.0,
+   "seconds": 0.001,
+   "flips": 3360.0,
+   "rejected_weight": 0.0,
+   "plus": 0.0,
+   "restarts": 0.0,
+   "dead_ends": 0.0,
+   "dep_reductions": 0.0
+  },
+  "improvements": [
+   [
+    19,
+    4482,
+    0.0
+   ],
+   [
+    18,
+    9120,
+    0.001
+   ]
+  ],
+  "params": {
+   "seconds": 30,
+   "plateau": 50000,
+   "slack": 3,
+   "full_reduce": false,
+   "dead_end": true,
+   "target_rank": 18,
+   "workers": 4
+  }
+ },
+ "terms": [
+  [
+   1,
+   693,
+   277
+  ],
+  [
+   1,
+   1023,
+   261
+  ],
+  [
+   3,
+   320,
+   963
+  ],
+  [
+   3,
+   672,
+   819
+  ],
+  [
+   4,
+   2,
+   282
+  ],
+  [
+   4,
+   28,
+   784
+  ],
+  [
+   4,
+   559,
+   816
+  ],
+  [
+   5,
+   26,
+   272
+  ],
+  [
+   8,
+   64,
+   204
+  ],
+  [
+   8,
+   960,
+   771
+  ],
+  [
+   10,
+   264,
+   68
+  ],
+  [
+   10,
+   555,
+   17
+  ],
+  [
+   10,
+   832,
+   257
+  ],
+  [
+   11,
+   328,
+   485
+  ],
+  [
+   11,
+   995,
+   803
+  ],
+  [
+   12,
+   544,
+   816
+  ],
+  [
+   15,
+   8,
+   642
+  ],
+  [
+   15,
+   11,
+   818
+  ]
+ ],
+ "products": [
+  "(A11)*(B11+B13+B15+B21+B23+B25) -> C11 C12 C13 C15",
+  "(A11)*(B11+B12+B13+B14+B15+B21+B22+B23+B24+B25) -> C11 C12 C15",
+  "(A11+A12)*(B22+B24) -> C11 C14 C15 C21 C24 C25",
+  "(A11+A12)*(B21+B23+B25) -> C11 C13 C15 C21 C23 C25",
+  "(A21)*(B12) -> C13 C15 C21 C22",
+  "(A21)*(B13+B14+B15) -> C13 C15 C25",
+  "(A21)*(B11+B12+B13+B14+B21+B25) -> C13 C15 C23 C25",
+  "(A11+A21)*(B12+B14+B15) -> C13 C15",
+  "(A22)*(B22) -> C12 C14 C22 C24",
+  "(A22)*(B22+B23+B24+B25) -> C11 C15 C21 C25",
+  "(A12+A22)*(B14+B24) -> C12 C14",
+  "(A12+A22)*(B11+B12+B14+B21+B25) -> C11 C13",
+  "(A12+A22)*(B22+B24+B25) -> C11 C15",
+  "(A11+A12+A22)*(B14+B22+B24) -> C11 C12 C14 C15 C23 C24",
+  "(A11+A12+A22)*(B11+B12+B21+B22+B23+B24+B25) -> C11 C15 C21 C23 C25",
+  "(A21+A22)*(B21+B25) -> C13 C15 C23 C25",
+  "(A11+A12+A21+A22)*(B14) -> C21 C24 C25",
+  "(A11+A12+A21+A22)*(B11+B12+B14) -> C13 C15 C21 C23 C25"
+ ]
+}

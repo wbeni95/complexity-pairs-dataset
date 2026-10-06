@@ -1,0 +1,4 @@
+(a) (2,5,6) seed 1001, 2e8 steps: identical True; ['STATS steps=200000000 seconds=14.090 flips=64634584 rejected_weight=0 plus=3867 restarts=0 dead_ends=0 dep_reductions=0', 'BEST 60']
+(a) (2,5,6) seed 1002, 2e8 steps: identical True; ['STATS steps=200000000 seconds=14.045 flips=64527339 rejected_weight=0 plus=3825 restarts=0 dead_ends=0 dep_reductions=0', 'BEST 60']
+(b) (6,2,5) orientation: best ranks [60, 60, 60, 60]; verified [True, True, True, True]; first improvements [[], [], [], []]
+(b) (2,5,6) plateau 2000 slack 1: best ranks [58, 55, 56, 59]; verified [True, True, True, True]; first improvements [[(59, 1943918, 0.159), (58, 79656533, 7.353)], [(59, 3795575, 0.328), (58, 3885816, 0.335)], [(59, 815878, 0.066), (58, 20352259, 1.66)], [(59, 601918, 0.055)]]

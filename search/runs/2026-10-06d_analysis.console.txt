@@ -1,0 +1,192 @@
+
+## 2026-10-06d_cal_3x4x5.jsonl
+3x4x5 std_off: 8 walks, start rank 60 (standard)
+   best ranks [48, 48, 51, 51, 49, 48, 47, 48]
+   <= 46: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 47: 1/8 (95% CI 0.003-0.527); first reached (s) [81.4]
+   <= 48: 5/8 (95% CI 0.245-0.915); first reached (s) [22.1, 29.8, 41.4, 56.8, 110.3]
+   steps 1.795e+10, flips 3.625e+09, walk-seconds 960; median steps/s 1.93e+07, median flips/s 3.79e+06; plus 346445, restarts 42, dead ends 0, dep_reductions 0; window 14:38:41-14:42:41; kernel 8e31926b
+3x4x5 std_full: 8 walks, start rank 60 (standard)
+   best ranks [48, 48, 49, 50, 48, 53, 53, 52]
+   <= 46: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 47: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 48: 3/8 (95% CI 0.085-0.755); first reached (s) [43.0, 77.6, 85.9]
+   steps 5.679e+09, flips 1.085e+09, walk-seconds 960; median steps/s 6.36e+06, median flips/s 1.21e+06; plus 109709, restarts 32, dead ends 0, dep_reductions 19689; window 14:42:41-14:46:41; kernel 8e31926b
+3x4x5 blk_off: 8 walks, start rank 49 (block start, rank 49: (3, 4, 2) + (3, 4, 3) (split of dimens)
+   best ranks [48, 48, 48, 48, 48, 48, 48, 48]
+   <= 46: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 47: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 48: 8/8 (95% CI 0.631-1.000); first reached (s) [7.0, 7.0, 8.0, 19.1, 22.6, 24.5, 37.6, 53.7]
+   steps 1.578e+10, flips 3.175e+09, walk-seconds 960; median steps/s 1.62e+07, median flips/s 3.43e+06; plus 304663, restarts 3, dead ends 0, dep_reductions 0; window 14:46:42-14:50:42; kernel 8e31926b
+3x4x5 blk_full: 8 walks, start rank 49 (block start, rank 49: (3, 4, 2) + (3, 4, 3) (split of dimens)
+   best ranks [49, 48, 48, 48, 48, 48, 48, 48]
+   <= 46: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 47: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 48: 7/8 (95% CI 0.473-0.997); first reached (s) [4.7, 5.3, 9.6, 13.2, 30.1, 56.8, 63.3]
+   steps 6.615e+09, flips 1.148e+09, walk-seconds 960; median steps/s 7.49e+06, median flips/s 1.29e+06; plus 128065, restarts 0, dead ends 0, dep_reductions 15448; window 14:50:42-14:54:42; kernel 8e31926b
+3x4x5 std_full_v2: 8 walks, start rank 60 (standard)
+   best ranks [48, 48, 49, 49, 48, 52, 48, 51]
+   <= 46: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 47: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 48: 4/8 (95% CI 0.157-0.843); first reached (s) [33.7, 50.9, 65.5, 96.8]
+   steps 9.195e+09, flips 1.66e+09, walk-seconds 960; median steps/s 8.97e+06, median flips/s 1.76e+06; plus 177727, restarts 48, dead ends 0, dep_reductions 29577; window 14:57:58-15:01:59; kernel 6933efaf
+3x4x5 blk_full_v2: 8 walks, start rank 49 (block start, rank 49: (3, 4, 2) + (3, 4, 3) (split of dimens)
+   best ranks [48, 48, 48, 48, 48, 48, 48, 48]
+   <= 46: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 47: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 48: 8/8 (95% CI 0.631-1.000); first reached (s) [2.9, 3.3, 3.3, 5.1, 18.5, 19.0, 32.9, 60.1]
+   steps 1.237e+10, flips 2.37e+09, walk-seconds 960; median steps/s 1.31e+07, median flips/s 2.44e+06; plus 239247, restarts 0, dead ends 0, dep_reductions 31585; window 15:01:59-15:05:59; kernel 6933efaf
+
+## 2026-10-06d_cal_4x4x5.jsonl
+4x4x5 blk_off: 8 walks, start rank 63 (block start, rank 63: (4, 4, 1) + (4, 4, 4) (split of dimens)
+   best ranks [60, 63, 62, 62, 63, 62, 62, 63]
+   <= 59: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 60: 1/8 (95% CI 0.003-0.527); first reached (s) [160.3]
+   <= 61: 1/8 (95% CI 0.003-0.527); first reached (s) [160.3]
+   steps 2.402e+10, flips 2.812e+09, walk-seconds 1440; median steps/s 1.67e+07, median flips/s 1.94e+06; plus 468984, restarts 0, dead ends 0, dep_reductions 0; window 15:06:00-15:12:00; kernel 6933efaf
+4x4x5 blk_full: 8 walks, start rank 63 (block start, rank 63: (4, 4, 1) + (4, 4, 4) (split of dimens)
+   best ranks [62, 63, 63, 62, 62, 63, 60, 63]
+   <= 59: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 60: 1/8 (95% CI 0.003-0.527); first reached (s) [148.8]
+   <= 61: 1/8 (95% CI 0.003-0.527); first reached (s) [148.8]
+   steps 1.434e+10, flips 1.673e+09, walk-seconds 1440; median steps/s 9.93e+06, median flips/s 1.16e+06; plus 280185, restarts 0, dead ends 0, dep_reductions 32440; window 15:12:00-15:18:01; kernel 6933efaf
+
+## 2026-10-06d_library.jsonl
+2x2x5 lib: 4 walks, start rank 20 (standard)
+   best ranks [18, 18, 18, 18]
+   <= 17: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 18: 4/4 (95% CI 0.398-1.000); first reached (s) [0.0, 0.0, 0.0, 0.0]
+   <= 19: 4/4 (95% CI 0.398-1.000); first reached (s) [0.0, 0.0, 0.0, 0.0]
+   steps 1.93e+05, flips 6.725e+04, walk-seconds 0; median steps/s 1.8e+07, median flips/s 6.25e+06; plus 2, restarts 0, dead ends 0, dep_reductions 0; window 15:18:01-15:18:01; kernel 6933efaf
+2x3x5 lib: 4 walks, start rank 30 (standard)
+   best ranks [25, 25, 25, 25]
+   <= 24: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 25: 4/4 (95% CI 0.398-1.000); first reached (s) [2.5, 2.6, 3.4, 5.6]
+   <= 26: 4/4 (95% CI 0.398-1.000); first reached (s) [0.0, 0.0, 0.0, 0.1]
+   steps 3.279e+08, flips 8.363e+07, walk-seconds 14; median steps/s 2.31e+07, median flips/s 5.9e+06; plus 6073, restarts 3, dead ends 0, dep_reductions 0; window 15:18:02-15:18:08; kernel 6933efaf
+2x2x6 lib: 4 walks, start rank 24 (standard)
+   best ranks [21, 21, 21, 21]
+   <= 20: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 21: 4/4 (95% CI 0.398-1.000); first reached (s) [0.0, 0.0, 0.0, 0.0]
+   <= 22: 4/4 (95% CI 0.398-1.000); first reached (s) [0.0, 0.0, 0.0, 0.0]
+   steps 1.718e+06, flips 5.756e+05, walk-seconds 0; median steps/s 2.04e+07, median flips/s 6.78e+06; plus 22, restarts 0, dead ends 0, dep_reductions 0; window 15:18:08-15:18:08; kernel 6933efaf
+2x3x6 lib: 4 walks, start rank 36 (standard)
+   best ranks [30, 30, 30, 30]
+   <= 29: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 30: 4/4 (95% CI 0.398-1.000); first reached (s) [1.6, 1.6, 4.7, 6.8]
+   <= 31: 4/4 (95% CI 0.398-1.000); first reached (s) [0.9, 1.5, 1.7, 6.5]
+   steps 2.231e+08, flips 7.607e+07, walk-seconds 15; median steps/s 1.58e+07, median flips/s 5.29e+06; plus 4054, restarts 9, dead ends 0, dep_reductions 0; window 15:18:08-15:18:15; kernel 6933efaf
+
+## 2026-10-06d_tgt_2x4x5.jsonl
+2x4x5 std: 8 walks, start rank 40 (standard)
+   best ranks [33, 33, 33, 39, 33, 37, 33, 33]
+   <= 32: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 33: 6/8 (95% CI 0.349-0.968); first reached (s) [1.6, 19.2, 26.5, 30.6, 38.8, 49.9]
+   <= 34: 6/8 (95% CI 0.349-0.968); first reached (s) [1.3, 16.4, 26.3, 27.5, 38.4, 49.7]
+   steps 7.89e+09, flips 1.924e+09, walk-seconds 480; median steps/s 1.7e+07, median flips/s 3.98e+06; plus 149234, restarts 79, dead ends 0, dep_reductions 0; window 15:18:51-15:20:51; kernel 6933efaf
+2x4x5 blk: 8 walks, start rank 34 (block start, rank 34: (2, 4, 1) + (2, 4, 4) (split of dimens)
+   best ranks [33, 33, 33, 33, 33, 33, 33, 33]
+   <= 32: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 33: 8/8 (95% CI 0.631-1.000); first reached (s) [0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1]
+   <= 34: 8/8 (95% CI 0.631-1.000); first reached (s) [0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1]
+   steps 1.07e+10, flips 1.556e+09, walk-seconds 480; median steps/s 2.24e+07, median flips/s 3.24e+06; plus 204120, restarts 142, dead ends 0, dep_reductions 0; window 15:20:51-15:22:52; kernel 6933efaf
+2x4x5 pub: 16 walks, start rank 33 (published: jakobmoosbauer/flips@e31a0a0f solutions/245-33-mo)
+   best ranks [33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33]
+   <= 32: 0/16 (95% CI 0.000-0.206); first reached (s) []
+   <= 33: 16/16 (95% CI 0.794-1.000); first reached (s) []
+   <= 34: 16/16 (95% CI 0.794-1.000); first reached (s) []
+   steps 2.103e+10, flips 3.186e+09, walk-seconds 960; median steps/s 2.18e+07, median flips/s 3.31e+06; plus 401121, restarts 381, dead ends 0, dep_reductions 0; window 15:22:52-15:26:52; kernel 6933efaf
+
+## 2026-10-06d_tgt_2x5x6.jsonl
+2x5x6 std: 4 walks, start rank 60 (standard)
+   best ranks [60, 60, 60, 60]
+   <= 46: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 47: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 48: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   steps 7.832e+09, flips 2.529e+09, walk-seconds 720; median steps/s 1.09e+07, median flips/s 3.51e+06; plus 150684, restarts 2, dead ends 0, dep_reductions 0; window 15:44:54-15:47:54; kernel 6933efaf
+2x5x6 blk: 4 walks, start rank 50 (block start, rank 50: (2, 5, 3) + (2, 5, 3) (split of dimens)
+   best ranks [50, 50, 50, 50]
+   <= 46: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 47: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 48: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   steps 9.049e+09, flips 2.902e+09, walk-seconds 720; median steps/s 1.26e+07, median flips/s 4.02e+06; plus 171350, restarts 2201, dead ends 0, dep_reductions 0; window 15:47:54-15:50:54; kernel 6933efaf
+2x5x6 pub: 8 walks, start rank 47 (published: AlphaEvolve 2x5x6 rank 47 (dronperminov/FastMatri)
+   best ranks [47, 47, 47, 47, 47, 47, 47, 47]
+   <= 46: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 47: 8/8 (95% CI 0.631-1.000); first reached (s) []
+   <= 48: 8/8 (95% CI 0.631-1.000); first reached (s) []
+   steps 3.327e+10, flips 4.904e+08, walk-seconds 1440; median steps/s 2.31e+07, median flips/s 3.43e+05; plus 650622, restarts 0, dead ends 0, dep_reductions 0; window 15:50:54-15:56:55; kernel 6933efaf
+2x5x6 std_p2000s1: 4 walks, start rank 60 (standard)
+   best ranks [57, 51, 52, 59]
+   <= 46: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 47: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 48: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   steps 1.447e+10, flips 3.949e+09, walk-seconds 1200; median steps/s 1.2e+07, median flips/s 3.32e+06; plus 6620983, restarts 320424, dead ends 0, dep_reductions 0; window 16:15:57-16:20:57; kernel 6933efaf
+
+## 2026-10-06d_tgt_3x3x6.jsonl
+3x3x6 std: 8 walks, start rank 54 (standard)
+   best ranks [43, 45, 45, 45, 45, 45, 45, 45]
+   <= 41: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 42: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 43: 1/8 (95% CI 0.003-0.527); first reached (s) [10.8]
+   steps 2.252e+10, flips 6.177e+09, walk-seconds 1440; median steps/s 1.49e+07, median flips/s 4.47e+06; plus 426171, restarts 56, dead ends 0, dep_reductions 0; window 15:26:52-15:32:53; kernel 6933efaf
+3x3x6 blk: 8 walks, start rank 44 (block start, rank 44: (3, 3, 2) + (3, 3, 4) (split of dimens)
+   best ranks [43, 43, 43, 43, 43, 43, 43, 43]
+   <= 41: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 42: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 43: 8/8 (95% CI 0.631-1.000); first reached (s) [0.3, 1.2, 1.6, 2.3, 4.3, 6.2, 12.7, 21.6]
+   steps 3.013e+10, flips 4.213e+09, walk-seconds 1440; median steps/s 2.09e+07, median flips/s 2.96e+06; plus 582245, restarts 30, dead ends 0, dep_reductions 0; window 15:32:53-15:38:53; kernel 6933efaf
+3x3x6 pub: 8 walks, start rank 42 (published: jakobmoosbauer/flips@e31a0a0f solutions/336-42-mo)
+   best ranks [42, 42, 42, 42, 42, 42, 42, 42]
+   <= 41: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 42: 8/8 (95% CI 0.631-1.000); first reached (s) []
+   <= 43: 8/8 (95% CI 0.631-1.000); first reached (s) []
+   steps 3.654e+10, flips 2.324e+09, walk-seconds 1440; median steps/s 2.54e+07, median flips/s 1.61e+06; plus 709805, restarts 0, dead ends 0, dep_reductions 0; window 15:38:53-15:44:53; kernel 6933efaf
+3x3x6 std_p2000s1: 4 walks, start rank 54 (standard)
+   best ranks [44, 45, 45, 45]
+   <= 41: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 42: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 43: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   steps 1.868e+10, flips 4.248e+09, walk-seconds 1200; median steps/s 1.49e+07, median flips/s 3.67e+06; plus 8647354, restarts 274627, dead ends 0, dep_reductions 0; window 16:20:57-16:25:57; kernel 6933efaf
+
+## 2026-10-06d_tgt_4x4x5.jsonl
+4x4x5 blk: 8 walks, start rank 63 (block start, rank 63: (4, 4, 1) + (4, 4, 4) (split of dimens)
+   best ranks [62, 62, 60, 62, 60, 60, 62, 60]
+   <= 59: 0/8 (95% CI 0.000-0.369); first reached (s) []
+   <= 60: 4/8 (95% CI 0.157-0.843); first reached (s) [8.5, 107.8, 108.4, 175.7]
+   <= 61: 4/8 (95% CI 0.157-0.843); first reached (s) [8.5, 78.9, 96.8, 175.7]
+   steps 3.073e+10, flips 3.3e+09, walk-seconds 1920; median steps/s 1.58e+07, median flips/s 1.76e+06; plus 600261, restarts 0, dead ends 0, dep_reductions 0; window 15:56:55-16:04:55; kernel 6933efaf
+4x4x5 pub: 4 walks, start rank 60 (published: jakobmoosbauer/flips@e31a0a0f solutions/445-60-mo)
+   best ranks [60, 60, 60, 60]
+   <= 59: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 60: 4/4 (95% CI 0.398-1.000); first reached (s) []
+   <= 61: 4/4 (95% CI 0.398-1.000); first reached (s) []
+   steps 1.874e+10, flips 1.597e+09, walk-seconds 960; median steps/s 1.95e+07, median flips/s 1.66e+06; plus 366145, restarts 0, dead ends 0, dep_reductions 0; window 16:04:56-16:08:56; kernel 6933efaf
+4x4x5 own60: 4 walks, start rank 60 (own rank-60 scheme search/schemes/rust-2026-10-06d/cal/4x4x5)
+   best ranks [60, 60, 60, 60]
+   <= 59: 0/4 (95% CI 0.000-0.602); first reached (s) []
+   <= 60: 4/4 (95% CI 0.398-1.000); first reached (s) []
+   <= 61: 4/4 (95% CI 0.398-1.000); first reached (s) []
+   steps 2.149e+10, flips 1.832e+09, walk-seconds 960; median steps/s 2.24e+07, median flips/s 1.91e+06; plus 419532, restarts 0, dead ends 0, dep_reductions 0; window 16:08:56-16:12:56; kernel 6933efaf
+
+## (3,4,5): reached <= 48, block starts 23/24 vs standard starts 12/24; two-sided Fisher p = 0.0007
+   median steps/s std_full / std_off = 0.33
+   median steps/s std_full_v2 / std_off = 0.46
+   median steps/s blk_full / blk_off = 0.46
+   median steps/s blk_full_v2 / blk_off = 0.81
+   (4,4,5) median steps/s blk_full / blk_off = 0.60
+
+## Re-verification of every saved scheme (search/schemes/rust-2026-10-06d/)
+   141/141 pass verify, verify_explicit and 200 random checks; valid over Z as they stand: 4; below the record: none
+
+## cal/3x4x5_rank48_*.json: 34 files, 24 distinct factor-rank profiles (distinct profile => inequivalent)
+
+## targets/3x3x6_rank43_*.json: 9 files, 9 distinct factor-rank profiles (distinct profile => inequivalent)
+
+## cal/4x4x5_rank60_*.json: 2 files, 2 distinct factor-rank profiles (distinct profile => inequivalent)
+
+## targets/4x4x5_rank60_*.json: 4 files, 4 distinct factor-rank profiles (distinct profile => inequivalent)
+
+## targets/2x4x5_rank33_*.json: 14 files, 14 distinct factor-rank profiles (distinct profile => inequivalent)
+
+## all (4,4,5) rank-60 schemes of this round + KM's published file: 7 schemes, 7 distinct factor-rank profiles; ['4x4x5_rank60_blk_full_seed7.json', '4x4x5_rank60_blk_off_seed1.json', '4x4x5_rank60_blk_seed1003.json', '4x4x5_rank60_blk_seed1005.json', '4x4x5_rank60_blk_seed1006.json', '4x4x5_rank60_blk_seed1008.json', 'KM 445-60-mod2']

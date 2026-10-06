@@ -21,6 +21,7 @@ are not evidence about hard problems, because a model trained only on them learn
 | Script | Family | Output |
 |---|---|---|
 | [linear_recurrence.py](linear_recurrence.py) | a(n) = Σ cᵢ a(n−i) mod 2⁶⁴ | `synthetic/linear-recurrence-c…/`: naive recursion Θ(λⁿ) vs DP Θ(kn) vs companion-matrix power Θ(k³ log n). λ is computed from the support of c, and V2 sizes are chosen automatically. |
+| [rules/](rules/) | 7 speed-up rules (memoisation, transform convolution, repeated squaring, matroid greedy, Knuth–Yao, GF(2) bilinear rank, meet in the middle) | `candidates/<round>/*.jsonl`: one screened candidate per line (verdict EXACT / NEAR-MISS / WRONG / INVALID, exact-count fit, canonical key). No entry folders; promotion is a separate decision (RL-081). |
 
 ## Rules for new generators
 

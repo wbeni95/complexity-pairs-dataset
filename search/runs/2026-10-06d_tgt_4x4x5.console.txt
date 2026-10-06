@@ -1,0 +1,8 @@
+# target (4, 4, 5): best known GF(2) rank 60; full_reduce=False; started 2026-10-06 15:56:55
+blk  start rank 63 (block start, rank 63: (4, 4, 1) + (4, 4, 4) (split of dimension 2) (search/schemes/rust-2026-10-06d/starts/4x4x5_start_rank63.json)); seeds 1001-1008 x 240 s; wall 481 s
+     best ranks [62, 62, 60, 62, 60, 60, 62, 60]; reached <= 60: 4/8 (95% CI 0.157-0.843); below 60: 0; first reached (s) [8.5, 107.8, 108.4, 175.7]; steps 3.073e+10; flips 3.3e+09; dep_reductions 0.0
+pub  start rank 60 (published: jakobmoosbauer/flips@e31a0a0f solutions/445-60-mod2.exp (reduced mod 2)); seeds 2001-2004 x 240 s; wall 240 s
+     best ranks [60, 60, 60, 60]; reached <= 60: 4/4 (95% CI 0.398-1.000); below 60: 0; first reached (s) []; steps 1.874e+10; flips 1.597e+09; dep_reductions 0.0
+own60 start rank 60 (own rank-60 scheme search/schemes/rust-2026-10-06d/cal/4x4x5_rank60_blk_off_seed1.json); seeds 3001-3004 x 240 s; wall 240 s
+     best ranks [60, 60, 60, 60]; reached <= 60: 4/4 (95% CI 0.398-1.000); below 60: 0; first reached (s) []; steps 2.149e+10; flips 1.832e+09; dep_reductions 0.0
+# finished 2026-10-06 16:12:56

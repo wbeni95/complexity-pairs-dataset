@@ -1,0 +1,6 @@
+# calibration (3, 4, 5), best known GF(2) rank 47; 8 seeds x 120 s per arm; started 2026-10-06 14:57:58
+std_full_v2 start rank  60 (standard); full_reduce=True; wall 240 s
+          best ranks [48, 48, 49, 49, 48, 52, 48, 51]; reached <= 47: 0/8 (95% CI 0.000-0.369); below 47: 0; first reached (s) []; steps 9.195e+09; flips 1.66e+09; dep_reductions 29577.0
+blk_full_v2 start rank  49 (block start, rank 49: (3, 4, 2) + (3, 4, 3) (split of dimension 2) (search/schemes/rust-2026-10-06d/starts/3x4x5_start_rank49.json)); full_reduce=True; wall 240 s
+          best ranks [48, 48, 48, 48, 48, 48, 48, 48]; reached <= 47: 0/8 (95% CI 0.000-0.369); below 47: 0; first reached (s) []; steps 1.237e+10; flips 2.37e+09; dep_reductions 31585.0
+# finished 2026-10-06 15:05:59

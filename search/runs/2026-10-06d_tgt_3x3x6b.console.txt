@@ -1,0 +1,4 @@
+# target (3, 3, 6): best known GF(2) rank 42; full_reduce=False; started 2026-10-06 16:20:57
+std  start rank 54 (standard); seeds 6001-6004 x 300 s; wall 301 s
+     best ranks [44, 45, 45, 45]; reached <= 42: 0/4 (95% CI 0.000-0.602); below 42: 0; first reached (s) []; steps 1.868e+10; flips 4.248e+09; dep_reductions 0.0
+# finished 2026-10-06 16:25:58

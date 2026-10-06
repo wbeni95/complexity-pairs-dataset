@@ -1,0 +1,8 @@
+# target (2, 4, 5): best known GF(2) rank 33; full_reduce=False; started 2026-10-06 15:18:51
+std  start rank 40 (standard); seeds 1001-1008 x 60 s; wall 120 s
+     best ranks [33, 33, 33, 39, 33, 37, 33, 33]; reached <= 33: 6/8 (95% CI 0.349-0.968); below 33: 0; first reached (s) [1.6, 19.2, 26.5, 30.6, 38.8, 49.9]; steps 7.89e+09; flips 1.924e+09; dep_reductions 0.0
+blk  start rank 34 (block start, rank 34: (2, 4, 1) + (2, 4, 4) (split of dimension 2) (search/schemes/rust-2026-10-06d/starts/2x4x5_start_rank34.json)); seeds 2001-2008 x 60 s; wall 120 s
+     best ranks [33, 33, 33, 33, 33, 33, 33, 33]; reached <= 33: 8/8 (95% CI 0.631-1.000); below 33: 0; first reached (s) [0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.1, 0.1]; steps 1.07e+10; flips 1.556e+09; dep_reductions 0.0
+pub  start rank 33 (published: jakobmoosbauer/flips@e31a0a0f solutions/245-33-mod0.exp (reduced mod 2)); seeds 3001-3016 x 60 s; wall 240 s
+     best ranks [33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33, 33]; reached <= 33: 16/16 (95% CI 0.794-1.000); below 33: 0; first reached (s) []; steps 2.103e+10; flips 3.186e+09; dep_reductions 0.0
+# finished 2026-10-06 15:26:52

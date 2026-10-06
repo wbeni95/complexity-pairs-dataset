@@ -827,3 +827,227 @@ In this log, "the maintainer" (27 uses before this entry) always meant the AI as
 **Rationale:** the project's value rests on transparency. An AI role that readers can only infer from commit metadata is not transparent, and errors must be attributable to whoever made them.
 
 **The RL-077 e-mail** was sent by the owner on 2026-10-06, before this disclosure. It does not mention the AI assistance; the audit report it links to names its author as a delegated research agent (Claude). Any reply will be logged.
+
+---
+
+## 2026-10-06 (evening: fourth round, consolidated by the maintainer)
+
+Four background agents. The owner proposed "morphing" the validated pairs (crossing, mirroring, changing operations, taking reciprocals) and asked for three things: rule mining over hundreds or thousands of generated candidates, a methodology survey, and a search in less-explored matrix formats. The detailed reports:
+- [mutation_pilot](research/2026-10-06d_mutation_pilot.md)
+- [rule_mining](research/2026-10-06d_rule_mining.md)
+- [methodology](research/2026-10-06d_methodology.md), with the short guide [notes/discovery-methods.md](notes/discovery-methods.md)
+- [exotic_formats](research/2026-10-06d_exotic_formats.md)
+
+The maintainer re-ran the main experiments of every agent (RL-080 to RL-083). Every status, verdict and headline number reproduced exactly; only wall-clock fields differ. Numbers outside those re-runs are agent reports.
+
+### RL-079 · DECISION · Mutations act on problems and implementations, not on cost formulas
+A cost formula (n³, 2ⁿ) is a measured property of an algorithm, not the pair itself. Transforming the formula alone (its reciprocal, a mirror image, a mix of two formulas) gives an expression with no problem and no algorithm behind it, so nothing can be verified; START_HERE rejects such rewrites.
+The owner's idea is therefore applied one level down:
+- mirror, swap operations, cross and simplify the **problems and implementations**;
+- use the slow side as the oracle, since it evaluates any objective or algebra;
+- **measure** the cost change with exact counts instead of assuming it.
+
+**Rationale:** every output stays checkable to the validator's standard. Formula-level structure remains useful as a map of gaps for literature search.
+
+### RL-080 · VERIFIED (rediscoveries) and NEAR-MISS · Mutation pilot: where fast algorithms survive mirroring and operation swaps
+**Engine:** `mutations/` (16 tests).
+- Fast algorithms run as in-memory copies of the repository's implementations: either unchanged on substituted value types, or after targeted AST rewrites.
+- The slow side, or a generic brute-force oracle, defines the mutated problem.
+- Nothing under pairs/, staging/ or synthetic/ is modified; a test checks the source hashes.
+
+**Outcomes:** 369 mutants and 233 532 differential tests. Every kill comes with a shrunk minimal counterexample.
+
+| Family | Mutants | Survived | Killed | Invalid | Trivial | Inconclusive |
+|---|---|---|---|---|---|---|
+| MIRROR | 27 | 0 | 7 | 1 | 19 | 0 |
+| OPSWAP | 342 | 176 | 77 | 68 | 20 | 1 |
+
+**Boundary map.** It is exact on the 6–13 structures tested per algorithm, but a correlation, not a proof.
+
+| Fast algorithm | Survives exactly where |
+|---|---|
+| Strassen, polynomial Karatsuba, Ryser, Kirchhoff/Bareiss | an additive inverse exists |
+| FWHT | an additive inverse exists and 1+1 ≠ 0 |
+| NTT | a primitive root of the transform size exists |
+| Dijkstra; Floyd–Warshall and Bellman–Ford on cyclic digraphs | 1 ⊕ a = 1 |
+| Floyd–Warshall and Bellman–Ford on DAGs; sparse table | ⊕ is idempotent |
+| square-and-multiply | power-associativity (octonions survive 1000 tests) |
+
+**Strassen rescued by input transformations** (known results, rediscovered): integer Strassen on embedded inputs gives
+- the Boolean product;
+- the (min,+) product, via Yuval's encoding;
+- the (max,min) product, via thresholds.
+
+The last two are pseudo-polynomial in the weights.
+
+**Cost:** 30 survivors were measured by exact counts.
+- In 29, the claimed cost is the only one that fits, and 215 rivals are rejected.
+- The exception is Boolean Floyd–Warshall (α = 1.0372 against n³), a counting gap: operations on plain literals are not counted while the edge density varies (INCONCLUSIVE).
+
+**NEAR-MISS:**
+- **Knuth's optimal-BST speed-up under (max,+)** agrees on 0.8662 of 800 tests. Smallest counterexample: p = (0,0,0), q = (0,0,0,1), where the recursion gives 3 and Knuth gives 2.
+  - No literature statement was found, but only the bibliographic records of Knuth 1971 and Yao 1980 were checked, not the papers.
+  - The maintainer's expectation, not checked: the speed-up's quadrangle-inequality condition is stated for minimisation, and maximisation reverses it.
+- **Stoer–Wagner as a max-cut algorithm** is killed, with ratio ≥ 0.708.
+
+**Limit:** Kruskal is INVALID everywhere because the repository implementation packs weights into integer sort keys. This is a property of our implementation, not of Kruskal's algorithm.
+
+**MIRROR:** all 19 survivors are known trivial reparametrisations. The 7 kills (longest path, farthest pair, max cut) are expected.
+
+**Maintainer re-run:** `experiments/2026-10-06d_mut_pilot.py --trials-scale 5`, then `python -m mutations props` and `experiments/2026-10-06d_mut_boundary_map.py`. All 446 records are identical except the `elapsed_s` field.
+
+**Data:** records in `mutations/records/2026-10-06d/` (660 KB). Literature: 32 identifiers [DOI OK]. The agent corrected one wrong DOI: Duan–Pettie 2009 is …068.43, not .42.
+
+### RL-081 · VERIFIED, NULL and REFUTED · Rule mining: 1920 generated candidates, nothing beyond textbook rules
+**Package:** `generators/rules/` (22 tests). Seven rules as executable templates, each with a family generator and a common screen:
+- memoisation (with state compression);
+- transform convolution;
+- repeated squaring;
+- matroid greedy;
+- Knuth–Yao monotone splits;
+- GF(2) bilinear rank;
+- meet in the middle.
+
+**Screen:** 1920 candidates gave 1161 EXACT, 380 NEAR-MISS, 310 WRONG and 69 INVALID, with 1138 distinct after canonical deduplication.
+- **Exponent fits:** for 1089 of the 1106 EXACT candidates with a fit, the exact-count fit resolves the exponent change.
+- **The 17 unresolved** are memoisation fits: 16 do not reach the asymptote at small n, and 1 is a harness artefact (a rival identical to the claim, not fixed).
+- **Count check:** instrumented counts and spec-derived counts agree wherever both exist.
+
+**NULL:** no candidate beats a known algorithm. The bilinear rule rediscovered Karatsuba (GF(2) rank 3) and GF(4) multiplication; the convolution rule rediscovered FWHT, NTT and Yates. All output is T7 at most.
+
+**Preconditions:** a stated precondition implied EXACT in every rule (precision 1.000). They are often not necessary, though: 97 magma, 43 Knuth, 9 meet-in-the-middle, 5 greedy and 4 compression candidates were EXACT without them.
+
+**IDEA** (supported on fresh seeds and held-out families; not theorems):
+- **Binary powering** is exact iff p_a·p_a = p_2a for every left power, which is weaker than power-associativity. 900/900 magmas agree, and 37 exact ones are not power-associative. Likely folklore; the literature was not checked.
+- **A compressed memo key** is exact iff the dropped coordinate is a function of the kept one on the reachable states (400/400).
+- **Concave length weights** made Knuth's speed-up exact on 600/600 instances, although the quadrangle inequality failed on all of them. Open. A possible explanation, not checked: with length-only weights the value depends only on the interval length.
+
+**REFUTED:**
+- Knuth's speed-up under the quadrangle inequality alone (728 of 1161 instances not exact);
+- translation-invariant weights (157/600 exact).
+
+**VERIFIED (pipeline check):** the greedy algorithm's adversarial ratio equals the Korte–Hausmann rank quotient within 0.0005 on 400/400 set systems.
+
+**Repairs** that make whole near-miss clusters exact:
+- transform plus sparse correction (300/300);
+- all-solutions lookup for meet in the middle (141/141);
+- boundary conditioning for cross-split interactions (92/92);
+- cycle detection for magmas (900/900).
+
+Bilinear repairs never gained (0/127).
+
+**Nearness metric:** use the adversarial ratio or a structural distance, not sampled ratios. For greedy, sampling reached the rank quotient on only 72 of 147 non-matroids.
+
+**Maintainer re-run:** `experiments/2026-10-06d_rules_mass_screen.py`, `…_hypotheses.py` and `…_analysis.py`. All 1920 verdicts are identical; only the `seconds` fields differ.
+
+**Data:** store `candidates/2026-10-06d/` (1.7 MB). The promotion list has 15 items. The only staging-level one is the maximum-weight basis of a binary matroid, which has low novelty next to the MST entry.
+
+### RL-082 · VERIFIED and INCONCLUSIVE · Methodology: exact formula recognition, log-factor identifiability, polynomial-method certificates, a tractability predictor
+**Output:** package `methods/` (20 tests); a survey of four areas with 117 checked identifiers; the guide `notes/discovery-methods.md`. Of the identifiers, 114 are OK, 1 is OK without a year, and 2 Theory of Computing DOIs have empty Crossref titles while their arXiv versions match.
+
+**Formula recognition:**
+- For 12 of 12 slow-algorithm count sequences in the dataset, a guessed exact recurrence gives the growth constant λ with its minimal polynomial and the polynomial exponent θ. All match the entries' claims. Example: plain-recursion edit distance gives λ = 3+2√2 (x²−6x+1) and θ = −1/2.
+- An independent route (ratio method plus LLL) agrees 12/12.
+- Cofactor determinant is flagged as factorial-type.
+- The MST enumeration count gives no recurrence of order ≤ 4 and degree ≤ 4 from 39 terms. NULL; this is not evidence of non-holonomicity.
+
+**Log factors (sharpens RL-048):**
+- On the grids of ledger run 20261006T105123Z, with perfect noise-free data, 0 of 44 timing fits could resolve a log factor at tolerance ±0.25. The largest tolerance that would resolve one is 0.1015. The cause is the tolerance on the given span of n, not noise.
+- Counts at n = 2^k give the exponent and the log power exactly through Berlekamp–Massey: NTT (x−2)² → n log n; Karatsuba x−3; Strassen x−7; Yates (x−2)² → N log N.
+- Monte Carlo (truth n log n, 8 points on [10³, 10⁵]): the correct model is chosen 81.0% of the time at σ = 0.03 and 57.8% at σ = 0.1. The usual confusion is with n^1.1.
+
+**Polynomial method:**
+- Exact adeg₁/₃(ORₙ) for 70 values of n ≤ 256, each with a primal and a dual certificate. Fit 0.7246·√n, log-log slope 0.4748 for n ≥ 16: the Ω(√N) bound behind Grover's optimality.
+- Parity has adeg = n for n ≤ 16.
+- Majority has slope 0.8738 on odd n ≤ 41 against the theorem's linear growth: INCONCLUSIVE as an asymptotic statement on this range.
+- On all 222 NPN classes of 4-bit functions, deg ≤ s² (Huang 2019), s ≤ bs ≤ C ≤ D and deg ≤ D hold.
+
+**Schaefer predictor:**
+- Polymorphism and syntactic classifications agree on all 276 relations of arity ≤ 3.
+- The predicted polynomial algorithm agrees with brute force on 900/900 instances, with valid witnesses; affine counting 2^(n−rank) agrees on 150/150.
+- Negative control: Horn propagation on NAE-3-SAT gives an invalid witness on 200/200.
+
+**Not done:** exact quantum query complexity by SDP (no solver in the standard library), and the matroid and TU demos.
+
+**Maintainer re-run:** the four experiments and the tests reproduced every number above.
+
+**The agent's own errors,** all fixed before the final runs and listed in the report:
+- a wrong λ comparison;
+- an LLL acceptance test that accepted 34x−55 for φ and at first used the true error;
+- a negative control that could not fail;
+- too few terms for global min cut;
+- an inconclusive dominance test.
+
+### RL-083 · VERIFIED (calibration), NULL and CORRECTED · Less-explored matrix formats: records table, block starts, no scheme below a record
+**Motivation:** an outside suggestion that larger or "exotic" formats may still hide lower ranks. The maintainer's assessment before the run:
+- possible in less-searched rectangular formats;
+- unlikely in 5×5 and 6×6, where expert groups search with large compute;
+- our kernel did not yet reach the record for (4,4,5) (RL-059: best 64 against 60).
+
+**Records table** for all 35 formats 2 ≤ n ≤ m ≤ p ≤ 6:
+- 372 published scheme files all verify over GF(2): Kauers–Moosbauer flips @e31a0a0f (37), Kauers' meta-flip-graph repository @12c26b29 (309), Arai–Ichikawa–Hukushima (2), Moosbauer–Poole (4), AlphaTensor (20).
+- **GF(2) vs general rings:** GF(2) is ahead in (4,4,4) 47/48, (4,4,5) 60/61 and (4,5,5) 73/76, and behind in (2,4,5) 33/32, (3,3,6) 42/40 and (3,6,6) 82/80.
+- The Q records 32 and 40 verify over Q but have denominators 2 and 8, so they do not reduce to GF(2) as they stand. An equivalent 2-integral scheme is not excluded.
+- Source oddity: KM's `366-85-mod2.exp` holds 86 terms.
+- The Linz server was not contacted.
+
+**Targets:** (3,3,6) → ≤ 41, (2,4,5) → 32, (2,5,6) → ≤ 46, (4,4,5) → ≤ 59.
+- Ranks 41, 46 and 59 would give exponents 2.7929, 2.8053 and 2.7915: below log₂7 = 2.80735, but none below log₄47 = 2.7773.
+- (2,4,5) at 32 (2.8185) would be a format record only.
+
+**Block starts** (`search/blocks.py`: direct sums of verified smaller schemes) close the (4,4,5) gap:
+- 6/24 walks reach the record 60, starting from (4,4,1)+(4,4,4) = 63, against 0/8 before.
+- The six rank-60 schemes are pairwise inequivalent, and inequivalent to KM's published file, by the factor-rank profile. They are rediscoveries of the best known rank.
+- For (3,4,5), block starts reach 48 in 23/24 walks against 12/24 from the standard start (Fisher p = 0.0007), but 47 in 0/24. The standard start reached 47 in 1/8, an exact reproduction of RL-059's seeds 1–8.
+
+**Kernel option `--full-reduce`** (default off): removes a term when the terms sharing one of its factors have linearly dependent factors in a second position.
+- **VERIFIED (exactness):** mirrored in `kernel_reference.py`, with differential and planted-dependency tests. `--full-reduce 0` is identical to the pre-round kernel in 14/14 step-limited cases.
+- **NULL (benefit):** no gain, at 0.46–0.81 of the plain kernel's speed.
+- The agent's first version allocated memory on every scan (0.33–0.46 of the speed). The fix gives identical trajectories, and the affected arms were re-run.
+- Kernel SHA-256: 69837abe… → 6933efaf….
+
+**NULL:** 160 walks, 3.89·10¹¹ steps and 24 000 walk-seconds (about 106 min of wall clock, at most 4 processes) found nothing below a best known GF(2) rank.
+
+**NEAR-MISS:**
+- (3,3,6): 9 pairwise inequivalent schemes at 43.
+- (4,4,5): walks from the published and from our own rank-60 schemes found no 59.
+
+**Obstacle:** (2,5,6) under the default plateau and slack never improves from 60 or 50. With plateau 2000 and slack 1 the walks descend at once, but the best within 300 s was 51.
+
+**Maintainer checks:** see RL-084.
+
+**CORRECTED (maintainer):** three exponents in the agent's report were written by hand and were off (formula 3·ln r / ln(nmp)):
+- (2,5,6) at 46 is 2.8053, not 2.8020;
+- (4,4,5) at 59 is 2.7915, not 2.7917;
+- (2,4,5) at 32 is 2.8185, not 2.8186.
+
+They are corrected in the report with a note. No conclusion changes, since 2.8053 is still below log₂7.
+
+### RL-084 · VERIFIED · Recorded run and maintainer checks after the fourth round
+Ledger: [ledger/runs/20261006T143136Z.json](ledger/runs/20261006T143136Z.json). Base commit `e575dd0`, with this round's work uncommitted; the run was made on a quiet machine after all agents had finished.
+- **Result:** 62/62 entries pass. V1 covered 51 entries, 3447 instances and 7323 implementation runs.
+- **V2:** 108 measurements, all passing (59 exact counts, 49 wall-clock); 113 of 113 rivals rejected; log factor resolved in 47 fits.
+- **Stability against RL-076:** all 59 exact-count series are identical; the largest change in a timing α is 0.0164.
+- **Unit tests:** 178 OK (110 before this round). **Citations:** 173 identifiers, 0 problems.
+- **Kernel identity:** `experiments/2026-10-06d_fmt_identity.py` — with `--full-reduce 0`, the changed kernel is identical to the pre-round kernel in 14/14 step-limited cases.
+- **Schemes:** all 141 schemes saved in `search/schemes/rust-2026-10-06d/` were re-verified by a separate script (verify, verify_explicit, 50 random checks, rank equal to the file name): 141 pass, none is below a best known rank.
+- **Equivalence:** `experiments/2026-10-06d_fmt_analysis.py` confirms 7 distinct factor-rank profiles among the six rank-60 (4,4,5) schemes and KM's published one.
+- **Agents' experiments:** re-run as stated in RL-080 to RL-082, all reproduced.
+
+### RL-085 · IDEA · Next steps from the fourth round
+1. **Exact shape diagnostic** for exact-count V2 (methodology recommendation 1; the code is in `methods/recurrences.py`). Start it as informational output; making it part of V2 needs a DECISION.
+2. **Entry candidates:** known, named problems, each needing the usual V1/V2 and verified citations.
+   - From the mutation pilot: Boolean matrix multiplication and transitive closure, bottleneck paths, counting Hamiltonian cycles, weighted spanning-tree sums.
+   - From the methodology survey: Horn-SAT, XOR-SAT, #XOR-SAT.
+   - From rule mining: OR/AND convolution, as an extension of the zeta entry.
+   - From the outside suggestion: bit-parallel algorithms in the word-RAM (log-factor gaps), and restricted graph classes with proven bounds (planar separators, bounded treewidth).
+   - Bit tricks for a fixed word size are constant factors and stay out of scope (START_HERE).
+3. **Search:**
+   - an exact SAT attack on (2,4,5) at rank 32 over GF(2);
+   - a pool of rank-48 (3,4,5) schemes;
+   - block starts from all four rank-47 4×4×4 classes;
+   - equivalence testing for non-square formats;
+   - format-dependent plateau and slack.
+4. **Open checks:**
+   - the (max,+) Knuth near-miss and the concave-weights observation against the literature;
+   - exact quantum query complexity by SDP, in a separate venv.

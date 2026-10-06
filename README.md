@@ -185,6 +185,10 @@ synthetic/<id>/              T7 entries (never counted as validated)
 notes/                       research notes and material that is not a pair
 lib/                         shared code (qsim.py state-vector simulator, qsearch.py quantum search, for T9 entries)
 generators/                  scripts that manufacture candidate pairs (mechanical output is T7 synthetic)
+generators/rules/            speed-up rules as executable templates; mass generation and screening (python -m generators.rules)
+candidates/<round>/          screened rule-generated candidates (JSONL): research artefacts, not entries
+mutations/                   mutation engine: mirrored and operation-swapped variants of the pairs (python -m mutations)
+methods/                     exact methods: recurrence and constant recognition, Boolean-function measures, LP, CSP predictor
 search/                      search environment: flip-graph search for matrix multiplication schemes (python -m search)
 research/                    detailed reports behind RESEARCH_LOG entries
 tools/                       validate.py, build_index.py, check_sources.py

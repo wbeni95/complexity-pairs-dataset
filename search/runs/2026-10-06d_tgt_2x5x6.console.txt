@@ -1,0 +1,8 @@
+# target (2, 5, 6): best known GF(2) rank 47; full_reduce=False; started 2026-10-06 15:44:54
+std  start rank 60 (standard); seeds 1001-1004 x 180 s; wall 180 s
+     best ranks [60, 60, 60, 60]; reached <= 47: 0/4 (95% CI 0.000-0.602); below 47: 0; first reached (s) []; steps 7.832e+09; flips 2.529e+09; dep_reductions 0.0
+blk  start rank 50 (block start, rank 50: (2, 5, 3) + (2, 5, 3) (split of dimension 2) (search/schemes/rust-2026-10-06d/starts/2x5x6_start_rank50.json)); seeds 2001-2004 x 180 s; wall 180 s
+     best ranks [50, 50, 50, 50]; reached <= 47: 0/4 (95% CI 0.000-0.602); below 47: 0; first reached (s) []; steps 9.049e+09; flips 2.902e+09; dep_reductions 0.0
+pub  start rank 47 (published: AlphaEvolve 2x5x6 rank 47 (dronperminov/FastMatrixMultiplication@64f58a5e, reduced mod 2)); seeds 3001-3008 x 180 s; wall 360 s
+     best ranks [47, 47, 47, 47, 47, 47, 47, 47]; reached <= 47: 8/8 (95% CI 0.631-1.000); below 47: 0; first reached (s) []; steps 3.327e+10; flips 4.904e+08; dep_reductions 0.0
+# finished 2026-10-06 15:56:55

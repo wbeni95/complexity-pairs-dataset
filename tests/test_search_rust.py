@@ -133,6 +133,37 @@ class RustKernelTests(unittest.TestCase):
                         if plateau == 10**9:
                             self.assertEqual(ref["flips"] + ref["plus"], 0)  # the old kernel idles here
 
+    def test_differential_full_reduce(self):
+        """--full-reduce 1 (linear-dependence reduction, research/2026-10-06d_exotic_formats.md): Rust and the mirror
+        agree exactly; the new branch, plus transitions and restarts are all exercised; with the flag off the
+        counter stays 0 and the trajectories equal the earlier kernel's (covered by the tests above)."""
+        from tests.test_search_blocks import _dependent_triple_scheme
+        configs = [((2, 2, 2), 1, 3000, 300, 0, 3), ((2, 2, 3), 2, 4000, 100, 0, 3), ((3, 3, 3), 3, 4000, 400, 0, 3),
+                   ((3, 3, 3), 4, 3000, 15, 0, 0), ((3, 3, 3), 5, 3000, 100, 3, 3), ((2, 3, 4), 6, 4000, 50, 0, 1)]
+        seen = {"dep_reductions": 0, "plus": 0, "restarts": 0, "dead_ends": 0}
+        starts = [(c, gf2mm.standard_scheme(c[0])) for c in configs]
+        fmt9, start9 = _dependent_triple_scheme(0)
+        starts += [(((2, 2, 2), s, 2000, 500, 0, 3), start9) for s in (1, 2, 3)]
+        for (fmt, seed, steps, plateau, cap, slack), start in starts:
+            for full in (True, False):
+                ref = kernel_reference.walk(start, seed, steps, plateau=plateau, slack=slack, max_weight=cap,
+                                            full_reduce=full)
+                got = rust_kernel.run(fmt, start, seed=seed, max_steps=steps, max_seconds=1e9, plateau=plateau,
+                                      slack=slack, max_weight=cap, full_reduce=full)
+                with self.subTest(fmt=fmt, seed=seed, plateau=plateau, cap=cap, slack=slack, full=full):
+                    self.assertEqual([tuple(t) for t in got["best"]], [tuple(t) for t in ref["best"]])
+                    for key in ("steps", "flips", "rejected_weight", "plus", "restarts", "dead_ends",
+                                "dep_reductions"):
+                        self.assertEqual(int(got["stats"][key]), ref[key], key)
+                    self.assertEqual([(r, s) for r, s, _ in got["improvements"]], ref["improvements"])
+                    if full:
+                        for key in seen:
+                            seen[key] += ref[key]
+                    else:
+                        self.assertEqual(ref["dep_reductions"], 0)
+        for key, val in seen.items():
+            self.assertGreater(val, 0, f"{key} must be exercised with --full-reduce 1")
+
     def test_reaches_strassen_rank_on_2x2(self):
         res = rust_kernel.run((2, 2, 2), gf2mm.standard_scheme((2, 2, 2)), seed=1, max_steps=2_000_000,
                               max_seconds=30, plateau=2000, target_rank=7)

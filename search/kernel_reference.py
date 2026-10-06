@@ -5,6 +5,8 @@ implementations; tests/test_search_rust.py checks this. It is slow and not meant
 The time budget is not mirrored, so call it with max_seconds effectively unlimited.
 Dead-end detection and escape (flipwalk.rs --dead-end, research/2026-10-06c_kernel_deadends.md) are mirrored;
 walk(..., dead_end=False) reproduces the earlier kernel exactly.
+The linear-dependence reduction (flipwalk.rs --full-reduce, research/2026-10-06d_exotic_formats.md) is mirrored;
+walk(..., full_reduce=False), the default, reproduces the kernel without it exactly.
 """
 from __future__ import annotations
 
@@ -64,8 +66,49 @@ def shift_after_remove(work, removed):
             work[idx] = w - 1
 
 
-def reduce(terms, touched):
+def dependency_reduction(terms, t):
+    """Mirror of flipwalk.rs dependency_reduction: returns (removed, changed) or None."""
+    r = len(terms)
+    for p in range(3):
+        key = terms[t][p]
+        group = [q for q in range(r) if terms[q][p] == key]
+        if len(group) < 3 or len(group) > 64:
+            continue
+        for d in (1, 2):
+            q = (p + d) % 3
+            o = (p + 3 - d) % 3
+            basis = [(0, 0)] * 64
+            for g, idx in enumerate(group):
+                v = terms[idx][q]
+                mask = 1 << g
+                inserted = False
+                for bit in range(63, -1, -1):
+                    if (v >> bit) & 1 == 0:
+                        continue
+                    if basis[bit][0] == 0:
+                        basis[bit] = (v, mask)
+                        inserted = True
+                        break
+                    v ^= basis[bit][0]
+                    mask ^= basis[bit][1]
+                if not inserted:
+                    y = terms[idx][o]
+                    changed = []
+                    for h, other in enumerate(group):
+                        if h != g and (mask >> h) & 1:
+                            nt = list(terms[other])
+                            nt[o] ^= y
+                            terms[other] = nt
+                            changed.append(other)
+                    del terms[idx]
+                    return idx, changed
+    return None
+
+
+def reduce(terms, touched, full=False):
+    """Mirror of flipwalk.rs reduce; returns the number of terms removed by the linear-dependence reduction."""
     work = list(touched)
+    deps = 0
     while work:
         t = work.pop()
         if t == REMOVED or t >= len(terms):
@@ -74,6 +117,7 @@ def reduce(terms, touched):
             del terms[t]
             shift_after_remove(work, t)
             continue
+        merged = False
         for q in range(len(terms)):
             if q == t:
                 continue
@@ -92,10 +136,22 @@ def reduce(terms, touched):
             del terms[t]
             shift_after_remove(work, t)
             work.append(q - 1 if q > t else q)
+            merged = True
             break
+        if full and not merged:
+            res = dependency_reduction(terms, t)
+            if res is not None:
+                removed, changed = res
+                deps += 1
+                shift_after_remove(work, removed)
+                if t != removed and t not in changed:
+                    work.append(t - 1 if t > removed else t)
+                for c in changed:
+                    work.append(c - 1 if c > removed else c)
+    return deps
 
 
-def plus_transition(terms, rng, cap) -> bool:
+def plus_transition(terms, rng, cap, full=False, counters=None) -> bool:
     r = len(terms)
     if r < 2:
         return False
@@ -114,12 +170,14 @@ def plus_transition(terms, rng, cap) -> bool:
     terms[i] = t1
     terms[j] = t2
     terms.append(t3)
-    reduce(terms, [i, j, len(terms) - 1])
+    deps = reduce(terms, [i, j, len(terms) - 1], full)
+    if counters is not None:
+        counters["dep_reductions"] += deps
     return True
 
 
 def walk(start, seed, max_steps, plateau=50_000, slack=3, max_weight=0, target_rank=0, dead_end=True,
-         on_dead_end=None):
+         on_dead_end=None, full_reduce=False):
     """Mirror of flipwalk.rs walk(). `on_dead_end(terms, best_rank)` (testing only, default None) is called at
     every step where a dead end is detected, before the escape move, with the current scheme (which it must not
     modify) and the rank of the best scheme so far."""
@@ -127,7 +185,7 @@ def walk(start, seed, max_steps, plateau=50_000, slack=3, max_weight=0, target_r
     terms = [list(t) for t in start]
     best = [list(t) for t in terms]
     since = 0
-    counters = {"flips": 0, "rejected_weight": 0, "plus": 0, "restarts": 0, "dead_ends": 0}
+    counters = {"flips": 0, "rejected_weight": 0, "plus": 0, "restarts": 0, "dead_ends": 0, "dep_reductions": 0}
     improvements = []
     # Exact dead-end detection (see flipwalk.rs): stamp[3*i+p] == epoch records that term i had no partner
     # sharing factor p in the current scheme; the epoch advances whenever the scheme may have changed.
@@ -149,7 +207,7 @@ def walk(start, seed, max_steps, plateau=50_000, slack=3, max_weight=0, target_r
                 j = cands[rng.below(len(cands))]
                 if flip(terms, i, j, p, max_weight):
                     counters["flips"] += 1
-                    reduce(terms, [i, j])
+                    counters["dep_reductions"] += reduce(terms, [i, j], full_reduce)
                     epoch += 1
                     unmatched = 0
                 else:
@@ -189,7 +247,7 @@ def walk(start, seed, max_steps, plateau=50_000, slack=3, max_weight=0, target_r
                 counters["restarts"] += 1
                 epoch += 1
                 unmatched = 0
-            elif plus_transition(terms, rng, max_weight):
+            elif plus_transition(terms, rng, max_weight, full_reduce, counters):
                 counters["plus"] += 1
                 epoch += 1
                 unmatched = 0

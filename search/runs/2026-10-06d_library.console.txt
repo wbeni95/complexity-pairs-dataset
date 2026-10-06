@@ -1,0 +1,5 @@
+# library build 2026-10-06 15:18:01
+(2, 2, 5) best known 18: best ranks [18, 18, 18, 18]; reached <= 18: 4/4 (95% CI 0.398-1.000); below 18: 0; first reached (s) [0.0, 0.0, 0.0, 0.0]; steps 1.93e+05; flips 6.725e+04; dep_reductions 0.0
+(2, 3, 5) best known 25: best ranks [25, 25, 25, 25]; reached <= 25: 4/4 (95% CI 0.398-1.000); below 25: 0; first reached (s) [2.5, 2.6, 3.4, 5.6]; steps 3.279e+08; flips 8.363e+07; dep_reductions 0.0
+(2, 2, 6) best known 21: best ranks [21, 21, 21, 21]; reached <= 21: 4/4 (95% CI 0.398-1.000); below 21: 0; first reached (s) [0.0, 0.0, 0.0, 0.0]; steps 1.718e+06; flips 5.756e+05; dep_reductions 0.0
+(2, 3, 6) best known 30: best ranks [30, 30, 30, 30]; reached <= 30: 4/4 (95% CI 0.398-1.000); below 30: 0; first reached (s) [1.6, 1.6, 4.7, 6.8]; steps 2.231e+08; flips 7.607e+07; dep_reductions 0.0
