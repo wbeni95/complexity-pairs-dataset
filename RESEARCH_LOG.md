@@ -471,3 +471,27 @@ In the recorded run (RL-050), 82 of the 90 V2 measurements had a computable diag
 ### RL-050 · VERIFIED · Recorded run after adding rivals and exact-count V2
 Ledger: [ledger/runs/20261006T070542Z.json](ledger/runs/20261006T070542Z.json), base commit `83b12c3`, with the RL-047 changes uncommitted in the tree (`git_dirty` true), run in the background.
 **Result:** 54/54 entries pass their claimed level. All 90 V2 measurements pass, including the two count-based ones with rivals.
+
+### RL-051 · VERIFIED · Single-file Rust compiles in under a second here; CI green on `92db882`
+**Measurement (console):** `rustc -O` on a dependency-free, kernel-sized file took 0.87 s cold, then 0.22 s and 0.25 s. With `-C opt-level=1` it took 0.21 s.
+The long builds the user had experienced come from cargo and dependencies, not from rustc on a small file.
+**Decision (by the user):** compiled kernels are written in single-file Rust without cargo. C would be about as fast for this kind of loop, but Rust gives memory safety by default and nothing needs installing.
+**CI:** GitHub Actions run 37427874381 on `92db882` succeeded in validate, scaling and sources (external).
+
+### RL-052 · VERIFIED and CORRECTED · Rust flip-graph kernel; a no-op plus transition caught by coverage checking
+**Built:**
+- `search/kernel/flipwalk.rs`: flips, zero-term removal and two-factor merges, plus transitions, restarts, weight cap, seeded SplitMix64, time and step budgets. It runs as a separate process at below-normal priority.
+- `search/rust_kernel.py`: builds the kernel, cached by source SHA-256 (0.42 s for a full build), runs single or parallel walks, and **re-verifies every result** with the exact Brent-equation verifier and a random-matrix check. A failing result raises KernelResultError and is never saved; `save_scheme` also refuses unverified schemes.
+- `search/kernel_reference.py`: a line-by-line Python mirror.
+
+**Differential test** (`tests/test_search_rust.py`): Rust and the Python mirror give identical best schemes, step counts, counters and improvement histories on 6 configurations, covering plus transitions, weight-cap rejections and restarts. A further test asserts that the restart branch is actually exercised.
+Other tests: the 2×2 run reaches rank 7 and passes both independent verifiers; malformed input exits cleanly with code 2; a corrupted scheme is rejected.
+
+**CORRECTED (maintainer's design error):** the first plus transition rewrote a⊗b⊗c + a'⊗b'⊗c' as (a+a')⊗b⊗c + a'⊗b⊗c + a'⊗b'⊗c'. Its first two terms share b and c, so the merge rule immediately undid it, and the move was a no-op.
+The differential test still passed, because both implementations shared the bug. It was found only by checking which branches the tests exercised: restarts were 0 in every case.
+The fix uses the non-collapsing form a⊗b⊗c + a'⊗b'⊗c' = (a+a')⊗b⊗c + a'⊗(b+b')⊗c' + a'⊗b⊗(c+c'), whose cross terms cancel in pairs. It requires a≠a', b≠b' and c≠c'.
+After the fix, 200 plus transitions raise a 2×2 scheme from rank 8 to 23 and it still verifies; a regression test was added.
+**Lesson:** a differential test proves agreement, not correctness. Branch coverage and invariant tests must accompany it.
+
+**Speed (console, one core, before the fix):** 4×4 walks ran at 2.1·10⁷ steps/s (3.6·10⁶ successful flips/s), against about 2.4·10⁵ flips/s for the Python driver of RL-036 (1.6M flips in 6.6 s). That is at least 15× per core in flips, before using the 16 logical cores.
+The move policies of the two drivers differ, so this comparison is approximate. Plus transitions happen at most once per 50 000-step plateau, so the fix does not materially change throughput; post-fix numbers come from the next recorded runs.

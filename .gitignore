@@ -29,3 +29,6 @@ results/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Rust kernel build output (rebuilt from search/kernel/flipwalk.rs in under a second)
+search/kernel/build/
