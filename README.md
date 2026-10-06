@@ -1,5 +1,7 @@
 # Complexity Pairs Dataset
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23184028.svg)](https://doi.org/10.5281/zenodo.23184028)
+
 An open, machine-readable, **verified** dataset of *complexity pairs*: computational problems for which
 we record two or more correct algorithms with **different asymptotic cost**, for example an
 exponential-time and a polynomial-time method for the same problem.
@@ -192,7 +194,7 @@ number-notation tricks.
 
 ## How to cite
 
-If you use the dataset or its tools, please cite it. GitHub's "Cite this repository" button uses [CITATION.cff](CITATION.cff).
+If you use the dataset or its tools, please cite it. GitHub's "Cite this repository" button uses [CITATION.cff](CITATION.cff). Every release is archived on Zenodo. The concept DOI [10.5281/zenodo.23184028](https://doi.org/10.5281/zenodo.23184028) always points to the latest version.
 
 ```bibtex
 @misc{weisz2026complexitypairs,
@@ -200,7 +202,8 @@ If you use the dataset or its tools, please cite it. GitHub's "Cite this reposit
   title        = {Complexity Pairs Dataset: verified pairs of algorithms with different asymptotic cost},
   year         = {2026},
   howpublished = {\url{https://github.com/wbeni95/complexity-pairs-dataset}},
-  note         = {Version 0.2.0}
+  doi          = {10.5281/zenodo.23184028},
+  note         = {Version 0.2.0, doi:10.5281/zenodo.23184029}
 }
 ```
 

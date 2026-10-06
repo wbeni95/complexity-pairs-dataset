@@ -676,3 +676,8 @@ Ledger: [ledger/runs/20261006T090819Z.json](ledger/runs/20261006T090819Z.json), 
 Ledger: [ledger/runs/20261006T091245Z.json](ledger/runs/20261006T091245Z.json), at commit `aedbdc6` with a clean tree.
 - **Result:** 62/62 entries pass their claimed level. All 108 V2 measurements pass, and all 94 declared rivals are rejected.
 - **Stability against RL-064:** all 52 exact-count series are **identical** value for value. The largest change in a timing α is 0.009.
+
+### RL-066 · VERIFIED · Zenodo DOI issued for v0.2.0
+Release v0.2.0 (2026-10-06 09:15:40 UTC) produced Zenodo record 23184029 two seconds later. Version DOI: **10.5281/zenodo.23184029**; concept DOI, for all versions: **10.5281/zenodo.23184028**.
+Both DOIs resolve, via DataCite (title checked) and doi.org (HTTP 302 to Zenodo). They were added to CITATION.cff (`doi`, `identifiers`) and to the README (badge, BibTeX `doi`).
+v0.1.0 never produced a record (RL-063), while v0.2.0, the first release with `.zenodo.json`, did so at once. This is consistent with the metadata hypothesis (a list of two licenses in CITATION.cff), but not proven, because the v0.1.0 error is visible only in the owner's Zenodo account.

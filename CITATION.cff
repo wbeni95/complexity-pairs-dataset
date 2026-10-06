@@ -6,6 +6,14 @@ authors:
   - family-names: Weisz
     given-names: Benjamin
 repository-code: "https://github.com/wbeni95/complexity-pairs-dataset"
+doi: "10.5281/zenodo.23184028"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23184028"
+    description: "Concept DOI: all versions (cite this unless you need a specific version)"
+  - type: doi
+    value: "10.5281/zenodo.23184029"
+    description: "Version 0.2.0"
 license:
   - Apache-2.0
   - CC-BY-4.0
