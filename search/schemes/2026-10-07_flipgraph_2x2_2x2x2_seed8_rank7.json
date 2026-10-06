@@ -1,0 +1,91 @@
+{
+ "format": [
+  2,
+  2,
+  2
+ ],
+ "field": "GF(2)",
+ "rank": 7,
+ "convention": "T<n,m,p> = sum a_ij (x) b_jk (x) c_ki over GF(2); alpha bit i*m+j, beta bit j*p+k, gamma bit k*n+i (gamma[k][i] = coefficient of the product in C[i][k])",
+ "status": "matches best known",
+ "best_known_rank": 7,
+ "provenance": {
+  "script": "experiments/2026-10-07_flipgraph_2x2.py",
+  "run_tag": "2026-10-07_flipgraph_2x2_2x2x2_seed8",
+  "seed": 8,
+  "start": "standard algorithm",
+  "reached_at_flip": 1542,
+  "reached_at_seconds": 0.007,
+  "run_total_flips": 1542,
+  "run_wall_seconds": 0.007,
+  "config": {
+   "fmt": [
+    2,
+    2,
+    2
+   ],
+   "seed": 8,
+   "max_flips": 1000000,
+   "plateau": 2000,
+   "escape": "plus",
+   "slack": 1,
+   "plus_per_escape": 1,
+   "pool_size": 64,
+   "reduction": "linear",
+   "max_seconds": null,
+   "target_rank": 7,
+   "verify_every": 4096,
+   "log_every": 0,
+   "keep_ranks_upto": 7,
+   "max_weight": 0,
+   "lookahead_every": 0,
+   "extra": {}
+  }
+ },
+ "terms": [
+  [
+   2,
+   15,
+   12
+  ],
+  [
+   3,
+   3,
+   1
+  ],
+  [
+   4,
+   5,
+   15
+  ],
+  [
+   5,
+   2,
+   5
+  ],
+  [
+   6,
+   7,
+   13
+  ],
+  [
+   10,
+   8,
+   8
+  ],
+  [
+   12,
+   4,
+   2
+  ]
+ ],
+ "products": [
+  "(A12)*(B11+B12+B21+B22) -> C12 C22",
+  "(A11+A12)*(B11+B12) -> C11",
+  "(A21)*(B11+B21) -> C11 C12 C21 C22",
+  "(A11+A21)*(B12) -> C11 C12",
+  "(A12+A21)*(B11+B12+B21) -> C11 C12 C22",
+  "(A12+A22)*(B22) -> C22",
+  "(A21+A22)*(B21) -> C21"
+ ]
+}

@@ -1,0 +1,21 @@
+{"event": "start", "config": {"fmt": [4, 4, 4], "seed": 101, "max_flips": 10000000, "plateau": 1000000, "escape": "plus", "slack": 1, "plus_per_escape": 1, "pool_size": 64, "reduction": "linear", "max_seconds": 1800, "target_rank": null, "verify_every": 1000000, "log_every": 1000000, "keep_ranks_upto": 47, "max_weight": 0, "lookahead_every": 0, "extra": {"tag": "s1"}}, "start_rank": 64, "rank_after_reduce": 64}
+{"event": "best", "rank": 63, "flips": 60149, "seconds": 0.289}
+{"event": "best", "rank": 62, "flips": 65594, "seconds": 0.315}
+{"event": "best", "rank": 61, "flips": 122766, "seconds": 0.586}
+{"event": "best", "rank": 60, "flips": 147609, "seconds": 0.704}
+{"event": "best", "rank": 59, "flips": 209071, "seconds": 0.995}
+{"event": "best", "rank": 58, "flips": 243619, "seconds": 1.156}
+{"event": "best", "rank": 57, "flips": 246442, "seconds": 1.169}
+{"event": "best", "rank": 56, "flips": 283394, "seconds": 1.335}
+{"event": "best", "rank": 55, "flips": 392340, "seconds": 1.84}
+{"event": "progress", "flips": 1003520, "rank": 55, "best": 55, "seconds": 4.467, "plus": 0, "restarts": 0, "flips_per_second": 224662}
+{"event": "best", "rank": 54, "flips": 1045330, "seconds": 4.65}
+{"event": "progress", "flips": 2002944, "rank": 54, "best": 54, "seconds": 8.64, "plus": 0, "restarts": 0, "flips_per_second": 231821}
+{"event": "progress", "flips": 3002368, "rank": 54, "best": 54, "seconds": 12.817, "plus": 1, "restarts": 0, "flips_per_second": 234257}
+{"event": "progress", "flips": 4001792, "rank": 54, "best": 54, "seconds": 17.025, "plus": 2, "restarts": 0, "flips_per_second": 235055}
+{"event": "progress", "flips": 5001216, "rank": 54, "best": 54, "seconds": 21.18, "plus": 3, "restarts": 0, "flips_per_second": 236127}
+{"event": "progress", "flips": 6000640, "rank": 54, "best": 54, "seconds": 25.328, "plus": 4, "restarts": 0, "flips_per_second": 236921}
+{"event": "progress", "flips": 7000064, "rank": 54, "best": 54, "seconds": 29.52, "plus": 5, "restarts": 0, "flips_per_second": 237133}
+{"event": "progress", "flips": 8003584, "rank": 54, "best": 54, "seconds": 33.695, "plus": 6, "restarts": 0, "flips_per_second": 237528}
+{"event": "progress", "flips": 9003008, "rank": 54, "best": 54, "seconds": 37.87, "plus": 7, "restarts": 0, "flips_per_second": 237733}
+{"event": "end", "format": [4, 4, 4], "seed": 101, "start_rank": 64, "best_rank": 54, "best_reached_at_flip": 1045330, "best_reached_at_seconds": 4.65, "flips": 10000000, "wall_seconds": 42.008, "flips_per_second": 238051, "flips_since_last_improvement": 8954670, "stopped_by": "flips", "plus_transitions": 8, "rejected_by_weight_cap": 0, "lookahead_scans": 0, "lookahead_hits": 0, "restarts": 0, "no_flip_available_events": 0, "reduction_events": 18, "full_verifications_passed": 20, "trajectory": [[64, 0, 0.0], [63, 60149, 0.289], [62, 65594, 0.315], [61, 122766, 0.586], [60, 147609, 0.704], [59, 209071, 0.995], [58, 243619, 1.156], [57, 246442, 1.169], [56, 283394, 1.335], [55, 392340, 1.84], [54, 1045330, 4.65]]}

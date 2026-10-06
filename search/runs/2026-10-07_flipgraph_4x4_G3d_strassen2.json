@@ -1,0 +1,298 @@
+{
+ "name": "2026-10-07_flipgraph_4x4_G3d_strassen2",
+ "script": "experiments/2026-10-07_flipgraph_4x4.py",
+ "best_known_rank": 47,
+ "start": "Strassen (x) Strassen, rank 49",
+ "environment": {
+  "python": "3.14.2",
+  "implementation": "CPython",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "machine": "AMD64",
+  "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "logical_cpus": 16
+ },
+ "batch_machine": {
+  "wall_seconds": 821.316,
+  "process_cpu_seconds": 815.516,
+  "system_cpu_utilisation": 0.0834,
+  "logical_cpus": 16
+ },
+ "runs": [
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 301,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 301,
+    "max_flips": 50000000,
+    "plateau": 200000,
+    "escape": "plus",
+    "slack": 3,
+    "plus_per_escape": 3,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "st2"
+    }
+   },
+   "start_rank": 49,
+   "best_rank": 49,
+   "best_reached_at_flip": 0,
+   "best_reached_at_seconds": 0.0,
+   "flips": 49683079,
+   "wall_seconds": 243.073,
+   "flips_per_second": 204396,
+   "flips_since_last_improvement": 49683079,
+   "stopped_by": "flips",
+   "plus_transitions": 950749,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 316921,
+   "reduction_events": 950543,
+   "full_verifications_passed": 50,
+   "trajectory": [
+    [
+     49,
+     0,
+     0.0
+    ]
+   ],
+   "started": "2026-10-06T04:09:22",
+   "machine": {
+    "wall_seconds": 243.074,
+    "process_cpu_seconds": 240.375,
+    "system_cpu_utilisation": 0.0833,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3d_strassen2_4x4x4_seed301_st2_rank49.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3d_strassen2_4x4x4_seed301_st2",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 302,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 302,
+    "max_flips": 50000000,
+    "plateau": 200000,
+    "escape": "plus",
+    "slack": 3,
+    "plus_per_escape": 3,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "st2"
+    }
+   },
+   "start_rank": 49,
+   "best_rank": 49,
+   "best_reached_at_flip": 0,
+   "best_reached_at_seconds": 0.0,
+   "flips": 49604246,
+   "wall_seconds": 266.289,
+   "flips_per_second": 186280,
+   "flips_since_last_improvement": 49604246,
+   "stopped_by": "flips",
+   "plus_transitions": 1187190,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 395754,
+   "reduction_events": 1186922,
+   "full_verifications_passed": 50,
+   "trajectory": [
+    [
+     49,
+     0,
+     0.0
+    ]
+   ],
+   "started": "2026-10-06T04:13:25",
+   "machine": {
+    "wall_seconds": 266.289,
+    "process_cpu_seconds": 264.984,
+    "system_cpu_utilisation": 0.0824,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3d_strassen2_4x4x4_seed302_st2_rank49.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3d_strassen2_4x4x4_seed302_st2",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 303,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 303,
+    "max_flips": 50000000,
+    "plateau": 200000,
+    "escape": "plus",
+    "slack": 3,
+    "plus_per_escape": 3,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 6,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "st2cap6"
+    }
+   },
+   "start_rank": 49,
+   "best_rank": 49,
+   "best_reached_at_flip": 0,
+   "best_reached_at_seconds": 0.0,
+   "flips": 49993051,
+   "wall_seconds": 51.453,
+   "flips_per_second": 971617,
+   "flips_since_last_improvement": 49993051,
+   "stopped_by": "flips",
+   "plus_transitions": 21281,
+   "rejected_by_weight_cap": 45787247,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 6949,
+   "reduction_events": 21274,
+   "full_verifications_passed": 50,
+   "trajectory": [
+    [
+     49,
+     0,
+     0.0
+    ]
+   ],
+   "started": "2026-10-06T04:17:51",
+   "machine": {
+    "wall_seconds": 51.454,
+    "process_cpu_seconds": 51.125,
+    "system_cpu_utilisation": 0.0828,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3d_strassen2_4x4x4_seed303_st2cap6_rank49.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3d_strassen2_4x4x4_seed303_st2cap6",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 304,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 304,
+    "max_flips": 50000000,
+    "plateau": 200000,
+    "escape": "plus",
+    "slack": 3,
+    "plus_per_escape": 3,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 8,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "st2cap8"
+    }
+   },
+   "start_rank": 49,
+   "best_rank": 49,
+   "best_reached_at_flip": 0,
+   "best_reached_at_seconds": 0.0,
+   "flips": 49609212,
+   "wall_seconds": 260.493,
+   "flips_per_second": 190443,
+   "flips_since_last_improvement": 49609212,
+   "stopped_by": "flips",
+   "plus_transitions": 1172322,
+   "rejected_by_weight_cap": 28452,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 390788,
+   "reduction_events": 1172057,
+   "full_verifications_passed": 50,
+   "trajectory": [
+    [
+     49,
+     0,
+     0.0
+    ]
+   ],
+   "started": "2026-10-06T04:18:43",
+   "machine": {
+    "wall_seconds": 260.494,
+    "process_cpu_seconds": 259.031,
+    "system_cpu_utilisation": 0.0846,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3d_strassen2_4x4x4_seed304_st2cap8_rank49.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3d_strassen2_4x4x4_seed304_st2cap8",
+   "status": "above best known"
+  }
+ ]
+}

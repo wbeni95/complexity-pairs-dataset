@@ -1,0 +1,15 @@
+{"event": "start", "config": {"fmt": [3, 3, 3], "seed": 4, "max_flips": 10000000, "plateau": 50000, "escape": "plus", "slack": 1, "pool_size": 64, "reduction": "linear", "max_seconds": 600, "target_rank": 22, "verify_every": 1000000, "log_every": 1000000, "keep_ranks_upto": 23, "max_weight": 0, "lookahead_every": 0, "extra": {}}, "start_rank": 27, "rank_after_reduce": 27}
+{"event": "best", "rank": 26, "flips": 3688, "seconds": 0.018}
+{"event": "best", "rank": 25, "flips": 3797, "seconds": 0.018}
+{"event": "best", "rank": 24, "flips": 19557, "seconds": 0.096}
+{"event": "best", "rank": 23, "flips": 109425, "seconds": 0.515}
+{"event": "progress", "flips": 1003520, "rank": 23, "best": 23, "seconds": 3.932, "plus": 18, "restarts": 0, "flips_per_second": 255214}
+{"event": "progress", "flips": 2002944, "rank": 23, "best": 23, "seconds": 7.753, "plus": 38, "restarts": 0, "flips_per_second": 258328}
+{"event": "progress", "flips": 3002368, "rank": 23, "best": 23, "seconds": 11.686, "plus": 57, "restarts": 0, "flips_per_second": 256920}
+{"event": "progress", "flips": 4001792, "rank": 23, "best": 23, "seconds": 15.586, "plus": 77, "restarts": 0, "flips_per_second": 256759}
+{"event": "progress", "flips": 5001216, "rank": 23, "best": 23, "seconds": 19.344, "plus": 96, "restarts": 0, "flips_per_second": 258538}
+{"event": "progress", "flips": 6000640, "rank": 23, "best": 23, "seconds": 23.091, "plus": 115, "restarts": 1, "flips_per_second": 259872}
+{"event": "progress", "flips": 7000064, "rank": 23, "best": 23, "seconds": 26.871, "plus": 134, "restarts": 1, "flips_per_second": 260510}
+{"event": "progress", "flips": 8003584, "rank": 23, "best": 23, "seconds": 30.878, "plus": 154, "restarts": 1, "flips_per_second": 259200}
+{"event": "progress", "flips": 9003008, "rank": 23, "best": 23, "seconds": 34.927, "plus": 174, "restarts": 1, "flips_per_second": 257766}
+{"event": "end", "format": [3, 3, 3], "seed": 4, "start_rank": 27, "best_rank": 23, "best_reached_at_flip": 109425, "best_reached_at_seconds": 0.515, "flips": 10000000, "wall_seconds": 38.741, "flips_per_second": 258123, "flips_since_last_improvement": 9890575, "stopped_by": "flips", "plus_transitions": 193, "rejected_by_weight_cap": 0, "lookahead_scans": 0, "lookahead_hits": 0, "restarts": 1, "no_flip_available_events": 0, "reduction_events": 196, "full_verifications_passed": 15, "trajectory": [[27, 0, 0.0], [26, 3688, 0.018], [25, 3797, 0.018], [24, 19557, 0.096], [23, 109425, 0.515]]}

@@ -1,0 +1,14 @@
+{"event": "start", "config": {"fmt": [4, 4, 4], "seed": 504, "max_flips": 5000000, "plateau": 1000000, "escape": "plus", "slack": 1, "plus_per_escape": 1, "pool_size": 64, "reduction": "linear", "max_seconds": 1800, "target_rank": null, "verify_every": 1000000, "log_every": 1000000, "keep_ranks_upto": 47, "max_weight": 5, "lookahead_every": 0, "extra": {"tag": "cap5"}}, "start_rank": 64, "rank_after_reduce": 64}
+{"event": "best", "rank": 63, "flips": 25961, "seconds": 0.115}
+{"event": "best", "rank": 62, "flips": 322032, "seconds": 1.403}
+{"event": "best", "rank": 61, "flips": 536368, "seconds": 2.3}
+{"event": "best", "rank": 60, "flips": 540754, "seconds": 2.317}
+{"event": "best", "rank": 59, "flips": 561332, "seconds": 2.398}
+{"event": "best", "rank": 58, "flips": 765776, "seconds": 3.169}
+{"event": "best", "rank": 57, "flips": 897130, "seconds": 3.653}
+{"event": "progress", "flips": 1003520, "rank": 57, "best": 57, "seconds": 4.016, "plus": 0, "restarts": 0, "flips_per_second": 249854}
+{"event": "best", "rank": 56, "flips": 1213502, "seconds": 4.74}
+{"event": "progress", "flips": 2002944, "rank": 56, "best": 56, "seconds": 7.149, "plus": 0, "restarts": 0, "flips_per_second": 280186}
+{"event": "progress", "flips": 3002368, "rank": 56, "best": 56, "seconds": 10.203, "plus": 1, "restarts": 0, "flips_per_second": 294269}
+{"event": "progress", "flips": 4001792, "rank": 56, "best": 56, "seconds": 13.288, "plus": 2, "restarts": 0, "flips_per_second": 301169}
+{"event": "end", "format": [4, 4, 4], "seed": 504, "start_rank": 64, "best_rank": 56, "best_reached_at_flip": 1213502, "best_reached_at_seconds": 4.74, "flips": 5000000, "wall_seconds": 16.338, "flips_per_second": 306042, "flips_since_last_improvement": 3786498, "stopped_by": "flips", "plus_transitions": 3, "rejected_by_weight_cap": 1750054, "lookahead_scans": 0, "lookahead_hits": 0, "restarts": 0, "no_flip_available_events": 0, "reduction_events": 11, "full_verifications_passed": 13, "trajectory": [[64, 0, 0.0], [63, 25961, 0.115], [62, 322032, 1.403], [61, 536368, 2.3], [60, 540754, 2.317], [59, 561332, 2.398], [58, 765776, 3.169], [57, 897130, 3.653], [56, 1213502, 4.74]]}

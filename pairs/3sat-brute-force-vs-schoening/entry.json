@@ -1,0 +1,63 @@
+{
+  "id": "3sat-brute-force-vs-schoening",
+  "title": "3-SAT: brute force vs Schöning's random walk",
+  "problem_statement": "Given a CNF formula over Boolean variables x_1..x_n in which every clause has at most 3 literals, decide whether some assignment satisfies every clause.",
+  "input": {
+    "parameter": "n = number of variables; m denotes the number of clauses.",
+    "size_measure": "m clauses of at most 3 literals each: O(m log n) bits. The harness uses at most 6n + 8 clauses (m = Theta(n) for n >= 3)."
+  },
+  "algorithms": [
+    {
+      "name": "brute force",
+      "idea": "Enumerate all 2^n assignments and evaluate the formula on each, abandoning an assignment at its first falsified clause.",
+      "model": "classical-deterministic",
+      "pseudocode": "for each assignment a in {0,1}^n: if every clause has a true literal under a: return True; return False",
+      "time_complexity": "O(2^n m) worst case (2^n assignments, O(m) clause checks each); all 2^n assignments are examined on every unsatisfiable formula",
+      "space_complexity": "O(n + m)",
+      "correctness": "Exhaustive.",
+      "implementation": "implementations/brute_force.py:sat_brute_force",
+      "harness": { "v1_max_n": 12 }
+    },
+    {
+      "name": "Schöning's random walk (Monte Carlo, one-sided error)",
+      "idea": "Repeat T(n) times: start from a uniformly random assignment, and 3n times pick the first falsified clause and flip a uniformly random one of its variables. Answer True as soon as an assignment satisfies the formula; False after all tries.",
+      "model": "classical-randomized",
+      "pseudocode": "see implementation",
+      "time_complexity": "O(T(n) n m) with T(n) = ceil(ln(10^6) / p(n)) = Theta((4/3)^n sqrt(n)) tries: O((4/3)^n n^1.5 m) on every input, attained on unsatisfiable formulas; p(n) is the per-try success lower bound in caveats",
+      "space_complexity": "O(n + m)",
+      "correctness": "Schöning 1999. A True answer is always correct (a satisfying assignment was found). For a satisfiable formula fix a solution a*. Every flip of a variable in a falsified clause decreases the distance to a* with probability >= 1/3, so one try succeeds with probability >= p(n) = sum_j C(n,j) 2^-n C(3j,j) (1/3)^(2j) (2/3)^j, and T(n) tries miss with probability <= exp(-p(n) T(n)) <= 10^-6.",
+      "implementation": "implementations/schoening.py:sat_schoening"
+    }
+  ],
+  "pair_type": "T6",
+  "secondary_tags": ["T8"],
+  "relationship": "O(2^n m) -> O((4/3)^n poly(n)) for a Monte Carlo algorithm with one-sided error 10^-6: a smaller exponential base, still exponential. 3-SAT is NP-complete (Cook 1971), so a polynomial-time algorithm would imply P = NP; hence primary T6 with secondary T8. Faster exponential algorithms (PPSZ and successors) are catalogued in staging/boolean-satisfiability.",
+  "sources": [
+    {
+      "authors": "Schöning, U.",
+      "year": 1999,
+      "title": "A probabilistic algorithm for k-SAT and constraint satisfaction problems",
+      "venue": "40th Annual Symposium on Foundations of Computer Science (FOCS 1999), 410-414",
+      "doi": "10.1109/SFFCS.1999.814612"
+    },
+    {
+      "authors": "Cook, S. A.",
+      "year": 1971,
+      "title": "The complexity of theorem-proving procedures",
+      "venue": "STOC 1971, 151-158",
+      "doi": "10.1145/800157.805047"
+    }
+  ],
+  "verification": {
+    "level": "V1",
+    "method": "V1: both implementations agree with each other and with an independent oracle (a DPLL solver with unit propagation, in harness.py) on random 3-CNF (m = 2n, 4.26n, 6n), planted satisfiable 3-CNF (m = 5n), unsatisfiable formulas (random clauses plus all 8 sign patterns on one variable triple), mixed 1-/2-/3-literal formulas and the n = 0, 1, 2 edge cases, n = 0..12 (both algorithms) and n = 14 (Schöning and the oracle only), 6 instances per n. Schöning's answers are random but reproducible (the validator re-seeds `random` before each call). Not raised to V2, for two measured reasons. (1) On the unsatisfiable timing family (random 3-CNF with m = 5n plus 8 forcing clauses), experiments/2026-10-07_3sat_timing_probe.py measured Schöning at n = 4..12 with alpha = 0.960 against (4/3)^n n^2.5, but also 1.225 against (4/3)^n n^1.5 and 0.865 against 2^n. Over the n range that pure Python can time, the fit therefore cannot tell the claimed bound from brute force's 2^n. On unsatisfiable inputs the running time is in any case fixed by the restart budget T(n), by construction. (2) On planted formulas with a unique solution (n = 6..16, 5 instances x 4000 tries each), experiments/2026-10-07_schoening_planted_success.py measured per-try success rates 5.7 to 15 times above p(n) (empirical base about 0.82 per variable, against 0.71 for p(n) over the same range), so that family does not attain the bound. Brute force alone does fit its 2^n factor on the unsatisfiable family (alpha = 1.016 against 2^n over n = 8..16; it makes 6.6 to 8.2 clause checks per assignment there, i.e. Theta(1) rather than Theta(m) on this family).",
+    "artifacts": ["implementations/brute_force.py", "implementations/schoening.py", "harness.py", "../../experiments/2026-10-07_3sat_timing_probe.py", "../../experiments/2026-10-07_schoening_planted_success.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14],
+    "trials": 6
+  },
+  "caveats": "Schöning's algorithm is randomized with one-sided error. With T(n) = ceil(ln(10^6) / p(n)) tries a satisfiable formula is wrongly reported unsatisfiable with probability at most 10^-6 per call; unsatisfiable formulas are always answered correctly. Hence the V1 agreement on satisfiable instances is itself probabilistic, although reproducible under the validator's seeding. The V1 battery contains 53 satisfiable and 31 unsatisfiable formulas (counted with the oracle). With fresh randomness, the probability that Schöning misses any of the satisfiable ones is at most 53 x 10^-6 (union bound). Here p(n) = sum_{j=0..n} C(n,j) 2^-n C(3j,j) (1/3)^(2j) (2/3)^j is an explicit lower bound on one try's success probability, derived as in Schöning's analysis (compare with a walk that moves toward a fixed solution with probability exactly 1/3). For n = 14..20 it lies between 0.87 and 0.89 times (3/4)^n / sqrt(n) (computed). The restart budget T(n) is 196, 1682 and 22371 tries for n = 6, 12, 20. The O((4/3)^n poly(n)) bound is a worst-case bound. On random and planted satisfiable formulas the walk usually succeeds much sooner. Brute force's O(2^n m) is likewise a worst case: on the unsatisfiable timing family it makes only about 7 clause checks per assignment.",
+  "notes": "The (4/3)^n base comes from k = 3: for k-SAT the walk gives (2(k-1)/k)^n poly(n) (Schöning 1999). 2-SAT, by contrast, is solvable in polynomial time (see notes/boundary-2sat-vs-3sat.md)."
+}

@@ -47,7 +47,7 @@ carries any of T1–T5, T8, T9.
 ## The dataset
 
 <!-- PAIRS-TABLE:START -->
-**28 validated pairs** (V1+, tagged T1–T5, T8 or T9) · 9 open problems (T6) · 4 proven quantum advantages (T9) · 8 staged (V0) · 6 with a quantum algorithm (⚛)
+**39 validated pairs** (V1+, tagged T1–T5, T8 or T9) · 12 open problems (T6) · 9 proven quantum advantages (T9) · 11 staged (V0) · 12 with a quantum algorithm (⚛)
 
 ### Verified (`pairs/`, V1+)
 
@@ -65,21 +65,32 @@ carries any of T1–T5, T8, T9.
 | [Minimum spanning tree: edge-subset enumeration vs Kruskal (and Prim)](pairs/minimum-spanning-tree-brute-vs-kruskal) | T2 | V2 | enumeration of all (n-1)-edge subsets: Theta(n * C(n(n-1)/2, n-1)) = 2^Theta(n log n)<br>Kruskal with union-find: O(m log m) = O(n^2 log n) on K_n<br>Prim, array version: Theta(n^2) on K_n |
 | [Modular exponentiation: repeated multiplication vs square-and-multiply](pairs/modular-exponentiation-repeated-vs-square-multiply) | T2 | V2 | repeated multiplication: Theta(e) = Theta(2^n) multiplications mod m<br>left-to-right square-and-multiply (binary method): Theta(n) multiplications mod m |
 | [Single-pair shortest path: simple-path enumeration vs Dijkstra](pairs/shortest-path-enumeration-vs-dijkstra) | T2 | V2 | simple-path enumeration: Theta(n (n-2)!) on the complete digraph<br>Dijkstra (array version): Theta(n^2) with an array |
+| [All-pairs shortest paths on dense digraphs: Bellman-Ford from every source vs Floyd-Warshall](pairs/all-pairs-shortest-paths-bellman-ford-vs-floyd-warshall) | T3 | V2 | Bellman-Ford from every source: Theta(n^2 m) for m >= 1 edges<br>Floyd-Warshall: Theta(n^3) on every input |
+| [Maximum bipartite matching: one augmenting path per vertex (Kuhn) vs Hopcroft-Karp](pairs/bipartite-matching-kuhn-vs-hopcroft-karp) | T3 | V2 | Kuhn's augmenting paths (one DFS per left vertex): O(V (V + E))<br>Hopcroft-Karp: O((V + E) sqrt(V)) |
 | [Closest pair of points: brute force vs divide and conquer](pairs/closest-pair-brute-vs-divide-conquer) | T3 | V2 | all pairs: Theta(n^2)<br>Shamos-Hoey divide and conquer: Theta(n log n) on every input |
+| [Element distinctness: all pairs vs sorting](pairs/element-distinctness-pairs-vs-sorting) | T3 | V2 | all pairs: Theta(n^2) worst case<br>sort, then compare neighbours: Theta(n log n) on every input |
 | [Integer multiplication: schoolbook vs Karatsuba](pairs/integer-multiplication-schoolbook-vs-karatsuba) | T3 | V2 | schoolbook (long) multiplication: Theta(n^2) digit operations<br>Karatsuba: Theta(n^log2(3)) ~ Theta(n^1.585) digit operations |
 | [Counting inversions: all pairs vs merge sort](pairs/inversion-counting-quadratic-vs-merge) | T3 | V2 | all pairs: Theta(n^2)<br>merge-sort counting: Theta(n log n) |
+| [Longest palindromic substring: brute force vs expanding around centers vs Manacher](pairs/longest-palindromic-substring) | T3 | V2 | brute force (test every substring): Theta(n^3) worst case<br>expand around centers: Theta(n + R) where R = sum of the maximal palindrome radii over all centers<br>Manacher's algorithm: Theta(n) on every input |
 | [Matrix multiplication: schoolbook vs Strassen](pairs/matrix-multiplication-naive-vs-strassen) | T3 | V1 | schoolbook: Theta(n^3)<br>Strassen: Theta(n^(log2 7)) ~ Theta(n^2.807) |
+| [Maximum flow: Edmonds-Karp vs Dinic](pairs/max-flow-edmonds-karp-vs-dinic) | T3 | V1 | Edmonds-Karp: O(V E^2)<br>Dinic (blocking flows): O(V^2 E) |
 | [Maximum subarray sum: brute force vs running sums vs Kadane's scan](pairs/maximum-subarray) | T3 | V2 | brute force (sum every subarray): Theta(n^3) on every input<br>running sums: Theta(n^2) on every input<br>Kadane's algorithm (linear scan): Theta(n) |
 | [Polynomial multiplication over Z_p: schoolbook vs number-theoretic transform (FFT)](pairs/polynomial-multiplication-naive-vs-ntt) | T3 | V2 | schoolbook convolution: Theta(n^2)<br>number-theoretic transform (Cooley-Tukey over Z_p): Theta(n log n) |
+| [Range minimum queries: scanning each range vs a sparse table](pairs/range-minimum-queries-naive-vs-sparse-table) | T3 | V2 | scan each range: Theta(q + sum of the query lengths)<br>sparse table: Theta(n log n) preprocessing plus O(1) per query |
 | [Comparison sorting: insertion sort vs merge sort](pairs/sorting-insertion-vs-merge) | T3 | V2 | insertion sort: Theta(n + I) where I is the number of inversions<br>merge sort: Theta(n log n) on every input |
 | [Exact string matching: naive scan vs Knuth-Morris-Pratt](pairs/string-matching-naive-vs-kmp) | T3 | V2 | naive matching: Theta(n m) character comparisons in the worst case<br>Knuth-Morris-Pratt: Theta(n + m) on every input |
 | [3SUM: all triples vs sorting with two pointers](pairs/three-sum-cubic-vs-quadratic) | T3 | V2 | all triples: Theta(n^3) worst case<br>sort + two pointers: Theta(n^2) |
 | [Primality testing: Miller-Rabin (randomized) vs AKS (deterministic)](pairs/primality-miller-rabin-vs-aks) | T4 | V1 | Miller-Rabin: O(k n^3) bit operations for k rounds with schoolbook multiplication<br>AKS: Õ(n^(21/2)) as proven in AKS 2004 |
+| [3-SAT: brute force vs Schöning's random walk](pairs/3sat-brute-force-vs-schoening) | T6+T8 | V1 | brute force: O(2^n m) worst case<br>Schöning's random walk (Monte Carlo, one-sided error): O(T(n) n m) with T(n) = ceil(ln(10^6) / p(n)) = Theta((4/3)^n sqrt(n)) tries |
+| [Chromatic number: subset DP over independent sets vs inclusion-exclusion](pairs/chromatic-number-subset-dp-vs-inclusion-exclusion) | T6+T8 | V2 | subset DP over all independent sets: Theta(3^n) on every input<br>inclusion-exclusion (Bjorklund-Husfeldt-Koivisto): (2 chi(G) + 2) 2^n arithmetic operations |
 | [0/1 knapsack: subset enumeration vs meet in the middle vs pseudo-polynomial DP](pairs/knapsack-01-brute-vs-dp) | T6+T8 | V2 | subset enumeration: Theta(2^n n)<br>meet in the middle (Horowitz-Sahni): Theta(2^(n/2) n)<br>capacity DP (Bellman): Theta(n W) |
 | [Permanent: sum over permutations vs Ryser's formula](pairs/permanent-naive-vs-ryser) | T6+T8 | V2 | sum over all permutations: Theta(n * n!) arithmetic operations<br>Ryser's formula with Gray-code ordering: Theta(n 2^n) arithmetic operations |
 | [Travelling salesman: permutation enumeration vs Held-Karp DP](pairs/tsp-brute-vs-held-karp) | T6+T8 | V2 | permutation enumeration: Theta(n!)<br>Held-Karp dynamic programming: Theta(n^2 2^n) |
 | [Bernstein-Vazirani: n classical queries vs 1 quantum query](pairs/bernstein-vazirani-classical-vs-quantum) | T9 | V2 | classical: query the unit vectors: n queries<br>Bernstein-Vazirani quantum algorithm: 1 query ⚛ |
+| [Collision problem: Theta(N^(1/2)) classical queries vs Theta(N^(1/3)) quantum queries (Brassard-Hoyer-Tapp)](pairs/collision-problem-classical-vs-quantum) | T9 | V2 | classical birthday search: Theta(sqrt N) = Theta(2^(n/2)) queries expected<br>Brassard-Hoyer-Tapp, known number of marked points: Theta(N^(1/3)) = Theta(2^(n/3)) queries expected ⚛<br>Brassard-Hoyer-Tapp with BBHT exponential search (unknown number of marked points): Theta(N^(1/3)) queries expected ⚛ |
+| [Deutsch-Jozsa: 2^(n-1)+1 exact classical queries vs 1 exact quantum query (no gap once classical error is allowed)](pairs/deutsch-jozsa-classical-vs-quantum) | T9 | V2 | classical deterministic: scan until a difference or a majority: 2^(n-1) + 1 queries in the worst case<br>classical randomized, one-sided bounded error (K = 20 random queries): K = 20 queries for every n<br>Deutsch-Jozsa quantum algorithm (one-query version): 1 query ⚛ |
 | [Unstructured search: Theta(N) classical queries vs Theta(sqrt N) quantum queries (Grover)](pairs/grover-search-classical-vs-quantum) | T9 | V2 | classical random-order search: (N + 1) / 2 queries expected = Theta(2^n)<br>Grover's algorithm: (pi/4) sqrt(N) + O(1) queries = Theta(2^(n/2)) ⚛ |
+| [Minimum finding: N classical queries vs O(sqrt N) quantum queries (Durr-Hoyer, bounded error)](pairs/minimum-finding-classical-vs-quantum) | T9 | V2 | classical scan: exactly N queries = Theta(2^n)<br>Durr-Hoyer quantum minimum finding: O(sqrt N) queries ⚛ |
 | [Simon's problem: Theta(2^(n/2)) classical queries vs O(n) quantum queries](pairs/simon-classical-vs-quantum) | T9 | V2 | classical collision search: Theta(2^(n/2)) queries expected<br>Simon's quantum algorithm: O(n) queries ⚛ |
 
 ### Staging (`staging/`, V0: cited, not yet independently checked)
@@ -93,7 +104,10 @@ carries any of T1–T5, T8, T9.
 | [Discrete logarithm: generic and index-calculus algorithms vs Shor's quantum algorithm](staging/discrete-logarithm) | T6+T9 | V0 | baby-step giant-step: O(sqrt(p)) = O(2^(n/2)) group operations<br>Pollard rho for logarithms: O(sqrt(p)) group operations<br>number field sieve for discrete logs in GF(q): L_q[1/3, (64/9)^(1/3)]<br>Shor's algorithm: polynomial in n ⚛ |
 | [Graph isomorphism: moderately exponential vs quasi-polynomial](staging/graph-isomorphism) | T6+T8 | V0 | brute force over permutations: O(n! n^2)<br>Babai-Luks canonical labeling: exp(O(sqrt(n log n)))<br>Babai's quasi-polynomial algorithm: exp((log n)^O(1)) |
 | [Integer factoring: classical algorithms vs Shor's quantum algorithm](staging/integer-factoring) | T6+T8 | V0 | trial division: O(2^(n/2))<br>Pollard rho: O(N^(1/4)) = O(2^(n/4)) heuristically<br>general number field sieve (GNFS): exp(((64/9)^(1/3) + o(1)) (ln N)^(1/3) (ln ln N)^(2/3))<br>Shor's algorithm: O(n^3) quantum gates with schoolbook modular arithmetic ⚛ |
+| [Linear systems: conjugate gradient vs the HHL quantum algorithm (conjectured exponential speedup, with fine print and low-rank dequantization)](staging/linear-systems-hhl) | T6 | V0 | classical conjugate-gradient-type solver: O(N sqrt(kappa)) for sparse A<br>HHL quantum algorithm: poly(log N, kappa) ⚛<br>quantum-inspired classical algorithm for LOW-RANK A (dequantization; a different input model): O(poly(k, kappa, ||A||_F, 1/eps) polylog(m, n)) for a rank-k m x n matrix |
 | [Polynomial identity testing: randomized polynomial vs deterministic (open)](staging/polynomial-identity-testing) | T6+T4 | V0 | expand into monomials: exponential in s in general<br>Schwartz-Zippel random evaluation: poly(s) |
+| [Element distinctness: Theta(N) classical queries vs Theta(N^(2/3)) quantum queries (Ambainis quantum walk)](staging/element-distinctness-quantum-walk) | T9 | V0 | classical: read everything, sort, scan: N queries<br>Ambainis quantum walk algorithm: O(N^(2/3)) queries ⚛ |
+| [Forrelation: 1 quantum query vs Omega(sqrt(N)/log N) classical queries (optimal partial-function separation)](staging/forrelation) | T9 | V0 | classical: read both functions: 2N queries<br>classical: generic simulation of a 1-query quantum algorithm: O(sqrt N) queries<br>quantum: one-query forrelation estimator: 1 query ⚛ |
 
 ### Synthetic (`synthetic/`, T7: not counted)
 
@@ -146,7 +160,10 @@ pairs/<id>/                  V1+ entries: entry.json, README.md, harness.py, imp
 staging/<id>/                V0 entries (cited, awaiting implementation)
 synthetic/<id>/              T7 entries (never counted as validated)
 notes/                       research notes and material that is not a pair
-lib/                         shared code (qsim.py: exact state-vector simulator for T9 entries)
+lib/                         shared code (qsim.py state-vector simulator, qsearch.py quantum search, for T9 entries)
+generators/                  scripts that manufacture candidate pairs (mechanical output is T7 synthetic)
+search/                      search environment: flip-graph search for matrix multiplication schemes (python -m search)
+research/                    detailed reports behind RESEARCH_LOG entries
 tools/                       validate.py, build_index.py, check_sources.py
 experiments/                 deterministic scripts behind RESEARCH_LOG entries
 ledger/runs/                 recorded validation runs (evidence)

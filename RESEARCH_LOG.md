@@ -265,3 +265,154 @@ Three of the four terminated with an API safeguard error labelled `reasoning_ext
 The three were relaunched with the same mandates, and the documentation request was rephrased as decision logs, near-miss records and open ideas.
 
 **Lesson:** ask agents for *documentation of decisions and evidence*, not for their internal reasoning.
+
+---
+
+## 2026-10-07 (overnight agents, consolidated by the maintainer)
+
+Four background agents worked in separate areas. Their full reports, with every number, decision log, near-miss and
+open idea, are in [research/](research/):
+- [classical_entries](research/2026-10-07_classical_entries.md)
+- [quantum_entries](research/2026-10-07_quantum_entries.md)
+- [patterns](research/2026-10-07_patterns.md) and [technique_mapping](research/2026-10-07_technique_mapping.json)
+- [search_flipgraph](research/2026-10-07_search_flipgraph.md)
+
+The entries below summarise them. The maintainer re-verified every entry in the recorded run (RL-044); numbers
+marked "agent report" were not re-run by the maintainer.
+
+### RL-027 · VERIFIED · Eight new classical pairs
+Recorded α values (RL-044):
+
+| Entry | Level | Recorded α |
+|---|---|---|
+| all-pairs-shortest-paths-bellman-ford-vs-floyd-warshall | V2 | 0.973 / 0.923 |
+| longest-palindromic-substring | V2 | 0.966 / 1.005 / 0.997 |
+| element-distinctness-pairs-vs-sorting | V2 | 1.000 / 1.002 |
+| chromatic-number-subset-dp-vs-inclusion-exclusion (T6 + T8) | V2 | 0.982 / 0.986 |
+| range-minimum-queries-naive-vs-sparse-table | V2 | 1.009 / 1.000 |
+| bipartite-matching-kuhn-vs-hopcroft-karp | V2 | 0.977 / 0.982 |
+| max-flow-edmonds-karp-vs-dinic | V1 | — |
+| 3sat-brute-force-vs-schoening (T6 + T8) | V1 | — |
+
+Each harness has an oracle independent of both implementations. The agent's control experiment reports that every oracle rejects deliberately wrong outputs, e.g. 111/111 for matching and 84/84 for 3-SAT (agent report; `experiments/2026-10-07_oracle_controls.py`).
+The chromatic-number DP is the plain variant with exactly 3ⁿ − 2ⁿ inner steps, not Lawler's O(2.4423ⁿ) version; the entry says so.
+
+### RL-028 · NEAR-MISS · Schöning: timing cannot separate (4/3)ⁿ from 2ⁿ in the range Python can time → V1
+On unsatisfiable formulas, n = 4..12: α = 0.960 against (4/3)ⁿ·n^2.5 and α = 0.865 against 2ⁿ. Both pass, so the fit does not discriminate.
+The suggested planted unique-solution family is far from the worst case: success per try was 5.7–15× above the proven bound p(n) on all 30 instances (agent report).
+
+### RL-029 · INCONCLUSIVE · Max flow: random networks are far from the worst case → V1
+Edmonds–Karp made only 21–176 augmentations, and Dinic needed 2–4 phases. Fits against the claimed bounds would fail (α = 0.558 vs n⁵, 0.479 vs n⁴). No worst-case family was built (agent report).
+
+### RL-030 · NEAR-MISS · Matching: timing passes even for wrong exponents; V2 rests on exact counts
+On the agent's adversarial family (K_{2a,a} plus graded paths, a = k²), timing passes not only for the claimed exponents but also for wrong ones (Kuhn vs n^2.5: 1.168; Hopcroft–Karp vs n²: 1.221, vs n³: 0.815).
+The exact counts pin the behaviour down:
+- exactly k + 1 Hopcroft–Karp phases for every k = 2..16;
+- Kuhn's edge scans ≈ 0.144·V·E;
+- Hopcroft–Karp's ≈ 1.01–1.05·E√V.
+
+V2 is kept, but this shows the ±0.25 timing test is not discriminative here; see RL-040.
+
+### RL-031 · CORRECTED · Agent self-corrections in the classical batch (all before any number was used)
+- A palindrome probe built its "random" string from a fresh RNG per character, so the string was constant.
+- An early-exit docstring predicted "3–4 passes" before the run; the measurement gave 3.25 → 5.22 passes (n = 8 → 64).
+- The max-flow V1 justification was drafted before its probe ran.
+
+Each was corrected to the measured numbers (agent report).
+
+### RL-032 · VERIFIED · Three new T9 pairs and three new staging entries
+Recorded α values (RL-044):
+- **deutsch-jozsa** (V2): α = 1.000 for the deterministic exact algorithm on worst-case inputs; constant 20 for the randomized algorithm (error 2⁻¹⁹) and constant 1 for the quantum one. The entry states prominently that the gap exists only against **exact** classical algorithms.
+- **collision-problem** (V2): 1.003 / 1.021 / 1.164. The last variant is pre-asymptotic: the exact slope over n = 15..30 is 1.009.
+- **minimum-finding** (V2): 1.000 / 0.886.
+
+Staging: element-distinctness-quantum-walk (T9), forrelation (T9), linear-systems-hhl (**T6**: there is no proven classical lower bound, and the dequantization results address a different, low-rank problem).
+The three existing T9 entries report identical query counts before and after the `lib/qsim.py` change (agent report §4). In RL-044 they are also identical to RL-022 (5/5 reported fits).
+
+### RL-033 · CORRECTED · BHT implementation stopped querying its classical set early (caught by theory vs simulation)
+The first collision-finder version gave z = +0.57, −1.97, −2.73, −1.61, −1.56 against the exact expected query count. Four of five were negative, which pointed to a real bias.
+After the fix (all of K is queried first, as in the paper): z = +0.57, −0.57, −0.87, −0.41, −1.31 (agent report; `experiments/2026-10-07_collision_expected_queries.py`).
+
+### RL-034 · NEAR-MISS · Quantum batch: fits near the edge, late crossovers, chance anomalies
+- **Dürr–Høyer:** α = 0.800 over n = 2..10, from lower-order terms in the time-out, so V2 uses n = 4..12 (0.886). With the published constants the quantum count only drops below classical N between N = 2048 and 4096.
+- **Suspicious z-scores, each checked with replications declared in advance:**
+  - classical collision, n = 8: +3.19, then +2.05; an independent 10⁶-sample sampler gave −0.95;
+  - Deutsch–Jozsa, n = 8: −2.37, then +0.65;
+  - a single exponential-search setting: −2.96, with the combined z over 11 settings −0.57.
+
+  All are consistent with chance, and the original values are kept (agent report).
+
+### RL-035 · DECISION · Query accounting and reusable quantum-search tooling
+A phase conditioned on a predicate of a non-Boolean oracle value costs 2 queries (compute and uncompute; Boyer–Brassard–Høyer–Tapp). The new code is `Oracle.apply_phase_where` and `lib/qsearch.py`, which provides known-count Grover, exponential search for an unknown count, and exact expected costs; it is covered by `tests/test_qsim.py` (18 tests).
+Constants are therefore up to 2× higher than in some papers' accounting. Exponents are unaffected.
+
+### RL-036 · VERIFIED (pipeline) and NULL · Flip-graph search for GF(2) matrix multiplication schemes
+The `search/` package has two exact verifiers of the Brent equations that share no code, 47 unit tests (a mutation check shows they catch broken moves), and a CLI: `python -m search flip|verify|sortnet`. Results (agent report; 77 saved schemes, all re-verified in a separate step):
+- **2×2:** rank 7 from rank 8 on 10/10 seeds, in 48–1,577 flips. An exhaustive check of 19,702 subspaces found **no rank-6 scheme over GF(2)**; that check was validated against an independent computation on 7,096 tensors.
+- **3×3:** rank 23 (Laderman's) on 10/10 seeds, in 13,470–709,024 flips; the 10 schemes are pairwise inequivalent. **NULL for rank 22** in 9.8·10⁷ further flips.
+- **4×4:** the best walk without a factor cap reached 52 (660M flips). With a cap of 4, one walk in 14 reached 49 in 1.6M flips; that scheme is very likely Strassen ⊗ Strassen, equivalence not proven. **NULL for rank ≤ 48** in about 1.05·10⁹ steps. Rank 47 is known to exist (AlphaTensor), so the null result reflects the search, not the problem.
+- **Sorting networks, n = 2..8:** sizes 1, 3, 5, 9, 12, 16, 19, all equal to the known optima. These are fixed-size objects, so this is pipeline validation only.
+- **Context (maintainer, via one arXiv API query):** Rudich & Rousseau, "Lower Bound of 22 for 3x3 Matrix Multiplication over the Integers", arXiv:2610.01639 (2026-10-01). It claims rank ≥ 22 for 3×3 recursive algorithms with integer constants, which would rule out beating Strassen's exponent with any 3×3 scheme over Z. It is a preprint, not yet peer-reviewed, and GF(2) is a different setting.
+
+Compute: about 85 minutes, single process, below-normal priority.
+
+### RL-037 · CORRECTED · log₄47 = 2.7773, not "≈ 2.774"
+The maintainer had written 2.774 in `notes/constant-factor-alphadev.md`, in the `relationship` of `pairs/matrix-multiplication-naive-vs-strassen`, and in its README. log 47 / log 4 = 2.777294…; all three were corrected. Found by the search agent.
+
+### RL-038 · CORRECTED · Process: the CPU-priority line in the maintainer's briefs did nothing
+`ctypes.windll.kernel32.SetPriorityClass(ctypes.windll.kernel32.GetCurrentProcess(), 0x4000)` fails silently on 64-bit CPython: it returns 0 with error 6 (invalid handle), because ctypes truncates the handle.
+The other agents therefore probably ran at normal priority, so their timing runs competed for CPU. The maintainer's final recorded run (RL-044) was made with no other Python process running.
+A correct version, which declares the argument types and reads the priority back, is in `search/machine.py`.
+Also recorded: the search agent ran one read-only `git status` despite the brief, and about 2 minutes of its early smoke tests ran at normal priority.
+
+### RL-039 · VERIFIED (measured) · When memoisation is enough: distinct subproblems in the stored slow recursions
+The pattern agent traced the unchanged slow implementations to count their distinct subproblems (agent report; `experiments/2026-10-07_subproblem_redundancy.py`):
+
+| Implementation | Distinct subproblems |
+|---|---|
+| Fibonacci | n + 1 |
+| edit distance | (n+1)² |
+| matrix chain | n(n+1)/2 |
+| cofactor determinant | **2ⁿ** |
+| shortest-path DFS | **n·2^(n−3) + 1** |
+
+The closed forms were read off the tables, not proven. So memoising the natural key gives a polynomial algorithm for the first three but not for the last two, whose fast algorithms need a structural insight: row-operation invariance, and dropping the visited set. This is a measurable form of the START_HERE section 5 warning about "un-bloating".
+
+### RL-040 · IDEA · Count-based V2 for classical entries, and a discriminating V2 diagnostic
+Proposed independently by two agents:
+1. **Operation counts:** let classical implementations report exact operation counts (e.g. an instrumented number type counting multiplications). This would make small exponent gaps resolvable: Strassen 7ᵏ vs 8ᵏ, matching, Schöning.
+2. **Discriminating diagnostic:** report local slopes, or require the fit against the next-lower plausible cost to *fail*, so that a V2 pass rules out the slower alternative.
+
+Not adopted yet; this needs a DECISION.
+
+### RL-041 · IDEA · Candidates for the next round (pattern report §3; costs mostly recalled, to be checked when implemented)
+- **XOR convolution:** naive 4ⁿ vs fast Walsh–Hadamard n·2ⁿ, the classical twin of the Hadamard step in Bernstein–Vazirani, Deutsch–Jozsa and Forrelation.
+- **Zeta transform:** 3ⁿ vs Yates n·2ⁿ.
+- **Regex matching:** backtracking vs Thompson NFA. Backtracking on (a?)ⁿaⁿ took exactly (n/2+2)·2ⁿ − 1 steps for every even n ≤ 20 (measured).
+- **Global minimum cut:** brute force vs Stoer–Wagner.
+- **NAND-tree evaluation:** deterministic 2ʰ vs randomized ((1+√33)/4)ʰ leaf reads; the tag is to be decided.
+- **Optimal BST:** n³ DP vs Knuth's n².
+
+40 candidates in total, with their traps.
+
+### RL-042 · DECISION · Two questions raised by the pattern agent
+- **Lehman factoring (candidate 28): not implemented.** Factoring stays catalogued as open (START_HERE section 10).
+- **NAND-tree tag:** decided when the entry is implemented. The proposal is T4 primary with T3 secondary, because randomisation changes the exponent.
+
+### RL-043 · NULL · Pair generators beyond linear recurrences: designs only
+The pattern report §5 proposes generator designs:
+- a bilinear-scheme amplifier fed by the flip-graph search;
+- a branching-rule synthesiser (honest only as upper bounds);
+- a small Boolean-function composer;
+- shared gates for every generator: a resolvability check that blocks undecidable V2 claims, a subproblem profiler, and deduplication.
+
+None was implemented tonight.
+
+### RL-044 · VERIFIED · Recorded run over all 54 entries before committing the overnight work
+Ledger: [ledger/runs/20261006T025704Z.json](ledger/runs/20261006T025704Z.json), at base commit `ae69311` with uncommitted agent work in the tree (so `git_dirty` is true), and no other Python process running.
+- **Result:** 54/54 entries pass their claimed level (pairs: 34 at V2, 5 at V1; staging: 11 at V0; synthetic: 4 at V2). V1 covered 43 entries, 2812 instances and 5917 implementation runs.
+- **V2:** 88 measurements, all passing, α from 0.886 to 1.164.
+- **Stability against RL-022:** the reported-count fits are identical (5/5). The largest timing α change on unchanged entries is 0.033 (fast doubling, 1.128 → 1.095).
+- **Unit tests:** 84 OK.
+- **Citations:** 157 identifiers checked, 0 problems; 131 sources also compared on volume, issue and pages; 35 sources have no DOI or arXiv id.
+- **Index:** 39 validated pairs (up from 28), 12 entries with T6, 9 with T9, 4 synthetic (T7).

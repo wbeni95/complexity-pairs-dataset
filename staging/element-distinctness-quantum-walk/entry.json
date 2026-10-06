@@ -1,0 +1,79 @@
+{
+  "id": "element-distinctness-quantum-walk",
+  "title": "Element distinctness: Theta(N) classical queries vs Theta(N^(2/3)) quantum queries (Ambainis quantum walk)",
+  "problem_statement": "Given oracle access to x_1, ..., x_N (values from a set of size M >= N), decide whether all N values are distinct, and if not, find i != j with x_i = x_j.",
+  "input": {
+    "parameter": "N = number of items.",
+    "size_measure": "Query model: cost is the number of oracle calls (each returns one x_i)."
+  },
+  "algorithms": [
+    {
+      "name": "classical: read everything, sort, scan",
+      "idea": "Query all N values, sort them, and compare neighbours.",
+      "model": "classical-deterministic",
+      "pseudocode": "read x_1..x_N; sort; report an equal adjacent pair if any",
+      "time_complexity": "N queries; O(N log N) comparisons",
+      "space_complexity": "O(N) values",
+      "correctness": "Trivial.",
+      "implementation": null
+    },
+    {
+      "name": "Ambainis quantum walk algorithm",
+      "idea": "A quantum walk over sets of r = N^(2/3) indices whose queried values are kept in a register; a set is marked if it contains a colliding pair, and a walk step exchanges one index, which costs O(1) queries.",
+      "model": "quantum",
+      "pseudocode": "Ambainis 2007",
+      "time_complexity": "O(N^(2/3)) queries, bounded error (running time is also analysed in the paper; not recorded here)",
+      "space_complexity": "O(N^(2/3)) values held in quantum registers",
+      "correctness": "Ambainis 2007 (arXiv quant-ph/0311001): 'For element distinctness ... we get an O(N^(2/3)) query quantum algorithm', improving an O(N^(3/4)) algorithm of Buhrman et al. and matching the lower bound of Shi (as stated in the arXiv abstract).",
+      "implementation": null
+    }
+  ],
+  "pair_type": "T9",
+  "lower_bounds": [
+    {
+      "model": "classical-randomized",
+      "bound": "Omega(N) queries for bounded error",
+      "setting": "query (oracle) model, unconditional",
+      "source": "Elementary reduction from the OR function on N - 1 bits (randomized query complexity Theta(N)): set x_0 = 0 and x_i = i if y_i = 0, x_i = 0 if y_i = 1; the values are all distinct iff OR(y) = 0, and each query of x costs at most one query of y."
+    },
+    {
+      "model": "quantum",
+      "bound": "Omega(N^(2/3)) queries for bounded error (Ambainis's algorithm is optimal up to a constant factor)",
+      "setting": "query (oracle) model, unconditional",
+      "source": "Aaronson & Shi 2004 (from the collision lower bound; Shi's abstract: 'implies a quantum lower bound of Omega(n^(2/3)) queries ... for the element distinctness problem'); Ambainis 2005 extends it to small ranges (all M >= N)"
+    }
+  ],
+  "relationship": "Proven POLYNOMIAL separation in the query model, tight on both sides: Theta(N) classical queries (even randomized) vs Theta(N^(2/3)) quantum queries. Element distinctness is harder than the collision problem quantumly (N^(2/3) vs N^(1/3)) because it has no 2-to-1 promise: there may be a single colliding pair. The quantum-walk technique that achieves it became a general tool (the abstract notes the generalisation to finding k equal items with O(N^(k/(k+1))) queries).",
+  "sources": [
+    {
+      "authors": "Ambainis, A.",
+      "year": 2007,
+      "title": "Quantum Walk Algorithm for Element Distinctness",
+      "venue": "SIAM Journal on Computing 37(1), 210-239",
+      "doi": "10.1137/S0097539705447311",
+      "note": "arXiv preprint quant-ph/0311001 (first version November 2003); the query bounds quoted in this entry were checked against its abstract."
+    },
+    {
+      "authors": "Aaronson, S.; Shi, Y.",
+      "year": 2004,
+      "title": "Quantum lower bounds for the collision and the element distinctness problems",
+      "venue": "Journal of the ACM 51(4), 595-605",
+      "doi": "10.1145/1008731.1008735"
+    },
+    {
+      "authors": "Ambainis, A.",
+      "year": 2005,
+      "title": "Polynomial Degree and Lower Bounds in Quantum Complexity: Collision and Element Distinctness with Small Range",
+      "venue": "Theory of Computing 1, 37-46",
+      "doi": "10.4086/toc.2005.v001a003",
+      "note": "Crossref holds no title for this DOI; title, volume and pages confirmed on theoryofcomputing.org (2026-10-07)."
+    }
+  ],
+  "verification": {
+    "level": "V0",
+    "method": "Cited from the literature. DOIs, titles, years, volumes, issues and pages checked against Crossref (and theoryofcomputing.org for the 2005 paper); the query bounds checked against the arXiv abstracts of Ambainis (quant-ph/0311001) and Shi (quant-ph/0112086), and the Theory of Computing abstract of Ambainis 2005. Not implemented: a quantum-walk simulation on lib/qsim.py would need a register of N^(2/3) values and is left open (see research/2026-10-07_quantum_entries.md).",
+    "artifacts": []
+  },
+  "caveats": "A separation relative to an oracle, and only polynomial; it does not imply BQP != BPP. The classical lower bound counts queries; in the comparison model, classical TIME is Theta(N log N). The quantum algorithm has bounded error. The quantum lower bound of Aaronson & Shi was first proven for large ranges; the small-range case (M close to N) is due to Ambainis 2005.",
+  "notes": "Pairs naturally with pairs/collision-problem-classical-vs-quantum: the same lower-bound technique (polynomial method) gives N^(1/3) for collision and N^(2/3) for element distinctness. The classical TIME side of the same problem (all pairs, Theta(N^2), vs sorting, O(N log N)) is recorded separately in pairs/element-distinctness-pairs-vs-sorting (added in parallel on 2026-10-07); this entry concerns query complexity."
+}

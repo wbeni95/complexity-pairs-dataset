@@ -1,0 +1,96 @@
+{
+  "id": "chromatic-number-subset-dp-vs-inclusion-exclusion",
+  "title": "Chromatic number: subset DP over independent sets vs inclusion-exclusion",
+  "problem_statement": "Given a simple undirected graph G on vertices 0..n-1, compute its chromatic number chi(G): the least k such that the vertices can be coloured with k colours so that adjacent vertices get different colours (chi = 0 for the empty graph on 0 vertices).",
+  "input": {
+    "parameter": "n = number of vertices.",
+    "size_measure": "n vertices and up to n(n-1)/2 edges, given as an edge list. Vertex subsets are n-bit masks (n <= 18 in the harness), and operations on them count as unit cost."
+  },
+  "algorithms": [
+    {
+      "name": "subset DP over all independent sets",
+      "idea": "chi(S) = 1 + min chi(S \\ T) over the non-empty independent sets T contained in S, computed for every vertex subset S in increasing order. T ranges over all independent subsets, not only the maximal ones.",
+      "model": "classical-deterministic",
+      "pseudocode": "independent[S] for all S (one vertex at a time); chi[0] = 0; for S = 1 .. 2^n - 1: chi[S] = min over submasks T != 0 of S with independent[T] of chi[S ^ T] + 1",
+      "time_complexity": "Theta(3^n) on every input: exactly 3^n - 2^n inner iterations (one per pair T, S with T a non-empty subset of S), plus Theta(2^n) to tabulate the independent subsets",
+      "space_complexity": "Theta(2^n)",
+      "correctness": "An optimal colouring's colour classes are independent; removing one class T leaves a (chi(S) - 1)-colouring of S \\ T, and conversely adding the class T to a colouring of S \\ T colours S. Induction over |S|. This is the subset dynamic programme that Bjorklund, Husfeldt & Koivisto (2009, section 1.3) describe as going back at least to Lawler 1976, whose running time they bound within a polynomial factor of 3^n. Lawler restricts T to maximal independent sets of G[S], which gives O((1 + 3^(1/3))^n) = O(2.4423^n); that refinement is not implemented here.",
+      "implementation": "implementations/subset_dp.py:chromatic_subset_dp",
+      "harness": {
+        "v1_max_n": 14,
+        "scaling": { "cost": "3**n", "n_values": [7, 8, 9, 10, 11, 12, 13] }
+      }
+    },
+    {
+      "name": "inclusion-exclusion (Bjorklund-Husfeldt-Koivisto)",
+      "idea": "Let a(S) = number of non-empty independent sets inside S. Then c_k = sum_S (-1)^(n-|S|) a(S)^k counts the k-tuples of independent sets that cover V, and chi(G) is the least k with c_k > 0. Tabulate a(S) for all S with a(S) = a(S - v) + a(S - N[v]) + 1, then try k = 1, 2, ... keeping a(S)^k by one multiplication per subset per round.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "(2 chi(G) + 2) 2^n arithmetic operations: one pass of two additions per subset to tabulate a, then chi(G) rounds of one multiplication and one addition per subset. The integers have at most n chi(G) bits. That is O(n 2^n) arithmetic operations in the unit-cost model (chi(G) <= n), Theta(n 2^n) whenever chi(G) = Theta(n), and O(n^4 2^n) bit operations with schoolbook multiplication",
+      "space_complexity": "Theta(2^n) integers",
+      "correctness": "Bjorklund, Husfeldt & Koivisto 2009: by inclusion-exclusion, sum over X of (-1)^|X| a'(X)^k, with a'(X) the number of sets from the family disjoint from X, counts the k-tuples covering V (their formula (1.1), written here with S = V \\ X). Their Lemma 7: chi(G) <= k iff the number of covers by k non-empty independent sets is positive, since a cover gives a colouring by giving each vertex the first set containing it. The recurrence for a(S) splits the independent sets into those avoiding v and those containing v (equation (4.1) of the paper, in complemented form).",
+      "implementation": "implementations/inclusion_exclusion.py:chromatic_inclusion_exclusion",
+      "harness": {
+        "scaling": { "cost": "n * 2**n", "n_values": [10, 11, 12, 13, 14, 15, 16, 17, 18] }
+      }
+    }
+  ],
+  "pair_type": "T6",
+  "secondary_tags": ["T8"],
+  "relationship": "Theta(3^n) -> O(n 2^n) (unit-cost arithmetic): one exponential base replaced by a smaller one, still exponential. Restricting the DP to maximal independent sets gives O(2.4423^n) (Lawler 1976). Further refinements of that line are listed in Table 1.2 of Bjorklund, Husfeldt & Koivisto, e.g. Eppstein 2003. Inclusion-exclusion reaches 2^n n^(O(1)). Deciding chi(G) <= k is NP-complete (Karp 1972), so a polynomial-time algorithm would imply P = NP; hence primary T6 with secondary T8.",
+  "sources": [
+    {
+      "authors": "Lawler, E. L.",
+      "year": 1976,
+      "title": "A note on the complexity of the chromatic number problem",
+      "venue": "Information Processing Letters 5(3), 66-67",
+      "doi": "10.1016/0020-0190(76)90065-X",
+      "note": "Subset DP restricted to maximal independent sets. The bound O(2.4423^n) = O((1 + 3^(1/3))^n) is quoted here from Table 1.2 of Bjorklund, Husfeldt & Koivisto and from the abstract and introduction of Eppstein 2003; the paper itself was not read for this entry."
+    },
+    {
+      "authors": "Bjorklund, A.; Husfeldt, T.; Koivisto, M.",
+      "year": 2009,
+      "title": "Set partitioning via inclusion-exclusion",
+      "venue": "SIAM Journal on Computing 39(2), 546-563",
+      "doi": "10.1137/070683933",
+      "url": "http://www.cs.helsinki.fi/u/mkhkoivi/publications/sicomp-200Y.pdf",
+      "note": "Read in the authors' open-access version (url). The abstract gives 2^n n^O(1) time for Chromatic Number. Proposition 1 states that deciding chi(G) <= k takes O(2^n n k polylog(nk)) time and O(2^n n) space, raising each a(X) to the k-th power with log k multiplications of nk-bit numbers. The implementation here instead tries k = 1, 2, ... with one multiplication per subset per round."
+    },
+    {
+      "authors": "Moon, J. W.; Moser, L.",
+      "year": 1965,
+      "title": "On cliques in graphs",
+      "venue": "Israel Journal of Mathematics 3(1), 23-28",
+      "doi": "10.1007/BF02760024",
+      "note": "At most 3^(n/3) maximal independent sets (maximal cliques of the complement) in an n-vertex graph; the basis of Lawler's bound."
+    },
+    {
+      "authors": "Eppstein, D.",
+      "year": 2003,
+      "title": "Small maximal independent sets and faster exact graph coloring",
+      "venue": "Journal of Graph Algorithms and Applications 7(2), 131-140",
+      "doi": "10.7155/jgaa.00064",
+      "note": "Its introduction describes Lawler's DP over maximal independent sets and its (1 + 3^(1/3))^n bound via Moon-Moser; the paper improves the base."
+    },
+    {
+      "authors": "Karp, R. M.",
+      "year": 1972,
+      "title": "Reducibility among combinatorial problems",
+      "venue": "Complexity of Computer Computations, Plenum Press, 85-103",
+      "doi": "10.1007/978-1-4684-2001-2_9",
+      "note": "NP-completeness of chromatic number (k-colourability)."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree with each other and with an independent oracle (exact backtracking k-colouring search in harness.py, which checks that chi colours suffice and chi - 1 do not) on G(n, p) graphs with p = 0.2, 0.5, 0.8, empty and complete graphs, cycles, random bipartite graphs and disjoint triangles, n = 0..14 (6 instances per n). V2 on G(n, 0.8) random graphs: runtimes fitted against 3^n (subset DP, n = 7..13) and n 2^n (inclusion-exclusion, n = 10..18). experiments/2026-10-07_chromatic_probe.py confirms the DP's exact inner-iteration count 3^n - 2^n for n = 6..12, and prints chi of each timing instance: chi/n between 0.50 and 0.71 for n = 6..18, so the number of inclusion-exclusion rounds grows linearly over the measured range. That is a measured property of these instances for n <= 18, not an asymptotic claim about G(n, 0.8). The fit cannot resolve the factor n: in the probe the same inclusion-exclusion timings gave alpha = 0.954 against n 2^n and 1.069 against 2^n (both inside the tolerance), and 0.674 against 3^n (rejected).",
+    "artifacts": ["implementations/subset_dp.py", "implementations/inclusion_exclusion.py", "harness.py", "../../experiments/2026-10-07_chromatic_probe.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+    "trials": 6
+  },
+  "caveats": "The O(n 2^n) count is for unit-cost arithmetic. The numbers a(S)^k have up to n chi(G) bits (at most 180 bits at n = 18 here), so the bit complexity carries extra polynomial factors. Bjorklund, Husfeldt & Koivisto also give a polynomial-space variant running in O(2.2461^n) time (their Proposition 7). The inclusion-exclusion algorithm's running time depends on chi(G) through the number of rounds. The subset DP's does not. Both need Theta(2^n) memory. The 3^n bound is for the plain DP over all independent subsets as implemented, not for Lawler's published algorithm, which enumerates only maximal independent sets.",
+  "notes": "Inclusion-exclusion counts covers rather than searching for colourings, which is why it can afford to look at each subset only once per round. The same framework also counts proper k-colourings, i.e. computes the chromatic polynomial, through counting partitions into independent sets (BHK Proposition 2, via their Theorem 2). Compare pairs/permanent-naive-vs-ryser, another inclusion-exclusion algorithm, and pairs/tsp-brute-vs-held-karp (subset DP)."
+}

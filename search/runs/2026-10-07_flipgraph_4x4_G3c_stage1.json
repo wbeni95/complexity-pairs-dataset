@@ -1,0 +1,969 @@
+{
+ "name": "2026-10-07_flipgraph_4x4_G3c_stage1",
+ "script": "experiments/2026-10-07_flipgraph_4x4.py",
+ "best_known_rank": 47,
+ "start": "standard algorithm",
+ "environment": {
+  "python": "3.14.2",
+  "implementation": "CPython",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "machine": "AMD64",
+  "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "logical_cpus": 16
+ },
+ "batch_machine": {
+  "wall_seconds": 344.805,
+  "process_cpu_seconds": 342.703,
+  "system_cpu_utilisation": 0.0831,
+  "logical_cpus": 16
+ },
+ "runs": [
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 101,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 101,
+    "max_flips": 10000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "s1"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 54,
+   "best_reached_at_flip": 1045330,
+   "best_reached_at_seconds": 4.65,
+   "flips": 10000000,
+   "wall_seconds": 42.008,
+   "flips_per_second": 238051,
+   "flips_since_last_improvement": 8954670,
+   "stopped_by": "flips",
+   "plus_transitions": 8,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 18,
+   "full_verifications_passed": 20,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     60149,
+     0.289
+    ],
+    [
+     62,
+     65594,
+     0.315
+    ],
+    [
+     61,
+     122766,
+     0.586
+    ],
+    [
+     60,
+     147609,
+     0.704
+    ],
+    [
+     59,
+     209071,
+     0.995
+    ],
+    [
+     58,
+     243619,
+     1.156
+    ],
+    [
+     57,
+     246442,
+     1.169
+    ],
+    [
+     56,
+     283394,
+     1.335
+    ],
+    [
+     55,
+     392340,
+     1.84
+    ],
+    [
+     54,
+     1045330,
+     4.65
+    ]
+   ],
+   "started": "2026-10-06T04:23:03",
+   "machine": {
+    "wall_seconds": 42.009,
+    "process_cpu_seconds": 41.766,
+    "system_cpu_utilisation": 0.0866,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed101_s1_rank54.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed101_s1",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 102,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 102,
+    "max_flips": 10000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "s1"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 54,
+   "best_reached_at_flip": 911360,
+   "best_reached_at_seconds": 4.126,
+   "flips": 10000000,
+   "wall_seconds": 42.737,
+   "flips_per_second": 233988,
+   "flips_since_last_improvement": 9088640,
+   "stopped_by": "flips",
+   "plus_transitions": 9,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 19,
+   "full_verifications_passed": 20,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     5585,
+     0.028
+    ],
+    [
+     62,
+     67432,
+     0.328
+    ],
+    [
+     61,
+     70355,
+     0.342
+    ],
+    [
+     60,
+     87560,
+     0.424
+    ],
+    [
+     59,
+     143132,
+     0.682
+    ],
+    [
+     58,
+     245713,
+     1.164
+    ],
+    [
+     57,
+     319570,
+     1.508
+    ],
+    [
+     56,
+     323775,
+     1.527
+    ],
+    [
+     55,
+     386084,
+     1.812
+    ],
+    [
+     54,
+     911360,
+     4.126
+    ]
+   ],
+   "started": "2026-10-06T04:23:45",
+   "machine": {
+    "wall_seconds": 42.738,
+    "process_cpu_seconds": 42.547,
+    "system_cpu_utilisation": 0.0814,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed102_s1_rank54.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed102_s1",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 103,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 103,
+    "max_flips": 10000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "s1"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 54,
+   "best_reached_at_flip": 472501,
+   "best_reached_at_seconds": 2.222,
+   "flips": 10000000,
+   "wall_seconds": 42.716,
+   "flips_per_second": 234105,
+   "flips_since_last_improvement": 9527499,
+   "stopped_by": "flips",
+   "plus_transitions": 9,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 19,
+   "full_verifications_passed": 20,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     134266,
+     0.678
+    ],
+    [
+     62,
+     198440,
+     0.994
+    ],
+    [
+     61,
+     235748,
+     1.175
+    ],
+    [
+     60,
+     247429,
+     1.231
+    ],
+    [
+     59,
+     258640,
+     1.284
+    ],
+    [
+     58,
+     259466,
+     1.288
+    ],
+    [
+     57,
+     289046,
+     1.42
+    ],
+    [
+     56,
+     291667,
+     1.432
+    ],
+    [
+     55,
+     303690,
+     1.484
+    ],
+    [
+     54,
+     472501,
+     2.222
+    ]
+   ],
+   "started": "2026-10-06T04:24:28",
+   "machine": {
+    "wall_seconds": 42.717,
+    "process_cpu_seconds": 42.422,
+    "system_cpu_utilisation": 0.0829,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed103_s1_rank54.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed103_s1",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 104,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 104,
+    "max_flips": 10000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "s1"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 54,
+   "best_reached_at_flip": 1467870,
+   "best_reached_at_seconds": 6.711,
+   "flips": 10000000,
+   "wall_seconds": 43.165,
+   "flips_per_second": 231670,
+   "flips_since_last_improvement": 8532130,
+   "stopped_by": "flips",
+   "plus_transitions": 8,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 18,
+   "full_verifications_passed": 20,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     57169,
+     0.281
+    ],
+    [
+     62,
+     69333,
+     0.339
+    ],
+    [
+     61,
+     133396,
+     0.645
+    ],
+    [
+     60,
+     178110,
+     0.853
+    ],
+    [
+     59,
+     256156,
+     1.216
+    ],
+    [
+     58,
+     387279,
+     1.848
+    ],
+    [
+     57,
+     506783,
+     2.399
+    ],
+    [
+     56,
+     528501,
+     2.497
+    ],
+    [
+     55,
+     631884,
+     2.958
+    ],
+    [
+     54,
+     1467870,
+     6.711
+    ]
+   ],
+   "started": "2026-10-06T04:25:10",
+   "machine": {
+    "wall_seconds": 43.165,
+    "process_cpu_seconds": 43.031,
+    "system_cpu_utilisation": 0.081,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed104_s1_rank54.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed104_s1",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 105,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 105,
+    "max_flips": 10000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "s1"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 424784,
+   "best_reached_at_seconds": 1.925,
+   "flips": 10000000,
+   "wall_seconds": 43.137,
+   "flips_per_second": 231820,
+   "flips_since_last_improvement": 9575216,
+   "stopped_by": "flips",
+   "plus_transitions": 9,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 18,
+   "full_verifications_passed": 19,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     11619,
+     0.058
+    ],
+    [
+     62,
+     40472,
+     0.198
+    ],
+    [
+     61,
+     42828,
+     0.21
+    ],
+    [
+     60,
+     80450,
+     0.386
+    ],
+    [
+     59,
+     143205,
+     0.678
+    ],
+    [
+     58,
+     152922,
+     0.724
+    ],
+    [
+     57,
+     224336,
+     1.041
+    ],
+    [
+     56,
+     414716,
+     1.88
+    ],
+    [
+     55,
+     424784,
+     1.925
+    ]
+   ],
+   "started": "2026-10-06T04:25:54",
+   "machine": {
+    "wall_seconds": 43.138,
+    "process_cpu_seconds": 42.859,
+    "system_cpu_utilisation": 0.0844,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed105_s1_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed105_s1",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 106,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 106,
+    "max_flips": 10000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "s1"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 54,
+   "best_reached_at_flip": 648300,
+   "best_reached_at_seconds": 3.318,
+   "flips": 10000000,
+   "wall_seconds": 43.937,
+   "flips_per_second": 227599,
+   "flips_since_last_improvement": 9351700,
+   "stopped_by": "flips",
+   "plus_transitions": 9,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 19,
+   "full_verifications_passed": 20,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     22439,
+     0.112
+    ],
+    [
+     62,
+     64668,
+     0.318
+    ],
+    [
+     61,
+     80085,
+     0.392
+    ],
+    [
+     60,
+     81488,
+     0.398
+    ],
+    [
+     59,
+     102475,
+     0.858
+    ],
+    [
+     58,
+     115490,
+     0.918
+    ],
+    [
+     57,
+     133308,
+     0.997
+    ],
+    [
+     56,
+     244277,
+     1.495
+    ],
+    [
+     55,
+     385010,
+     2.137
+    ],
+    [
+     54,
+     648300,
+     3.318
+    ]
+   ],
+   "started": "2026-10-06T04:26:37",
+   "machine": {
+    "wall_seconds": 43.938,
+    "process_cpu_seconds": 43.391,
+    "system_cpu_utilisation": 0.0829,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed106_s1_rank54.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed106_s1",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 107,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 107,
+    "max_flips": 10000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "s1"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 928542,
+   "best_reached_at_seconds": 4.289,
+   "flips": 10000000,
+   "wall_seconds": 44.003,
+   "flips_per_second": 227256,
+   "flips_since_last_improvement": 9071458,
+   "stopped_by": "flips",
+   "plus_transitions": 9,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 18,
+   "full_verifications_passed": 19,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     14774,
+     0.073
+    ],
+    [
+     62,
+     20310,
+     0.1
+    ],
+    [
+     61,
+     37032,
+     0.18
+    ],
+    [
+     60,
+     81858,
+     0.394
+    ],
+    [
+     59,
+     176217,
+     0.841
+    ],
+    [
+     58,
+     380113,
+     1.797
+    ],
+    [
+     57,
+     397195,
+     1.887
+    ],
+    [
+     56,
+     625597,
+     2.93
+    ],
+    [
+     55,
+     928542,
+     4.289
+    ]
+   ],
+   "started": "2026-10-06T04:27:21",
+   "machine": {
+    "wall_seconds": 44.004,
+    "process_cpu_seconds": 43.734,
+    "system_cpu_utilisation": 0.0841,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed107_s1_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed107_s1",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 108,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 108,
+    "max_flips": 10000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "s1"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 53,
+   "best_reached_at_flip": 5653957,
+   "best_reached_at_seconds": 25.126,
+   "flips": 10000000,
+   "wall_seconds": 43.085,
+   "flips_per_second": 232099,
+   "flips_since_last_improvement": 4346043,
+   "stopped_by": "flips",
+   "plus_transitions": 7,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 18,
+   "full_verifications_passed": 21,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     61253,
+     0.348
+    ],
+    [
+     62,
+     99363,
+     0.535
+    ],
+    [
+     61,
+     144820,
+     0.755
+    ],
+    [
+     60,
+     350375,
+     1.744
+    ],
+    [
+     59,
+     465813,
+     2.284
+    ],
+    [
+     58,
+     829537,
+     3.978
+    ],
+    [
+     57,
+     969157,
+     4.621
+    ],
+    [
+     56,
+     1190864,
+     5.637
+    ],
+    [
+     55,
+     1987192,
+     9.164
+    ],
+    [
+     54,
+     2201167,
+     10.107
+    ],
+    [
+     53,
+     5653957,
+     25.126
+    ]
+   ],
+   "started": "2026-10-06T04:28:05",
+   "machine": {
+    "wall_seconds": 43.086,
+    "process_cpu_seconds": 42.922,
+    "system_cpu_utilisation": 0.082,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed108_s1_rank53.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed108_s1",
+   "status": "above best known"
+  }
+ ]
+}

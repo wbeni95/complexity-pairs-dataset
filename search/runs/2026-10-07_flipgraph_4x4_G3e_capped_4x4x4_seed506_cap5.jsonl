@@ -1,0 +1,15 @@
+{"event": "start", "config": {"fmt": [4, 4, 4], "seed": 506, "max_flips": 5000000, "plateau": 1000000, "escape": "plus", "slack": 1, "plus_per_escape": 1, "pool_size": 64, "reduction": "linear", "max_seconds": 1800, "target_rank": null, "verify_every": 1000000, "log_every": 1000000, "keep_ranks_upto": 47, "max_weight": 5, "lookahead_every": 0, "extra": {"tag": "cap5"}}, "start_rank": 64, "rank_after_reduce": 64}
+{"event": "best", "rank": 63, "flips": 28842, "seconds": 0.126}
+{"event": "best", "rank": 62, "flips": 81153, "seconds": 0.351}
+{"event": "best", "rank": 61, "flips": 120461, "seconds": 0.518}
+{"event": "best", "rank": 60, "flips": 205008, "seconds": 0.869}
+{"event": "best", "rank": 59, "flips": 286080, "seconds": 1.194}
+{"event": "best", "rank": 58, "flips": 515526, "seconds": 2.179}
+{"event": "best", "rank": 57, "flips": 833680, "seconds": 3.49}
+{"event": "best", "rank": 56, "flips": 849728, "seconds": 3.62}
+{"event": "best", "rank": 55, "flips": 870706, "seconds": 3.703}
+{"event": "progress", "flips": 1003520, "rank": 55, "best": 55, "seconds": 4.222, "plus": 0, "restarts": 0, "flips_per_second": 237664}
+{"event": "progress", "flips": 2002944, "rank": 55, "best": 55, "seconds": 8.025, "plus": 1, "restarts": 0, "flips_per_second": 249587}
+{"event": "progress", "flips": 3002368, "rank": 55, "best": 55, "seconds": 11.922, "plus": 2, "restarts": 0, "flips_per_second": 251835}
+{"event": "progress", "flips": 4001792, "rank": 55, "best": 55, "seconds": 15.857, "plus": 3, "restarts": 0, "flips_per_second": 252368}
+{"event": "end", "format": [4, 4, 4], "seed": 506, "start_rank": 64, "best_rank": 55, "best_reached_at_flip": 870706, "best_reached_at_seconds": 3.703, "flips": 5000000, "wall_seconds": 19.799, "flips_per_second": 252544, "flips_since_last_improvement": 4129294, "stopped_by": "flips", "plus_transitions": 4, "rejected_by_weight_cap": 782032, "lookahead_scans": 0, "lookahead_hits": 0, "restarts": 0, "no_flip_available_events": 0, "reduction_events": 13, "full_verifications_passed": 14, "trajectory": [[64, 0, 0.0], [63, 28842, 0.126], [62, 81153, 0.351], [61, 120461, 0.518], [60, 205008, 0.869], [59, 286080, 1.194], [58, 515526, 2.179], [57, 833680, 3.49], [56, 849728, 3.62], [55, 870706, 3.703]]}

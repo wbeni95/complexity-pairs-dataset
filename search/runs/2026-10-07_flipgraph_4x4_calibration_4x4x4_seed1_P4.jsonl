@@ -1,0 +1,31 @@
+{"event": "start", "config": {"fmt": [4, 4, 4], "seed": 1, "max_flips": 20000000, "plateau": 1000000, "escape": "restart", "slack": 1, "pool_size": 64, "reduction": "linear", "max_seconds": 400, "target_rank": null, "verify_every": 1000000, "log_every": 1000000, "keep_ranks_upto": 47, "extra": {"tag": "P4"}}, "start_rank": 64, "rank_after_reduce": 64}
+{"event": "best", "rank": 63, "flips": 104480, "seconds": 0.547}
+{"event": "best", "rank": 62, "flips": 111434, "seconds": 0.589}
+{"event": "best", "rank": 61, "flips": 155010, "seconds": 0.803}
+{"event": "best", "rank": 60, "flips": 161254, "seconds": 0.833}
+{"event": "best", "rank": 59, "flips": 227326, "seconds": 1.175}
+{"event": "best", "rank": 58, "flips": 247164, "seconds": 1.27}
+{"event": "best", "rank": 57, "flips": 250519, "seconds": 1.286}
+{"event": "best", "rank": 56, "flips": 260921, "seconds": 1.334}
+{"event": "best", "rank": 55, "flips": 412629, "seconds": 2.063}
+{"event": "progress", "flips": 1003520, "rank": 55, "best": 55, "seconds": 4.699, "plus": 0, "restarts": 0, "flips_per_second": 213583}
+{"event": "best", "rank": 54, "flips": 1112275, "seconds": 5.183}
+{"event": "progress", "flips": 2002944, "rank": 54, "best": 54, "seconds": 8.97, "plus": 0, "restarts": 0, "flips_per_second": 223301}
+{"event": "progress", "flips": 3002368, "rank": 54, "best": 54, "seconds": 13.143, "plus": 0, "restarts": 1, "flips_per_second": 228436}
+{"event": "progress", "flips": 4001792, "rank": 54, "best": 54, "seconds": 17.344, "plus": 0, "restarts": 2, "flips_per_second": 230729}
+{"event": "progress", "flips": 5001216, "rank": 54, "best": 54, "seconds": 21.492, "plus": 0, "restarts": 3, "flips_per_second": 232704}
+{"event": "progress", "flips": 6000640, "rank": 54, "best": 54, "seconds": 25.682, "plus": 0, "restarts": 4, "flips_per_second": 233652}
+{"event": "progress", "flips": 7000064, "rank": 54, "best": 54, "seconds": 29.847, "plus": 0, "restarts": 5, "flips_per_second": 234532}
+{"event": "progress", "flips": 8003584, "rank": 54, "best": 54, "seconds": 35.382, "plus": 0, "restarts": 6, "flips_per_second": 226204}
+{"event": "progress", "flips": 9003008, "rank": 54, "best": 54, "seconds": 40.113, "plus": 0, "restarts": 7, "flips_per_second": 224444}
+{"event": "progress", "flips": 10002432, "rank": 54, "best": 54, "seconds": 44.645, "plus": 0, "restarts": 8, "flips_per_second": 224042}
+{"event": "progress", "flips": 11001856, "rank": 54, "best": 54, "seconds": 49.307, "plus": 0, "restarts": 9, "flips_per_second": 223130}
+{"event": "progress", "flips": 12001280, "rank": 54, "best": 54, "seconds": 54.012, "plus": 0, "restarts": 10, "flips_per_second": 222198}
+{"event": "progress", "flips": 13000704, "rank": 54, "best": 54, "seconds": 58.648, "plus": 0, "restarts": 11, "flips_per_second": 221672}
+{"event": "progress", "flips": 14000128, "rank": 54, "best": 54, "seconds": 63.187, "plus": 0, "restarts": 12, "flips_per_second": 221565}
+{"event": "progress", "flips": 15003648, "rank": 54, "best": 54, "seconds": 67.839, "plus": 0, "restarts": 13, "flips_per_second": 221165}
+{"event": "progress", "flips": 16003072, "rank": 54, "best": 54, "seconds": 72.432, "plus": 0, "restarts": 14, "flips_per_second": 220941}
+{"event": "progress", "flips": 17002496, "rank": 54, "best": 54, "seconds": 77.281, "plus": 0, "restarts": 15, "flips_per_second": 220010}
+{"event": "progress", "flips": 18001920, "rank": 54, "best": 54, "seconds": 82.533, "plus": 0, "restarts": 16, "flips_per_second": 218118}
+{"event": "progress", "flips": 19001344, "rank": 54, "best": 54, "seconds": 87.603, "plus": 0, "restarts": 17, "flips_per_second": 216904}
+{"event": "end", "format": [4, 4, 4], "seed": 1, "start_rank": 64, "best_rank": 54, "best_reached_at_flip": 1112275, "best_reached_at_seconds": 5.183, "flips": 20000000, "wall_seconds": 92.808, "flips_per_second": 215499, "flips_since_last_improvement": 18887725, "stopped_by": "flips", "plus_transitions": 0, "restarts": 18, "no_flip_available_events": 0, "reduction_events": 10, "full_verifications_passed": 48, "trajectory": [[64, 0, 0.0], [63, 104480, 0.547], [62, 111434, 0.589], [61, 155010, 0.803], [60, 161254, 0.833], [59, 227326, 1.175], [58, 247164, 1.27], [57, 250519, 1.286], [56, 260921, 1.334], [55, 412629, 2.063], [54, 1112275, 5.183]]}

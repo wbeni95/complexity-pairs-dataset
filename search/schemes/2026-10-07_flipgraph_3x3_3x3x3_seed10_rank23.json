@@ -1,0 +1,186 @@
+{
+ "format": [
+  3,
+  3,
+  3
+ ],
+ "field": "GF(2)",
+ "rank": 23,
+ "convention": "T<n,m,p> = sum a_ij (x) b_jk (x) c_ki over GF(2); alpha bit i*m+j, beta bit j*p+k, gamma bit k*n+i (gamma[k][i] = coefficient of the product in C[i][k])",
+ "status": "matches best known",
+ "best_known_rank": 23,
+ "provenance": {
+  "script": "experiments/2026-10-07_flipgraph_3x3.py",
+  "run_tag": "2026-10-07_flipgraph_3x3_3x3x3_seed10",
+  "seed": 10,
+  "start": "standard algorithm",
+  "reached_at_flip": 50370,
+  "reached_at_seconds": 0.225,
+  "run_total_flips": 10000000,
+  "run_wall_seconds": 38.17,
+  "config": {
+   "fmt": [
+    3,
+    3,
+    3
+   ],
+   "seed": 10,
+   "max_flips": 10000000,
+   "plateau": 50000,
+   "escape": "plus",
+   "slack": 1,
+   "pool_size": 64,
+   "reduction": "linear",
+   "max_seconds": 600,
+   "target_rank": 22,
+   "verify_every": 1000000,
+   "log_every": 1000000,
+   "keep_ranks_upto": 23,
+   "max_weight": 0,
+   "lookahead_every": 0,
+   "extra": {}
+  }
+ },
+ "terms": [
+  [
+   3,
+   360,
+   7
+  ],
+  [
+   6,
+   45,
+   64
+  ],
+  [
+   7,
+   64,
+   73
+  ],
+  [
+   7,
+   365,
+   64
+  ],
+  [
+   8,
+   260,
+   144
+  ],
+  [
+   16,
+   288,
+   455
+  ],
+  [
+   18,
+   9,
+   69
+  ],
+  [
+   19,
+   297,
+   71
+  ],
+  [
+   27,
+   65,
+   14
+  ],
+  [
+   56,
+   64,
+   18
+  ],
+  [
+   56,
+   256,
+   384
+  ],
+  [
+   64,
+   18,
+   296
+  ],
+  [
+   90,
+   17,
+   12
+  ],
+  [
+   130,
+   24,
+   4
+  ],
+  [
+   144,
+   54,
+   256
+  ],
+  [
+   256,
+   144,
+   56
+  ],
+  [
+   260,
+   195,
+   8
+  ],
+  [
+   280,
+   80,
+   28
+  ],
+  [
+   288,
+   470,
+   16
+  ],
+  [
+   296,
+   278,
+   272
+  ],
+  [
+   325,
+   3,
+   8
+  ],
+  [
+   448,
+   16,
+   36
+  ],
+  [
+   504,
+   22,
+   256
+  ]
+ ],
+ "products": [
+  "(A11+A12)*(B21+B23+B31+B33) -> C11 C21 C31",
+  "(A12+A13)*(B11+B13+B21+B23) -> C13",
+  "(A11+A12+A13)*(B31) -> C11 C12 C13",
+  "(A11+A12+A13)*(B11+B13+B21+B23+B31+B33) -> C13",
+  "(A21)*(B13+B33) -> C22 C23",
+  "(A22)*(B23+B33) -> C11 C13 C21 C23 C31 C33",
+  "(A12+A22)*(B11+B21) -> C11 C13 C31",
+  "(A11+A12+A22)*(B11+B21+B23+B33) -> C11 C13 C21 C31",
+  "(A11+A12+A21+A22)*(B11+B31) -> C12 C21 C31",
+  "(A21+A22+A23)*(B31) -> C21 C22",
+  "(A21+A22+A23)*(B33) -> C23 C33",
+  "(A31)*(B12+B22) -> C12 C32 C33",
+  "(A12+A21+A22+A31)*(B11+B22) -> C12 C31",
+  "(A12+A32)*(B21+B22) -> C31",
+  "(A22+A32)*(B12+B13+B22+B23) -> C33",
+  "(A33)*(B22+B32) -> C12 C22 C32",
+  "(A13+A33)*(B11+B12+B31+B32) -> C12",
+  "(A21+A22+A33)*(B22+B31) -> C12 C22 C31",
+  "(A23+A33)*(B12+B13+B22+B31+B32+B33) -> C22",
+  "(A21+A23+A33)*(B12+B13+B22+B33) -> C22 C33",
+  "(A11+A13+A31+A33)*(B11+B12) -> C12",
+  "(A31+A32+A33)*(B22) -> C31 C32",
+  "(A21+A22+A23+A31+A32+A33)*(B12+B13+B22) -> C33"
+ ]
+}

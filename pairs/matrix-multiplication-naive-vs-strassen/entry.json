@@ -29,7 +29,7 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "Both polynomial; Strassen lowers the exponent from 3 to log2(7) ~ 2.807. The line continues: Coppersmith-Winograd (omega < 2.376) ... Alman et al. 2024 (omega < 2.371339). AlphaTensor (2022) found low-rank schemes for small fixed sizes, e.g. rank 47 for 4 x 4 over GF(2), which gives omega <= log4(47) ~ 2.774 in characteristic 2.",
+  "relationship": "Both polynomial; Strassen lowers the exponent from 3 to log2(7) ~ 2.807. The line continues: Coppersmith-Winograd (omega < 2.376) ... Alman et al. 2024 (omega < 2.371339). AlphaTensor (2022) found low-rank schemes for small fixed sizes, e.g. rank 47 for 4 x 4 over GF(2), which gives omega <= log4(47) ~ 2.7773 in characteristic 2.",
   "sources": [
     {
       "authors": "Strassen, V.",

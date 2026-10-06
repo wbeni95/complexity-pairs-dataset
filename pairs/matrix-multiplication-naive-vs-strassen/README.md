@@ -8,7 +8,7 @@
 | Strassen (1969) | Θ(n^2.807) | [strassen.py](implementations/strassen.py) |
 
 **The longer line.** Coppersmith–Winograd 1990 (ω < 2.376) → … → Alman et al. 2024 (ω < 2.371339).
-AlphaTensor (2022) found rank-47 schemes for 4×4 over GF(2), giving ω ≤ 2.774 in characteristic 2.
+AlphaTensor (2022) found rank-47 schemes for 4×4 over GF(2), giving ω ≤ log₄47 ≈ 2.7773 in characteristic 2.
 
 **Why only V1.** The exponent gap (0.19) is too small for pure-Python timing at feasible sizes to
 confirm reliably. The measured per-doubling ratios were ~7.3 for Strassen and ~7.8 for schoolbook,

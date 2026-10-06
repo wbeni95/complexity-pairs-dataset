@@ -1,0 +1,31 @@
+{"event": "start", "config": {"fmt": [4, 4, 4], "seed": 2, "max_flips": 20000000, "plateau": 200000, "escape": "plus", "slack": 1, "pool_size": 64, "reduction": "pair", "max_seconds": 400, "target_rank": null, "verify_every": 1000000, "log_every": 1000000, "keep_ranks_upto": 47, "extra": {"tag": "P5"}}, "start_rank": 64, "rank_after_reduce": 64}
+{"event": "best", "rank": 63, "flips": 176315, "seconds": 0.665}
+{"event": "best", "rank": 62, "flips": 203672, "seconds": 0.769}
+{"event": "best", "rank": 61, "flips": 205211, "seconds": 0.775}
+{"event": "best", "rank": 60, "flips": 267560, "seconds": 1.005}
+{"event": "best", "rank": 59, "flips": 398329, "seconds": 1.485}
+{"event": "best", "rank": 58, "flips": 427218, "seconds": 1.587}
+{"event": "best", "rank": 57, "flips": 628296, "seconds": 2.314}
+{"event": "best", "rank": 56, "flips": 950594, "seconds": 3.454}
+{"event": "best", "rank": 55, "flips": 979180, "seconds": 3.554}
+{"event": "progress", "flips": 1003520, "rank": 55, "best": 55, "seconds": 3.635, "plus": 2, "restarts": 0, "flips_per_second": 276050}
+{"event": "progress", "flips": 2002944, "rank": 55, "best": 55, "seconds": 7.056, "plus": 7, "restarts": 0, "flips_per_second": 283876}
+{"event": "best", "rank": 54, "flips": 2433599, "seconds": 8.535}
+{"event": "progress", "flips": 3002368, "rank": 54, "best": 54, "seconds": 10.472, "plus": 11, "restarts": 0, "flips_per_second": 286699}
+{"event": "progress", "flips": 4001792, "rank": 54, "best": 54, "seconds": 14.038, "plus": 16, "restarts": 0, "flips_per_second": 285072}
+{"event": "progress", "flips": 5001216, "rank": 54, "best": 54, "seconds": 17.656, "plus": 21, "restarts": 0, "flips_per_second": 283263}
+{"event": "progress", "flips": 6000640, "rank": 54, "best": 54, "seconds": 21.167, "plus": 26, "restarts": 0, "flips_per_second": 283490}
+{"event": "progress", "flips": 7000064, "rank": 54, "best": 54, "seconds": 24.721, "plus": 31, "restarts": 0, "flips_per_second": 283157}
+{"event": "progress", "flips": 8003584, "rank": 54, "best": 54, "seconds": 28.335, "plus": 36, "restarts": 0, "flips_per_second": 282464}
+{"event": "progress", "flips": 9003008, "rank": 54, "best": 54, "seconds": 31.826, "plus": 41, "restarts": 0, "flips_per_second": 282882}
+{"event": "progress", "flips": 10002432, "rank": 54, "best": 54, "seconds": 35.372, "plus": 46, "restarts": 0, "flips_per_second": 282780}
+{"event": "progress", "flips": 11001856, "rank": 54, "best": 54, "seconds": 38.941, "plus": 51, "restarts": 0, "flips_per_second": 282528}
+{"event": "progress", "flips": 12001280, "rank": 54, "best": 54, "seconds": 42.486, "plus": 55, "restarts": 1, "flips_per_second": 282474}
+{"event": "progress", "flips": 13000704, "rank": 54, "best": 54, "seconds": 46.076, "plus": 60, "restarts": 1, "flips_per_second": 282159}
+{"event": "progress", "flips": 14000128, "rank": 54, "best": 54, "seconds": 49.636, "plus": 65, "restarts": 1, "flips_per_second": 282059}
+{"event": "progress", "flips": 15003648, "rank": 54, "best": 54, "seconds": 53.225, "plus": 70, "restarts": 1, "flips_per_second": 281892}
+{"event": "progress", "flips": 16003072, "rank": 54, "best": 54, "seconds": 56.767, "plus": 75, "restarts": 1, "flips_per_second": 281910}
+{"event": "progress", "flips": 17002496, "rank": 54, "best": 54, "seconds": 60.355, "plus": 80, "restarts": 1, "flips_per_second": 281707}
+{"event": "progress", "flips": 18001920, "rank": 54, "best": 54, "seconds": 63.906, "plus": 85, "restarts": 1, "flips_per_second": 281696}
+{"event": "progress", "flips": 19001344, "rank": 54, "best": 54, "seconds": 67.591, "plus": 90, "restarts": 1, "flips_per_second": 281122}
+{"event": "end", "format": [4, 4, 4], "seed": 2, "start_rank": 64, "best_rank": 54, "best_reached_at_flip": 2433599, "best_reached_at_seconds": 8.535, "flips": 20000000, "wall_seconds": 71.126, "flips_per_second": 281191, "flips_since_last_improvement": 17566401, "stopped_by": "flips", "plus_transitions": 95, "restarts": 1, "no_flip_available_events": 0, "reduction_events": 104, "full_verifications_passed": 31, "trajectory": [[64, 0, 0.0], [63, 176315, 0.665], [62, 203672, 0.769], [61, 205211, 0.775], [60, 267560, 1.005], [59, 398329, 1.485], [58, 427218, 1.587], [57, 628296, 2.314], [56, 950594, 3.454], [55, 979180, 3.554], [54, 2433599, 8.535]]}

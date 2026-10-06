@@ -1,0 +1,91 @@
+{
+ "name": "2026-10-07_flipgraph_4x4_G3c_stage2_from_seed108",
+ "script": "experiments/2026-10-07_flipgraph_4x4.py",
+ "best_known_rank": 47,
+ "start": "stage-1 best scheme of seed 108 (rank 53, search/schemes/2026-10-07_flipgraph_4x4_G3c_stage1_4x4x4_seed108_s1_rank53.json)",
+ "environment": {
+  "python": "3.14.2",
+  "implementation": "CPython",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "machine": "AMD64",
+  "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "logical_cpus": 16
+ },
+ "batch_machine": {
+  "wall_seconds": 639.165,
+  "process_cpu_seconds": 635.141,
+  "system_cpu_utilisation": 0.0838,
+  "logical_cpus": 16
+ },
+ "runs": [
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 201,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 201,
+    "max_flips": 150000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "s2"
+    }
+   },
+   "start_rank": 53,
+   "best_rank": 53,
+   "best_reached_at_flip": 0,
+   "best_reached_at_seconds": 0.0,
+   "flips": 150000000,
+   "wall_seconds": 639.163,
+   "flips_per_second": 234682,
+   "flips_since_last_improvement": 150000000,
+   "stopped_by": "flips",
+   "plus_transitions": 148,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 148,
+   "full_verifications_passed": 150,
+   "trajectory": [
+    [
+     53,
+     0,
+     0.0
+    ]
+   ],
+   "started": "2026-10-06T04:28:48",
+   "machine": {
+    "wall_seconds": 639.164,
+    "process_cpu_seconds": 635.141,
+    "system_cpu_utilisation": 0.0838,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3c_stage2_from_seed108_4x4x4_seed201_s2_rank53.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3c_stage2_from_seed108_4x4x4_seed201_s2",
+   "status": "above best known"
+  }
+ ]
+}

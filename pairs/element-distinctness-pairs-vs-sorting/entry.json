@@ -1,0 +1,85 @@
+{
+  "id": "element-distinctness-pairs-vs-sorting",
+  "title": "Element distinctness: all pairs vs sorting",
+  "problem_statement": "Given n integers a_1..a_n, decide whether they are pairwise distinct, i.e. whether a_i != a_j for all i < j. For n <= 1 the answer is yes.",
+  "input": {
+    "parameter": "n = number of integers.",
+    "size_measure": "n integers; each comparison of two values costs O(1) (values have magnitude at most 10^18 in the harness)."
+  },
+  "algorithms": [
+    {
+      "name": "all pairs",
+      "idea": "Compare every pair of positions and answer no at the first equal pair.",
+      "model": "classical-deterministic",
+      "pseudocode": "for i < j: if a_i == a_j: return no; return yes",
+      "time_complexity": "Theta(n^2) worst case: exactly n(n-1)/2 comparisons whenever the answer is yes",
+      "space_complexity": "O(1)",
+      "correctness": "Exhaustive over all pairs.",
+      "implementation": "implementations/all_pairs.py:distinct_all_pairs",
+      "harness": {
+        "v1_max_n": 300,
+        "scaling": { "cost": "n**2", "n_values": [500, 1000, 1500, 2000, 3000, 4000] }
+      }
+    },
+    {
+      "name": "sort, then compare neighbours",
+      "idea": "Sort a copy (bottom-up merge sort); equal values become adjacent, so the values are distinct iff no two neighbours are equal.",
+      "model": "classical-deterministic",
+      "pseudocode": "b = merge_sort(a); return all(b[k-1] != b[k] for k in 1..n-1)",
+      "time_complexity": "Theta(n log n) on every input (merge sort: ceil(log2 n) passes of Theta(n) each; final scan Theta(n))",
+      "space_complexity": "Theta(n)",
+      "correctness": "If a_i = a_j then, after sorting, every element between the two copies equals them too, so some adjacent pair is equal; conversely an equal adjacent pair is an equal pair of the input. Merge sort is correct by induction on the merge passes.",
+      "implementation": "implementations/sort_adjacent.py:distinct_by_sorting",
+      "harness": {
+        "scaling": { "cost": "n*log(n)", "n_values": [1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000] }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "lower_bounds": [
+    {
+      "model": "classical-deterministic",
+      "bound": "Omega(n log n) operations (the depth of any algebraic computation tree that decides element distinctness)",
+      "setting": "algebraic computation tree model over the reals: real-valued inputs, arithmetic operations and sign tests at unit cost. Ben-Or's bound is in terms of the number of connected components of the set of yes-inputs; the inputs with pairwise distinct coordinates form n! components (one per ordering).",
+      "source": "Ben-Or 1983"
+    }
+  ],
+  "relationship": "Theta(n^2) -> Theta(n log n). Sorting brings equal values together, so n - 1 neighbour comparisons replace n(n-1)/2 pair comparisons. In the algebraic computation tree model, Theta(n log n) is optimal (Ben-Or 1983), so sorting-based algorithms are optimal there.",
+  "sources": [
+    {
+      "authors": "Ben-Or, M.",
+      "year": 1983,
+      "title": "Lower bounds for algebraic computation trees",
+      "venue": "Proceedings of the 15th Annual ACM Symposium on Theory of Computing (STOC 1983), 80-86",
+      "doi": "10.1145/800061.808735"
+    },
+    {
+      "authors": "Carter, J. L.; Wegman, M. N.",
+      "year": 1979,
+      "title": "Universal classes of hash functions",
+      "venue": "Journal of Computer and System Sciences 18(2), 143-154",
+      "doi": "10.1016/0022-0000(79)90044-8",
+      "note": "Universal hashing; basis of the expected-linear-time method mentioned in caveats (outside the algebraic computation tree model)."
+    },
+    {
+      "authors": "Knuth, D. E.",
+      "year": 1998,
+      "title": "The Art of Computer Programming, Vol. 3: Sorting and Searching (2nd ed.)",
+      "venue": "Addison-Wesley",
+      "isbn": "978-0-201-89685-5",
+      "note": "Section 5.2.4 (sorting by merging)."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree with each other and with an independent oracle (len(set(values)) == n, i.e. hashing) on four kinds of inputs (distinct values, distinct values with one planted duplicate, values from [0, n), and distinct values up to 10^18 in magnitude with both signs), n = 0..8, 16, 50, 300 (all pairs up to 300) and 3000, 20000 (sorting). V2: on distinct inputs (the all-pairs worst case), runtimes fitted against n^2 (n = 500..4000) and n log n (n = 1000..128000). The fit cannot separate n log n from n: in experiments/2026-10-07_element_distinctness_probe.py the same merge-sort timings gave alpha = 1.001 against n log n and 1.125 against n (both inside the tolerance), and 0.558 against n^2 (rejected).",
+    "artifacts": ["implementations/all_pairs.py", "implementations/sort_adjacent.py", "harness.py", "../../experiments/2026-10-07_element_distinctness_probe.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 16, 50, 300, 3000, 20000],
+    "trials": 6
+  },
+  "caveats": "The Omega(n log n) lower bound is a theorem about algebraic computation trees on real-valued inputs; this entry's inputs are integers, and the lower bound does not automatically carry over to models that exploit the representation of integers. On a word RAM, inserting the values into a hash table of size Theta(n) with a function drawn from a universal class (Carter & Wegman 1979) decides distinctness in O(n) expected time: any two distinct keys collide with probability at most 1/(table size), so the expected number of colliding pairs is O(n). That algorithm is randomized and outside the comparison/algebraic model; it is not implemented here (the V1 oracle uses Python's built-in set, whose integer hash is not universal, only as a correctness check). The all-pairs scan is fast when duplicates occur early; its Theta(n^2) is attained exactly on yes-instances.",
+  "notes": "Element distinctness is a common source of Omega(n log n) lower bounds by reduction (e.g. closest pair: the minimum distance is 0 iff two points coincide; compare pairs/closest-pair-brute-vs-divide-conquer). Its quantum query complexity is a separate topic, not covered by this entry."
+}

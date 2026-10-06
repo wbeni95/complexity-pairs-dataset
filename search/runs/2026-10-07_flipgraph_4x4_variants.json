@@ -1,0 +1,756 @@
+{
+ "name": "2026-10-07_flipgraph_4x4_variants",
+ "script": "experiments/2026-10-07_flipgraph_4x4_variants.py",
+ "best_known_rank": 47,
+ "start": "standard algorithm",
+ "environment": {
+  "python": "3.14.2",
+  "implementation": "CPython",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "machine": "AMD64",
+  "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "logical_cpus": 16
+ },
+ "batch_machine": {
+  "wall_seconds": 568.101,
+  "process_cpu_seconds": 564.031,
+  "system_cpu_utilisation": 0.1126,
+  "logical_cpus": 16
+ },
+ "runs": [
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 1,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 1,
+    "max_flips": 20000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 600,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 16,
+    "extra": {
+     "tag": "V1"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 54,
+   "best_reached_at_flip": 1955658,
+   "best_reached_at_seconds": 17.557,
+   "flips": 20000000,
+   "wall_seconds": 151.27,
+   "flips_per_second": 132214,
+   "flips_since_last_improvement": 18044342,
+   "stopped_by": "flips",
+   "plus_transitions": 19,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 1250000,
+   "lookahead_hits": 16,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 29,
+   "full_verifications_passed": 30,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     104464,
+     1.696
+    ],
+    [
+     62,
+     123549,
+     1.981
+    ],
+    [
+     61,
+     171152,
+     2.651
+    ],
+    [
+     60,
+     180304,
+     2.76
+    ],
+    [
+     59,
+     194628,
+     2.928
+    ],
+    [
+     58,
+     254672,
+     3.616
+    ],
+    [
+     57,
+     267776,
+     3.755
+    ],
+    [
+     56,
+     271360,
+     3.79
+    ],
+    [
+     55,
+     292822,
+     3.97
+    ],
+    [
+     54,
+     1955658,
+     17.557
+    ]
+   ],
+   "started": "2026-10-06T03:51:44",
+   "machine": {
+    "wall_seconds": 151.27,
+    "process_cpu_seconds": 150.188,
+    "system_cpu_utilisation": 0.1126,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_variants_4x4x4_seed1_V1_rank54.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_variants_4x4x4_seed1_V1",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 1,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 1,
+    "max_flips": 20000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 600,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 6,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "V2"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 1269928,
+   "best_reached_at_seconds": 5.437,
+   "flips": 20000000,
+   "wall_seconds": 75.951,
+   "flips_per_second": 263328,
+   "flips_since_last_improvement": 18730072,
+   "stopped_by": "flips",
+   "plus_transitions": 18,
+   "rejected_by_weight_cap": 4629468,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 27,
+   "full_verifications_passed": 29,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     78178,
+     0.368
+    ],
+    [
+     62,
+     108449,
+     0.515
+    ],
+    [
+     61,
+     122810,
+     0.579
+    ],
+    [
+     60,
+     139976,
+     0.654
+    ],
+    [
+     59,
+     169689,
+     0.791
+    ],
+    [
+     58,
+     195681,
+     0.91
+    ],
+    [
+     57,
+     269824,
+     1.227
+    ],
+    [
+     56,
+     402784,
+     1.789
+    ],
+    [
+     55,
+     1269928,
+     5.437
+    ]
+   ],
+   "started": "2026-10-06T03:54:15",
+   "machine": {
+    "wall_seconds": 75.952,
+    "process_cpu_seconds": 75.391,
+    "system_cpu_utilisation": 0.1154,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_variants_4x4x4_seed1_V2_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_variants_4x4x4_seed1_V2",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 1,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 1,
+    "max_flips": 20000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 600,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "V3"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 53,
+   "best_reached_at_flip": 12644383,
+   "best_reached_at_seconds": 49.946,
+   "flips": 20000000,
+   "wall_seconds": 76.106,
+   "flips_per_second": 262793,
+   "flips_since_last_improvement": 7355617,
+   "stopped_by": "flips",
+   "plus_transitions": 17,
+   "rejected_by_weight_cap": 4225452,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 28,
+   "full_verifications_passed": 31,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     38507,
+     0.157
+    ],
+    [
+     62,
+     52198,
+     0.212
+    ],
+    [
+     61,
+     55923,
+     0.227
+    ],
+    [
+     60,
+     96597,
+     0.383
+    ],
+    [
+     59,
+     171803,
+     0.669
+    ],
+    [
+     58,
+     224018,
+     0.87
+    ],
+    [
+     57,
+     309916,
+     1.198
+    ],
+    [
+     56,
+     877352,
+     3.233
+    ],
+    [
+     55,
+     5763944,
+     21.535
+    ],
+    [
+     54,
+     5946192,
+     22.263
+    ],
+    [
+     53,
+     12644383,
+     49.946
+    ]
+   ],
+   "started": "2026-10-06T03:55:31",
+   "machine": {
+    "wall_seconds": 76.106,
+    "process_cpu_seconds": 75.641,
+    "system_cpu_utilisation": 0.1033,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_variants_4x4x4_seed1_V3_rank53.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_variants_4x4x4_seed1_V3",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 2,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 2,
+    "max_flips": 20000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 600,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 0,
+    "lookahead_every": 16,
+    "extra": {
+     "tag": "V1"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 990208,
+   "best_reached_at_seconds": 11.219,
+   "flips": 20000000,
+   "wall_seconds": 162.723,
+   "flips_per_second": 122908,
+   "flips_since_last_improvement": 19009792,
+   "stopped_by": "flips",
+   "plus_transitions": 19,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 1250000,
+   "lookahead_hits": 18,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 28,
+   "full_verifications_passed": 29,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     150896,
+     2.535
+    ],
+    [
+     62,
+     170432,
+     2.847
+    ],
+    [
+     61,
+     180560,
+     2.991
+    ],
+    [
+     60,
+     187936,
+     3.088
+    ],
+    [
+     59,
+     207112,
+     3.329
+    ],
+    [
+     58,
+     213984,
+     3.423
+    ],
+    [
+     57,
+     362576,
+     5.114
+    ],
+    [
+     56,
+     441328,
+     5.919
+    ],
+    [
+     55,
+     990208,
+     11.219
+    ]
+   ],
+   "started": "2026-10-06T03:56:47",
+   "machine": {
+    "wall_seconds": 162.724,
+    "process_cpu_seconds": 161.766,
+    "system_cpu_utilisation": 0.1112,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_variants_4x4x4_seed2_V1_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_variants_4x4x4_seed2_V1",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 2,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 2,
+    "max_flips": 20000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 600,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 6,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "V2"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 54,
+   "best_reached_at_flip": 5492892,
+   "best_reached_at_seconds": 22.478,
+   "flips": 20000000,
+   "wall_seconds": 76.032,
+   "flips_per_second": 263047,
+   "flips_since_last_improvement": 14507108,
+   "stopped_by": "flips",
+   "plus_transitions": 17,
+   "rejected_by_weight_cap": 3687767,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 1,
+   "no_flip_available_events": 0,
+   "reduction_events": 26,
+   "full_verifications_passed": 31,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     14756,
+     0.069
+    ],
+    [
+     62,
+     38815,
+     0.175
+    ],
+    [
+     61,
+     41464,
+     0.186
+    ],
+    [
+     60,
+     89989,
+     0.384
+    ],
+    [
+     59,
+     94396,
+     0.516
+    ],
+    [
+     58,
+     188661,
+     0.89
+    ],
+    [
+     57,
+     243688,
+     1.099
+    ],
+    [
+     56,
+     604974,
+     2.425
+    ],
+    [
+     55,
+     849598,
+     3.443
+    ],
+    [
+     54,
+     5492892,
+     22.478
+    ]
+   ],
+   "started": "2026-10-06T03:59:30",
+   "machine": {
+    "wall_seconds": 76.033,
+    "process_cpu_seconds": 75.297,
+    "system_cpu_utilisation": 0.1119,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_variants_4x4x4_seed2_V2_rank54.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_variants_4x4x4_seed2_V2",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 2,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 2,
+    "max_flips": 20000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 600,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "V3"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 49,
+   "best_reached_at_flip": 1631342,
+   "best_reached_at_seconds": 6.591,
+   "flips": 19960829,
+   "wall_seconds": 26.007,
+   "flips_per_second": 767506,
+   "flips_since_last_improvement": 18329487,
+   "stopped_by": "flips",
+   "plus_transitions": 39187,
+   "rejected_by_weight_cap": 17327129,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 39171,
+   "reduction_events": 39202,
+   "full_verifications_passed": 35,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     7191,
+     0.031
+    ],
+    [
+     62,
+     32119,
+     0.134
+    ],
+    [
+     61,
+     45681,
+     0.187
+    ],
+    [
+     60,
+     62162,
+     0.251
+    ],
+    [
+     59,
+     94193,
+     0.391
+    ],
+    [
+     58,
+     167034,
+     0.681
+    ],
+    [
+     57,
+     171747,
+     0.705
+    ],
+    [
+     56,
+     356303,
+     1.457
+    ],
+    [
+     55,
+     544529,
+     2.247
+    ],
+    [
+     54,
+     892965,
+     3.684
+    ],
+    [
+     53,
+     1136238,
+     4.64
+    ],
+    [
+     52,
+     1562165,
+     6.326
+    ],
+    [
+     51,
+     1626809,
+     6.573
+    ],
+    [
+     50,
+     1626970,
+     6.574
+    ],
+    [
+     49,
+     1631342,
+     6.591
+    ]
+   ],
+   "started": "2026-10-06T04:00:46",
+   "machine": {
+    "wall_seconds": 26.008,
+    "process_cpu_seconds": 25.75,
+    "system_cpu_utilisation": 0.144,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_variants_4x4x4_seed2_V3_rank49.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_variants_4x4x4_seed2_V3",
+   "status": "above best known"
+  }
+ ]
+}

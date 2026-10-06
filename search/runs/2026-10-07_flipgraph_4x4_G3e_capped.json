@@ -1,0 +1,2049 @@
+{
+ "name": "2026-10-07_flipgraph_4x4_G3e_capped",
+ "script": "experiments/2026-10-07_flipgraph_4x4.py",
+ "best_known_rank": 47,
+ "start": "standard algorithm",
+ "environment": {
+  "python": "3.14.2",
+  "implementation": "CPython",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "machine": "AMD64",
+  "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "logical_cpus": 16
+ },
+ "batch_machine": {
+  "wall_seconds": 350.819,
+  "process_cpu_seconds": 340.766,
+  "system_cpu_utilisation": 0.1169,
+  "logical_cpus": 16
+ },
+ "runs": [
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 401,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 401,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap4"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 2869999,
+   "best_reached_at_seconds": 10.756,
+   "flips": 5000000,
+   "wall_seconds": 18.521,
+   "flips_per_second": 269967,
+   "flips_since_last_improvement": 2130001,
+   "stopped_by": "flips",
+   "plus_transitions": 3,
+   "rejected_by_weight_cap": 1240199,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 12,
+   "full_verifications_passed": 14,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     49637,
+     0.221
+    ],
+    [
+     62,
+     58539,
+     0.257
+    ],
+    [
+     61,
+     182769,
+     0.783
+    ],
+    [
+     60,
+     223504,
+     0.953
+    ],
+    [
+     59,
+     316505,
+     1.324
+    ],
+    [
+     58,
+     350557,
+     1.453
+    ],
+    [
+     57,
+     752261,
+     2.989
+    ],
+    [
+     56,
+     1020574,
+     3.928
+    ],
+    [
+     55,
+     2869999,
+     10.756
+    ]
+   ],
+   "started": "2026-10-06T04:03:31",
+   "machine": {
+    "wall_seconds": 18.522,
+    "process_cpu_seconds": 18.469,
+    "system_cpu_utilisation": 0.1488,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed401_cap4_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed401_cap4",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 402,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 402,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap4"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 56,
+   "best_reached_at_flip": 1721135,
+   "best_reached_at_seconds": 6.644,
+   "flips": 5000000,
+   "wall_seconds": 18.834,
+   "flips_per_second": 265478,
+   "flips_since_last_improvement": 3278865,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 1477795,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 12,
+   "full_verifications_passed": 13,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     50414,
+     0.203
+    ],
+    [
+     62,
+     79498,
+     0.322
+    ],
+    [
+     61,
+     119212,
+     0.483
+    ],
+    [
+     60,
+     306638,
+     1.232
+    ],
+    [
+     59,
+     552543,
+     2.199
+    ],
+    [
+     58,
+     558272,
+     2.22
+    ],
+    [
+     57,
+     662872,
+     2.601
+    ],
+    [
+     56,
+     1721135,
+     6.644
+    ]
+   ],
+   "started": "2026-10-06T04:03:49",
+   "machine": {
+    "wall_seconds": 18.836,
+    "process_cpu_seconds": 18.672,
+    "system_cpu_utilisation": 0.1594,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed402_cap4_rank56.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed402_cap4",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 403,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 403,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap4"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 54,
+   "best_reached_at_flip": 2640641,
+   "best_reached_at_seconds": 10.562,
+   "flips": 5000000,
+   "wall_seconds": 19.772,
+   "flips_per_second": 252877,
+   "flips_since_last_improvement": 2359359,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 981254,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 14,
+   "full_verifications_passed": 15,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     27451,
+     0.115
+    ],
+    [
+     62,
+     61160,
+     0.263
+    ],
+    [
+     61,
+     66987,
+     0.293
+    ],
+    [
+     60,
+     93288,
+     0.403
+    ],
+    [
+     59,
+     119095,
+     0.51
+    ],
+    [
+     58,
+     198689,
+     0.84
+    ],
+    [
+     57,
+     328840,
+     1.377
+    ],
+    [
+     56,
+     328965,
+     1.377
+    ],
+    [
+     55,
+     1620866,
+     6.518
+    ],
+    [
+     54,
+     2640641,
+     10.562
+    ]
+   ],
+   "started": "2026-10-06T04:04:08",
+   "machine": {
+    "wall_seconds": 19.773,
+    "process_cpu_seconds": 19.594,
+    "system_cpu_utilisation": 0.1576,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed403_cap4_rank54.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed403_cap4",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 404,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 404,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap4"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 54,
+   "best_reached_at_flip": 469692,
+   "best_reached_at_seconds": 1.882,
+   "flips": 5000000,
+   "wall_seconds": 19.951,
+   "flips_per_second": 250614,
+   "flips_since_last_improvement": 4530308,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 690347,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 14,
+   "full_verifications_passed": 15,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     42289,
+     0.173
+    ],
+    [
+     62,
+     47145,
+     0.192
+    ],
+    [
+     61,
+     59910,
+     0.242
+    ],
+    [
+     60,
+     105020,
+     0.424
+    ],
+    [
+     59,
+     106294,
+     0.43
+    ],
+    [
+     58,
+     121118,
+     0.488
+    ],
+    [
+     57,
+     131033,
+     0.525
+    ],
+    [
+     56,
+     196752,
+     0.773
+    ],
+    [
+     55,
+     333642,
+     1.276
+    ],
+    [
+     54,
+     469692,
+     1.882
+    ]
+   ],
+   "started": "2026-10-06T04:04:28",
+   "machine": {
+    "wall_seconds": 19.952,
+    "process_cpu_seconds": 19.656,
+    "system_cpu_utilisation": 0.1286,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed404_cap4_rank54.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed404_cap4",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 405,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 405,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap4"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 1708675,
+   "best_reached_at_seconds": 7.509,
+   "flips": 5000000,
+   "wall_seconds": 21.908,
+   "flips_per_second": 228230,
+   "flips_since_last_improvement": 3291325,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 361432,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 13,
+   "full_verifications_passed": 14,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     47006,
+     0.198
+    ],
+    [
+     62,
+     77490,
+     0.325
+    ],
+    [
+     61,
+     82706,
+     0.348
+    ],
+    [
+     60,
+     98185,
+     0.413
+    ],
+    [
+     59,
+     139009,
+     0.586
+    ],
+    [
+     58,
+     142630,
+     0.602
+    ],
+    [
+     57,
+     190084,
+     0.809
+    ],
+    [
+     56,
+     229858,
+     0.977
+    ],
+    [
+     55,
+     1708675,
+     7.509
+    ]
+   ],
+   "started": "2026-10-06T04:04:48",
+   "machine": {
+    "wall_seconds": 21.908,
+    "process_cpu_seconds": 21.703,
+    "system_cpu_utilisation": 0.1016,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed405_cap4_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed405_cap4",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 406,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 406,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap4"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 990304,
+   "best_reached_at_seconds": 3.724,
+   "flips": 5000000,
+   "wall_seconds": 18.215,
+   "flips_per_second": 274496,
+   "flips_since_last_improvement": 4009696,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 1447016,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 13,
+   "full_verifications_passed": 14,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     832,
+     0.004
+    ],
+    [
+     62,
+     82154,
+     0.334
+    ],
+    [
+     61,
+     107100,
+     0.432
+    ],
+    [
+     60,
+     114298,
+     0.46
+    ],
+    [
+     59,
+     133400,
+     0.536
+    ],
+    [
+     58,
+     176073,
+     0.698
+    ],
+    [
+     57,
+     492636,
+     1.883
+    ],
+    [
+     56,
+     728788,
+     2.796
+    ],
+    [
+     55,
+     990304,
+     3.724
+    ]
+   ],
+   "started": "2026-10-06T04:05:10",
+   "machine": {
+    "wall_seconds": 18.216,
+    "process_cpu_seconds": 18.016,
+    "system_cpu_utilisation": 0.1956,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed406_cap4_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed406_cap4",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 407,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 407,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap4"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 56,
+   "best_reached_at_flip": 977582,
+   "best_reached_at_seconds": 3.606,
+   "flips": 5000000,
+   "wall_seconds": 19.352,
+   "flips_per_second": 258368,
+   "flips_since_last_improvement": 4022418,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 1060879,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 12,
+   "full_verifications_passed": 13,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     15896,
+     0.065
+    ],
+    [
+     62,
+     37980,
+     0.156
+    ],
+    [
+     61,
+     40645,
+     0.169
+    ],
+    [
+     60,
+     130171,
+     0.515
+    ],
+    [
+     59,
+     173507,
+     0.679
+    ],
+    [
+     58,
+     186084,
+     0.725
+    ],
+    [
+     57,
+     349013,
+     1.314
+    ],
+    [
+     56,
+     977582,
+     3.606
+    ]
+   ],
+   "started": "2026-10-06T04:05:28",
+   "machine": {
+    "wall_seconds": 19.353,
+    "process_cpu_seconds": 19.172,
+    "system_cpu_utilisation": 0.1177,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed407_cap4_rank56.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed407_cap4",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 408,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 408,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap4"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 514145,
+   "best_reached_at_seconds": 2.02,
+   "flips": 5000000,
+   "wall_seconds": 19.649,
+   "flips_per_second": 254464,
+   "flips_since_last_improvement": 4485855,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 1023005,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 13,
+   "full_verifications_passed": 14,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     37804,
+     0.156
+    ],
+    [
+     62,
+     43573,
+     0.181
+    ],
+    [
+     61,
+     78857,
+     0.327
+    ],
+    [
+     60,
+     93738,
+     0.388
+    ],
+    [
+     59,
+     97939,
+     0.417
+    ],
+    [
+     58,
+     121595,
+     0.509
+    ],
+    [
+     57,
+     320115,
+     1.252
+    ],
+    [
+     56,
+     432591,
+     1.698
+    ],
+    [
+     55,
+     514145,
+     2.02
+    ]
+   ],
+   "started": "2026-10-06T04:05:48",
+   "machine": {
+    "wall_seconds": 19.65,
+    "process_cpu_seconds": 19.453,
+    "system_cpu_utilisation": 0.1187,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed408_cap4_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed408_cap4",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 409,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 409,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap4"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 1409824,
+   "best_reached_at_seconds": 5.566,
+   "flips": 5000000,
+   "wall_seconds": 19.778,
+   "flips_per_second": 252801,
+   "flips_since_last_improvement": 3590176,
+   "stopped_by": "flips",
+   "plus_transitions": 3,
+   "rejected_by_weight_cap": 906676,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 12,
+   "full_verifications_passed": 14,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     27038,
+     0.111
+    ],
+    [
+     62,
+     80391,
+     0.342
+    ],
+    [
+     61,
+     80416,
+     0.342
+    ],
+    [
+     60,
+     91133,
+     0.386
+    ],
+    [
+     59,
+     126683,
+     0.531
+    ],
+    [
+     58,
+     150041,
+     0.626
+    ],
+    [
+     57,
+     229826,
+     0.946
+    ],
+    [
+     56,
+     577783,
+     2.284
+    ],
+    [
+     55,
+     1409824,
+     5.566
+    ]
+   ],
+   "started": "2026-10-06T04:06:07",
+   "machine": {
+    "wall_seconds": 20.5,
+    "process_cpu_seconds": 19.641,
+    "system_cpu_utilisation": 0.133,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed409_cap4_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed409_cap4",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 410,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 410,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap4"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 4589382,
+   "best_reached_at_seconds": 17.959,
+   "flips": 5000000,
+   "wall_seconds": 19.681,
+   "flips_per_second": 254057,
+   "flips_since_last_improvement": 410618,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 953222,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 13,
+   "full_verifications_passed": 14,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     48119,
+     0.205
+    ],
+    [
+     62,
+     48158,
+     0.206
+    ],
+    [
+     61,
+     65844,
+     0.283
+    ],
+    [
+     60,
+     125189,
+     0.536
+    ],
+    [
+     59,
+     125227,
+     0.544
+    ],
+    [
+     58,
+     163205,
+     0.697
+    ],
+    [
+     57,
+     205309,
+     0.857
+    ],
+    [
+     56,
+     4252168,
+     16.592
+    ],
+    [
+     55,
+     4589382,
+     17.959
+    ]
+   ],
+   "started": "2026-10-06T04:06:28",
+   "machine": {
+    "wall_seconds": 25.339,
+    "process_cpu_seconds": 19.484,
+    "system_cpu_utilisation": 0.0947,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed410_cap4_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed410_cap4",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 411,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 411,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap4"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 56,
+   "best_reached_at_flip": 578439,
+   "best_reached_at_seconds": 2.164,
+   "flips": 5000000,
+   "wall_seconds": 16.774,
+   "flips_per_second": 298080,
+   "flips_since_last_improvement": 4421561,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 1811971,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 12,
+   "full_verifications_passed": 13,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     15220,
+     0.068
+    ],
+    [
+     62,
+     16066,
+     0.072
+    ],
+    [
+     61,
+     38967,
+     0.168
+    ],
+    [
+     60,
+     96981,
+     0.402
+    ],
+    [
+     59,
+     175226,
+     0.706
+    ],
+    [
+     58,
+     183549,
+     0.737
+    ],
+    [
+     57,
+     246568,
+     0.971
+    ],
+    [
+     56,
+     578439,
+     2.164
+    ]
+   ],
+   "started": "2026-10-06T04:06:53",
+   "machine": {
+    "wall_seconds": 16.776,
+    "process_cpu_seconds": 16.625,
+    "system_cpu_utilisation": 0.1233,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed411_cap4_rank56.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed411_cap4",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 412,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 412,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 4,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap4"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 136147,
+   "best_reached_at_seconds": 1.002,
+   "flips": 5000000,
+   "wall_seconds": 20.36,
+   "flips_per_second": 245581,
+   "flips_since_last_improvement": 4863853,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 998769,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 13,
+   "full_verifications_passed": 14,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     64172,
+     0.276
+    ],
+    [
+     62,
+     77422,
+     0.332
+    ],
+    [
+     61,
+     96065,
+     0.407
+    ],
+    [
+     60,
+     118182,
+     0.497
+    ],
+    [
+     59,
+     120108,
+     0.934
+    ],
+    [
+     58,
+     120148,
+     0.934
+    ],
+    [
+     57,
+     130151,
+     0.976
+    ],
+    [
+     56,
+     135514,
+     0.999
+    ],
+    [
+     55,
+     136147,
+     1.002
+    ]
+   ],
+   "started": "2026-10-06T04:07:10",
+   "machine": {
+    "wall_seconds": 20.364,
+    "process_cpu_seconds": 19.844,
+    "system_cpu_utilisation": 0.1032,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed412_cap4_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed412_cap4",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 501,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 501,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 5,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap5"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 56,
+   "best_reached_at_flip": 892457,
+   "best_reached_at_seconds": 3.759,
+   "flips": 5000000,
+   "wall_seconds": 18.399,
+   "flips_per_second": 271748,
+   "flips_since_last_improvement": 4107543,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 1300315,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 12,
+   "full_verifications_passed": 13,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     64494,
+     0.285
+    ],
+    [
+     62,
+     70451,
+     0.31
+    ],
+    [
+     61,
+     114635,
+     0.498
+    ],
+    [
+     60,
+     179017,
+     0.767
+    ],
+    [
+     59,
+     288914,
+     1.426
+    ],
+    [
+     58,
+     662518,
+     2.91
+    ],
+    [
+     57,
+     691379,
+     3.012
+    ],
+    [
+     56,
+     892457,
+     3.759
+    ]
+   ],
+   "started": "2026-10-06T04:07:30",
+   "machine": {
+    "wall_seconds": 18.4,
+    "process_cpu_seconds": 18.047,
+    "system_cpu_utilisation": 0.0916,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed501_cap5_rank56.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed501_cap5",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 502,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 502,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 5,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap5"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 56,
+   "best_reached_at_flip": 4123934,
+   "best_reached_at_seconds": 15.614,
+   "flips": 5000000,
+   "wall_seconds": 18.373,
+   "flips_per_second": 272132,
+   "flips_since_last_improvement": 876066,
+   "stopped_by": "flips",
+   "plus_transitions": 3,
+   "rejected_by_weight_cap": 1340854,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 11,
+   "full_verifications_passed": 13,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     100243,
+     0.457
+    ],
+    [
+     62,
+     127800,
+     0.573
+    ],
+    [
+     61,
+     212874,
+     0.946
+    ],
+    [
+     60,
+     227830,
+     1.008
+    ],
+    [
+     59,
+     421032,
+     1.804
+    ],
+    [
+     58,
+     455825,
+     1.94
+    ],
+    [
+     57,
+     1105611,
+     4.359
+    ],
+    [
+     56,
+     4123934,
+     15.614
+    ]
+   ],
+   "started": "2026-10-06T04:07:49",
+   "machine": {
+    "wall_seconds": 18.374,
+    "process_cpu_seconds": 18.234,
+    "system_cpu_utilisation": 0.0961,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed502_cap5_rank56.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed502_cap5",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 503,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 503,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 5,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap5"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 56,
+   "best_reached_at_flip": 517312,
+   "best_reached_at_seconds": 2.122,
+   "flips": 5000000,
+   "wall_seconds": 19.98,
+   "flips_per_second": 250247,
+   "flips_since_last_improvement": 4482688,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 928175,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 12,
+   "full_verifications_passed": 13,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     10543,
+     0.048
+    ],
+    [
+     62,
+     34239,
+     0.152
+    ],
+    [
+     61,
+     76382,
+     0.33
+    ],
+    [
+     60,
+     199380,
+     0.849
+    ],
+    [
+     59,
+     224933,
+     0.953
+    ],
+    [
+     58,
+     366203,
+     1.499
+    ],
+    [
+     57,
+     446718,
+     1.839
+    ],
+    [
+     56,
+     517312,
+     2.122
+    ]
+   ],
+   "started": "2026-10-06T04:08:07",
+   "machine": {
+    "wall_seconds": 19.981,
+    "process_cpu_seconds": 19.766,
+    "system_cpu_utilisation": 0.0877,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed503_cap5_rank56.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed503_cap5",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 504,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 504,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 5,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap5"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 56,
+   "best_reached_at_flip": 1213502,
+   "best_reached_at_seconds": 4.74,
+   "flips": 5000000,
+   "wall_seconds": 16.338,
+   "flips_per_second": 306042,
+   "flips_since_last_improvement": 3786498,
+   "stopped_by": "flips",
+   "plus_transitions": 3,
+   "rejected_by_weight_cap": 1750054,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 11,
+   "full_verifications_passed": 13,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     25961,
+     0.115
+    ],
+    [
+     62,
+     322032,
+     1.403
+    ],
+    [
+     61,
+     536368,
+     2.3
+    ],
+    [
+     60,
+     540754,
+     2.317
+    ],
+    [
+     59,
+     561332,
+     2.398
+    ],
+    [
+     58,
+     765776,
+     3.169
+    ],
+    [
+     57,
+     897130,
+     3.653
+    ],
+    [
+     56,
+     1213502,
+     4.74
+    ]
+   ],
+   "started": "2026-10-06T04:08:27",
+   "machine": {
+    "wall_seconds": 16.338,
+    "process_cpu_seconds": 16.297,
+    "system_cpu_utilisation": 0.0844,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed504_cap5_rank56.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed504_cap5",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 505,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 505,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 5,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap5"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 4189783,
+   "best_reached_at_seconds": 15.81,
+   "flips": 5000000,
+   "wall_seconds": 18.619,
+   "flips_per_second": 268547,
+   "flips_since_last_improvement": 810217,
+   "stopped_by": "flips",
+   "plus_transitions": 3,
+   "rejected_by_weight_cap": 936664,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 12,
+   "full_verifications_passed": 14,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     3938,
+     0.018
+    ],
+    [
+     62,
+     35484,
+     0.161
+    ],
+    [
+     61,
+     35596,
+     0.162
+    ],
+    [
+     60,
+     39638,
+     0.18
+    ],
+    [
+     59,
+     66790,
+     0.293
+    ],
+    [
+     58,
+     250649,
+     1.034
+    ],
+    [
+     57,
+     259188,
+     1.068
+    ],
+    [
+     56,
+     2631583,
+     10.136
+    ],
+    [
+     55,
+     4189783,
+     15.81
+    ]
+   ],
+   "started": "2026-10-06T04:08:43",
+   "machine": {
+    "wall_seconds": 18.619,
+    "process_cpu_seconds": 18.5,
+    "system_cpu_utilisation": 0.0857,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed505_cap5_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed505_cap5",
+   "status": "above best known"
+  },
+  {
+   "format": [
+    4,
+    4,
+    4
+   ],
+   "seed": 506,
+   "config": {
+    "fmt": [
+     4,
+     4,
+     4
+    ],
+    "seed": 506,
+    "max_flips": 5000000,
+    "plateau": 1000000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": 1800,
+    "target_rank": null,
+    "verify_every": 1000000,
+    "log_every": 1000000,
+    "keep_ranks_upto": 47,
+    "max_weight": 5,
+    "lookahead_every": 0,
+    "extra": {
+     "tag": "cap5"
+    }
+   },
+   "start_rank": 64,
+   "best_rank": 55,
+   "best_reached_at_flip": 870706,
+   "best_reached_at_seconds": 3.703,
+   "flips": 5000000,
+   "wall_seconds": 19.799,
+   "flips_per_second": 252544,
+   "flips_since_last_improvement": 4129294,
+   "stopped_by": "flips",
+   "plus_transitions": 4,
+   "rejected_by_weight_cap": 782032,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 13,
+   "full_verifications_passed": 14,
+   "trajectory": [
+    [
+     64,
+     0,
+     0.0
+    ],
+    [
+     63,
+     28842,
+     0.126
+    ],
+    [
+     62,
+     81153,
+     0.351
+    ],
+    [
+     61,
+     120461,
+     0.518
+    ],
+    [
+     60,
+     205008,
+     0.869
+    ],
+    [
+     59,
+     286080,
+     1.194
+    ],
+    [
+     58,
+     515526,
+     2.179
+    ],
+    [
+     57,
+     833680,
+     3.49
+    ],
+    [
+     56,
+     849728,
+     3.62
+    ],
+    [
+     55,
+     870706,
+     3.703
+    ]
+   ],
+   "started": "2026-10-06T04:09:02",
+   "machine": {
+    "wall_seconds": 19.799,
+    "process_cpu_seconds": 19.594,
+    "system_cpu_utilisation": 0.0866,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed506_cap5_rank55.json"
+   ],
+   "tag": "2026-10-07_flipgraph_4x4_G3e_capped_4x4x4_seed506_cap5",
+   "status": "above best known"
+  }
+ ]
+}

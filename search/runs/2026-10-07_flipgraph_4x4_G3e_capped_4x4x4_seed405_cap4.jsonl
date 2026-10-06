@@ -1,0 +1,15 @@
+{"event": "start", "config": {"fmt": [4, 4, 4], "seed": 405, "max_flips": 5000000, "plateau": 1000000, "escape": "plus", "slack": 1, "plus_per_escape": 1, "pool_size": 64, "reduction": "linear", "max_seconds": 1800, "target_rank": null, "verify_every": 1000000, "log_every": 1000000, "keep_ranks_upto": 47, "max_weight": 4, "lookahead_every": 0, "extra": {"tag": "cap4"}}, "start_rank": 64, "rank_after_reduce": 64}
+{"event": "best", "rank": 63, "flips": 47006, "seconds": 0.198}
+{"event": "best", "rank": 62, "flips": 77490, "seconds": 0.325}
+{"event": "best", "rank": 61, "flips": 82706, "seconds": 0.348}
+{"event": "best", "rank": 60, "flips": 98185, "seconds": 0.413}
+{"event": "best", "rank": 59, "flips": 139009, "seconds": 0.586}
+{"event": "best", "rank": 58, "flips": 142630, "seconds": 0.602}
+{"event": "best", "rank": 57, "flips": 190084, "seconds": 0.809}
+{"event": "best", "rank": 56, "flips": 229858, "seconds": 0.977}
+{"event": "progress", "flips": 1003520, "rank": 56, "best": 56, "seconds": 4.368, "plus": 0, "restarts": 0, "flips_per_second": 229734}
+{"event": "best", "rank": 55, "flips": 1708675, "seconds": 7.509}
+{"event": "progress", "flips": 2002944, "rank": 55, "best": 55, "seconds": 8.82, "plus": 1, "restarts": 0, "flips_per_second": 227103}
+{"event": "progress", "flips": 3002368, "rank": 55, "best": 55, "seconds": 13.224, "plus": 2, "restarts": 0, "flips_per_second": 227037}
+{"event": "progress", "flips": 4001792, "rank": 55, "best": 55, "seconds": 17.548, "plus": 3, "restarts": 0, "flips_per_second": 228046}
+{"event": "end", "format": [4, 4, 4], "seed": 405, "start_rank": 64, "best_rank": 55, "best_reached_at_flip": 1708675, "best_reached_at_seconds": 7.509, "flips": 5000000, "wall_seconds": 21.908, "flips_per_second": 228230, "flips_since_last_improvement": 3291325, "stopped_by": "flips", "plus_transitions": 4, "rejected_by_weight_cap": 361432, "lookahead_scans": 0, "lookahead_hits": 0, "restarts": 0, "no_flip_available_events": 0, "reduction_events": 13, "full_verifications_passed": 14, "trajectory": [[64, 0, 0.0], [63, 47006, 0.198], [62, 77490, 0.325], [61, 82706, 0.348], [60, 98185, 0.413], [59, 139009, 0.586], [58, 142630, 0.602], [57, 190084, 0.809], [56, 229858, 0.977], [55, 1708675, 7.509]]}

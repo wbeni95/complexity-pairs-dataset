@@ -1,0 +1,56 @@
+{
+ "object": "sorting network",
+ "n": 5,
+ "size": 9,
+ "comparators": [
+  [
+   0,
+   2
+  ],
+  [
+   1,
+   4
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   2,
+   3
+  ]
+ ],
+ "status": "matches best known",
+ "best_known_size": 9,
+ "verified": {
+  "zero_one_principle": true,
+  "all_permutations": true
+ },
+ "provenance": {
+  "script": "experiments/2026-10-07_sortnet_small.py",
+  "seed": 1,
+  "tries": 200,
+  "first_reached_at_try": 1,
+  "explore": 0.1
+ }
+}

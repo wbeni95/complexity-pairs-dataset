@@ -17,6 +17,18 @@ class State:
         self.amp = [0j] * (1 << num_qubits)
         self.amp[basis] = 1 + 0j
 
+    @classmethod
+    def uniform(cls, num_qubits: int) -> "State":
+        """The uniform superposition H^n |0> = sum_x |x> / sqrt(2^n), written down directly.
+
+        Added 2026-10-07. Same state as State(n) followed by h_all() (tests/test_qsim.py checks this), built in
+        O(2^n) instead of O(n 2^n). Involves no oracle query.
+        """
+        state = cls(num_qubits)
+        a = 1 / math.sqrt(1 << num_qubits) + 0j
+        state.amp = [a] * (1 << num_qubits)
+        return state
+
     def h(self, k: int) -> None:
         """Hadamard on qubit k."""
         s = 1 / math.sqrt(2)
@@ -80,6 +92,24 @@ class Oracle:
         a = state.amp
         for x, fx in enumerate(self._table):
             if fx & 1:
+                a[x] = -a[x]
+
+    def apply_phase_where(self, state: State, predicate) -> None:
+        """TWO queries: |x> -> (-1)^[predicate(x, f(x))] |x>, for a predicate of the input and the oracle VALUE.
+
+        Added 2026-10-07 for searches over a property derived from a non-Boolean f (e.g. "f(x) < f(y)" in
+        minimum finding, "f(x) is in the table L" in collision finding). On a quantum computer this takes U_f to
+        compute f(x) into an ancilla register, a query-free phase flip conditioned on predicate(x, f(x)), and U_f
+        again to uncompute the ancilla, which must be returned to |0> for the branches to interfere. That is two
+        queries per application (Boyer, Brassard, Hoyer & Tapp 1998, sections 3.1 and 7: one Grover iteration
+        "requires two table look-ups (including one for uncomputation purposes)"). The ancilla is not
+        materialised: after uncomputation it is |0> in every branch, so only the phase remains. Contrast
+        apply_phase, which is ONE query because there f is itself Boolean (phase kickback).
+        """
+        self.queries += 2
+        a = state.amp
+        for x, fx in enumerate(self._table):
+            if predicate(x, fx):
                 a[x] = -a[x]
 
     def apply_xor_and_measure_output(self, state: State, rng) -> tuple[State, int]:

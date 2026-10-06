@@ -1,0 +1,2010 @@
+{
+  "status": "PROPOSAL (research/2026-10-07, pattern-mining agent). Not part of schema/entry.schema.json; nothing in the dataset depends on it.",
+  "purpose": "A controlled vocabulary for a possible future per-algorithm 'technique' field, plus a draft mapping of every entry that had an entry.json when this file was written.",
+  "how_to_read": {
+    "techniques": "Each technique has an id, a name, a definition (what the algorithm does) and the structural property of the problem it exploits.",
+    "baselines": "Kinds of SLOW algorithm. A baseline is a description of the slow side, not a technique.",
+    "mapping.algorithms": "One record per algorithm of the entry, in the entry's order and with the entry's exact name: role (slow / intermediate / fast / peer), baseline kind (slow side only), techniques used.",
+    "mapping.transformation": "The technique(s) that turn the slowest algorithm into the fastest one: the pair-level pattern used for the taxonomy.",
+    "mapping.domain": "Coarse problem domain, assigned by the mapper (used only for gap statistics).",
+    "mapping.confidence": "high = the entry's own text states the mechanism; medium = staging entry or a judgement call by the mapper.",
+    "mapping.provisional": "true = entry added by a parallel agent during the 2026-10-07 session; its text may still change."
+  },
+  "techniques": [
+    {
+      "id": "memoization-dp",
+      "name": "Memoisation / dynamic programming",
+      "definition": "Solve each distinct subproblem once, store the answer, and combine stored answers with a recurrence (a Bellman equation).",
+      "exploited_property": "Optimal substructure plus a set of distinct subproblems far smaller than the recursion tree or the solution space (polynomial for the T2 cases in this dataset)."
+    },
+    {
+      "id": "subset-dp",
+      "name": "Dynamic programming over subsets",
+      "definition": "A dynamic program whose state is a subset of the ground set together with O(1) boundary information (e.g. the last element).",
+      "exploited_property": "The value of a partial solution depends on WHICH elements it uses, not on their order, so n!-type enumeration collapses to 2^n poly(n) or 3^n states."
+    },
+    {
+      "id": "divide-and-conquer",
+      "name": "Divide and conquer (combinatorial)",
+      "definition": "Split the instance into independent parts, solve them recursively, and combine the answers in (near-)linear time.",
+      "exploited_property": "The answer decomposes over a partition with a cheap merge step (sorted halves, the strip lemma, cross inversions)."
+    },
+    {
+      "id": "bilinear-recursion",
+      "name": "Bilinear algebraic recursion (tensor-rank amplification)",
+      "definition": "Use a fixed-size bilinear identity with fewer multiplications than the definition, and apply it recursively to blocks.",
+      "exploited_property": "The problem is a bilinear map over a ring whose fixed-format tensor rank r is below the naive count; a format-k scheme of rank r gives exponent log_k r (for square formats)."
+    },
+    {
+      "id": "algebraic-transform",
+      "name": "Fast algebraic transform (FFT / NTT / Walsh-Hadamard / zeta-Moebius)",
+      "definition": "Change to a basis in which the operation is pointwise, using a recursively factorised transform.",
+      "exploited_property": "The operation (cyclic, XOR or subset convolution) is diagonalised by the characters of a group or by the zeta/Moebius pair of the subset lattice, and the transform factorises into O(log N) sparse stages."
+    },
+    {
+      "id": "elimination-invariant",
+      "name": "Elimination preserving an algebraic invariant",
+      "definition": "Apply elementary operations that preserve (or change predictably) the quantity sought, until it can be read off a triangular form.",
+      "exploited_property": "Invariance of the target (determinant, rank, solution space) under row operations; this is exactly what the permanent lacks."
+    },
+    {
+      "id": "inclusion-exclusion",
+      "name": "Inclusion-exclusion",
+      "definition": "Replace a sum over constrained structures by an alternating sum, over subsets, of unconstrained counts restricted to each subset.",
+      "exploited_property": "The constraint is of 'covering' type (every element used: permutations, covers, partitions), and unconstrained counts restricted to a subset are cheap."
+    },
+    {
+      "id": "meet-in-the-middle",
+      "name": "Meet in the middle",
+      "definition": "Split the variables into two halves, enumerate each half, and combine the halves by sorting or hashing.",
+      "exploited_property": "The objective/constraint is additive across the split, so combining reduces to a one-dimensional search (binary search, hash lookup)."
+    },
+    {
+      "id": "greedy-exchange",
+      "name": "Greedy choice justified by an exchange or cut argument",
+      "definition": "Make the locally best choice at every step; an exchange argument, cut property or label-setting argument proves it is never wrong.",
+      "exploited_property": "Matroid / cut structure (MST), or monotonicity of labels under non-negative weights (Dijkstra), or an exchange-sortable objective (scheduling rules)."
+    },
+    {
+      "id": "primal-dual-potentials",
+      "name": "LP duality / potentials",
+      "definition": "Maintain dual variables (potentials) that certify optimality and reweight costs so that cheap subroutines (e.g. Dijkstra) apply.",
+      "exploited_property": "The problem is a linear program with integral optimal vertices or a min-max theorem (assignment, flows)."
+    },
+    {
+      "id": "augmenting-paths",
+      "name": "Augmenting paths in a residual structure",
+      "definition": "Improve a feasible solution along an improving path in a residual graph; choose paths (e.g. shortest) so that few rounds suffice.",
+      "exploited_property": "A solution is optimal iff no improving path exists (flow / matching optimality conditions)."
+    },
+    {
+      "id": "phased-augmentation",
+      "name": "Phased augmentation along shortest paths (blocking flows)",
+      "definition": "In each phase, compute residual distances once (BFS) and augment along a maximal set of shortest augmenting paths, so the shortest-path length strictly grows from phase to phase.",
+      "exploited_property": "Monotonicity of residual s-t distances; few phases suffice (O(sqrt V) for matching, at most V - 1 for flow)."
+    },
+    {
+      "id": "amortized-scan",
+      "name": "Amortised single scan",
+      "definition": "Scan the input once, reusing information about already-processed overlaps so that the total work is linear by an amortisation argument.",
+      "exploited_property": "Self-similarity of the structure being matched: borders of the pattern (KMP), mirror symmetry of palindromes (Manacher)."
+    },
+    {
+      "id": "automaton",
+      "name": "Finite-automaton compilation or simulation",
+      "definition": "Compile the pattern(s) into a finite automaton, or simulate a nondeterministic automaton with a set of states, so the text is read once.",
+      "exploited_property": "The language to recognise is regular (or a finite union of patterns), so the relevant state after a prefix is finite and independent of how the prefix was matched."
+    },
+    {
+      "id": "incremental-reuse",
+      "name": "Incremental reuse of the previous result",
+      "definition": "Obtain the next quantity from the previous one in O(1) instead of recomputing it from scratch.",
+      "exploited_property": "Quantities for nested or overlapping ranges are additive or nested (running sums; palindromes sharing a center)."
+    },
+    {
+      "id": "sorting-monotone-scan",
+      "name": "Sort, then exploit monotonicity",
+      "definition": "Sort once, then answer the question by a monotone scan: two pointers, binary search, or comparison of neighbours.",
+      "exploited_property": "After sorting, the relevant predicate is monotone in the index (pair sums, LIS tails), or equal items become adjacent."
+    },
+    {
+      "id": "data-structure",
+      "name": "Specialised data structure",
+      "definition": "Answer the repeated inner query with a structure built for it (union-find, heaps, sparse tables, Fenwick trees, suffix automata).",
+      "exploited_property": "The inner query has exploitable algebra: disjoint-set merges, associativity or idempotence of the combining operation, a total order."
+    },
+    {
+      "id": "repeated-squaring",
+      "name": "Doubling / exponentiation by squaring",
+      "definition": "Compute x^e with O(log e) operations by squaring and multiplying along the bits of e.",
+      "exploited_property": "Associativity of a monoid operation (modular multiplication, matrix product, function composition)."
+    },
+    {
+      "id": "invariant-reduction",
+      "name": "Invariant-preserving reduction (Euclidean descent)",
+      "definition": "Replace the instance by a strictly smaller one with the same answer, so the size shrinks geometrically.",
+      "exploited_property": "An identity such as gcd(a, b) = gcd(b, a mod b) together with a guaranteed size decrease (Lame's bound)."
+    },
+    {
+      "id": "algebraic-characterization",
+      "name": "Algebraic characterisation checked in a small ring",
+      "definition": "Decide the property by checking a polynomial identity that is equivalent to it, modulo a small ideal.",
+      "exploited_property": "(X + a)^N = X^N + a (mod N) characterises primes; working modulo (X^r - 1, N) keeps the check polynomial."
+    },
+    {
+      "id": "random-witness",
+      "name": "Randomisation with abundant witnesses",
+      "definition": "Sample random certificates; if a constant fraction of samples are witnesses, a few samples decide with one-sided error.",
+      "exploited_property": "Witness abundance: >= 3/4 of bases for Miller-Rabin, Schwartz-Zippel for polynomial identities, half of all points for balanced functions."
+    },
+    {
+      "id": "random-collision",
+      "name": "Birthday-paradox collision search",
+      "definition": "Sample random points until two collide; a hidden pairing or period is then revealed.",
+      "exploited_property": "A hidden 2-to-1 structure or period makes collisions appear after about sqrt(N) samples."
+    },
+    {
+      "id": "random-sampling-estimation",
+      "name": "Estimation from random samples",
+      "definition": "Estimate an average, correlation or acceptance probability from independent random samples, with Chernoff/Hoeffding error bounds.",
+      "exploited_property": "The quantity is an expectation of a bounded random variable, so O(1/eps^2) samples give additive error eps."
+    },
+    {
+      "id": "random-order",
+      "name": "Randomised processing order",
+      "definition": "Process items in random order (random pivots, random child order, random incremental construction) to defeat worst-case inputs.",
+      "exploited_property": "Expected work averaged over the algorithm's own coin flips is small for EVERY input (backward analysis; recursive hedging)."
+    },
+    {
+      "id": "randomized-search",
+      "name": "Randomised local search / random restarts",
+      "definition": "Random initial assignment plus a short random walk or random-order forced assignment, restarted many times.",
+      "exploited_property": "From a random start, a solution is reached with probability exponentially larger than 2^-n (Schoening, PPSZ)."
+    },
+    {
+      "id": "branch-and-reduce",
+      "name": "Branching with reduction rules (measure-and-conquer analysis)",
+      "definition": "Recursive branching on local configurations, with polynomial-time reduction rules; the branching vectors give a recurrence whose dominant root bounds the running time.",
+      "exploited_property": "Local structure (degree, neighbourhood) forces large size reductions in every branch."
+    },
+    {
+      "id": "monotone-matrix-search",
+      "name": "Monotone / Monge matrix search (DP speed-ups)",
+      "definition": "Exploit monotonicity of optimal split points or row minima (Knuth-Yao quadrangle inequality, SMAWK, divide-and-conquer optimisation).",
+      "exploited_property": "Totally monotone or Monge cost matrices; quadrangle inequalities on DP weights."
+    },
+    {
+      "id": "determinant-counting",
+      "name": "Counting via determinants (matrix-tree, Pfaffians)",
+      "definition": "Express a count of combinatorial structures as a determinant or Pfaffian, then compute it by elimination.",
+      "exploited_property": "A sign-reversing structure makes unwanted terms cancel (Kirchhoff's matrix-tree theorem, Kasteleyn orientations for planar graphs)."
+    },
+    {
+      "id": "structured-linear-algebra",
+      "name": "Structured / Krylov linear algebra",
+      "definition": "Exploit matrix structure (band, Toeplitz, sparsity) or Krylov sequences and minimal polynomials (Levinson, Thomas, Wiedemann, Berlekamp-Massey).",
+      "exploited_property": "Low displacement rank, bandedness, or cheap matrix-vector products."
+    },
+    {
+      "id": "quantum-fourier-sampling",
+      "name": "Quantum interference / Fourier sampling",
+      "definition": "Prepare a superposition, query the oracle in phase or in a second register, apply a (quantum) Fourier transform and measure.",
+      "exploited_property": "The hidden object (linear function, period, hidden subgroup, constant-vs-balanced) is a character or coset structure of an abelian group."
+    },
+    {
+      "id": "amplitude-amplification",
+      "name": "Amplitude amplification",
+      "definition": "Alternate a phase oracle with a reflection about the start state to rotate amplitude toward marked states.",
+      "exploited_property": "A checkable predicate; success amplitude grows linearly in the number of iterations, so probability grows quadratically faster than classical repetition."
+    },
+    {
+      "id": "quantum-walk",
+      "name": "Quantum walk",
+      "definition": "Replace a classical random walk on a graph by a quantum walk (search on Johnson graphs, glued trees).",
+      "exploited_property": "Spectral gap and marked-set structure of the walk graph."
+    },
+    {
+      "id": "quantum-linear-algebra",
+      "name": "Quantum linear algebra (phase estimation on encoded matrices)",
+      "definition": "Phase estimation / singular value transformation on a matrix given by QRAM or block encoding.",
+      "exploited_property": "Low rank or well-conditioned matrices with efficient state preparation; the speedup depends on the input model."
+    },
+    {
+      "id": "length-squared-sampling",
+      "name": "Length-squared (l2) sampling (dequantisation)",
+      "definition": "Sample rows/entries with probability proportional to squared norms to simulate the state preparation a quantum algorithm assumes.",
+      "exploited_property": "Low-rank structure plus sample-and-query access comparable to QRAM."
+    },
+    {
+      "id": "group-theoretic",
+      "name": "Group-theoretic divide and conquer",
+      "definition": "Use permutation-group algorithms and structure theory to prune the space of isomorphisms.",
+      "exploited_property": "Automorphism-group structure (Luks; Babai's local certificates)."
+    },
+    {
+      "id": "sieving-smoothness",
+      "name": "Sieving and smoothness (index calculus)",
+      "definition": "Collect relations among smooth numbers in suitable rings, then combine them by linear algebra.",
+      "exploited_property": "Density of smooth numbers (heuristic L-notation estimates)."
+    },
+    {
+      "id": "continuous-optimization",
+      "name": "Continuous optimisation (ellipsoid, interior point)",
+      "definition": "Follow a central path or shrink an ellipsoid in the continuous relaxation; round at the end.",
+      "exploited_property": "Convexity of the feasible region; polynomially bounded bit sizes (weakly polynomial bounds)."
+    },
+    {
+      "id": "preflow-push",
+      "name": "Preflow-push (push-relabel)",
+      "definition": "Maintain a preflow and vertex labels; push excess along admissible edges and relabel when stuck.",
+      "exploited_property": "Distance labels bound the number of relabels and saturating pushes."
+    }
+  ],
+  "baselines": [
+    {
+      "id": "exhaustive-enumeration",
+      "definition": "Enumerate the whole solution or candidate space (subsets, permutations, pairs, alignments, paths)."
+    },
+    {
+      "id": "unmemoized-recursion",
+      "definition": "Transcribe a recurrence directly; overlapping subproblems are recomputed."
+    },
+    {
+      "id": "value-linear-iteration",
+      "definition": "Loop over a range proportional to the numeric VALUE of an input number; exponential in its bit length."
+    },
+    {
+      "id": "direct-definition",
+      "definition": "Evaluate the defining formula term by term (schoolbook product, convolution)."
+    },
+    {
+      "id": "simple-polynomial",
+      "definition": "A simpler polynomial algorithm that repeats work (insertion sort, running sums, expand-around-centers)."
+    },
+    {
+      "id": "repeated-subroutine",
+      "definition": "Run an algorithm for a simpler problem many times (Bellman-Ford from every source)."
+    },
+    {
+      "id": "classical-query",
+      "definition": "Classical query algorithm used as the baseline of a quantum query separation (T9)."
+    },
+    {
+      "id": "best-known-classical",
+      "definition": "A serious classical algorithm that is the best known for an open (T6) or dequantised (T5) problem."
+    },
+    {
+      "id": "quantum-claimed",
+      "definition": "The quantum algorithm whose claimed advantage a T5 entry dequantises."
+    }
+  ],
+  "mapping": [
+    {
+      "id": "3sat-brute-force-vs-schoening",
+      "location": "pairs",
+      "domain": "logic / SAT",
+      "provisional": true,
+      "confidence": "high",
+      "transformation": [
+        "randomized-search"
+      ],
+      "exploited_property": "From a uniformly random assignment, a 3n-step random walk flipping variables of falsified clauses reaches a fixed satisfying assignment with probability ~(3/4)^n.",
+      "algorithms": [
+        {
+          "name": "brute force",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "Schöning's random walk (Monte Carlo, one-sided error)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "randomized-search"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07."
+    },
+    {
+      "id": "all-pairs-shortest-paths-bellman-ford-vs-floyd-warshall",
+      "location": "pairs",
+      "domain": "graphs",
+      "provisional": true,
+      "confidence": "high",
+      "transformation": [
+        "memoization-dp"
+      ],
+      "exploited_property": "Subproblems indexed by the set {0..k} of allowed intermediate vertices are shared across all sources.",
+      "algorithms": [
+        {
+          "name": "Bellman-Ford from every source",
+          "role": "slow",
+          "baseline": "repeated-subroutine",
+          "techniques": []
+        },
+        {
+          "name": "Floyd-Warshall",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "memoization-dp"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07. The gap exists only for dense graphs (m = Theta(n^2))."
+    },
+    {
+      "id": "assignment-brute-vs-hungarian",
+      "location": "pairs",
+      "domain": "combinatorial optimisation",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "primal-dual-potentials",
+        "augmenting-paths"
+      ],
+      "exploited_property": "The assignment LP has integral optimal vertices; dual potentials certify optimality and make reduced costs non-negative, so each augmentation is a Dijkstra search.",
+      "algorithms": [
+        {
+          "name": "permutation enumeration",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "Hungarian method (shortest augmenting paths with potentials)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "primal-dual-potentials",
+            "augmenting-paths"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bernstein-vazirani-classical-vs-quantum",
+      "location": "pairs",
+      "domain": "query model",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "quantum-fourier-sampling"
+      ],
+      "exploited_property": "f is a character of Z_2^n; one Hadamard-sandwiched phase query maps the uniform state exactly to |s>.",
+      "algorithms": [
+        {
+          "name": "classical: query the unit vectors",
+          "role": "slow",
+          "baseline": "classical-query",
+          "techniques": []
+        },
+        {
+          "name": "Bernstein-Vazirani quantum algorithm",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "quantum-fourier-sampling"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bipartite-matching-kuhn-vs-hopcroft-karp",
+      "location": "pairs",
+      "domain": "graphs",
+      "provisional": true,
+      "confidence": "high",
+      "transformation": [
+        "phased-augmentation"
+      ],
+      "exploited_property": "Shortest augmenting-path lengths grow from phase to phase; one BFS + DFS phase finds a maximal set of vertex-disjoint shortest paths, and O(sqrt V) phases suffice.",
+      "algorithms": [
+        {
+          "name": "Kuhn's augmenting paths (one DFS per left vertex)",
+          "role": "slow",
+          "baseline": "simple-polynomial",
+          "techniques": [
+            "augmenting-paths"
+          ]
+        },
+        {
+          "name": "Hopcroft-Karp",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "phased-augmentation",
+            "augmenting-paths"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07."
+    },
+    {
+      "id": "chromatic-number-subset-dp-vs-inclusion-exclusion",
+      "location": "pairs",
+      "domain": "graphs",
+      "provisional": true,
+      "confidence": "high",
+      "transformation": [
+        "inclusion-exclusion"
+      ],
+      "exploited_property": "k-colourability = existence of a k-tuple of independent sets covering V; covering counts come from an alternating sum of a(S)^k, with a(S) tabulated by a zeta-type pass.",
+      "algorithms": [
+        {
+          "name": "subset DP over all independent sets",
+          "role": "slow",
+          "baseline": null,
+          "techniques": [
+            "subset-dp"
+          ]
+        },
+        {
+          "name": "inclusion-exclusion (Bjorklund-Husfeldt-Koivisto)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "inclusion-exclusion",
+            "algebraic-transform"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07. The slow side is itself a subset DP (3^n), not enumeration."
+    },
+    {
+      "id": "closest-pair-brute-vs-divide-conquer",
+      "location": "pairs",
+      "domain": "geometry",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "divide-and-conquer"
+      ],
+      "exploited_property": "Strip lemma: a closer cross pair lies in a 2-delta strip, and each strip point has O(1) candidates in y order.",
+      "algorithms": [
+        {
+          "name": "all pairs",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "Shamos-Hoey divide and conquer",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "divide-and-conquer",
+            "sorting-monotone-scan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "collision-problem-classical-vs-quantum",
+      "location": "pairs",
+      "domain": "query model",
+      "provisional": true,
+      "confidence": "high",
+      "transformation": [
+        "amplitude-amplification"
+      ],
+      "exploited_property": "A 2-to-1 function: after querying k = N^(1/3) points, exactly k other points are partners, and Grover search over the rest finds one in O(sqrt(N/k)) queries.",
+      "algorithms": [
+        {
+          "name": "classical birthday search",
+          "role": "slow",
+          "baseline": "classical-query",
+          "techniques": [
+            "random-collision"
+          ]
+        },
+        {
+          "name": "Brassard-Hoyer-Tapp, known number of marked points",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "amplitude-amplification",
+            "random-collision"
+          ]
+        },
+        {
+          "name": "Brassard-Hoyer-Tapp with BBHT exponential search (unknown number of marked points)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "amplitude-amplification",
+            "random-collision"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07."
+    },
+    {
+      "id": "determinant-cofactor-vs-gaussian",
+      "location": "pairs",
+      "domain": "algebra",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "elimination-invariant"
+      ],
+      "exploited_property": "det is alternating and multilinear in the rows, hence invariant under row additions; elimination reaches a triangular matrix in O(n^3).",
+      "algorithms": [
+        {
+          "name": "Laplace (cofactor) expansion",
+          "role": "slow",
+          "baseline": "unmemoized-recursion",
+          "techniques": []
+        },
+        {
+          "name": "Gaussian elimination mod p",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "elimination-invariant"
+          ]
+        }
+      ],
+      "note": "Memoising the expansion is NOT enough: experiments/2026-10-07_subproblem_redundancy.py counts exactly 2^n distinct column sets (n = 3..8)."
+    },
+    {
+      "id": "deutsch-jozsa-classical-vs-quantum",
+      "location": "pairs",
+      "domain": "query model",
+      "provisional": true,
+      "confidence": "high",
+      "transformation": [
+        "quantum-fourier-sampling",
+        "random-witness"
+      ],
+      "exploited_property": "The amplitude of |0..0> after H-query-H is the normalised sum of (-1)^f(x): exactly +-1 or 0 under the promise. Random queries already decide with bounded error, so the exponential gap holds only for exact algorithms.",
+      "algorithms": [
+        {
+          "name": "classical deterministic: scan until a difference or a majority",
+          "role": "slow",
+          "baseline": "classical-query",
+          "techniques": []
+        },
+        {
+          "name": "classical randomized, one-sided bounded error (K = 20 random queries)",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "random-witness"
+          ]
+        },
+        {
+          "name": "Deutsch-Jozsa quantum algorithm (one-query version)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "quantum-fourier-sampling"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07."
+    },
+    {
+      "id": "edit-distance-brute-vs-dp",
+      "location": "pairs",
+      "domain": "strings",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "memoization-dp"
+      ],
+      "exploited_property": "Only (n+1)^2 distinct suffix pairs; the recursion revisits them (measured: 398,593 calls on 81 distinct pairs at n = 8).",
+      "algorithms": [
+        {
+          "name": "plain recursion",
+          "role": "slow",
+          "baseline": "unmemoized-recursion",
+          "techniques": []
+        },
+        {
+          "name": "Wagner-Fischer dynamic programming",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "memoization-dp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "element-distinctness-pairs-vs-sorting",
+      "location": "pairs",
+      "domain": "arrays / sorting",
+      "provisional": true,
+      "confidence": "high",
+      "transformation": [
+        "sorting-monotone-scan"
+      ],
+      "exploited_property": "Sorting makes equal values adjacent, so n - 1 neighbour comparisons replace n(n-1)/2.",
+      "algorithms": [
+        {
+          "name": "all pairs",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "sort, then compare neighbours",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "sorting-monotone-scan",
+            "divide-and-conquer"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07."
+    },
+    {
+      "id": "fibonacci-naive-vs-dp",
+      "location": "pairs",
+      "domain": "recurrences",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "memoization-dp",
+        "repeated-squaring"
+      ],
+      "exploited_property": "n + 1 distinct subproblems (memoisation), then associativity of the 2x2 matrix power (doubling).",
+      "algorithms": [
+        {
+          "name": "naive recursion",
+          "role": "slow",
+          "baseline": "unmemoized-recursion",
+          "techniques": []
+        },
+        {
+          "name": "bottom-up dynamic programming",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "memoization-dp"
+          ]
+        },
+        {
+          "name": "fast doubling (matrix power)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "repeated-squaring"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gcd-trial-vs-euclid",
+      "location": "pairs",
+      "domain": "number theory",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "invariant-reduction"
+      ],
+      "exploited_property": "gcd(a, b) = gcd(b, a mod b) with geometric size decrease (Lame).",
+      "algorithms": [
+        {
+          "name": "trial divisors",
+          "role": "slow",
+          "baseline": "value-linear-iteration",
+          "techniques": []
+        },
+        {
+          "name": "Euclid's algorithm",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "invariant-reduction"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grover-search-classical-vs-quantum",
+      "location": "pairs",
+      "domain": "query model",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "amplitude-amplification"
+      ],
+      "exploited_property": "A checkable predicate with one marked item; each iteration rotates the state by a fixed angle.",
+      "algorithms": [
+        {
+          "name": "classical random-order search",
+          "role": "slow",
+          "baseline": "classical-query",
+          "techniques": []
+        },
+        {
+          "name": "Grover's algorithm",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "amplitude-amplification"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "integer-multiplication-schoolbook-vs-karatsuba",
+      "location": "pairs",
+      "domain": "algebra",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "bilinear-recursion"
+      ],
+      "exploited_property": "The 2-term product has bilinear rank 3 (not 4); recursion gives exponent log2 3.",
+      "algorithms": [
+        {
+          "name": "schoolbook (long) multiplication",
+          "role": "slow",
+          "baseline": "direct-definition",
+          "techniques": []
+        },
+        {
+          "name": "Karatsuba",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "bilinear-recursion"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "inversion-counting-quadratic-vs-merge",
+      "location": "pairs",
+      "domain": "arrays / sorting",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "divide-and-conquer"
+      ],
+      "exploited_property": "Cross inversions between sorted halves are counted during the linear merge.",
+      "algorithms": [
+        {
+          "name": "all pairs",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "merge-sort counting",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "divide-and-conquer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "knapsack-01-brute-vs-dp",
+      "location": "pairs",
+      "domain": "combinatorial optimisation",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "meet-in-the-middle"
+      ],
+      "exploited_property": "Weight and value are additive across a split of the items; the best partner of a half-subset is a prefix maximum in weight order.",
+      "algorithms": [
+        {
+          "name": "subset enumeration",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "meet in the middle (Horowitz-Sahni)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "meet-in-the-middle",
+            "sorting-monotone-scan"
+          ]
+        },
+        {
+          "name": "capacity DP (Bellman)",
+          "role": "peer",
+          "baseline": null,
+          "techniques": [
+            "memoization-dp"
+          ]
+        }
+      ],
+      "note": "The capacity DP is pseudo-polynomial (Theta(nW)); it is recorded as a peer, not as the fast side of a pair."
+    },
+    {
+      "id": "lcs-brute-vs-dp",
+      "location": "pairs",
+      "domain": "strings",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "memoization-dp"
+      ],
+      "exploited_property": "Optimal substructure over prefix pairs: (n+1)^2 subproblems.",
+      "algorithms": [
+        {
+          "name": "subsequence enumeration",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "dynamic programming",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "memoization-dp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "longest-increasing-subsequence",
+      "location": "pairs",
+      "domain": "arrays / sorting",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "memoization-dp",
+        "sorting-monotone-scan"
+      ],
+      "exploited_property": "Best subsequence ending at i (n subproblems); then the tails array is sorted, so binary search replaces the inner scan.",
+      "algorithms": [
+        {
+          "name": "subset enumeration",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "quadratic dynamic programming",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "memoization-dp"
+          ]
+        },
+        {
+          "name": "patience sorting with binary search",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "sorting-monotone-scan",
+            "memoization-dp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "longest-palindromic-substring",
+      "location": "pairs",
+      "domain": "strings",
+      "provisional": true,
+      "confidence": "high",
+      "transformation": [
+        "incremental-reuse",
+        "amortized-scan"
+      ],
+      "exploited_property": "Palindromes sharing a center are nested (expand once per center); mirror symmetry inside the rightmost palindrome gives a lower bound for the next radius (amortised linear).",
+      "algorithms": [
+        {
+          "name": "brute force (test every substring)",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "expand around centers",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "incremental-reuse"
+          ]
+        },
+        {
+          "name": "Manacher's algorithm",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "amortized-scan"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07."
+    },
+    {
+      "id": "matrix-chain-recursion-vs-dp",
+      "location": "pairs",
+      "domain": "combinatorial optimisation",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "memoization-dp"
+      ],
+      "exploited_property": "n(n+1)/2 distinct subchains (measured: 177,147 calls on 78 at n = 12).",
+      "algorithms": [
+        {
+          "name": "plain recursion",
+          "role": "slow",
+          "baseline": "unmemoized-recursion",
+          "techniques": []
+        },
+        {
+          "name": "bottom-up dynamic programming",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "memoization-dp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "matrix-multiplication-naive-vs-strassen",
+      "location": "pairs",
+      "domain": "algebra",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "bilinear-recursion"
+      ],
+      "exploited_property": "The 2x2 matrix multiplication tensor has rank 7 (not 8); recursion gives exponent log2 7.",
+      "algorithms": [
+        {
+          "name": "schoolbook",
+          "role": "slow",
+          "baseline": "direct-definition",
+          "techniques": []
+        },
+        {
+          "name": "Strassen",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "bilinear-recursion"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "max-flow-edmonds-karp-vs-dinic",
+      "location": "pairs",
+      "domain": "graphs",
+      "provisional": true,
+      "confidence": "high",
+      "transformation": [
+        "phased-augmentation"
+      ],
+      "exploited_property": "Residual s-t distance grows every phase; a blocking flow on the BFS level graph replaces one BFS per augmenting path.",
+      "algorithms": [
+        {
+          "name": "Edmonds-Karp",
+          "role": "slow",
+          "baseline": "simple-polynomial",
+          "techniques": [
+            "augmenting-paths"
+          ]
+        },
+        {
+          "name": "Dinic (blocking flows)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "phased-augmentation"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07."
+    },
+    {
+      "id": "maximum-subarray",
+      "location": "pairs",
+      "domain": "arrays / sorting",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "incremental-reuse",
+        "memoization-dp"
+      ],
+      "exploited_property": "Sums of nested ranges are additive (running sums); the best subarray ending at j depends only on the best ending at j - 1 (one-state DP).",
+      "algorithms": [
+        {
+          "name": "brute force (sum every subarray)",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "running sums",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "incremental-reuse"
+          ]
+        },
+        {
+          "name": "Kadane's algorithm (linear scan)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "memoization-dp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "minimum-finding-classical-vs-quantum",
+      "location": "pairs",
+      "domain": "query model",
+      "provisional": true,
+      "confidence": "high",
+      "transformation": [
+        "amplitude-amplification"
+      ],
+      "exploited_property": "Threshold search: repeated Grover searches (unknown number of marked items) for an entry below the current threshold.",
+      "algorithms": [
+        {
+          "name": "classical scan",
+          "role": "slow",
+          "baseline": "classical-query",
+          "techniques": []
+        },
+        {
+          "name": "Durr-Hoyer quantum minimum finding",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "amplitude-amplification"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07."
+    },
+    {
+      "id": "minimum-spanning-tree-brute-vs-kruskal",
+      "location": "pairs",
+      "domain": "graphs",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "greedy-exchange"
+      ],
+      "exploited_property": "Cut property (graphic matroid): the lightest edge across any cut respecting the current forest is safe.",
+      "algorithms": [
+        {
+          "name": "enumeration of all (n-1)-edge subsets",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "Kruskal with union-find",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "greedy-exchange",
+            "data-structure",
+            "sorting-monotone-scan"
+          ]
+        },
+        {
+          "name": "Prim, array version",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "greedy-exchange"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "modular-exponentiation-repeated-vs-square-multiply",
+      "location": "pairs",
+      "domain": "number theory",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "repeated-squaring"
+      ],
+      "exploited_property": "Associativity of multiplication mod m.",
+      "algorithms": [
+        {
+          "name": "repeated multiplication",
+          "role": "slow",
+          "baseline": "value-linear-iteration",
+          "techniques": []
+        },
+        {
+          "name": "left-to-right square-and-multiply (binary method)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "repeated-squaring"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "permanent-naive-vs-ryser",
+      "location": "pairs",
+      "domain": "algebra",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "inclusion-exclusion"
+      ],
+      "exploited_property": "Permutations = maps from rows to columns that cover every column; inclusion-exclusion over column subsets, Gray-code order makes each step O(n).",
+      "algorithms": [
+        {
+          "name": "sum over all permutations",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "Ryser's formula with Gray-code ordering",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "inclusion-exclusion",
+            "incremental-reuse"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "polynomial-multiplication-naive-vs-ntt",
+      "location": "pairs",
+      "domain": "algebra",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "algebraic-transform"
+      ],
+      "exploited_property": "The DFT over Z_p diagonalises cyclic convolution; radix-2 factorisation needs 2^k-th roots of unity (p - 1 = 119 * 2^23).",
+      "algorithms": [
+        {
+          "name": "schoolbook convolution",
+          "role": "slow",
+          "baseline": "direct-definition",
+          "techniques": []
+        },
+        {
+          "name": "number-theoretic transform (Cooley-Tukey over Z_p)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "algebraic-transform",
+            "divide-and-conquer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "primality-miller-rabin-vs-aks",
+      "location": "pairs",
+      "domain": "number theory",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "random-witness",
+        "algebraic-characterization"
+      ],
+      "exploited_property": "T4: witness abundance (randomised) vs a deterministic polynomial identity characterising primes.",
+      "algorithms": [
+        {
+          "name": "Miller-Rabin",
+          "role": "peer",
+          "baseline": null,
+          "techniques": [
+            "random-witness",
+            "repeated-squaring"
+          ]
+        },
+        {
+          "name": "AKS",
+          "role": "peer",
+          "baseline": null,
+          "techniques": [
+            "algebraic-characterization",
+            "repeated-squaring"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "primality-trial-vs-aks",
+      "location": "pairs",
+      "domain": "number theory",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "algebraic-characterization"
+      ],
+      "exploited_property": "(X + a)^N = X^N + a mod (X^r - 1, N) for few a characterises primes (after the perfect-power and small-factor steps).",
+      "algorithms": [
+        {
+          "name": "trial division",
+          "role": "slow",
+          "baseline": "value-linear-iteration",
+          "techniques": []
+        },
+        {
+          "name": "AKS",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "algebraic-characterization",
+            "repeated-squaring"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "range-minimum-queries-naive-vs-sparse-table",
+      "location": "pairs",
+      "domain": "data structures",
+      "provisional": true,
+      "confidence": "high",
+      "transformation": [
+        "data-structure"
+      ],
+      "exploited_property": "min is associative and idempotent, so any range is the union of two overlapping power-of-two ranges; doubling builds all of them in n log n.",
+      "algorithms": [
+        {
+          "name": "scan each range",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "sparse table",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "data-structure",
+            "repeated-squaring"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07. 'repeated-squaring' here means the doubling construction of the levels."
+    },
+    {
+      "id": "shortest-path-enumeration-vs-dijkstra",
+      "location": "pairs",
+      "domain": "graphs",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "greedy-exchange"
+      ],
+      "exploited_property": "With non-negative weights the minimum tentative label is final, and the subproblem state compresses from (vertex, visited set) to the vertex alone.",
+      "algorithms": [
+        {
+          "name": "simple-path enumeration",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "Dijkstra (array version)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "greedy-exchange",
+            "memoization-dp"
+          ]
+        }
+      ],
+      "note": "experiments/2026-10-07_subproblem_redundancy.py: the DFS has n*2^(n-3)+1 distinct (vertex, visited) states at n = 4..9, but only n distinct vertices."
+    },
+    {
+      "id": "simon-classical-vs-quantum",
+      "location": "pairs",
+      "domain": "query model",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "quantum-fourier-sampling"
+      ],
+      "exploited_property": "f is constant on cosets of {0, s}; Fourier sampling over Z_2^n returns random y with y.s = 0; GF(2) elimination recovers s.",
+      "algorithms": [
+        {
+          "name": "classical collision search",
+          "role": "slow",
+          "baseline": "classical-query",
+          "techniques": [
+            "random-collision"
+          ]
+        },
+        {
+          "name": "Simon's quantum algorithm",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "quantum-fourier-sampling",
+            "elimination-invariant"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sorting-insertion-vs-merge",
+      "location": "pairs",
+      "domain": "arrays / sorting",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "divide-and-conquer"
+      ],
+      "exploited_property": "Two sorted halves merge in linear time.",
+      "algorithms": [
+        {
+          "name": "insertion sort",
+          "role": "slow",
+          "baseline": "simple-polynomial",
+          "techniques": []
+        },
+        {
+          "name": "merge sort",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "divide-and-conquer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "string-matching-naive-vs-kmp",
+      "location": "pairs",
+      "domain": "strings",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "amortized-scan",
+        "automaton"
+      ],
+      "exploited_property": "Borders of the pattern: after a mismatch the longest border of the matched part is the only alignment worth keeping, so the text pointer never moves back.",
+      "algorithms": [
+        {
+          "name": "naive matching",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "Knuth-Morris-Pratt",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "amortized-scan",
+            "automaton"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "three-sum-cubic-vs-quadratic",
+      "location": "pairs",
+      "domain": "arrays / sorting",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "sorting-monotone-scan"
+      ],
+      "exploited_property": "On sorted input pair sums are monotone in both pointers.",
+      "algorithms": [
+        {
+          "name": "all triples",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "sort + two pointers",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "sorting-monotone-scan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tsp-brute-vs-held-karp",
+      "location": "pairs",
+      "domain": "graphs",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "subset-dp"
+      ],
+      "exploited_property": "The cost of a partial tour depends only on the visited set and the endpoint, not on the order.",
+      "algorithms": [
+        {
+          "name": "permutation enumeration",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "Held-Karp dynamic programming",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "subset-dp"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "boolean-satisfiability",
+      "location": "staging",
+      "domain": "logic / SAT",
+      "provisional": false,
+      "confidence": "medium",
+      "transformation": [
+        "randomized-search"
+      ],
+      "exploited_property": "From a random assignment, a random walk of length 3n flipping variables of violated clauses hits a satisfying assignment with probability ~(3/4)^n; PPSZ adds forced values by bounded resolution in a random order.",
+      "algorithms": [
+        {
+          "name": "brute force",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "Schöning's random walk",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "randomized-search"
+          ]
+        },
+        {
+          "name": "PPSZ / biased-PPSZ",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "randomized-search",
+            "random-order"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "discrete-logarithm",
+      "location": "staging",
+      "domain": "number theory",
+      "provisional": false,
+      "confidence": "medium",
+      "transformation": [
+        "meet-in-the-middle",
+        "random-collision",
+        "sieving-smoothness",
+        "quantum-fourier-sampling"
+      ],
+      "exploited_property": "x = im + j splits the exponent (BSGS); collisions of a pseudo-random walk (rho); smoothness of field elements (NFS, finite fields only); the map (a, b) -> g^a h^-b hides a subgroup of Z_p x Z_p (Shor).",
+      "algorithms": [
+        {
+          "name": "baby-step giant-step",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "meet-in-the-middle"
+          ]
+        },
+        {
+          "name": "Pollard rho for logarithms",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "random-collision"
+          ]
+        },
+        {
+          "name": "number field sieve for discrete logs in GF(q)",
+          "role": "intermediate",
+          "baseline": "best-known-classical",
+          "techniques": [
+            "sieving-smoothness"
+          ]
+        },
+        {
+          "name": "Shor's algorithm",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "quantum-fourier-sampling"
+          ]
+        }
+      ],
+      "note": "No slow 'enumeration' algorithm is listed in the entry; BSGS is the generic baseline."
+    },
+    {
+      "id": "element-distinctness-quantum-walk",
+      "location": "staging",
+      "domain": "query model",
+      "provisional": true,
+      "confidence": "medium",
+      "transformation": [
+        "quantum-walk"
+      ],
+      "exploited_property": "Quantum walk on the Johnson graph of N^(2/3)-subsets whose marked vertices contain a colliding pair.",
+      "algorithms": [
+        {
+          "name": "classical: read everything, sort, scan",
+          "role": "slow",
+          "baseline": "classical-query",
+          "techniques": [
+            "sorting-monotone-scan"
+          ]
+        },
+        {
+          "name": "Ambainis quantum walk algorithm",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "quantum-walk"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07."
+    },
+    {
+      "id": "forrelation",
+      "location": "staging",
+      "domain": "query model",
+      "provisional": true,
+      "confidence": "medium",
+      "transformation": [
+        "quantum-fourier-sampling"
+      ],
+      "exploited_property": "Phi(f, g) is the correlation of g with the Hadamard transform of f; one superposition query with a Hadamard transform between f and g makes the acceptance probability depend on Phi.",
+      "algorithms": [
+        {
+          "name": "classical: read both functions",
+          "role": "slow",
+          "baseline": "classical-query",
+          "techniques": [
+            "algebraic-transform"
+          ]
+        },
+        {
+          "name": "classical: generic simulation of a 1-query quantum algorithm",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "random-sampling-estimation"
+          ]
+        },
+        {
+          "name": "quantum: one-query forrelation estimator",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "quantum-fourier-sampling"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07. Computing Phi exactly classically is a fast Walsh-Hadamard transform, the same transform as candidate 1 of research/2026-10-07_patterns.md."
+    },
+    {
+      "id": "graph-isomorphism",
+      "location": "staging",
+      "domain": "graphs",
+      "provisional": false,
+      "confidence": "medium",
+      "transformation": [
+        "group-theoretic"
+      ],
+      "exploited_property": "Structure of permutation groups acting on the vertex set.",
+      "algorithms": [
+        {
+          "name": "brute force over permutations",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "Babai-Luks canonical labeling",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "group-theoretic"
+          ]
+        },
+        {
+          "name": "Babai's quasi-polynomial algorithm",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "group-theoretic"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "integer-factoring",
+      "location": "staging",
+      "domain": "number theory",
+      "provisional": false,
+      "confidence": "medium",
+      "transformation": [
+        "random-collision",
+        "sieving-smoothness",
+        "quantum-fourier-sampling"
+      ],
+      "exploited_property": "Collisions modulo an unknown prime factor (rho, heuristic); smooth relations combined into a congruence of squares (GNFS, heuristic); order finding by period finding over Z_N (Shor).",
+      "algorithms": [
+        {
+          "name": "trial division",
+          "role": "slow",
+          "baseline": "value-linear-iteration",
+          "techniques": []
+        },
+        {
+          "name": "Pollard rho",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "random-collision"
+          ]
+        },
+        {
+          "name": "general number field sieve (GNFS)",
+          "role": "intermediate",
+          "baseline": "best-known-classical",
+          "techniques": [
+            "sieving-smoothness"
+          ]
+        },
+        {
+          "name": "Shor's algorithm",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "quantum-fourier-sampling",
+            "repeated-squaring"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "linear-programming-simplex-vs-interior-point",
+      "location": "staging",
+      "domain": "continuous optimisation",
+      "provisional": false,
+      "confidence": "medium",
+      "transformation": [
+        "continuous-optimization"
+      ],
+      "exploited_property": "Convexity: polynomially many steps in the bit length L suffice to approach the optimum, then round (weakly polynomial).",
+      "algorithms": [
+        {
+          "name": "simplex method (Dantzig's pivot rule)",
+          "role": "slow",
+          "baseline": "best-known-classical",
+          "techniques": []
+        },
+        {
+          "name": "ellipsoid method",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "continuous-optimization"
+          ]
+        },
+        {
+          "name": "interior-point method (Karmarkar)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "continuous-optimization"
+          ]
+        }
+      ],
+      "note": "The slow side (simplex) is a combinatorial vertex walk, exponential only on adversarial (Klee-Minty) inputs."
+    },
+    {
+      "id": "linear-systems-hhl",
+      "location": "staging",
+      "domain": "linear algebra / ML",
+      "provisional": true,
+      "confidence": "medium",
+      "transformation": [
+        "quantum-linear-algebra"
+      ],
+      "exploited_property": "Phase estimation on e^(-iAt) inverts the eigenvalues of a sparse, well-conditioned A on a state |b>; the claimed speedup depends on the input and output model (conjectured, not proven).",
+      "algorithms": [
+        {
+          "name": "classical conjugate-gradient-type solver",
+          "role": "slow",
+          "baseline": "best-known-classical",
+          "techniques": [
+            "structured-linear-algebra"
+          ]
+        },
+        {
+          "name": "HHL quantum algorithm",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "quantum-linear-algebra"
+          ]
+        },
+        {
+          "name": "quantum-inspired classical algorithm for LOW-RANK A (dequantization; a different input model)",
+          "role": "peer",
+          "baseline": null,
+          "techniques": [
+            "length-squared-sampling"
+          ]
+        }
+      ],
+      "note": "Added by a parallel agent during this session; mapped from its entry.json as read on 2026-10-07."
+    },
+    {
+      "id": "max-flow-edmonds-karp-vs-almost-linear",
+      "location": "staging",
+      "domain": "graphs",
+      "provisional": false,
+      "confidence": "medium",
+      "transformation": [
+        "preflow-push",
+        "continuous-optimization"
+      ],
+      "exploited_property": "Shortest augmenting paths bound the rounds (EK); distance labels bound pushes (push-relabel); an interior-point method with dynamic min-ratio-cycle data structures (Chen et al.).",
+      "algorithms": [
+        {
+          "name": "Edmonds-Karp",
+          "role": "slow",
+          "baseline": null,
+          "techniques": [
+            "augmenting-paths"
+          ]
+        },
+        {
+          "name": "push-relabel (Goldberg-Tarjan)",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "preflow-push",
+            "data-structure"
+          ]
+        },
+        {
+          "name": "almost-linear-time max flow (Chen et al.)",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "continuous-optimization",
+            "data-structure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "polynomial-identity-testing",
+      "location": "staging",
+      "domain": "algebra",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "random-witness"
+      ],
+      "exploited_property": "A nonzero polynomial of degree d vanishes on at most a d/|S| fraction of S^n.",
+      "algorithms": [
+        {
+          "name": "expand into monomials",
+          "role": "slow",
+          "baseline": "exhaustive-enumeration",
+          "techniques": []
+        },
+        {
+          "name": "Schwartz-Zippel random evaluation",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "random-witness"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recommendation-systems-dequantization",
+      "location": "staging",
+      "domain": "linear algebra / ML",
+      "provisional": false,
+      "confidence": "medium",
+      "transformation": [
+        "length-squared-sampling"
+      ],
+      "exploited_property": "Low-rank structure plus sample-and-query access lets classical l2-sampling mimic the quantum state preparation.",
+      "algorithms": [
+        {
+          "name": "Kerenidis-Prakash quantum recommendation algorithm",
+          "role": "peer",
+          "baseline": "quantum-claimed",
+          "techniques": [
+            "quantum-linear-algebra"
+          ]
+        },
+        {
+          "name": "Tang's quantum-inspired classical algorithm",
+          "role": "peer",
+          "baseline": null,
+          "techniques": [
+            "length-squared-sampling"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "linear-recurrence-c1-0-1",
+      "location": "synthetic",
+      "domain": "recurrences",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "memoization-dp",
+        "repeated-squaring"
+      ],
+      "exploited_property": "Generated (T7): the same two transformations as fibonacci-naive-vs-dp.",
+      "algorithms": [
+        {
+          "name": "naive recursion (deliberately wasteful)",
+          "role": "slow",
+          "baseline": "unmemoized-recursion",
+          "techniques": []
+        },
+        {
+          "name": "bottom-up dynamic programming",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "memoization-dp"
+          ]
+        },
+        {
+          "name": "companion-matrix power",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "repeated-squaring"
+          ]
+        }
+      ],
+      "note": "T7 synthetic, generated by generators/linear_recurrence.py; never counted."
+    },
+    {
+      "id": "linear-recurrence-c1-1-1",
+      "location": "synthetic",
+      "domain": "recurrences",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "memoization-dp",
+        "repeated-squaring"
+      ],
+      "exploited_property": "Generated (T7): the same two transformations as fibonacci-naive-vs-dp.",
+      "algorithms": [
+        {
+          "name": "naive recursion (deliberately wasteful)",
+          "role": "slow",
+          "baseline": "unmemoized-recursion",
+          "techniques": []
+        },
+        {
+          "name": "bottom-up dynamic programming",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "memoization-dp"
+          ]
+        },
+        {
+          "name": "companion-matrix power",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "repeated-squaring"
+          ]
+        }
+      ],
+      "note": "T7 synthetic, generated by generators/linear_recurrence.py; never counted."
+    },
+    {
+      "id": "linear-recurrence-c1-1-1-1",
+      "location": "synthetic",
+      "domain": "recurrences",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "memoization-dp",
+        "repeated-squaring"
+      ],
+      "exploited_property": "Generated (T7): the same two transformations as fibonacci-naive-vs-dp.",
+      "algorithms": [
+        {
+          "name": "naive recursion (deliberately wasteful)",
+          "role": "slow",
+          "baseline": "unmemoized-recursion",
+          "techniques": []
+        },
+        {
+          "name": "bottom-up dynamic programming",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "memoization-dp"
+          ]
+        },
+        {
+          "name": "companion-matrix power",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "repeated-squaring"
+          ]
+        }
+      ],
+      "note": "T7 synthetic, generated by generators/linear_recurrence.py; never counted."
+    },
+    {
+      "id": "linear-recurrence-c2-3",
+      "location": "synthetic",
+      "domain": "recurrences",
+      "provisional": false,
+      "confidence": "high",
+      "transformation": [
+        "memoization-dp",
+        "repeated-squaring"
+      ],
+      "exploited_property": "Generated (T7): the same two transformations as fibonacci-naive-vs-dp.",
+      "algorithms": [
+        {
+          "name": "naive recursion (deliberately wasteful)",
+          "role": "slow",
+          "baseline": "unmemoized-recursion",
+          "techniques": []
+        },
+        {
+          "name": "bottom-up dynamic programming",
+          "role": "intermediate",
+          "baseline": null,
+          "techniques": [
+            "memoization-dp"
+          ]
+        },
+        {
+          "name": "companion-matrix power",
+          "role": "fast",
+          "baseline": null,
+          "techniques": [
+            "repeated-squaring"
+          ]
+        }
+      ],
+      "note": "T7 synthetic, generated by generators/linear_recurrence.py; never counted."
+    }
+  ],
+  "not_mapped": {
+    "reason": "folder existed without an entry.json (work in progress by parallel agents) when this file was written",
+    "ids": []
+  }
+}

@@ -1,0 +1,14 @@
+{"event": "start", "config": {"fmt": [4, 4, 4], "seed": 502, "max_flips": 5000000, "plateau": 1000000, "escape": "plus", "slack": 1, "plus_per_escape": 1, "pool_size": 64, "reduction": "linear", "max_seconds": 1800, "target_rank": null, "verify_every": 1000000, "log_every": 1000000, "keep_ranks_upto": 47, "max_weight": 5, "lookahead_every": 0, "extra": {"tag": "cap5"}}, "start_rank": 64, "rank_after_reduce": 64}
+{"event": "best", "rank": 63, "flips": 100243, "seconds": 0.457}
+{"event": "best", "rank": 62, "flips": 127800, "seconds": 0.573}
+{"event": "best", "rank": 61, "flips": 212874, "seconds": 0.946}
+{"event": "best", "rank": 60, "flips": 227830, "seconds": 1.008}
+{"event": "best", "rank": 59, "flips": 421032, "seconds": 1.804}
+{"event": "best", "rank": 58, "flips": 455825, "seconds": 1.94}
+{"event": "progress", "flips": 1003520, "rank": 58, "best": 58, "seconds": 3.978, "plus": 0, "restarts": 0, "flips_per_second": 252246}
+{"event": "best", "rank": 57, "flips": 1105611, "seconds": 4.359}
+{"event": "progress", "flips": 2002944, "rank": 57, "best": 57, "seconds": 7.745, "plus": 0, "restarts": 0, "flips_per_second": 258615}
+{"event": "progress", "flips": 3002368, "rank": 57, "best": 57, "seconds": 11.461, "plus": 1, "restarts": 0, "flips_per_second": 261974}
+{"event": "progress", "flips": 4001792, "rank": 57, "best": 57, "seconds": 15.16, "plus": 2, "restarts": 0, "flips_per_second": 263979}
+{"event": "best", "rank": 56, "flips": 4123934, "seconds": 15.614}
+{"event": "end", "format": [4, 4, 4], "seed": 502, "start_rank": 64, "best_rank": 56, "best_reached_at_flip": 4123934, "best_reached_at_seconds": 15.614, "flips": 5000000, "wall_seconds": 18.373, "flips_per_second": 272132, "flips_since_last_improvement": 876066, "stopped_by": "flips", "plus_transitions": 3, "rejected_by_weight_cap": 1340854, "lookahead_scans": 0, "lookahead_hits": 0, "restarts": 0, "no_flip_available_events": 0, "reduction_events": 11, "full_verifications_passed": 13, "trajectory": [[64, 0, 0.0], [63, 100243, 0.457], [62, 127800, 0.573], [61, 212874, 0.946], [60, 227830, 1.008], [59, 421032, 1.804], [58, 455825, 1.94], [57, 1105611, 4.359], [56, 4123934, 15.614]]}

@@ -1,28 +1,28 @@
 {
   "schema": "schema/entry.schema.json",
   "counts": {
-    "entries": 40,
-    "validated_pairs": 28,
-    "open_problems_T6": 9,
-    "proven_quantum_advantage_T9": 4,
+    "entries": 54,
+    "validated_pairs": 39,
+    "open_problems_T6": 12,
+    "proven_quantum_advantage_T9": 9,
     "synthetic_T7": 4,
-    "with_quantum_algorithm": 6,
+    "with_quantum_algorithm": 12,
     "by_level": {
-      "V0": 8,
-      "V1": 3,
-      "V2": 29,
+      "V0": 11,
+      "V1": 5,
+      "V2": 38,
       "V3": 0
     },
     "by_type": {
       "T1": 2,
       "T2": 11,
-      "T3": 10,
+      "T3": 16,
       "T4": 1,
       "T5": 1,
-      "T6": 8,
+      "T6": 11,
       "T7": 4,
       "T8": 0,
-      "T9": 3
+      "T9": 8
     }
   },
   "entries": [
@@ -392,6 +392,60 @@
       "sources": 3
     },
     {
+      "id": "all-pairs-shortest-paths-bellman-ford-vs-floyd-warshall",
+      "title": "All-pairs shortest paths on dense digraphs: Bellman-Ford from every source vs Floyd-Warshall",
+      "path": "pairs/all-pairs-shortest-paths-bellman-ford-vs-floyd-warshall",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "Bellman-Ford from every source",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2 m) for m >= 1 edges (n sources x (n - 1) passes x m relaxations, no early exit), plus Theta(n^2) to list the edges: Theta(n^4) when m = Theta(n^2); exactly n^2 (n-1)^2 relaxations on the complete digraphs used for timing",
+          "implemented": true
+        },
+        {
+          "name": "Floyd-Warshall",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^3) on every input (exactly n^3 relaxation steps; independent of m)",
+          "implemented": true
+        }
+      ],
+      "sources": 6
+    },
+    {
+      "id": "bipartite-matching-kuhn-vs-hopcroft-karp",
+      "title": "Maximum bipartite matching: one augmenting path per vertex (Kuhn) vs Hopcroft-Karp",
+      "path": "pairs/bipartite-matching-kuhn-vs-hopcroft-karp",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "Kuhn's augmenting paths (one DFS per left vertex)",
+          "model": "classical-deterministic",
+          "time_complexity": "O(V (V + E)), i.e. O(V E) when E = Omega(V): one O(V + E) search per left vertex. Theta(V E) on the adversarial timing family: 0.143-0.145 V E edge scans for k = 4..16",
+          "implemented": true
+        },
+        {
+          "name": "Hopcroft-Karp",
+          "model": "classical-deterministic",
+          "time_complexity": "O((V + E) sqrt(V)): O(sqrt(V)) phases (Hopcroft & Karp 1973), O(V + E) each; O(V^2.5) on dense graphs (the paper's title bound). Theta(E sqrt V) on the adversarial timing family: exactly k + 1 phases and 1.01-1.05 E sqrt(V) edge scans for k = 4..16",
+          "implemented": true
+        }
+      ],
+      "sources": 3
+    },
+    {
       "id": "closest-pair-brute-vs-divide-conquer",
       "title": "Closest pair of points: brute force vs divide and conquer",
       "path": "pairs/closest-pair-brute-vs-divide-conquer",
@@ -417,6 +471,40 @@
         }
       ],
       "sources": 5
+    },
+    {
+      "id": "element-distinctness-pairs-vs-sorting",
+      "title": "Element distinctness: all pairs vs sorting",
+      "path": "pairs/element-distinctness-pairs-vs-sorting",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [
+        {
+          "model": "classical-deterministic",
+          "bound": "Omega(n log n) operations (the depth of any algebraic computation tree that decides element distinctness)",
+          "setting": "algebraic computation tree model over the reals: real-valued inputs, arithmetic operations and sign tests at unit cost. Ben-Or's bound is in terms of the number of connected components of the set of yes-inputs; the inputs with pairwise distinct coordinates form n! components (one per ordering).",
+          "source": "Ben-Or 1983"
+        }
+      ],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "all pairs",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2) worst case: exactly n(n-1)/2 comparisons whenever the answer is yes",
+          "implemented": true
+        },
+        {
+          "name": "sort, then compare neighbours",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n log n) on every input (merge sort: ceil(log2 n) passes of Theta(n) each; final scan Theta(n))",
+          "implemented": true
+        }
+      ],
+      "sources": 3
     },
     {
       "id": "integer-multiplication-schoolbook-vs-karatsuba",
@@ -473,6 +561,39 @@
       "sources": 3
     },
     {
+      "id": "longest-palindromic-substring",
+      "title": "Longest palindromic substring: brute force vs expanding around centers vs Manacher",
+      "path": "pairs/longest-palindromic-substring",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "brute force (test every substring)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^3) worst case: on n equal characters every substring is a palindrome and the tests make sum_{L=1..n} (n-L+1) floor(L/2) ~ n^3/12 comparisons; Omega(n^2) on every input (n(n+1)/2 tests)",
+          "implemented": true
+        },
+        {
+          "name": "expand around centers",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n + R) where R = sum of the maximal palindrome radii over all centers: Theta(n^2) worst case (n equal characters: n^2/2 + n/2 comparisons); Theta(n) in expectation on uniformly random strings over two or more letters",
+          "implemented": true
+        },
+        {
+          "name": "Manacher's algorithm",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n) on every input (at most 2n successful comparisons and at most 2n failed ones)",
+          "implemented": true
+        }
+      ],
+      "sources": 2
+    },
+    {
       "id": "matrix-multiplication-naive-vs-strassen",
       "title": "Matrix multiplication: schoolbook vs Strassen",
       "path": "pairs/matrix-multiplication-naive-vs-strassen",
@@ -494,6 +615,33 @@
           "name": "Strassen",
           "model": "classical-deterministic",
           "time_complexity": "Theta(n^(log2 7)) ~ Theta(n^2.807)",
+          "implemented": true
+        }
+      ],
+      "sources": 4
+    },
+    {
+      "id": "max-flow-edmonds-karp-vs-dinic",
+      "title": "Maximum flow: Edmonds-Karp vs Dinic",
+      "path": "pairs/max-flow-edmonds-karp-vs-dinic",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V1",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "Edmonds-Karp",
+          "model": "classical-deterministic",
+          "time_complexity": "O(V E^2): O(V E) augmentations of O(V + E) each (Edmonds & Karp 1972); O(V^5) on dense graphs",
+          "implemented": true
+        },
+        {
+          "name": "Dinic (blocking flows)",
+          "model": "classical-deterministic",
+          "time_complexity": "O(V^2 E): at most V - 1 phases, O(V E) per blocking flow; O(V^4) on dense graphs",
           "implemented": true
         }
       ],
@@ -558,6 +706,33 @@
         }
       ],
       "sources": 3
+    },
+    {
+      "id": "range-minimum-queries-naive-vs-sparse-table",
+      "title": "Range minimum queries: scanning each range vs a sparse table",
+      "path": "pairs/range-minimum-queries-naive-vs-sparse-table",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "scan each range",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(q + sum of the query lengths); Theta(n^2) for q = n queries of length Theta(n), as in the timing family (every range longer than n/2; total scanned length 0.75 n^2 within 0.5% at n = 800, 1200, 1600)",
+          "implemented": true
+        },
+        {
+          "name": "sparse table",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n log n) preprocessing plus O(1) per query: Theta(n log n + q) = Theta(n log n) for q = n, on every input",
+          "implemented": true
+        }
+      ],
+      "sources": 2
     },
     {
       "id": "sorting-insertion-vs-merge",
@@ -680,6 +855,64 @@
         }
       ],
       "sources": 3
+    },
+    {
+      "id": "3sat-brute-force-vs-schoening",
+      "title": "3-SAT: brute force vs Schöning's random walk",
+      "path": "pairs/3sat-brute-force-vs-schoening",
+      "location": "pairs",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T8"
+      ],
+      "level": "V1",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "brute force",
+          "model": "classical-deterministic",
+          "time_complexity": "O(2^n m) worst case (2^n assignments, O(m) clause checks each); all 2^n assignments are examined on every unsatisfiable formula",
+          "implemented": true
+        },
+        {
+          "name": "Schöning's random walk (Monte Carlo, one-sided error)",
+          "model": "classical-randomized",
+          "time_complexity": "O(T(n) n m) with T(n) = ceil(ln(10^6) / p(n)) = Theta((4/3)^n sqrt(n)) tries: O((4/3)^n n^1.5 m) on every input, attained on unsatisfiable formulas; p(n) is the per-try success lower bound in caveats",
+          "implemented": true
+        }
+      ],
+      "sources": 2
+    },
+    {
+      "id": "chromatic-number-subset-dp-vs-inclusion-exclusion",
+      "title": "Chromatic number: subset DP over independent sets vs inclusion-exclusion",
+      "path": "pairs/chromatic-number-subset-dp-vs-inclusion-exclusion",
+      "location": "pairs",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T8"
+      ],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "subset DP over all independent sets",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(3^n) on every input: exactly 3^n - 2^n inner iterations (one per pair T, S with T a non-empty subset of S), plus Theta(2^n) to tabulate the independent subsets",
+          "implemented": true
+        },
+        {
+          "name": "inclusion-exclusion (Bjorklund-Husfeldt-Koivisto)",
+          "model": "classical-deterministic",
+          "time_complexity": "(2 chi(G) + 2) 2^n arithmetic operations: one pass of two additions per subset to tabulate a, then chi(G) rounds of one multiplication and one addition per subset. The integers have at most n chi(G) bits. That is O(n 2^n) arithmetic operations in the unit-cost model (chi(G) <= n), Theta(n 2^n) whenever chi(G) = Theta(n), and O(n^4 2^n) bit operations with schoolbook multiplication",
+          "implemented": true
+        }
+      ],
+      "sources": 5
     },
     {
       "id": "knapsack-01-brute-vs-dp",
@@ -809,6 +1042,98 @@
       "sources": 1
     },
     {
+      "id": "collision-problem-classical-vs-quantum",
+      "title": "Collision problem: Theta(N^(1/2)) classical queries vs Theta(N^(1/3)) quantum queries (Brassard-Hoyer-Tapp)",
+      "path": "pairs/collision-problem-classical-vs-quantum",
+      "location": "pairs",
+      "pair_type": "T9",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [
+        {
+          "model": "classical-randomized",
+          "bound": "Omega(sqrt N) = Omega(2^(n/2)) queries for bounded error",
+          "setting": "query (oracle) model, unconditional",
+          "source": "Birthday argument: on a uniformly random 2-to-1 function, after i collision-free queries ANY next query completes a pair with probability exactly i/(N-i), so q queries reveal a collision with probability at most q^2/(2(N-q)), and guessing an unseen pair succeeds with probability at most 1/(N-q-1); Yao's principle gives the randomized bound. Stated as the classical optimum (expected Theta(sqrt N)) in the arXiv note of Brassard, Hoyer & Tapp (1997). It also follows from the classical lower bound for Simon's problem (simon-classical-vs-quantum), because every Simon instance is 2-to-1 and any collision reveals s."
+        },
+        {
+          "model": "classical-deterministic",
+          "bound": "N/2 + 1 queries in the worst case for algorithms that are always correct (N >= 4)",
+          "setting": "query (oracle) model, exact computation, unconditional",
+          "source": "Elementary adversary argument: answer the first N/2 queries with distinct values; every unqueried point can still be the partner of every queried one, so no pair is certain. Pigeonhole makes N/2 + 1 sufficient."
+        },
+        {
+          "model": "quantum",
+          "bound": "Omega(N^(1/3)) = Omega(2^(n/3)) queries for bounded error (BHT is optimal up to a constant factor)",
+          "setting": "query (oracle) model, unconditional; proven for the decision version (1-to-1 vs 2-to-1), which the search version solves with one extra check",
+          "source": "Aaronson & Shi 2004 (proof requires a codomain of size at least 3N/2, which this harness's codomain of size 2N satisfies; as stated by Kutin 2005); Kutin 2005 and Ambainis 2005 remove the range condition"
+        }
+      ],
+      "has_quantum_algorithm": true,
+      "algorithms": [
+        {
+          "name": "classical birthday search",
+          "model": "classical-randomized",
+          "time_complexity": "Theta(sqrt N) = Theta(2^(n/2)) queries expected: E[Q] = sum_q prod_{i=1}^{q-1} (N-2i)/(N-i) ~ sqrt(pi N / 2); at most N/2 + 1",
+          "implemented": true
+        },
+        {
+          "name": "Brassard-Hoyer-Tapp, known number of marked points",
+          "model": "quantum",
+          "time_complexity": "Theta(N^(1/3)) = Theta(2^(n/3)) queries expected: k + (2m + 1)/sin^2((2m+1) theta) with sin^2 theta = k/N, m = floor(pi/(4 theta)), counting 2 queries per Grover iteration; about 2.57 N^(1/3)",
+          "implemented": true
+        },
+        {
+          "name": "Brassard-Hoyer-Tapp with BBHT exponential search (unknown number of marked points)",
+          "model": "quantum",
+          "time_complexity": "Theta(N^(1/3)) queries expected (BBHT Theorem 3: O(sqrt(N/t)) iterations for t marked items); exact expectation about 3.9 N^(1/3) for large N, reached only for n >~ 18",
+          "implemented": true
+        }
+      ],
+      "sources": 7
+    },
+    {
+      "id": "deutsch-jozsa-classical-vs-quantum",
+      "title": "Deutsch-Jozsa: 2^(n-1)+1 exact classical queries vs 1 exact quantum query (no gap once classical error is allowed)",
+      "path": "pairs/deutsch-jozsa-classical-vs-quantum",
+      "location": "pairs",
+      "pair_type": "T9",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [
+        {
+          "model": "classical-deterministic",
+          "bound": "2^(n-1) + 1 queries in the worst case, for any algorithm that is always correct",
+          "setting": "query (oracle) model, EXACT (zero-error) computation, unconditional. The same argument forces 2^(n-1) + 1 queries on every constant input for zero-error randomized (Las Vegas) algorithms. It does NOT hold for bounded-error randomized algorithms, which need only O(1) queries (see the randomized algorithm in this entry).",
+          "source": "Elementary adversary argument: answer f(x) = 0 to the first 2^(n-1) distinct queries; both the constant-0 function and a balanced function (ones on unqueried points only) remain consistent, so no exact algorithm can stop. Spelled out in this entry's correctness fields and README; the comparison with exact deterministic computation goes back to Deutsch & Jozsa 1992."
+        }
+      ],
+      "has_quantum_algorithm": true,
+      "algorithms": [
+        {
+          "name": "classical deterministic: scan until a difference or a majority",
+          "model": "classical-deterministic",
+          "time_complexity": "2^(n-1) + 1 queries in the worst case (optimal for exact classical algorithms); about 3 queries on average over uniformly random balanced functions",
+          "implemented": true
+        },
+        {
+          "name": "classical randomized, one-sided bounded error (K = 20 random queries)",
+          "model": "classical-randomized",
+          "time_complexity": "K = 20 queries for every n: O(1); O(log(1/eps)) queries for error probability eps",
+          "implemented": true
+        },
+        {
+          "name": "Deutsch-Jozsa quantum algorithm (one-query version)",
+          "model": "quantum",
+          "time_complexity": "1 query, exact (zero error); O(n) gates besides the oracle",
+          "implemented": true
+        }
+      ],
+      "sources": 2
+    },
+    {
       "id": "grover-search-classical-vs-quantum",
       "title": "Unstructured search: Theta(N) classical queries vs Theta(sqrt N) quantum queries (Grover)",
       "path": "pairs/grover-search-classical-vs-quantum",
@@ -847,6 +1172,46 @@
         }
       ],
       "sources": 2
+    },
+    {
+      "id": "minimum-finding-classical-vs-quantum",
+      "title": "Minimum finding: N classical queries vs O(sqrt N) quantum queries (Durr-Hoyer, bounded error)",
+      "path": "pairs/minimum-finding-classical-vs-quantum",
+      "location": "pairs",
+      "pair_type": "T9",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [
+        {
+          "model": "classical-randomized",
+          "bound": "Omega(N) = Omega(2^n) queries for bounded error",
+          "setting": "query (oracle) model, unconditional",
+          "source": "Reduction from unstructured search with one marked item: T[x] = 0 if x is marked, else x + 1 (distinct values, one probe of T = one query of the search oracle), so the classical Omega(N) search bound applies (see Bennett, Bernstein, Brassard & Vazirani 1997 and grover-search-classical-vs-quantum). Durr & Hoyer 1996 state the linear classical lower bound."
+        },
+        {
+          "model": "quantum",
+          "bound": "Omega(sqrt N) = Omega(2^(n/2)) queries for bounded error (Durr-Hoyer is optimal up to a constant factor)",
+          "setting": "query (oracle) model, unconditional",
+          "source": "Same reduction plus Bennett, Bernstein, Brassard & Vazirani 1997; cited for this purpose by Durr & Hoyer 1996"
+        }
+      ],
+      "has_quantum_algorithm": true,
+      "algorithms": [
+        {
+          "name": "classical scan",
+          "model": "classical-deterministic",
+          "time_complexity": "exactly N queries = Theta(2^n); N - 1 comparisons",
+          "implemented": true
+        },
+        {
+          "name": "Durr-Hoyer quantum minimum finding",
+          "model": "quantum",
+          "time_complexity": "O(sqrt N) queries, success probability >= 1/2 (Theorem 1); O(c sqrt N) for success >= 1 - 2^-c. As implemented: time-out 22.5 sqrt(N) + 1.4 lg^2 N time steps; queries = 2 per Grover iteration + 1 per observed candidate + 1, about 2 x the time-out",
+          "implemented": true
+        }
+      ],
+      "sources": 3
     },
     {
       "id": "simon-classical-vs-quantum",
@@ -1137,6 +1502,46 @@
       "sources": 4
     },
     {
+      "id": "linear-systems-hhl",
+      "title": "Linear systems: conjugate gradient vs the HHL quantum algorithm (conjectured exponential speedup, with fine print and low-rank dequantization)",
+      "path": "staging/linear-systems-hhl",
+      "location": "staging",
+      "pair_type": "T6",
+      "secondary_tags": [],
+      "level": "V0",
+      "validated": false,
+      "lower_bounds": [
+        {
+          "model": "classical-randomized",
+          "bound": "no algorithm in time poly(log N, kappa, 1/eps) for the general sparse well-conditioned case unless every quantum polynomial-time computation can be simulated classically (BQP = BPP)",
+          "setting": "CONDITIONAL (on BQP != BPP), not a proven query lower bound; follows from HHL's result that the problem is universal for quantum computation (BQP-complete): any quantum circuit on n qubits can be encoded as a linear system of about 2^n equations",
+          "source": "Harrow, Hassidim & Lloyd 2009; universality statement as summarised by Aaronson 2015"
+        }
+      ],
+      "has_quantum_algorithm": true,
+      "algorithms": [
+        {
+          "name": "classical conjugate-gradient-type solver",
+          "model": "classical-deterministic",
+          "time_complexity": "O(N sqrt(kappa)) for sparse A, as stated in the HHL abstract (dependence on s and eps not shown there)",
+          "implemented": false
+        },
+        {
+          "name": "HHL quantum algorithm",
+          "model": "quantum",
+          "time_complexity": "poly(log N, kappa) (HHL abstract); Aaronson 2015 summarises it as roughly log(N) * kappa * s / eps, given fast preparation of |b> and fast application of e^(-iAt)",
+          "implemented": false
+        },
+        {
+          "name": "quantum-inspired classical algorithm for LOW-RANK A (dequantization; a different input model)",
+          "model": "classical-randomized",
+          "time_complexity": "O(poly(k, kappa, ||A||_F, 1/eps) polylog(m, n)) for a rank-k m x n matrix (Chia, Lin & Wang 2018 abstract): polylogarithmic in the dimension, polynomial in rank, condition number and 1/eps",
+          "implemented": false
+        }
+      ],
+      "sources": 5
+    },
+    {
       "id": "polynomial-identity-testing",
       "title": "Polynomial identity testing: randomized polynomial vs deterministic (open)",
       "path": "staging/polynomial-identity-testing",
@@ -1296,6 +1701,86 @@
         }
       ],
       "sources": 1
+    },
+    {
+      "id": "element-distinctness-quantum-walk",
+      "title": "Element distinctness: Theta(N) classical queries vs Theta(N^(2/3)) quantum queries (Ambainis quantum walk)",
+      "path": "staging/element-distinctness-quantum-walk",
+      "location": "staging",
+      "pair_type": "T9",
+      "secondary_tags": [],
+      "level": "V0",
+      "validated": false,
+      "lower_bounds": [
+        {
+          "model": "classical-randomized",
+          "bound": "Omega(N) queries for bounded error",
+          "setting": "query (oracle) model, unconditional",
+          "source": "Elementary reduction from the OR function on N - 1 bits (randomized query complexity Theta(N)): set x_0 = 0 and x_i = i if y_i = 0, x_i = 0 if y_i = 1; the values are all distinct iff OR(y) = 0, and each query of x costs at most one query of y."
+        },
+        {
+          "model": "quantum",
+          "bound": "Omega(N^(2/3)) queries for bounded error (Ambainis's algorithm is optimal up to a constant factor)",
+          "setting": "query (oracle) model, unconditional",
+          "source": "Aaronson & Shi 2004 (from the collision lower bound; Shi's abstract: 'implies a quantum lower bound of Omega(n^(2/3)) queries ... for the element distinctness problem'); Ambainis 2005 extends it to small ranges (all M >= N)"
+        }
+      ],
+      "has_quantum_algorithm": true,
+      "algorithms": [
+        {
+          "name": "classical: read everything, sort, scan",
+          "model": "classical-deterministic",
+          "time_complexity": "N queries; O(N log N) comparisons",
+          "implemented": false
+        },
+        {
+          "name": "Ambainis quantum walk algorithm",
+          "model": "quantum",
+          "time_complexity": "O(N^(2/3)) queries, bounded error (running time is also analysed in the paper; not recorded here)",
+          "implemented": false
+        }
+      ],
+      "sources": 3
+    },
+    {
+      "id": "forrelation",
+      "title": "Forrelation: 1 quantum query vs Omega(sqrt(N)/log N) classical queries (optimal partial-function separation)",
+      "path": "staging/forrelation",
+      "location": "staging",
+      "pair_type": "T9",
+      "secondary_tags": [],
+      "level": "V0",
+      "validated": false,
+      "lower_bounds": [
+        {
+          "model": "classical-randomized",
+          "bound": "Omega(sqrt(N) / log N) queries for bounded error",
+          "setting": "query (oracle) model, unconditional; promise (partial-function) problem",
+          "source": "Aaronson & Ambainis 2015 (improving an Omega(N^(1/4)) bound of Aaronson)"
+        }
+      ],
+      "has_quantum_algorithm": true,
+      "algorithms": [
+        {
+          "name": "classical: read both functions",
+          "model": "classical-deterministic",
+          "time_complexity": "2N queries; O(N log N) arithmetic operations",
+          "implemented": false
+        },
+        {
+          "name": "classical: generic simulation of a 1-query quantum algorithm",
+          "model": "classical-randomized",
+          "time_complexity": "O(sqrt N) queries (t = 1 in O(N^(1-1/(2t)))), bounded error",
+          "implemented": false
+        },
+        {
+          "name": "quantum: one-query forrelation estimator",
+          "model": "quantum",
+          "time_complexity": "1 query, bounded error; O(n) gates besides the oracle",
+          "implemented": false
+        }
+      ],
+      "sources": 4
     }
   ]
 }

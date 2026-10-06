@@ -1,0 +1,91 @@
+{
+  "id": "minimum-finding-classical-vs-quantum",
+  "title": "Minimum finding: N classical queries vs O(sqrt N) quantum queries (Durr-Hoyer, bounded error)",
+  "problem_statement": "Given oracle access to a table T[0..N-1], N = 2^n, of distinct values from an ordered set, output the index y such that T[y] is minimal.",
+  "input": {
+    "parameter": "n = number of index bits; N = 2^n table entries.",
+    "size_measure": "Query model: cost is the number of probes of T. The harness materialises the table (a random permutation of 0..N-1) only so that the oracle can be simulated."
+  },
+  "algorithms": [
+    {
+      "name": "classical scan",
+      "idea": "Read every entry and keep the index of the smallest value seen.",
+      "model": "classical-deterministic",
+      "pseudocode": "best = 0; for x in 1..N-1: if T[x] < T[best]: best = x; return best",
+      "time_complexity": "exactly N queries = Theta(2^n); N - 1 comparisons",
+      "space_complexity": "O(n)",
+      "correctness": "Trivial. Optimal for exact algorithms (any unread entry could hold the minimum), and Omega(N) queries are needed even with bounded error (see lower_bounds).",
+      "implementation": "implementations/classical.py:minimum_scan",
+      "harness": {
+        "scaling": { "cost": "2**n", "n_values": [2, 4, 6, 8, 10, 12, 14, 16], "measure": "reported" }
+      }
+    },
+    {
+      "name": "Durr-Hoyer quantum minimum finding",
+      "idea": "Keep a threshold index y (initially random). Repeatedly use the BBHT exponential search (Grover search for an unknown number of marked items) to find some j with T[j] < T[y], and make it the new threshold; stop at the time-out 22.5 sqrt(N) + 1.4 lg^2 N. Each new threshold is uniform among the smaller items, so its rank drops quickly.",
+      "model": "quantum",
+      "pseudocode": "see implementation (the paper's steps 1-3, with its time-out and time-unit convention)",
+      "time_complexity": "O(sqrt N) queries, success probability >= 1/2 (Theorem 1); O(c sqrt N) for success >= 1 - 2^-c. As implemented: time-out 22.5 sqrt(N) + 1.4 lg^2 N time steps; queries = 2 per Grover iteration + 1 per observed candidate + 1, about 2 x the time-out",
+      "space_complexity": "n qubits plus the value register",
+      "correctness": "Durr & Hoyer 1996: by their Lemma 1 the element of rank r is ever chosen as threshold with probability 1/r; by BBHT 1998 each search with t marked items takes at most (9/2) sqrt(N/t) expected iterations; hence (Lemma 2) the expected time until y holds the minimum is at most m0 = 45/4 sqrt(N) + 7/10 lg^2 N, and by Markov's inequality the time-out 2 m0 gives success probability >= 1/2.",
+      "implementation": "implementations/durr_hoyer.py:minimum_durr_hoyer",
+      "harness": {
+        "v1_max_n": 10,
+        "scaling": { "cost": "2**(n/2)", "n_values": [4, 6, 8, 10, 12], "measure": "reported", "samples": 5 }
+      }
+    }
+  ],
+  "pair_type": "T9",
+  "lower_bounds": [
+    {
+      "model": "classical-randomized",
+      "bound": "Omega(N) = Omega(2^n) queries for bounded error",
+      "setting": "query (oracle) model, unconditional",
+      "source": "Reduction from unstructured search with one marked item: T[x] = 0 if x is marked, else x + 1 (distinct values, one probe of T = one query of the search oracle), so the classical Omega(N) search bound applies (see Bennett, Bernstein, Brassard & Vazirani 1997 and grover-search-classical-vs-quantum). Durr & Hoyer 1996 state the linear classical lower bound."
+    },
+    {
+      "model": "quantum",
+      "bound": "Omega(sqrt N) = Omega(2^(n/2)) queries for bounded error (Durr-Hoyer is optimal up to a constant factor)",
+      "setting": "query (oracle) model, unconditional",
+      "source": "Same reduction plus Bennett, Bernstein, Brassard & Vazirani 1997; cited for this purpose by Durr & Hoyer 1996"
+    }
+  ],
+  "relationship": "Proven QUADRATIC separation in the query model: Theta(N) classical queries (even randomized with bounded error) vs Theta(sqrt N) quantum queries with bounded error. Minimum finding contains unstructured search, so it inherits both the quadratic speedup and its limit. With the published constants (time-out 22.5 sqrt N + 1.4 lg^2 N, two queries per Grover iteration), the simulated quantum query count exceeds the classical N up to N = 2048 and falls below it from N = 4096 (experiments/2026-10-07_minimum_finding.py).",
+  "sources": [
+    {
+      "authors": "Durr, C.; Hoyer, P.",
+      "year": 1996,
+      "title": "A Quantum Algorithm for Finding the Minimum",
+      "venue": "arXiv preprint (version 2, January 1999)",
+      "arxiv": "quant-ph/9607014"
+    },
+    {
+      "authors": "Boyer, M.; Brassard, G.; Hoyer, P.; Tapp, A.",
+      "year": 1998,
+      "title": "Tight bounds on quantum searching",
+      "venue": "Fortschritte der Physik 46(4-5), 493-505",
+      "doi": "10.1002/(SICI)1521-3978(199806)46:4/5<493::AID-PROP493>3.0.CO;2-P",
+      "arxiv": "quant-ph/9605034",
+      "note": "Algorithm details (exponential search with lambda = 6/5, Theorem 3, two table look-ups per Grover iteration) were read in the arXiv version 1 (May 1996 draft)."
+    },
+    {
+      "authors": "Bennett, C. H.; Bernstein, E.; Brassard, G.; Vazirani, U.",
+      "year": 1997,
+      "title": "Strengths and weaknesses of quantum computing",
+      "venue": "SIAM Journal on Computing 26(5), 1510-1523",
+      "doi": "10.1137/S0097539796300933"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both algorithms return the index of the minimum (independently checked against the table) on random permutations for n = 1..12 (Durr-Hoyer simulated exactly with lib/qsim.py and lib/qsearch.py up to n = 10). Durr-Hoyer is a bounded-error algorithm, so its V1 agreement is a probabilistic statement; experiments/2026-10-07_minimum_finding.py observed 0 failures in 14000 runs (n = 2..10; one-sided 95% upper bounds on the failure rate 0.075% to 0.30%). V2 measures QUERY COUNTS reported through lib.qsim.Oracle: the scan uses exactly N (alpha = 1.000 against 2^n); Durr-Hoyer is fitted against 2^(n/2) over n = 4..12 with 5 instances per n (its count is nearly determined by the time-out: sd/mean <= 6% at n >= 4, so the predicted standard error of alpha is < 0.01). The fitted alpha lies below 1 because the time-out contains the explicit lower-order term 1.4 lg^2 N and each run adds about 75-100 classical candidate checks; over n = 2..10 the same measurement gives alpha = 0.800, inside the tolerance but close to its edge (see research/2026-10-07_quantum_entries.md). The experiment also checks the simulation against theory: the time and the queries of the paper's 'infinite algorithm' until the threshold holds the minimum agree with their exact expectations (computed from Lemma 1 and the exact BBHT costs) within |z| <= 1.01 for n = 2..10, and the exact expected time is only 11% to 27% of the Lemma 2 bound m0.",
+    "artifacts": ["implementations/classical.py", "implementations/durr_hoyer.py", "harness.py", "../../lib/qsim.py", "../../lib/qsearch.py", "../../experiments/2026-10-07_minimum_finding.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [1, 2, 3, 4, 5, 6, 8, 10, 12],
+    "trials": 6
+  },
+  "caveats": "A separation relative to an oracle, and only quadratic; it does not imply BQP != BPP. Durr-Hoyer has bounded error: Theorem 1 guarantees success probability >= 1/2 (more with a longer time-out or repetition); the observed failure rate was 0 in 14000 runs, which bounds it but does not make it zero. Query accounting is stricter than the paper's time units: the marking 'T[j] < T[y]' depends on the value T[j], so each Grover iteration costs two queries (compute and uncompute, as noted by Boyer et al. 1998), and each observed candidate costs one classical query; the paper charges lg N per initialisation and 1 per iteration and does not count the comparisons. Because the time-out is a fixed formula, the quantum query count is largely set by design; the information in the simulation is that the minimum is found within that budget (V1) and that the time to reach it matches theory. With these constants the quantum count is larger than the classical N for N <= 2048.",
+  "notes": "Uses lib/qsearch.py (BBHT exponential search with an optional time-out), which is reusable for other amplitude-amplification entries. Durr & Hoyer remark that for non-distinct values the same algorithm works and the success bound still holds (Lemma 1 becomes an inequality); the harness uses distinct values only."
+}

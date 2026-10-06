@@ -27,7 +27,7 @@ The paper reports up to 70% speedups for short sequences and about 1.7% for sequ
 ## When fixed-size results *are* in scope
 
 A fixed-size scheme enters the dataset when applying it recursively yields an asymptotic bound. For example,
-AlphaTensor's rank-47 scheme for 4×4 matrix multiplication over GF(2) gives ω ≤ log₄ 47 ≈ 2.774 in
+AlphaTensor's rank-47 scheme for 4×4 matrix multiplication over GF(2) gives ω ≤ log₄ 47 ≈ 2.7773 in
 characteristic 2 (see `pairs/matrix-multiplication-naive-vs-strassen`).
 
 ## Source

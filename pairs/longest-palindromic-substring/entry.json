@@ -1,0 +1,84 @@
+{
+  "id": "longest-palindromic-substring",
+  "title": "Longest palindromic substring: brute force vs expanding around centers vs Manacher",
+  "problem_statement": "Given a string s of length n, return (L, i) where L is the maximum length of a substring s[i..i+L-1] that reads the same forwards and backwards, and i is the smallest start position of such a substring of length L. For the empty string return (0, 0).",
+  "input": {
+    "parameter": "n = length of the string.",
+    "size_measure": "n characters; one character comparison costs O(1)."
+  },
+  "algorithms": [
+    {
+      "name": "brute force (test every substring)",
+      "idea": "For every pair i <= j, compare s[i..j] with its reverse from both ends inward, stopping at the first mismatch, and keep the longest palindrome found.",
+      "model": "classical-deterministic",
+      "pseudocode": "best = (0, 0); for i in 0..n-1: for j in i..n-1: if s[i..j] is a palindrome (two-pointer test) and j-i+1 > best.L: best = (j-i+1, i)",
+      "time_complexity": "Theta(n^3) worst case: on n equal characters every substring is a palindrome and the tests make sum_{L=1..n} (n-L+1) floor(L/2) ~ n^3/12 comparisons; Omega(n^2) on every input (n(n+1)/2 tests)",
+      "space_complexity": "O(1) words",
+      "correctness": "Exhaustive over all n(n+1)/2 non-empty substrings; scanning i upwards and replacing only on a strictly longer palindrome keeps the leftmost one.",
+      "implementation": "implementations/brute_force.py:lps_brute",
+      "harness": {
+        "v1_max_n": 80,
+        "scaling": { "cost": "n**3", "n_values": [40, 60, 80, 120, 160, 240, 320] }
+      }
+    },
+    {
+      "name": "expand around centers",
+      "idea": "Every palindrome has a center: one of the n characters or one of the n - 1 gaps. From each center, extend outwards while the two characters match; the extent reached is the longest palindrome with that center.",
+      "model": "classical-deterministic",
+      "pseudocode": "for c in 0..2n-2: lo = c // 2; hi = lo + c % 2; while lo >= 0 and hi < n and s[lo] == s[hi]: lo -= 1; hi += 1; candidate = (hi-lo-1, lo+1)",
+      "time_complexity": "Theta(n + R) where R = sum of the maximal palindrome radii over all centers: Theta(n^2) worst case (n equal characters: n^2/2 + n/2 comparisons); Theta(n) in expectation on uniformly random strings over two or more letters",
+      "space_complexity": "O(1) words",
+      "correctness": "A substring s[a..b] is a palindrome iff its inner substring s[a+1..b-1] is a palindrome and s[a] = s[b], so the palindromes sharing a center are nested and the expansion finds the longest one. Every palindrome has exactly one center.",
+      "implementation": "implementations/expand_centers.py:lps_expand",
+      "harness": {
+        "v1_max_n": 1000,
+        "scaling": { "cost": "n**2", "n_values": [200, 400, 800, 1600, 3200] }
+      }
+    },
+    {
+      "name": "Manacher's algorithm",
+      "idea": "Compute the maximal palindrome radius at every center left to right while remembering the rightmost palindrome s[l..r] found so far. Inside it, the radius at the mirrored center is a lower bound for the current center (capped at r), so comparisons start from there; every successful comparison pushes r right.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation (two scans: odd-length radii d1 and even-length radii d2)",
+      "time_complexity": "Theta(n) on every input (at most 2n successful comparisons and at most 2n failed ones)",
+      "space_complexity": "Theta(n)",
+      "correctness": "Manacher 1975. Mirror property: if center i lies inside the palindrome s[l..r], the palindrome at the mirror center l + r - i, cut off at the boundary of s[l..r], reappears around i. So the radius at i is at least min(radius at the mirror, r - i + 1), and it is exactly the mirror's radius when that one ends strictly inside s[l..r].",
+      "implementation": "implementations/manacher.py:lps_manacher",
+      "harness": {
+        "scaling": { "cost": "n", "n_values": [3000, 10000, 30000, 100000, 300000] }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "Theta(n^3) -> Theta(n^2) -> Theta(n), all worst case. Expanding around centers stops re-testing the nested palindromes that share a center. Manacher's mirror property removes the remaining recomputation between overlapping centers. Theta(n) is optimal up to a constant factor: on a^n, changing any character other than the middle one makes the whole string a non-palindrome, so a correct algorithm must read at least n - 1 characters.",
+  "sources": [
+    {
+      "authors": "Manacher, G.",
+      "year": 1975,
+      "title": "A new linear-time \"on-line\" algorithm for finding the smallest initial palindrome of a string",
+      "venue": "Journal of the ACM 22(3), 346-351",
+      "doi": "10.1145/321892.321896",
+      "note": "The paper's stated application is the smallest initial palindrome (per its title); the radius computation used here comes from it."
+    },
+    {
+      "authors": "Apostolico, A.; Breslauer, D.; Galil, Z.",
+      "year": 1995,
+      "title": "Parallel detection of all palindromes in a string",
+      "venue": "Theoretical Computer Science 141(1-2), 163-173",
+      "doi": "10.1016/0304-3975(94)00083-U",
+      "note": "Detection of all maximal palindromes. Credited (by the Wikipedia article 'Longest palindromic substring') with observing that Manacher's algorithm finds all maximal palindromes in O(n) time; the paper's text was not checked for this entry."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: all three agree with each other and with an independent oracle (harness.check verifies the claimed (L, i) directly: s[i..i+L-1] is a palindrome, no window of length L+1 or L+2 is one, and no palindrome of length L starts before i) on six kinds of strings (random over {a,b}, {a,b,c} and 26 letters, all-equal, planted palindromes, periodic), n = 0..10, 15, 20, 40, 80 (brute force up to 80), 200, 1000 (expand up to 1000) and 5000 (Manacher). V2 on the worst-case family a^n: runtimes fitted against n^3 (brute force, n = 40..320), n^2 (expand, n = 200..3200) and n (Manacher, n = 3000..300000). experiments/2026-10-07_palindrome_probe.py checks the comparison counts on a^n exactly: brute force equals sum_{L} (n-L+1) floor(L/2) (2743440 at n = 320), expand equals n^2/2 + n/2 (51360 at n = 320), Manacher 2n - 3 (637 at n = 320).",
+    "artifacts": ["implementations/brute_force.py", "implementations/expand_centers.py", "implementations/manacher.py", "harness.py", "../../experiments/2026-10-07_palindrome_probe.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 40, 80, 200, 1000, 5000],
+    "trials": 6
+  },
+  "caveats": "The quadratic and cubic bounds are worst-case bounds, attained on strings with many long palindromes such as a^n; on random strings over two or more letters brute force costs Theta(n^2) and expanding around centers Theta(n) in expectation (the probe measured 100431 and 1596 comparisons at n = 320 on a random {a, b} string). So the pair, and its V2 check, concern worst-case inputs. The returned position is the leftmost among the longest palindromes; other conventions (e.g. returning the substring) are equivalent up to O(n).",
+  "notes": "The same linear-time radius array also lists every maximal palindrome and counts all palindromic substrings (the sum of the radii)."
+}

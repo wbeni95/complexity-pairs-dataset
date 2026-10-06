@@ -1,0 +1,32 @@
+{"event": "start", "config": {"fmt": [4, 4, 4], "seed": 1, "max_flips": 20000000, "plateau": 1000000, "escape": "plus", "slack": 1, "plus_per_escape": 1, "pool_size": 64, "reduction": "linear", "max_seconds": 600, "target_rank": null, "verify_every": 1000000, "log_every": 1000000, "keep_ranks_upto": 47, "max_weight": 4, "lookahead_every": 0, "extra": {"tag": "V3"}}, "start_rank": 64, "rank_after_reduce": 64}
+{"event": "best", "rank": 63, "flips": 38507, "seconds": 0.157}
+{"event": "best", "rank": 62, "flips": 52198, "seconds": 0.212}
+{"event": "best", "rank": 61, "flips": 55923, "seconds": 0.227}
+{"event": "best", "rank": 60, "flips": 96597, "seconds": 0.383}
+{"event": "best", "rank": 59, "flips": 171803, "seconds": 0.669}
+{"event": "best", "rank": 58, "flips": 224018, "seconds": 0.87}
+{"event": "best", "rank": 57, "flips": 309916, "seconds": 1.198}
+{"event": "best", "rank": 56, "flips": 877352, "seconds": 3.233}
+{"event": "progress", "flips": 1003520, "rank": 56, "best": 56, "seconds": 3.689, "plus": 0, "restarts": 0, "flips_per_second": 272003}
+{"event": "progress", "flips": 2002944, "rank": 56, "best": 56, "seconds": 7.304, "plus": 1, "restarts": 0, "flips_per_second": 274217}
+{"event": "progress", "flips": 3002368, "rank": 56, "best": 56, "seconds": 10.872, "plus": 2, "restarts": 0, "flips_per_second": 276151}
+{"event": "progress", "flips": 4001792, "rank": 56, "best": 56, "seconds": 14.449, "plus": 3, "restarts": 0, "flips_per_second": 276964}
+{"event": "progress", "flips": 5001216, "rank": 56, "best": 56, "seconds": 18.494, "plus": 4, "restarts": 0, "flips_per_second": 270425}
+{"event": "best", "rank": 55, "flips": 5763944, "seconds": 21.535}
+{"event": "best", "rank": 54, "flips": 5946192, "seconds": 22.263}
+{"event": "progress", "flips": 6000640, "rank": 54, "best": 54, "seconds": 22.489, "plus": 4, "restarts": 0, "flips_per_second": 266824}
+{"event": "progress", "flips": 7000064, "rank": 54, "best": 54, "seconds": 26.675, "plus": 5, "restarts": 0, "flips_per_second": 262417}
+{"event": "progress", "flips": 8003584, "rank": 54, "best": 54, "seconds": 30.899, "plus": 6, "restarts": 0, "flips_per_second": 259024}
+{"event": "progress", "flips": 9003008, "rank": 54, "best": 54, "seconds": 35.061, "plus": 7, "restarts": 0, "flips_per_second": 256782}
+{"event": "progress", "flips": 10002432, "rank": 54, "best": 54, "seconds": 39.211, "plus": 8, "restarts": 0, "flips_per_second": 255094}
+{"event": "progress", "flips": 11001856, "rank": 54, "best": 54, "seconds": 43.363, "plus": 9, "restarts": 0, "flips_per_second": 253713}
+{"event": "progress", "flips": 12001280, "rank": 54, "best": 54, "seconds": 47.455, "plus": 10, "restarts": 0, "flips_per_second": 252898}
+{"event": "best", "rank": 53, "flips": 12644383, "seconds": 49.946}
+{"event": "progress", "flips": 13000704, "rank": 53, "best": 53, "seconds": 51.199, "plus": 10, "restarts": 0, "flips_per_second": 253927}
+{"event": "progress", "flips": 14000128, "rank": 53, "best": 53, "seconds": 54.726, "plus": 11, "restarts": 0, "flips_per_second": 255823}
+{"event": "progress", "flips": 15003648, "rank": 53, "best": 53, "seconds": 58.278, "plus": 12, "restarts": 0, "flips_per_second": 257448}
+{"event": "progress", "flips": 16003072, "rank": 53, "best": 53, "seconds": 61.789, "plus": 13, "restarts": 0, "flips_per_second": 258997}
+{"event": "progress", "flips": 17002496, "rank": 53, "best": 53, "seconds": 65.4, "plus": 14, "restarts": 0, "flips_per_second": 259976}
+{"event": "progress", "flips": 18001920, "rank": 53, "best": 53, "seconds": 68.966, "plus": 15, "restarts": 0, "flips_per_second": 261026}
+{"event": "progress", "flips": 19001344, "rank": 53, "best": 53, "seconds": 72.486, "plus": 16, "restarts": 0, "flips_per_second": 262138}
+{"event": "end", "format": [4, 4, 4], "seed": 1, "start_rank": 64, "best_rank": 53, "best_reached_at_flip": 12644383, "best_reached_at_seconds": 49.946, "flips": 20000000, "wall_seconds": 76.106, "flips_per_second": 262793, "flips_since_last_improvement": 7355617, "stopped_by": "flips", "plus_transitions": 17, "rejected_by_weight_cap": 4225452, "lookahead_scans": 0, "lookahead_hits": 0, "restarts": 0, "no_flip_available_events": 0, "reduction_events": 28, "full_verifications_passed": 31, "trajectory": [[64, 0, 0.0], [63, 38507, 0.157], [62, 52198, 0.212], [61, 55923, 0.227], [60, 96597, 0.383], [59, 171803, 0.669], [58, 224018, 0.87], [57, 309916, 1.198], [56, 877352, 3.233], [55, 5763944, 21.535], [54, 5946192, 22.263], [53, 12644383, 49.946]]}

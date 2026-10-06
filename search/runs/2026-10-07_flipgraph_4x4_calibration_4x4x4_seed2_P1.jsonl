@@ -1,0 +1,32 @@
+{"event": "start", "config": {"fmt": [4, 4, 4], "seed": 2, "max_flips": 20000000, "plateau": 200000, "escape": "plus", "slack": 1, "pool_size": 64, "reduction": "linear", "max_seconds": 400, "target_rank": null, "verify_every": 1000000, "log_every": 1000000, "keep_ranks_upto": 47, "extra": {"tag": "P1"}}, "start_rank": 64, "rank_after_reduce": 64}
+{"event": "best", "rank": 63, "flips": 176315, "seconds": 0.895}
+{"event": "best", "rank": 62, "flips": 203552, "seconds": 1.025}
+{"event": "best", "rank": 61, "flips": 222034, "seconds": 1.111}
+{"event": "best", "rank": 60, "flips": 246671, "seconds": 1.233}
+{"event": "best", "rank": 59, "flips": 336253, "seconds": 1.654}
+{"event": "best", "rank": 58, "flips": 371292, "seconds": 1.815}
+{"event": "best", "rank": 57, "flips": 422368, "seconds": 2.051}
+{"event": "best", "rank": 56, "flips": 490931, "seconds": 2.357}
+{"event": "progress", "flips": 1003520, "rank": 56, "best": 56, "seconds": 4.57, "plus": 2, "restarts": 0, "flips_per_second": 219568}
+{"event": "best", "rank": 55, "flips": 1784665, "seconds": 8.097}
+{"event": "progress", "flips": 2002944, "rank": 55, "best": 55, "seconds": 9.055, "plus": 7, "restarts": 0, "flips_per_second": 221189}
+{"event": "best", "rank": 54, "flips": 2772863, "seconds": 12.595}
+{"event": "best", "rank": 53, "flips": 2837759, "seconds": 12.889}
+{"event": "progress", "flips": 3002368, "rank": 53, "best": 53, "seconds": 13.633, "plus": 10, "restarts": 0, "flips_per_second": 220231}
+{"event": "progress", "flips": 4001792, "rank": 53, "best": 53, "seconds": 18.139, "plus": 15, "restarts": 0, "flips_per_second": 220616}
+{"event": "progress", "flips": 5001216, "rank": 53, "best": 53, "seconds": 22.498, "plus": 20, "restarts": 0, "flips_per_second": 222297}
+{"event": "progress", "flips": 6000640, "rank": 53, "best": 53, "seconds": 26.865, "plus": 25, "restarts": 0, "flips_per_second": 223360}
+{"event": "progress", "flips": 7000064, "rank": 53, "best": 53, "seconds": 31.208, "plus": 30, "restarts": 0, "flips_per_second": 224303}
+{"event": "progress", "flips": 8003584, "rank": 53, "best": 53, "seconds": 35.509, "plus": 35, "restarts": 0, "flips_per_second": 225394}
+{"event": "progress", "flips": 9003008, "rank": 53, "best": 53, "seconds": 39.853, "plus": 40, "restarts": 0, "flips_per_second": 225907}
+{"event": "progress", "flips": 10002432, "rank": 53, "best": 53, "seconds": 44.308, "plus": 45, "restarts": 0, "flips_per_second": 225750}
+{"event": "progress", "flips": 11001856, "rank": 53, "best": 53, "seconds": 48.665, "plus": 50, "restarts": 0, "flips_per_second": 226073}
+{"event": "progress", "flips": 12001280, "rank": 53, "best": 53, "seconds": 53.119, "plus": 55, "restarts": 0, "flips_per_second": 225931}
+{"event": "progress", "flips": 13000704, "rank": 53, "best": 53, "seconds": 57.518, "plus": 60, "restarts": 0, "flips_per_second": 226030}
+{"event": "progress", "flips": 14000128, "rank": 53, "best": 53, "seconds": 61.912, "plus": 65, "restarts": 0, "flips_per_second": 226130}
+{"event": "progress", "flips": 15003648, "rank": 53, "best": 53, "seconds": 66.314, "plus": 70, "restarts": 0, "flips_per_second": 226252}
+{"event": "progress", "flips": 16003072, "rank": 53, "best": 53, "seconds": 70.873, "plus": 75, "restarts": 0, "flips_per_second": 225800}
+{"event": "progress", "flips": 17002496, "rank": 53, "best": 53, "seconds": 75.365, "plus": 80, "restarts": 0, "flips_per_second": 225602}
+{"event": "progress", "flips": 18001920, "rank": 53, "best": 53, "seconds": 79.837, "plus": 85, "restarts": 0, "flips_per_second": 225483}
+{"event": "progress", "flips": 19001344, "rank": 53, "best": 53, "seconds": 84.362, "plus": 90, "restarts": 0, "flips_per_second": 225237}
+{"event": "end", "format": [4, 4, 4], "seed": 2, "start_rank": 64, "best_rank": 53, "best_reached_at_flip": 2837759, "best_reached_at_seconds": 12.889, "flips": 20000000, "wall_seconds": 88.674, "flips_per_second": 225545, "flips_since_last_improvement": 17162241, "stopped_by": "flips", "plus_transitions": 95, "restarts": 0, "no_flip_available_events": 0, "reduction_events": 106, "full_verifications_passed": 31, "trajectory": [[64, 0, 0.0], [63, 176315, 0.895], [62, 203552, 1.025], [61, 222034, 1.111], [60, 246671, 1.233], [59, 336253, 1.654], [58, 371292, 1.815], [57, 422368, 2.051], [56, 490931, 2.357], [55, 1784665, 8.097], [54, 2772863, 12.595], [53, 2837759, 12.889]]}

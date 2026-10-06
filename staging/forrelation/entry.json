@@ -1,0 +1,90 @@
+{
+  "id": "forrelation",
+  "title": "Forrelation: 1 quantum query vs Omega(sqrt(N)/log N) classical queries (optimal partial-function separation)",
+  "problem_statement": "Given oracle access to two Boolean functions f, g: {0,1}^n -> {-1, 1}, N = 2^n, decide whether g is highly correlated with the Fourier (Hadamard) transform of f or nearly uncorrelated with it, under the promise that one of the two holds. The forrelation is Phi(f, g) = N^(-3/2) sum_{x,y} f(x) (-1)^(x.y) g(y); the paper fixes explicit constant thresholds for 'large' and 'small' (not reproduced here).",
+  "input": {
+    "parameter": "n = number of input bits; N = 2^n.",
+    "size_measure": "Query model: cost is the number of queries to f or g (2N values in total)."
+  },
+  "algorithms": [
+    {
+      "name": "classical: read both functions",
+      "idea": "Query all 2N values and compute Phi exactly.",
+      "model": "classical-deterministic",
+      "pseudocode": "read f and g; compute Phi with a fast Walsh-Hadamard transform",
+      "time_complexity": "2N queries; O(N log N) arithmetic operations",
+      "space_complexity": "O(N)",
+      "correctness": "Exact computation of Phi.",
+      "implementation": null
+    },
+    {
+      "name": "classical: generic simulation of a 1-query quantum algorithm",
+      "idea": "Aaronson & Ambainis show that any t-query quantum algorithm can be simulated by a randomized algorithm with O(N^(1-1/(2t))) queries; for t = 1 this solves Forrelation with O(sqrt N) queries.",
+      "model": "classical-randomized",
+      "pseudocode": "Aaronson & Ambainis 2015",
+      "time_complexity": "O(sqrt N) queries (t = 1 in O(N^(1-1/(2t)))), bounded error",
+      "space_complexity": "not recorded",
+      "correctness": "Aaronson & Ambainis 2015 (abstract: 'any t-query quantum algorithm whatsoever can be simulated by an O(N^(1-1/2t))-query randomized algorithm').",
+      "implementation": null
+    },
+    {
+      "name": "quantum: one-query forrelation estimator",
+      "idea": "A quantum circuit that makes a single query to the oracle for the pair (f, g) and accepts with a probability that depends on Phi, so the two promise cases are distinguished with bounded error. (Circuit details are in the paper and not reproduced here.)",
+      "model": "quantum",
+      "pseudocode": "Aaronson & Ambainis 2015",
+      "time_complexity": "1 query, bounded error; O(n) gates besides the oracle",
+      "space_complexity": "O(n) qubits",
+      "correctness": "Aaronson & Ambainis 2015 (abstract: 'This problem can be solved using 1 quantum query').",
+      "implementation": null
+    }
+  ],
+  "pair_type": "T9",
+  "lower_bounds": [
+    {
+      "model": "classical-randomized",
+      "bound": "Omega(sqrt(N) / log N) queries for bounded error",
+      "setting": "query (oracle) model, unconditional; promise (partial-function) problem",
+      "source": "Aaronson & Ambainis 2015 (improving an Omega(N^(1/4)) bound of Aaronson)"
+    }
+  ],
+  "relationship": "Proven separation in the query model: 1 quantum query vs Omega~(sqrt N) randomized classical queries, with an O(sqrt N) classical upper bound. Aaronson & Ambainis also prove this is OPTIMAL for 1-query quantum algorithms: no partial Boolean function has constant quantum query complexity and linear randomized query complexity. In terms of n = log N the gap is exponential (1 vs about 2^(n/2)/n). Related: Raz & Tal (STOC 2019; J. ACM 2022) give a distribution on 2N bits that ONE quantum query distinguishes from uniform with advantage Omega(1/log N), while no quasi-polynomial-size constant-depth circuit achieves advantage better than polylog(N)/sqrt(N) (ECCC TR18-107 abstract); this yields an oracle relative to which BQP is not contained in PH.",
+  "sources": [
+    {
+      "authors": "Aaronson, S.; Ambainis, A.",
+      "year": 2015,
+      "title": "Forrelation: A Problem that Optimally Separates Quantum from Classical Computing",
+      "venue": "STOC 2015, 307-316",
+      "doi": "10.1145/2746539.2746547",
+      "arxiv": "1411.5729"
+    },
+    {
+      "authors": "Raz, R.; Tal, A.",
+      "year": 2019,
+      "title": "Oracle separation of BQP and PH",
+      "venue": "STOC 2019, 13-23",
+      "doi": "10.1145/3313276.3316315"
+    },
+    {
+      "authors": "Raz, R.; Tal, A.",
+      "year": 2022,
+      "title": "Oracle Separation of BQP and PH",
+      "venue": "Journal of the ACM 69(4), 1-21",
+      "doi": "10.1145/3530258"
+    },
+    {
+      "authors": "Aaronson, S.",
+      "year": 2015,
+      "title": "Read the fine print",
+      "venue": "Nature Physics 11(4), 291-293",
+      "doi": "10.1038/nphys3272",
+      "note": "Quoted from the author's preprint 'Quantum Machine Learning Algorithms: Read the Fine Print'."
+    }
+  ],
+  "verification": {
+    "level": "V0",
+    "method": "Cited from the literature. DOIs, titles, years, volumes, issues and pages checked against Crossref; the query bounds and the optimality statement checked against the arXiv abstract of Aaronson & Ambainis (1411.5729); the Raz-Tal statement checked against their ECCC abstract (TR18-107). Not implemented: a lib/qsim.py implementation is feasible (one query, O(n) qubits) but needs a sampler for forrelated pairs (f, g), which is left open.",
+    "artifacts": []
+  },
+  "caveats": "A separation relative to an oracle (and for a promise problem); it does not imply BQP != BPP. The quantum algorithm has bounded error, and the classical lower bound is for bounded-error randomized algorithms. The Raz-Tal result is also relative to an oracle. Aaronson (Nature Physics 2015) stresses that such speedups need the functions to be given as oracles (or loaded efficiently) and that the hardness proof concerns inputs that are random individually.",
+  "notes": "Strongest single data point in the dataset for 'black-box quantum advantage': the gap 1 vs ~sqrt N is proven and proven optimal. Aaronson & Ambainis conjecture that a natural generalisation (k-fold Forrelation) gives the optimal t vs ~N^(1-1/2t) separation for every t, and show that this generalisation is BQP-complete (abstract). Whether the Raz-Tal distribution should be described as a variant of Forrelation is not asserted here: their abstract does not say so, and the paper was not read for this entry."
+}

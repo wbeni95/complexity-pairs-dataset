@@ -1,0 +1,68 @@
+{
+  "id": "range-minimum-queries-naive-vs-sparse-table",
+  "title": "Range minimum queries: scanning each range vs a sparse table",
+  "problem_statement": "Given n numbers a[0..n-1] and q queries (l, r) with 0 <= l <= r < n, return, for every query, min(a[l], a[l+1], ..., a[r]). This entry fixes q = n (offline: all queries are given with the input, but the algorithms answer them one at a time).",
+  "input": {
+    "parameter": "n = number of values (= number of queries q).",
+    "size_measure": "n numbers plus q = n index pairs: Theta(n) words. Comparisons and index arithmetic are unit cost."
+  },
+  "algorithms": [
+    {
+      "name": "scan each range",
+      "idea": "No preprocessing; answer each query by scanning a[l..r].",
+      "model": "classical-deterministic",
+      "pseudocode": "for (l, r) in queries: m = a[l]; for i in l+1..r: m = min(m, a[i]); output m",
+      "time_complexity": "Theta(q + sum of the query lengths); Theta(n^2) for q = n queries of length Theta(n), as in the timing family (every range longer than n/2; total scanned length 0.75 n^2 within 0.5% at n = 800, 1200, 1600)",
+      "space_complexity": "O(1) besides the output",
+      "correctness": "Direct evaluation of the definition.",
+      "implementation": "implementations/naive_scan.py:rmq_naive",
+      "harness": {
+        "v1_max_n": 2000,
+        "scaling": { "cost": "n**2", "n_values": [200, 400, 600, 800, 1200, 1600, 2400, 3200] }
+      }
+    },
+    {
+      "name": "sparse table",
+      "idea": "Precompute the minimum of every range whose length is a power of two (each level from the previous one). Any range [l, r] is the union of two such ranges of length 2^k, k = floor(log2(r - l + 1)), possibly overlapping, so a query takes two table lookups.",
+      "model": "classical-deterministic",
+      "pseudocode": "T[0] = a; T[j][i] = min(T[j-1][i], T[j-1][i + 2^(j-1)]); query(l, r): k = floor(log2(r-l+1)); return min(T[k][l], T[k][r - 2^k + 1])",
+      "time_complexity": "Theta(n log n) preprocessing plus O(1) per query: Theta(n log n + q) = Theta(n log n) for q = n, on every input",
+      "space_complexity": "Theta(n log n)",
+      "correctness": "Induction on j: T[j][i] is the minimum of a[i .. i + 2^j - 1] because that range splits into two halves of length 2^(j-1). For a query, 2^k <= r - l + 1 < 2^(k+1), so the blocks [l, l + 2^k - 1] and [r - 2^k + 1, r] lie inside [l, r] and together cover it; min is idempotent, so the overlap does no harm. Presented as the <O(n log n), O(1)> sparse-table algorithm in Bender & Farach-Colton 2000.",
+      "implementation": "implementations/sparse_table.py:rmq_sparse_table",
+      "harness": {
+        "scaling": { "cost": "n*log(n)", "n_values": [2000, 4000, 8000, 16000, 32000, 64000, 128000] }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "Theta(n^2) -> Theta(n log n) for n values and n long queries. Preprocessing all power-of-two ranges turns each query into O(1) work. Linear preprocessing with O(1) queries is also possible: Bender & Farach-Colton 2000 reduce RMQ to LCA and back to RMQ with +-1 differences, and Fischer & Heun 2011 give a space-efficient scheme.",
+  "sources": [
+    {
+      "authors": "Bender, M. A.; Farach-Colton, M.",
+      "year": 2000,
+      "title": "The LCA problem revisited",
+      "venue": "LATIN 2000: Theoretical Informatics, LNCS 1776, 88-94",
+      "doi": "10.1007/10719839_9"
+    },
+    {
+      "authors": "Fischer, J.; Heun, V.",
+      "year": 2011,
+      "title": "Space-efficient preprocessing schemes for range minimum queries on static arrays",
+      "venue": "SIAM Journal on Computing 40(2), 465-492",
+      "doi": "10.1137/090779759"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree with each other and with an independent oracle (an iterative segment tree in harness.py) on random values from [-1000, 1000] or [0, 4] (ties) with q = n queries mixing random ranges, single positions, short ranges and prefix/suffix/whole-array ranges, n = 0..8, 16, 50, 200, 2000 and 10000 (sparse table only above 2000). V2 on the long-query family (q = n ranges, each longer than n/2): runtimes fitted against n^2 (scan, n = 200..3200) and n log n (sparse table, n = 2000..128000). The fit cannot separate n log n from n: in experiments/2026-10-07_rmq_probe.py the same sparse-table timings gave alpha = 0.989 against n log n and 1.100 against n.",
+    "artifacts": ["implementations/naive_scan.py", "implementations/sparse_table.py", "harness.py", "../../experiments/2026-10-07_rmq_probe.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 16, 50, 200, 2000, 10000],
+    "trials": 5
+  },
+  "caveats": "The quadratic cost of scanning is a worst case. With short queries (length O(1)) scanning costs Theta(n) and beats the sparse table's Theta(n log n) preprocessing, so the pair is stated for q = n queries of length Theta(n). The sparse table's Theta(n log n) is dominated by preprocessing; with q >> n log n queries, both its per-query cost (O(1)) and the scan's (Theta(length)) matter. The algorithms here answer queries one at a time; offline algorithms that sort the queries are another option and are not considered.",
+  "notes": "RMQ and lowest common ancestors in trees are linearly equivalent (Bender & Farach-Colton 2000). The sparse table also answers any idempotent associative range query (max, gcd, bitwise and/or) in O(1), but not sums, whose two blocks would double-count the overlap."
+}

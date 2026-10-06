@@ -1,0 +1,77 @@
+{
+  "id": "bipartite-matching-kuhn-vs-hopcroft-karp",
+  "title": "Maximum bipartite matching: one augmenting path per vertex (Kuhn) vs Hopcroft-Karp",
+  "problem_statement": "Given a bipartite graph with left vertices 0..n_left-1, right vertices 0..n_right-1 and edges given as adjacency lists of the left vertices, compute the maximum number of edges in a matching (a set of edges no two of which share a vertex).",
+  "input": {
+    "parameter": "n = V = n_left + n_right, the number of vertices; E denotes the number of edges.",
+    "size_measure": "V + E (adjacency lists). Index operations are unit cost."
+  },
+  "algorithms": [
+    {
+      "name": "Kuhn's augmenting paths (one DFS per left vertex)",
+      "idea": "For each left vertex in turn, search depth-first for an augmenting path (alternating between non-matching and matching edges, ending at a free right vertex) and flip it if found.",
+      "model": "classical-deterministic",
+      "pseudocode": "for u in left: seen = {}; if dfs(u) finds a free right vertex along an alternating path: flip the path",
+      "time_complexity": "O(V (V + E)), i.e. O(V E) when E = Omega(V): one O(V + E) search per left vertex. Theta(V E) on the adversarial timing family: 0.143-0.145 V E edge scans for k = 4..16",
+      "space_complexity": "O(V)",
+      "correctness": "Berge 1957: a matching is maximum iff it has no augmenting path. When the search from u fails, no augmenting path starts at u for the current matching. That stays true after later augmentations (a standard property of the method: a vertex that cannot be matched never becomes matchable), so after all left vertices have been tried, no augmenting path exists. The augmenting-path method for bipartite matching underlies Kuhn's 1955 Hungarian method.",
+      "implementation": "implementations/kuhn.py:matching_kuhn",
+      "harness": {
+        "v1_max_n": 300,
+        "scaling": { "cost": "n**3", "n_values": [39, 68, 105, 150, 203, 264, 333, 410, 495] }
+      }
+    },
+    {
+      "name": "Hopcroft-Karp",
+      "idea": "Work in phases. Each phase finds the length of a shortest augmenting path by BFS from all free left vertices, then augments along a maximal set of vertex-disjoint shortest augmenting paths found by DFS in the layered graph. The shortest length grows every phase.",
+      "model": "classical-deterministic",
+      "pseudocode": "repeat: BFS layers from free left vertices (stop at the first layer with a free right vertex); if none: stop; DFS from each free left vertex along layer-increasing edges, removing dead ends and used paths; augment",
+      "time_complexity": "O((V + E) sqrt(V)): O(sqrt(V)) phases (Hopcroft & Karp 1973), O(V + E) each; O(V^2.5) on dense graphs (the paper's title bound). Theta(E sqrt V) on the adversarial timing family: exactly k + 1 phases and 1.01-1.05 E sqrt(V) edge scans for k = 4..16",
+      "space_complexity": "O(V)",
+      "correctness": "Hopcroft & Karp 1973. Augmenting along vertex-disjoint shortest augmenting paths keeps the matching valid, and after a phase that uses a maximal such set, every augmenting path is strictly longer. After phase i every augmenting path has at least 2i + 1 edges. The symmetric difference with a maximum matching contains (maximum - current size) vertex-disjoint augmenting paths, so after sqrt(V) phases at most about sqrt(V)/2 augmentations remain, and every phase performs at least one. Termination when no augmenting path exists gives a maximum matching by Berge's theorem.",
+      "implementation": "implementations/hopcroft_karp.py:matching_hopcroft_karp",
+      "harness": {
+        "scaling": { "cost": "n**2.5", "n_values": [68, 105, 150, 203, 264, 333, 410, 495, 588, 689, 798, 915] }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "O(V E) -> O(E sqrt(V)) (for E = Omega(V)); on dense graphs O(V^3) -> O(V^2.5). Kuhn may traverse the whole graph to find each augmenting path. Hopcroft-Karp finds many shortest augmenting paths per graph traversal, and the shortest-path length must grow every phase.",
+  "sources": [
+    {
+      "authors": "Hopcroft, J. E.; Karp, R. M.",
+      "year": 1973,
+      "title": "An n^(5/2) algorithm for maximum matchings in bipartite graphs",
+      "venue": "SIAM Journal on Computing 2(4), 225-231",
+      "doi": "10.1137/0202019"
+    },
+    {
+      "authors": "Berge, C.",
+      "year": 1957,
+      "title": "Two theorems in graph theory",
+      "venue": "Proceedings of the National Academy of Sciences 43(9), 842-844",
+      "doi": "10.1073/pnas.43.9.842",
+      "note": "A matching is maximum iff it admits no augmenting path."
+    },
+    {
+      "authors": "Kuhn, H. W.",
+      "year": 1955,
+      "title": "The Hungarian method for the assignment problem",
+      "venue": "Naval Research Logistics Quarterly 2(1-2), 83-97",
+      "doi": "10.1002/nav.3800020109",
+      "note": "Augmenting-path method for bipartite assignment; the one-DFS-per-vertex matching algorithm is commonly named after Kuhn."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree with each other and with an independent algebraic oracle (rank over GF(2^61 - 1) of the Edmonds matrix with random entries, in harness.py; Schwartz-Zippel bounds its error by 10^-15 per instance) on random bipartite graphs (densities 0.05-0.8, balanced and unbalanced sides), complete bipartite graphs, perfect matchings with noise, graphs with isolated vertices and members of the adversarial family, n = 0..10, 18, 20, 39, 50, 68, 100, 200, 300. V2 on the adversarial family G_k (n = V = 4k^2 + k, see harness.py): runtimes fitted against n^3 (Kuhn, k = 3..11) and n^2.5 (Hopcroft-Karp, k = 4..15). Because a timing fit with tolerance 0.25 cannot separate n^3 from n^2.5 (in experiments/2026-10-07_bipartite_matching_probe.py Kuhn also passed against n^2.5, alpha = 1.168, and Hopcroft-Karp against n^2 and n^3, alpha = 1.221 and 0.815), the claim on the family rests on exact operation counts (experiments/2026-10-07_bipartite_matching_counts.py). Hopcroft-Karp ran exactly k + 1 phases for every k = 2, 4, ..., 16; Kuhn's edge scans / (V E) were 0.1446, 0.1432, 0.1432, 0.1434, 0.1436, 0.1439, 0.1440 for k = 4..16; Hopcroft-Karp's edge scans / (E sqrt V) were 1.0501 down to 1.0144.",
+    "artifacts": ["implementations/kuhn.py", "implementations/hopcroft_karp.py", "harness.py", "../../experiments/2026-10-07_bipartite_matching_counts.py", "../../experiments/2026-10-07_bipartite_matching_probe.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 18, 20, 39, 50, 68, 100, 200, 300],
+    "trials": 6
+  },
+  "caveats": "Both bounds are worst-case bounds, and the timing family is adversarial and implementation-specific: a dense K_{2a,a} gadget whose a unmatchable left vertices make every Kuhn search and every Hopcroft-Karp phase traverse it, plus paths P_2..P_2k whose adjacency order makes Hopcroft-Karp's first phase choose the wrong edges, so that phase j repairs only path j. With other scan orders the family need not be hard. On random bipartite graphs Hopcroft-Karp needed only 2 to 5 phases (V = 100..800, same experiment), so random graphs do not exhibit its sqrt(V) factor. Kuhn did take about 0.08 V E edge scans on dense random graphs (p = 0.5) and 0.025-0.047 V E on sparse ones (p = 0.05). The oracle is randomized (one-sided: a random substitution can only lower the rank), with failure probability below 10^-15 per instance and a deterministic seed.",
+  "notes": "Maximum bipartite matching is also a special case of maximum flow with unit capacities (compare pairs/max-flow-edmonds-karp-vs-dinic). The Edmonds-matrix rank used as the oracle is also the basis of randomized algebraic matching algorithms."
+}

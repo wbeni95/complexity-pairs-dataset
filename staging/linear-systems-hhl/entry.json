@@ -1,0 +1,98 @@
+{
+  "id": "linear-systems-hhl",
+  "title": "Linear systems: conjugate gradient vs the HHL quantum algorithm (conjectured exponential speedup, with fine print and low-rank dequantization)",
+  "problem_statement": "Given an N x N sparse Hermitian matrix A with condition number kappa, accessible through an oracle for its nonzero entries, and a vector b available as a quantum state |b> (or, classically, by its entries), estimate an expectation value x^T M x of the solution x of Ax = b for a given operator M (HHL's formulation: 'one doesn't need to know the solution x itself, but rather an approximation of the expectation value of some operator associated with x'), to precision eps.",
+  "input": {
+    "parameter": "N = dimension; also the sparsity s (nonzeros per row), the condition number kappa and the precision eps.",
+    "size_measure": "Implicit input: A and b are given by efficient access procedures (sparse-entry oracle and state preparation), so the description size is poly(log N, s); an explicit input would already have size Theta(N s)."
+  },
+  "algorithms": [
+    {
+      "name": "classical conjugate-gradient-type solver",
+      "idea": "Krylov-subspace iteration with sparse matrix-vector products; computes x and hence x^T M x.",
+      "model": "classical-deterministic",
+      "pseudocode": "conjugate gradient (for positive definite A; general A via the normal equations or Hermitian embedding)",
+      "time_complexity": "O(N sqrt(kappa)) for sparse A, as stated in the HHL abstract (dependence on s and eps not shown there)",
+      "space_complexity": "O(N)",
+      "correctness": "Standard numerical linear algebra; the bound is the one HHL quote as the best classical algorithm.",
+      "implementation": null
+    },
+    {
+      "name": "HHL quantum algorithm",
+      "idea": "Phase estimation of e^(-iAt) on |b> writes A's eigenvalues into a register; a controlled rotation multiplies each eigencomponent by 1/lambda; uncomputing phase estimation and post-selecting yields |x> proportional to A^(-1)|b>, from which x^T M x is estimated.",
+      "model": "quantum",
+      "pseudocode": "Harrow, Hassidim & Lloyd 2009",
+      "time_complexity": "poly(log N, kappa) (HHL abstract); Aaronson 2015 summarises it as roughly log(N) * kappa * s / eps, given fast preparation of |b> and fast application of e^(-iAt)",
+      "space_complexity": "O(log N) qubits plus phase-estimation and ancilla registers",
+      "correctness": "Harrow, Hassidim & Lloyd 2009.",
+      "implementation": null
+    },
+    {
+      "name": "quantum-inspired classical algorithm for LOW-RANK A (dequantization; a different input model)",
+      "idea": "With length-squared sampling access to A and b, subsample to an approximate low-rank SVD, invert the singular values, and output samples from or entries of the pseudo-inverse solution.",
+      "model": "classical-randomized",
+      "pseudocode": "Chia, Lin & Wang 2018; Gilyen, Lloyd & Tang 2018; framework in Chia et al. 2022",
+      "time_complexity": "O(poly(k, kappa, ||A||_F, 1/eps) polylog(m, n)) for a rank-k m x n matrix (Chia, Lin & Wang 2018 abstract): polylogarithmic in the dimension, polynomial in rank, condition number and 1/eps",
+      "space_complexity": "a sampling data structure over A and b (assumed given, like QRAM on the quantum side)",
+      "correctness": "Chia, Lin & Wang 2018; Gilyen, Lloyd & Tang 2018; Chia et al. 2022 (which recovers and often improves 'low-rank regression' among other dequantization results).",
+      "implementation": null
+    }
+  ],
+  "pair_type": "T6",
+  "lower_bounds": [
+    {
+      "model": "classical-randomized",
+      "bound": "no algorithm in time poly(log N, kappa, 1/eps) for the general sparse well-conditioned case unless every quantum polynomial-time computation can be simulated classically (BQP = BPP)",
+      "setting": "CONDITIONAL (on BQP != BPP), not a proven query lower bound; follows from HHL's result that the problem is universal for quantum computation (BQP-complete): any quantum circuit on n qubits can be encoded as a linear system of about 2^n equations",
+      "source": "Harrow, Hassidim & Lloyd 2009; universality statement as summarised by Aaronson 2015"
+    }
+  ],
+  "relationship": "CONJECTURED exponential speedup, not a proven separation: classical O(N sqrt(kappa)) vs quantum poly(log N, kappa) for estimating x^T M x, under strong input assumptions. TAG DECISION: T6 (open / unpaired), not T9 and not T5. Not T9, because no unconditional classical lower bound is known for HHL's task; the only barrier is conditional (HHL's BQP-completeness: a classical poly(log N, kappa, 1/eps) algorithm would give BQP = BPP). Not T5, because the dequantization results apply to LOW-RANK matrices with length-squared sampling access, a different problem and input model from HHL's sparse, full-rank, oracle-access setting, for which no dequantization is known. So, like integer factoring, this is a problem where the best known classical algorithm is exponentially slower in log N than a quantum one, with no proof either way. The low-rank variant belongs with staging/recommendation-systems-dequantization (T5).",
+  "sources": [
+    {
+      "authors": "Harrow, A. W.; Hassidim, A.; Lloyd, S.",
+      "year": 2009,
+      "title": "Quantum Algorithm for Linear Systems of Equations",
+      "venue": "Physical Review Letters 103(15), 150502",
+      "doi": "10.1103/PhysRevLett.103.150502",
+      "arxiv": "0811.3171"
+    },
+    {
+      "authors": "Aaronson, S.",
+      "year": 2015,
+      "title": "Read the fine print",
+      "venue": "Nature Physics 11(4), 291-293",
+      "doi": "10.1038/nphys3272",
+      "note": "Caveats and the universality summary quoted from the author's preprint 'Quantum Machine Learning Algorithms: Read the Fine Print'."
+    },
+    {
+      "authors": "Chia, N.-H.; Lin, H.-H.; Wang, C.",
+      "year": 2018,
+      "title": "Quantum-inspired sublinear classical algorithms for solving low-rank linear systems",
+      "venue": "arXiv preprint",
+      "arxiv": "1811.04852"
+    },
+    {
+      "authors": "Gilyen, A.; Lloyd, S.; Tang, E.",
+      "year": 2018,
+      "title": "Quantum-inspired low-rank stochastic regression with logarithmic dependence on the dimension",
+      "venue": "arXiv preprint",
+      "arxiv": "1811.04909"
+    },
+    {
+      "authors": "Chia, N.-H.; Gilyen, A.; Li, T.; Lin, H.-H.; Tang, E.; Wang, C.",
+      "year": 2022,
+      "title": "Sampling-based Sublinear Low-rank Matrix Arithmetic Framework for Dequantizing Quantum Machine Learning",
+      "venue": "Journal of the ACM 69(5)",
+      "doi": "10.1145/3549524",
+      "arxiv": "1910.06151"
+    }
+  ],
+  "verification": {
+    "level": "V0",
+    "method": "Cited from the literature. DOIs, titles, years, volumes and issues checked against Crossref; the HHL complexity statements checked against the HHL arXiv abstract (0811.3171); the four caveats and the universality (BQP-completeness) summary checked against Aaronson's preprint of the Nature Physics article; the dequantization bounds checked against the arXiv abstracts of 1811.04852, 1811.04909 and 1910.06151.",
+    "artifacts": []
+  },
+  "caveats": "Aaronson (2015) lists four caveats, each of which can remove the speedup: (1) b must be loaded quickly as the state |b>, e.g. from a quantum RAM, and b must be fairly uniform or come with suitable auxiliary data; (2) e^(-iAt) must be applicable quickly, e.g. for sparse A with its nonzero entries in a quantum RAM; (3) A must be robustly invertible: the running time grows nearly linearly with kappa, so kappa ~ N^c kills the speedup; (4) the output is the quantum state |x>, not x: measuring it reveals limited statistics, and reading a specific entry x_i generally needs about N repetitions. He also stresses that the fair comparison is with the best classical algorithm for the same restricted task (estimating observables of x for systems HHL can handle), which may be much faster than O(N sqrt(kappa)); that the instances produced by the universality reduction are 'extremely artificial'; and that the quantum RAM must be passive, since otherwise classical parallelism solves Ax = b in O(log^2 N) steps. The dequantized algorithms likewise assume a preprocessed sampling data structure; their polynomial degrees are large.",
+  "notes": "Evidence on both sides of the classical-vs-quantum question: a BQP-complete problem (so an exponential speedup exists for SOME instances if BQP != BPP), whose practically motivated low-rank instances were dequantized. Not implemented: simulating HHL on lib/qsim.py would need phase estimation and Hamiltonian simulation and would not measure a query separation."
+}

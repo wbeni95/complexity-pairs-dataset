@@ -1,0 +1,742 @@
+{
+ "name": "2026-10-07_flipgraph_2x2",
+ "script": "experiments/2026-10-07_flipgraph_2x2.py",
+ "best_known_rank": 7,
+ "start": "standard algorithm",
+ "environment": {
+  "python": "3.14.2",
+  "implementation": "CPython",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "machine": "AMD64",
+  "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "logical_cpus": 16
+ },
+ "batch_machine": {
+  "wall_seconds": 0.04,
+  "process_cpu_seconds": 0.031,
+  "system_cpu_utilisation": 0.05,
+  "logical_cpus": 16
+ },
+ "runs": [
+  {
+   "format": [
+    2,
+    2,
+    2
+   ],
+   "seed": 1,
+   "config": {
+    "fmt": [
+     2,
+     2,
+     2
+    ],
+    "seed": 1,
+    "max_flips": 1000000,
+    "plateau": 2000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": null,
+    "target_rank": 7,
+    "verify_every": 4096,
+    "log_every": 0,
+    "keep_ranks_upto": 7,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {}
+   },
+   "start_rank": 8,
+   "best_rank": 7,
+   "best_reached_at_flip": 555,
+   "best_reached_at_seconds": 0.003,
+   "flips": 555,
+   "wall_seconds": 0.003,
+   "flips_per_second": 199175,
+   "flips_since_last_improvement": 0,
+   "stopped_by": "target",
+   "plus_transitions": 0,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 1,
+   "full_verifications_passed": 2,
+   "trajectory": [
+    [
+     8,
+     0,
+     0.0
+    ],
+    [
+     7,
+     555,
+     0.003
+    ]
+   ],
+   "started": "2026-10-06T04:51:19",
+   "machine": {
+    "wall_seconds": 0.003,
+    "process_cpu_seconds": 0.0,
+    "system_cpu_utilisation": 0.0,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_2x2_2x2x2_seed1_rank7.json"
+   ],
+   "tag": "2026-10-07_flipgraph_2x2_2x2x2_seed1",
+   "status": "matches best known"
+  },
+  {
+   "format": [
+    2,
+    2,
+    2
+   ],
+   "seed": 2,
+   "config": {
+    "fmt": [
+     2,
+     2,
+     2
+    ],
+    "seed": 2,
+    "max_flips": 1000000,
+    "plateau": 2000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": null,
+    "target_rank": 7,
+    "verify_every": 4096,
+    "log_every": 0,
+    "keep_ranks_upto": 7,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {}
+   },
+   "start_rank": 8,
+   "best_rank": 7,
+   "best_reached_at_flip": 976,
+   "best_reached_at_seconds": 0.004,
+   "flips": 976,
+   "wall_seconds": 0.004,
+   "flips_per_second": 222086,
+   "flips_since_last_improvement": 0,
+   "stopped_by": "target",
+   "plus_transitions": 0,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 1,
+   "full_verifications_passed": 2,
+   "trajectory": [
+    [
+     8,
+     0,
+     0.0
+    ],
+    [
+     7,
+     976,
+     0.004
+    ]
+   ],
+   "started": "2026-10-06T04:51:19",
+   "machine": {
+    "wall_seconds": 0.005,
+    "process_cpu_seconds": 0.0,
+    "system_cpu_utilisation": null,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_2x2_2x2x2_seed2_rank7.json"
+   ],
+   "tag": "2026-10-07_flipgraph_2x2_2x2x2_seed2",
+   "status": "matches best known"
+  },
+  {
+   "format": [
+    2,
+    2,
+    2
+   ],
+   "seed": 3,
+   "config": {
+    "fmt": [
+     2,
+     2,
+     2
+    ],
+    "seed": 3,
+    "max_flips": 1000000,
+    "plateau": 2000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": null,
+    "target_rank": 7,
+    "verify_every": 4096,
+    "log_every": 0,
+    "keep_ranks_upto": 7,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {}
+   },
+   "start_rank": 8,
+   "best_rank": 7,
+   "best_reached_at_flip": 63,
+   "best_reached_at_seconds": 0.0,
+   "flips": 63,
+   "wall_seconds": 0.0,
+   "flips_per_second": 166315,
+   "flips_since_last_improvement": 0,
+   "stopped_by": "target",
+   "plus_transitions": 0,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 1,
+   "full_verifications_passed": 2,
+   "trajectory": [
+    [
+     8,
+     0,
+     0.0
+    ],
+    [
+     7,
+     63,
+     0.0
+    ]
+   ],
+   "started": "2026-10-06T04:51:19",
+   "machine": {
+    "wall_seconds": 0.001,
+    "process_cpu_seconds": 0.0,
+    "system_cpu_utilisation": null,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_2x2_2x2x2_seed3_rank7.json"
+   ],
+   "tag": "2026-10-07_flipgraph_2x2_2x2x2_seed3",
+   "status": "matches best known"
+  },
+  {
+   "format": [
+    2,
+    2,
+    2
+   ],
+   "seed": 4,
+   "config": {
+    "fmt": [
+     2,
+     2,
+     2
+    ],
+    "seed": 4,
+    "max_flips": 1000000,
+    "plateau": 2000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": null,
+    "target_rank": 7,
+    "verify_every": 4096,
+    "log_every": 0,
+    "keep_ranks_upto": 7,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {}
+   },
+   "start_rank": 8,
+   "best_rank": 7,
+   "best_reached_at_flip": 1577,
+   "best_reached_at_seconds": 0.007,
+   "flips": 1577,
+   "wall_seconds": 0.007,
+   "flips_per_second": 219564,
+   "flips_since_last_improvement": 0,
+   "stopped_by": "target",
+   "plus_transitions": 0,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 1,
+   "full_verifications_passed": 2,
+   "trajectory": [
+    [
+     8,
+     0,
+     0.0
+    ],
+    [
+     7,
+     1577,
+     0.007
+    ]
+   ],
+   "started": "2026-10-06T04:51:19",
+   "machine": {
+    "wall_seconds": 0.007,
+    "process_cpu_seconds": 0.016,
+    "system_cpu_utilisation": 0.0625,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_2x2_2x2x2_seed4_rank7.json"
+   ],
+   "tag": "2026-10-07_flipgraph_2x2_2x2x2_seed4",
+   "status": "matches best known"
+  },
+  {
+   "format": [
+    2,
+    2,
+    2
+   ],
+   "seed": 5,
+   "config": {
+    "fmt": [
+     2,
+     2,
+     2
+    ],
+    "seed": 5,
+    "max_flips": 1000000,
+    "plateau": 2000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": null,
+    "target_rank": 7,
+    "verify_every": 4096,
+    "log_every": 0,
+    "keep_ranks_upto": 7,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {}
+   },
+   "start_rank": 8,
+   "best_rank": 7,
+   "best_reached_at_flip": 818,
+   "best_reached_at_seconds": 0.004,
+   "flips": 818,
+   "wall_seconds": 0.004,
+   "flips_per_second": 215456,
+   "flips_since_last_improvement": 0,
+   "stopped_by": "target",
+   "plus_transitions": 0,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 1,
+   "full_verifications_passed": 2,
+   "trajectory": [
+    [
+     8,
+     0,
+     0.0
+    ],
+    [
+     7,
+     818,
+     0.004
+    ]
+   ],
+   "started": "2026-10-06T04:51:19",
+   "machine": {
+    "wall_seconds": 0.004,
+    "process_cpu_seconds": 0.0,
+    "system_cpu_utilisation": null,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_2x2_2x2x2_seed5_rank7.json"
+   ],
+   "tag": "2026-10-07_flipgraph_2x2_2x2x2_seed5",
+   "status": "matches best known"
+  },
+  {
+   "format": [
+    2,
+    2,
+    2
+   ],
+   "seed": 6,
+   "config": {
+    "fmt": [
+     2,
+     2,
+     2
+    ],
+    "seed": 6,
+    "max_flips": 1000000,
+    "plateau": 2000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": null,
+    "target_rank": 7,
+    "verify_every": 4096,
+    "log_every": 0,
+    "keep_ranks_upto": 7,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {}
+   },
+   "start_rank": 8,
+   "best_rank": 7,
+   "best_reached_at_flip": 666,
+   "best_reached_at_seconds": 0.003,
+   "flips": 666,
+   "wall_seconds": 0.003,
+   "flips_per_second": 214438,
+   "flips_since_last_improvement": 0,
+   "stopped_by": "target",
+   "plus_transitions": 0,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 1,
+   "full_verifications_passed": 2,
+   "trajectory": [
+    [
+     8,
+     0,
+     0.0
+    ],
+    [
+     7,
+     666,
+     0.003
+    ]
+   ],
+   "started": "2026-10-06T04:51:19",
+   "machine": {
+    "wall_seconds": 0.003,
+    "process_cpu_seconds": 0.0,
+    "system_cpu_utilisation": null,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_2x2_2x2x2_seed6_rank7.json"
+   ],
+   "tag": "2026-10-07_flipgraph_2x2_2x2x2_seed6",
+   "status": "matches best known"
+  },
+  {
+   "format": [
+    2,
+    2,
+    2
+   ],
+   "seed": 7,
+   "config": {
+    "fmt": [
+     2,
+     2,
+     2
+    ],
+    "seed": 7,
+    "max_flips": 1000000,
+    "plateau": 2000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": null,
+    "target_rank": 7,
+    "verify_every": 4096,
+    "log_every": 0,
+    "keep_ranks_upto": 7,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {}
+   },
+   "start_rank": 8,
+   "best_rank": 7,
+   "best_reached_at_flip": 349,
+   "best_reached_at_seconds": 0.002,
+   "flips": 349,
+   "wall_seconds": 0.002,
+   "flips_per_second": 211106,
+   "flips_since_last_improvement": 0,
+   "stopped_by": "target",
+   "plus_transitions": 0,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 1,
+   "full_verifications_passed": 2,
+   "trajectory": [
+    [
+     8,
+     0,
+     0.0
+    ],
+    [
+     7,
+     349,
+     0.002
+    ]
+   ],
+   "started": "2026-10-06T04:51:19",
+   "machine": {
+    "wall_seconds": 0.002,
+    "process_cpu_seconds": 0.0,
+    "system_cpu_utilisation": null,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_2x2_2x2x2_seed7_rank7.json"
+   ],
+   "tag": "2026-10-07_flipgraph_2x2_2x2x2_seed7",
+   "status": "matches best known"
+  },
+  {
+   "format": [
+    2,
+    2,
+    2
+   ],
+   "seed": 8,
+   "config": {
+    "fmt": [
+     2,
+     2,
+     2
+    ],
+    "seed": 8,
+    "max_flips": 1000000,
+    "plateau": 2000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": null,
+    "target_rank": 7,
+    "verify_every": 4096,
+    "log_every": 0,
+    "keep_ranks_upto": 7,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {}
+   },
+   "start_rank": 8,
+   "best_rank": 7,
+   "best_reached_at_flip": 1542,
+   "best_reached_at_seconds": 0.007,
+   "flips": 1542,
+   "wall_seconds": 0.007,
+   "flips_per_second": 220522,
+   "flips_since_last_improvement": 0,
+   "stopped_by": "target",
+   "plus_transitions": 0,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 1,
+   "full_verifications_passed": 2,
+   "trajectory": [
+    [
+     8,
+     0,
+     0.0
+    ],
+    [
+     7,
+     1542,
+     0.007
+    ]
+   ],
+   "started": "2026-10-06T04:51:19",
+   "machine": {
+    "wall_seconds": 0.007,
+    "process_cpu_seconds": 0.016,
+    "system_cpu_utilisation": 0.0625,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_2x2_2x2x2_seed8_rank7.json"
+   ],
+   "tag": "2026-10-07_flipgraph_2x2_2x2x2_seed8",
+   "status": "matches best known"
+  },
+  {
+   "format": [
+    2,
+    2,
+    2
+   ],
+   "seed": 9,
+   "config": {
+    "fmt": [
+     2,
+     2,
+     2
+    ],
+    "seed": 9,
+    "max_flips": 1000000,
+    "plateau": 2000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": null,
+    "target_rank": 7,
+    "verify_every": 4096,
+    "log_every": 0,
+    "keep_ranks_upto": 7,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {}
+   },
+   "start_rank": 8,
+   "best_rank": 7,
+   "best_reached_at_flip": 340,
+   "best_reached_at_seconds": 0.002,
+   "flips": 340,
+   "wall_seconds": 0.002,
+   "flips_per_second": 208423,
+   "flips_since_last_improvement": 0,
+   "stopped_by": "target",
+   "plus_transitions": 0,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 1,
+   "full_verifications_passed": 2,
+   "trajectory": [
+    [
+     8,
+     0,
+     0.0
+    ],
+    [
+     7,
+     340,
+     0.002
+    ]
+   ],
+   "started": "2026-10-06T04:51:19",
+   "machine": {
+    "wall_seconds": 0.002,
+    "process_cpu_seconds": 0.0,
+    "system_cpu_utilisation": null,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_2x2_2x2x2_seed9_rank7.json"
+   ],
+   "tag": "2026-10-07_flipgraph_2x2_2x2x2_seed9",
+   "status": "matches best known"
+  },
+  {
+   "format": [
+    2,
+    2,
+    2
+   ],
+   "seed": 10,
+   "config": {
+    "fmt": [
+     2,
+     2,
+     2
+    ],
+    "seed": 10,
+    "max_flips": 1000000,
+    "plateau": 2000,
+    "escape": "plus",
+    "slack": 1,
+    "plus_per_escape": 1,
+    "pool_size": 64,
+    "reduction": "linear",
+    "max_seconds": null,
+    "target_rank": 7,
+    "verify_every": 4096,
+    "log_every": 0,
+    "keep_ranks_upto": 7,
+    "max_weight": 0,
+    "lookahead_every": 0,
+    "extra": {}
+   },
+   "start_rank": 8,
+   "best_rank": 7,
+   "best_reached_at_flip": 48,
+   "best_reached_at_seconds": 0.0,
+   "flips": 48,
+   "wall_seconds": 0.0,
+   "flips_per_second": 136752,
+   "flips_since_last_improvement": 0,
+   "stopped_by": "target",
+   "plus_transitions": 0,
+   "rejected_by_weight_cap": 0,
+   "lookahead_scans": 0,
+   "lookahead_hits": 0,
+   "restarts": 0,
+   "no_flip_available_events": 0,
+   "reduction_events": 1,
+   "full_verifications_passed": 2,
+   "trajectory": [
+    [
+     8,
+     0,
+     0.0
+    ],
+    [
+     7,
+     48,
+     0.0
+    ]
+   ],
+   "started": "2026-10-06T04:51:19",
+   "machine": {
+    "wall_seconds": 0.001,
+    "process_cpu_seconds": 0.0,
+    "system_cpu_utilisation": null,
+    "logical_cpus": 16
+   },
+   "saved_schemes": [
+    "search/schemes/2026-10-07_flipgraph_2x2_2x2x2_seed10_rank7.json"
+   ],
+   "tag": "2026-10-07_flipgraph_2x2_2x2x2_seed10",
+   "status": "matches best known"
+  }
+ ]
+}
