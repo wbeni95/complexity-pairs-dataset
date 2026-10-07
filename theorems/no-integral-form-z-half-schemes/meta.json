@@ -1,0 +1,56 @@
+{
+  "id": "no-integral-form-z-half-schemes",
+  "title": "No integer equivalent form for the ⟨2,4,5;32⟩ and ⟨3,3,6;40⟩ ℤ[1/2] matrix multiplication schemes",
+  "statement": "Let K be a field of characteristic 0. For a scheme (a_r, b_r, c_r), r = 1..R, for the format ⟨n,m,p⟩ (a_r: n×m, b_r: m×p, c_r: p×n, satisfying the Brent equations), call (λ_r U a_r V⁻¹, μ_r V b_r W⁻¹, (λ_r μ_r)⁻¹ W c_r U⁻¹) with U ∈ GL_n(K), V ∈ GL_m(K), W ∈ GL_p(K), λ_r, μ_r ∈ K^×, possibly followed by a reordering of the terms, an equivalent form. Then neither the ⟨2,4,5;32⟩ scheme of AlphaEvolve (2025) nor the ⟨3,3,6;40⟩ scheme of Smirnov (2013), both with coefficients in ℤ[1/2] (as in the pinned files named in the README), has an equivalent form all of whose coefficients are integers. Certificates (the type of Moran–Schwartz–Yuan, Proposition 3), with term matrices M_j = a_j b_j c_j: tr(M_1) = 3/2 for ⟨3,3,6;40⟩ and tr(M_2 M_5) = 1/2 for ⟨2,4,5;32⟩. The action conjugates every M_j by U (term scalings cancel), so these traces are invariant, and they would be integers for an integer form.",
+  "provenance": {
+    "class": "literature",
+    "bases": ["Moran–Schwartz–Yuan 2026, arXiv:2602.13171"]
+  },
+  "sources": [
+    {
+      "authors": "Moran, Y.; Schwartz, O.; Yuan, S.",
+      "year": 2026,
+      "title": "Complex to Rational Fast Matrix Multiplication",
+      "venue": "arXiv preprint (v1, 13 February 2026)",
+      "arxiv": "2602.13171",
+      "note": "Proposition 3 and §3.2 (Integer algorithms): the result for Smirnov's ⟨3,3,6,40⟩ (single trace not in ℤ) and for a ⟨2,4,5,32⟩ algorithm over ℤ[1/2] (trace of a product of two term matrices not in ℤ), which they attribute to Hopcroft and Kerr (1971). The note uses certificates of this type."
+    },
+    {
+      "authors": "Novikov, A.; Vũ, N.; Eisenberger, M.; Dupont, E.; Huang, P.-S.; Wagner, A. Z.; Shirobokov, S.; Kozlovskii, B.; Ruiz, F. J. R.; Mehrabian, A.; Kumar, M. P.; See, A.; Chaudhuri, S.; Holland, G.; Davies, A.; Nowozin, S.; Kohli, P.; Balog, M.",
+      "year": 2025,
+      "title": "AlphaEvolve: A coding agent for scientific and algorithmic discovery",
+      "arxiv": "2506.13131",
+      "url": "https://github.com/google-deepmind/alphaevolve_results",
+      "note": "Source of the ⟨2,4,5;32⟩ scheme. The pinned file agrees term by term, in order, with decomposition_245 in mathematical_results.ipynb at commit 4226acbf237ff9ad10ba7673a2af127a2d8a5971 (not re-checked by verify.py)."
+    },
+    {
+      "authors": "Smirnov, A. V.",
+      "year": 2013,
+      "title": "The bilinear complexity and practical algorithms for matrix multiplication",
+      "venue": "Computational Mathematics and Mathematical Physics 53(12), 1781-1795",
+      "doi": "10.1134/S0965542513120129",
+      "note": "Source of the ⟨3,3,6;40⟩ scheme."
+    },
+    {
+      "authors": "Hopcroft, J. E.; Kerr, L. R.",
+      "year": 1971,
+      "title": "On minimizing the number of multiplications necessary for matrix multiplication",
+      "venue": "SIAM Journal on Applied Mathematics 20(1), 30-36",
+      "doi": "10.1137/0120004",
+      "note": "Cited only because Moran-Schwartz-Yuan attribute their ⟨2,4,5,32⟩ algorithm to it; by its abstract it gives ⌈(3pn + max(n,p))/2⌉ multiplications for p×2 by 2×n, i.e. 33 for this format."
+    },
+    {
+      "authors": "dronperminov (GitHub)",
+      "title": "FastMatrixMultiplication, schemes/known/tensor/2x4x5_tensor.mpl (SHA-256 e03c7743a60f53ae21a3413af4a5f019600a12befc8ed22ffdf2baa8b0f7dd4b)",
+      "url": "https://raw.githubusercontent.com/dronperminov/FastMatrixMultiplication/64f58a5e40806bc47847b11dd8aceec043fa895d/schemes/known/tensor/2x4x5_tensor.mpl",
+      "note": "Pinned input of verify.py (commit 64f58a5e40806bc47847b11dd8aceec043fa895d)."
+    },
+    {
+      "authors": "dronperminov (GitHub)",
+      "title": "FastMatrixMultiplication, schemes/known/tensor/3x3x6_tensor.mpl (SHA-256 3e79357c5d2540e5c54c2a5f484f17009f70799b10bd45ed8e4bf893b5e223ab)",
+      "url": "https://raw.githubusercontent.com/dronperminov/FastMatrixMultiplication/64f58a5e40806bc47847b11dd8aceec043fa895d/schemes/known/tensor/3x3x6_tensor.mpl",
+      "note": "Pinned input of verify.py (commit 64f58a5e40806bc47847b11dd8aceec043fa895d)."
+    }
+  ],
+  "verify": "python theorems/no-integral-form-z-half-schemes/verify.py"
+}

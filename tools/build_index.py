@@ -57,11 +57,41 @@ def summarize(entry_dir: Path, entry: dict) -> dict:
             for a in entry["algorithms"]
         ],
         "sources": len(entry["sources"]),
+        "provenance": entry.get("provenance", {"class": "literature"}),
     }
 
 
-def build_index(rows: list[dict]) -> dict:
+PROVENANCE_BADGE = {"own": "🟠 Own result", "own-extension": "🟠 Own extension"}
+
+
+def provenance_badge(prov: dict) -> str:
+    """Orange label for the project's own results; a pending flag where a source could not be checked."""
+    parts = []
+    if prov.get("class") in PROVENANCE_BADGE:
+        parts.append(PROVENANCE_BADGE[prov["class"]])
+    if prov.get("pending"):
+        parts.append("⏳ Pending")
+    return (" " + " · ".join(parts)) if parts else ""
+
+
+def discover_theorems() -> list[dict]:
+    """Notes under theorems/<slug>/ (meta.json + README.md + verify.py): results that are not complexity pairs."""
+    out = []
+    for meta in sorted((REPO / "theorems").glob("*/meta.json")):
+        m = json.loads(meta.read_text(encoding="utf-8"))
+        out.append({
+            "id": m["id"],
+            "title": m["title"],
+            "path": meta.parent.relative_to(REPO).as_posix(),
+            "provenance": m.get("provenance", {"class": "literature"}),
+            "verify": m.get("verify", ""),
+        })
+    return out
+
+
+def build_index(rows: list[dict], theorems: list[dict] | None = None) -> dict:
     count = lambda pred: sum(1 for r in rows if pred(r))  # noqa: E731
+    theorems = theorems or []
     return {
         "schema": "schema/entry.schema.json",
         "counts": {
@@ -73,8 +103,10 @@ def build_index(rows: list[dict]) -> dict:
             "with_quantum_algorithm": count(lambda r: r["has_quantum_algorithm"]),
             "by_level": {lv: count(lambda r, lv=lv: r["level"] == lv) for lv in LEVELS},
             "by_type": {t: count(lambda r, t=t: r["pair_type"] == t) for t in TAG_NAMES},
+            "theorems": len(theorems),
         },
         "entries": rows,
+        "theorems": theorems,
     }
 
 
@@ -93,7 +125,7 @@ def short_complexity(text: str) -> str:
     return text
 
 
-def readme_table(rows: list[dict]) -> str:
+def readme_table(rows: list[dict], theorems: list[dict] | None = None) -> str:
     def fmt_algos(r):
         return "<br>".join(
             f"{a['name']}: {short_complexity(a['time_complexity'])}"
@@ -105,7 +137,7 @@ def readme_table(rows: list[dict]) -> str:
         lines = ["| Entry | Type | Level | Algorithms (time) |", "|---|---|---|---|"]
         for r in sel:
             tags = r["pair_type"] + ("+" + "+".join(r["secondary_tags"]) if r["secondary_tags"] else "")
-            lines.append(f"| [{r['title']}]({r['path']}) | {tags} | {r['level']} | {fmt_algos(r)} |")
+            lines.append(f"| [{r['title']}]({r['path']}){provenance_badge(r['provenance'])} | {tags} | {r['level']} | {fmt_algos(r)} |")
         return "\n".join(lines)
 
     idx = build_index(rows)["counts"]
@@ -127,6 +159,11 @@ def readme_table(rows: list[dict]) -> str:
     ]
     if synthetic:
         parts += ["", "### Synthetic (`synthetic/`, T7: not counted)", "", table(synthetic)]
+    if theorems:
+        lines = ["| Theorem | Verify |", "|---|---|"]
+        for th in theorems:
+            lines.append(f"| [{th['title']}]({th['path']}){provenance_badge(th['provenance'])} | `{th['verify']}` |")
+        parts += ["", "### Theorems (`theorems/`: results that are not complexity pairs)", "", "\n".join(lines)]
     return "\n".join(parts)
 
 
@@ -177,6 +214,7 @@ def main(argv=None) -> int:
 
     entries = [(d, load_entry(d)) for d in discover_entries()]
     rows = sorted((summarize(d, e) for d, e in entries), key=lambda r: (r["location"] != "pairs", r["pair_type"], r["id"]))
+    theorems = discover_theorems()
     outputs: dict[Path, str] = {
         REPO / "index.json": json.dumps(build_index(rows), indent=2, ensure_ascii=False) + "\n",
     }
@@ -188,7 +226,7 @@ def main(argv=None) -> int:
         return 2
     head, rest = readme.split(TABLE_START, 1)
     _, tail = rest.split(TABLE_END, 1)
-    outputs[readme_path] = f"{head}{TABLE_START}\n{readme_table(rows)}\n{TABLE_END}{tail}"
+    outputs[readme_path] = f"{head}{TABLE_START}\n{readme_table(rows, theorems)}\n{TABLE_END}{tail}"
 
     for d, e in entries:
         p = d / "README.md"

@@ -12,7 +12,7 @@
       "idea": "Try d = min(a, b), min(a, b) - 1, ... and return the first d that divides both a and b.",
       "model": "classical-deterministic",
       "pseudocode": "if a = 0 or b = 0: return a + b; d = min(a, b); while d does not divide both a and b: d = d - 1; return d",
-      "time_complexity": "Theta(2^n) iterations in the worst case: exactly min(a, b) - gcd(a, b) + 1 iterations of one or two divisions, i.e. up to 2^n - 2 on coprime n-bit inputs (>= 2^(n-2) on the coprime Fibonacci pairs used for V2). In bit operations, Theta(2^n) times the cost of an n-bit division.",
+      "time_complexity": "Theta(2^n) iterations in the worst case: exactly min(a, b) - gcd(a, b) + 1 iterations of one or two divisions, i.e. up to 2^n - 2 on coprime n-bit inputs (>= 2^(n-2) on the coprime Fibonacci pairs used for V2: the pair is F_(k+1), F_k with F_(k+1) < 2^n <= F_(k+2), and F_(k+2) = F_(k+1) + F_k <= 3 F_k, so min(a, b) = F_k >= 2^n / 3 > 2^(n-2)). In bit operations, Theta(2^n) times the cost of an n-bit division.",
       "space_complexity": "O(n) bits",
       "correctness": "Every common divisor is at most min(a, b) (for a, b > 0), and d = 1 always divides both, so the first d found scanning downwards is the greatest common divisor.",
       "implementation": "implementations/trial.py:gcd_trial",

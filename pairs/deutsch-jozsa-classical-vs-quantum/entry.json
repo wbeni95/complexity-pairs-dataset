@@ -12,7 +12,7 @@
       "idea": "Query x = 0, 1, 2, ... in a fixed order; answer 'balanced' at the first value different from f(0), and 'constant' after 2^(n-1) + 1 equal values (more than half the table, which no balanced function can show).",
       "model": "classical-deterministic",
       "pseudocode": "v = f(0); for x in 1..2^(n-1): if f(x) != v: return balanced; return constant",
-      "time_complexity": "2^(n-1) + 1 queries in the worst case (optimal for exact classical algorithms); about 3 queries on average over uniformly random balanced functions",
+      "time_complexity": "2^(n-1) + 1 queries in the worst case (optimal for exact classical algorithms); at most 3 queries on average over uniformly random balanced functions, tending to 3 as n grows: the first j values agree with probability 2 prod_{i<j} (N/2 - i)/(N - i) <= 2^(1-j) (N = 2^n), and the expected number of queries is 1 plus the sum of these probabilities over j >= 1",
       "space_complexity": "O(n)",
       "correctness": "If two values differ, f is not constant, so by the promise it is balanced. If 2^(n-1) + 1 values agree, f has more than 2^(n-1) equal values, so it is not balanced, hence constant. Never wrong.",
       "implementation": "implementations/classical.py:dj_classical",
@@ -85,6 +85,6 @@
     "v1_sizes": [1, 2, 3, 4, 5, 6, 8, 10, 12, 16],
     "trials": 6
   },
-  "caveats": "The exponential gap holds ONLY against exact classical algorithms: with any constant error probability a classical randomized algorithm uses O(1) queries, so Deutsch-Jozsa gives no separation between bounded-error classical and quantum query complexity. It is a promise (partial-function) problem, and a separation relative to an oracle; it does not imply BQP != BPP (it does not even separate the bounded-error query complexities). The V2 fit of the deterministic algorithm uses its worst-case inputs; on random balanced inputs it stops after about 3 queries.",
+  "caveats": "The exponential gap holds ONLY against exact classical algorithms: with any constant error probability a classical randomized algorithm uses O(1) queries, so Deutsch-Jozsa gives no separation between bounded-error classical and quantum query complexity. It is a promise (partial-function) problem, and a separation relative to an oracle; it does not imply BQP != BPP (it does not even separate the bounded-error query complexities). The V2 fit of the deterministic algorithm uses its worst-case inputs; on random balanced inputs it stops after at most 3 queries on average.",
   "notes": "Historically the first problem for which a quantum algorithm was shown to beat every exact classical algorithm exponentially. The original 1992 algorithm used two queries; the one-query, zero-error form implemented here is from Cleve, Ekert, Macchiavello & Mosca 1998 (attribution per secondary sources; the 1992 paper's text could not be accessed for this entry, so no detail of its wording is relied on). The lower bound recorded here is proven in the entry itself and does not depend on that attribution."
 }

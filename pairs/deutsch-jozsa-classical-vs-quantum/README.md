@@ -10,7 +10,7 @@
 
 | Algorithm | Model | Queries | Error | Implementation |
 |---|---|---|---|---|
-| Scan until a difference or a majority | classical, deterministic | **2ⁿ⁻¹ + 1** worst case (optimal for exact algorithms); ≈ 3 on random balanced f | none | [classical.py](implementations/classical.py) |
+| Scan until a difference or a majority | classical, deterministic | **2ⁿ⁻¹ + 1** worst case (optimal for exact algorithms); ≤ 3 on average over random balanced f (→ 3 as n grows) | none | [classical.py](implementations/classical.py) |
 | K = 20 random queries | classical, randomized | **20** for every n (O(log 1/ε)) | one-sided, 2¹⁻ᴷ = 2⁻¹⁹ on balanced f | [randomized.py](implementations/randomized.py) |
 | Deutsch–Jozsa (one-query form) | quantum | **1** | none | [quantum.py](implementations/quantum.py) |
 

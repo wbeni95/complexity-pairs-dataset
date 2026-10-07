@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/complexity-pairs-dataset/theorems/meta.schema.json",
+  "title": "Theorem note metadata",
+  "description": "meta.json of a note in theorems/<id>/. See theorems/README.md for the meaning of the provenance labels.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "statement", "provenance", "sources", "verify"],
+  "properties": {
+    "id": {
+      "description": "Stable slug; must equal the note's folder name.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 3
+    },
+    "statement": {
+      "description": "The exact statement, self-contained, with the definitions it needs (the README has the full version).",
+      "type": "string",
+      "minLength": 20
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "bases"],
+      "properties": {
+        "class": {
+          "enum": ["literature", "own-extension", "own"]
+        },
+        "bases": {
+          "description": "The cited results the label rests on (short citations).",
+          "type": "array",
+          "items": {"type": "string", "minLength": 3}
+        },
+        "pending": {
+          "description": "True if a source that could not be accessed might already cover the result; the class is then provisional.",
+          "type": "boolean"
+        },
+        "pending_note": {
+          "description": "Which source is missing and what remains open.",
+          "type": "string",
+          "minLength": 10
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"class": {"enum": ["literature", "own-extension"]}}},
+          "then": {"properties": {"bases": {"minItems": 1}}}
+        },
+        {
+          "if": {"properties": {"pending": {"const": true}}, "required": ["pending"]},
+          "then": {"required": ["pending_note"]}
+        },
+        {
+          "if": {"required": ["pending_note"]},
+          "then": {"required": ["pending"], "properties": {"pending": {"const": true}}}
+        }
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/source"}
+    },
+    "verify": {
+      "description": "Command, run from the repository root, that re-checks the note; exit code 0 means every check passed.",
+      "type": "string",
+      "pattern": "^python theorems/[a-z0-9]+(-[a-z0-9]+)*/verify\\.py( .*)?$"
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authors", "title"],
+      "properties": {
+        "authors": {"type": "string"},
+        "year": {"type": "integer", "minimum": 1800, "maximum": 2100},
+        "title": {"type": "string"},
+        "venue": {"type": "string"},
+        "doi": {"type": "string", "pattern": "^10\\.\\d{4,9}/\\S+$"},
+        "arxiv": {"type": "string", "pattern": "^(\\d{4}\\.\\d{4,5}|[a-z\\-]+(\\.[A-Z]{2})?/\\d{7})$"},
+        "url": {"type": "string", "format": "uri"},
+        "note": {"type": "string"}
+      }
+    }
+  }
+}

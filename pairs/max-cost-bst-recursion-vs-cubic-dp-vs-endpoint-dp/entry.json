@@ -1,0 +1,228 @@
+{
+  "id": "max-cost-bst-recursion-vs-cubic-dp-vs-endpoint-dp",
+  "title": "Interval DP with inclusion-monotone weights (endpoint law; maximum-cost BST): plain recursion vs cubic DP vs endpoint DP",
+  "problem_statement": "Given n >= 0, a direction sense in {max, min} and exact real weights w(i, j) for 0 <= i < j <= n (integers or rationals in the implementations) that are MONOTONE under inclusion if sense = max (w(b, c) <= w(a, d) whenever a <= b < c <= d) and ANTI-MONOTONE if sense = min (w(b, c) >= w(a, d) whenever a <= b < c <= d), compute c(0, n), where c(i, i) = 0 and c(i, j) = w(i, j) + opt_{i<k<=j} [c(i, k-1) + c(k, j)] with opt = max for sense = max and opt = min for sense = min. Equivalently: the optimum (max or min), over all binary trees whose in-order nodes are 1..n, of the sum over the nodes v of w(I_v), where I_v = (lo, hi) is the interval spanned by v's subtree (nodes lo+1..hi). n = 0 gives 0. The main instance is the maximum-cost binary search tree: keys k_1 < ... < k_n with access frequencies p_1..p_n >= 0 and gap frequencies q_0..q_n >= 0 (q_j counts searches for values strictly between k_j and k_(j+1)); maximise sum_m p_m (level(k_m) + 1) + sum_j q_j level(gap j) over all BSTs, with the root at level 0 and gap j the external node between k_j and k_(j+1). This is Knuth's (1971) optimal-BST cost maximised instead of minimised, and it is the instance sense = max, w(i, j) = q_i + sum_{l=i+1..j} (p_l + q_l), which the implementations also accept in the form (p, q).",
+  "input": {
+    "parameter": "n = number of tree nodes (keys).",
+    "size_measure": "Table form: the direction and n(n+1)/2 weights. BST form: 2n + 1 non-negative integers (p_1..p_n, q_0..q_n). Complexities count additions and comparisons of weights and cost values as unit cost; in the BST form every cost is at most (n + 1) times the total frequency, so it needs only O(log n) more bits than the input numbers."
+  },
+  "algorithms": [
+    {
+      "name": "plain recursion",
+      "idea": "c(i, j) = w(i, j) + opt over roots k of c(i, k-1) + c(k, j), evaluated top-down without memoisation, so the Theta(n^2) interval subproblems are solved again and again.",
+      "model": "classical-deterministic",
+      "pseudocode": "cost(i, j): if i = j return 0; return w(i, j) + opt over i < k <= j of (cost(i, k-1) + cost(k, j)); answer cost(0, n). In the BST form, w is first tabulated from p and q (w(i, j) = q_i + sum_{l=i+1..j} (p_l + q_l)).",
+      "time_complexity": "Theta(3^n) on every input: exactly 3^n calls and (3^(n-1) - 1)/2 cost comparisons for n >= 1",
+      "space_complexity": "Theta(n^2) for the weight table (Theta(n) recursion depth)",
+      "correctness": "Optimal substructure, for any weights and either direction: the value of a tree with root k is w(i, j) plus the values of its two subtrees, so the subtrees of an optimal tree are optimal for (i, k-1) and (k, j). For the BST form this value is Knuth's cost, because a frequency is counted in w(I_v) once for every node v whose subtree contains it: level + 1 times for a key, level times for a gap. Count (read off the code): calls K(m) = 1 + 2 sum_{t<m} K(t), K(0) = 1, so K(m) = 3^m; comparisons C(m) = (m-1) + 2 sum_{t<m} C(t), C(0) = 0, so C(m) = (3^(m-1) - 1)/2 for m >= 1. Both checked value by value for n = 0..12 in both instance forms and both directions (experiments/2026-10-07_max_cost_bst_checks.py, section N).",
+      "implementation": "implementations/recursion.py:maxbst_recursive",
+      "harness": {
+        "v1_max_n": 10,
+        "scaling": {
+          "cost": "(3**(n-1) - 1)/2",
+          "n_values": [
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "2**n",
+            "2.5**n",
+            "3.5**n",
+            "4**n",
+            "4**n/n**1.5",
+            "3**n*n",
+            "3**n/n"
+          ],
+          "shape": {
+            "sequence": "consecutive",
+            "n_range": [
+              1,
+              12
+            ],
+            "note": "The closed form (3^(n-1) - 1)/2 holds from n = 1 (C(0) = 0 is off the formula)."
+          }
+        }
+      }
+    },
+    {
+      "name": "cubic interval DP (every root)",
+      "idea": "Fill c[i][j] for increasing length j - i; every interval tries every one of its roots.",
+      "model": "classical-deterministic",
+      "pseudocode": "c[i][i] = 0; for L = 1..n, for i = 0..n-L: j = i + L; c[i][j] = w[i][j] + opt over i < k <= j of (c[i][k-1] + c[k][j]); return c[0][n]",
+      "time_complexity": "Theta(n^3) on every input: n(n+1)(n+2)/6 candidate roots, (n+1)n(n-1)/6 cost comparisons",
+      "space_complexity": "Theta(n^2)",
+      "correctness": "The same recurrence evaluated bottom-up, correct for any weights and either direction; each interval's subintervals are shorter and already filled (the textbook interval DP for optimal BSTs, Knuth 1971 and CLRS Section 15.5, here with a general weight table and either max or min). An interval of length L makes L - 1 comparisons, and sum_{L=1..n} (n - L + 1)(L - 1) = C(n+1, 3).",
+      "implementation": "implementations/cubic_dp.py:maxbst_cubic",
+      "harness": {
+        "scaling": {
+          "cost": "(n+1)*n*(n-1)/6",
+          "n_values": [
+            16,
+            32,
+            64,
+            128
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**2",
+            "n**2*log(n)",
+            "n**3/log(n)",
+            "n**3*log(n)",
+            "n**4"
+          ],
+          "shape": {
+            "sequence": "consecutive",
+            "n_range": [
+              1,
+              20
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "endpoint DP (two candidate roots per interval)",
+      "idea": "Under the precondition (monotone weights for max, anti-monotone for min) every interval has an optimal root at one of its two ends (Theorem E', README; it follows by the exchange argument of Qian & Wang 2004, Lemma 1), so c(i, j) = w(i, j) + opt(c(i+1, j), c(i, j-1)); an optimal tree can be taken to be a path.",
+      "model": "classical-deterministic",
+      "pseudocode": "as the cubic DP, but for j - i >= 2 the optimum runs over k in {i+1, j} only: c[i][j] = w[i][j] + opt(c[i][i] + c[i+1][j], c[i][j-1] + c[j][j]); c[i][i+1] = w[i][i+1]",
+      "time_complexity": "Theta(n^2) on every input: n(n+1)/2 intervals with O(1) work each; exactly n(n-1)/2 cost comparisons",
+      "space_complexity": "Theta(n^2)",
+      "correctness": "Theorem E' (README, section 'Theorem E′ and its proof'; it follows by the exchange argument of Qian & Wang 2004, Lemma 1): if w is monotone under inclusion, every interval (i, j) has a maximising root in {i+1, j}, so restricting the max to these two roots does not change c(i, j). Proof by induction on j - i with exchanges at the root (tree rotations; diagonal flips in the triangulation form of the cited source): in an optimal tree with an interior root k whose subtrees are optimal path trees with roots k_L and k_R, the right and left rotations at the root change the value by Delta_R = w(k_L, j) - w(i, k-1) and Delta_L = w(i, k_R - 1) - w(k, j); both are <= 0 by optimality, and Delta_R + Delta_L = [w(k_L, j) - w(k, j)] + [w(i, k_R - 1) - w(i, k-1)] >= 0 by monotonicity, because (k, j) lies inside (k_L, j) and (i, k-1) inside (i, k_R - 1); so both are 0, and repeated right rotations keep the tree optimal and move the root to i+1. The min form with anti-monotone weights is the same statement for -w. The BST weights are monotone if p, q >= 0 (exactly when q_(l-1) + p_l >= 0 for l = 1..n-1 and p_l + q_l >= 0 for l = 2..n), which gives Theorem E, the main instance. Without the precondition the restriction can fail: monotone weights under min (n = 3, w(i, j) = j - i, i.e. the optimal BST with p = (1, 1, 1), q = 0: optimum 5, endpoint DP 6), arbitrary weights under max (n = 3, w(0, 1) = w(2, 3) = 1, all other weights 0: optimum 2, endpoint DP 1), BST frequencies with a negative entry (n = 3, p = (0, -1, 0), q = 0: -1 vs -2). Count: one comparison per interval of length >= 2, sum_{L=2..n} (n - L + 1) = n(n-1)/2.",
+      "implementation": "implementations/endpoint_dp.py:maxbst_endpoint",
+      "harness": {
+        "scaling": {
+          "cost": "n*(n-1)/2",
+          "n_values": [
+            32,
+            64,
+            128,
+            256,
+            512
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n",
+            "n*log(n)",
+            "n**1.5",
+            "n**2/log(n)",
+            "n**2*log(n)",
+            "n**3"
+          ],
+          "shape": {
+            "sequence": "consecutive",
+            "n_range": [
+              1,
+              24
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "secondary_tags": [
+    "T3"
+  ],
+  "relationship": "Plain recursion over the root is exponential, Theta(3^n), because it recomputes the Theta(n^2) interval subproblems; tabulating them gives the Theta(n^3) interval DP (the T2 step). Theorem E' (for weights monotone under inclusion, under max, or anti-monotone, under min, every interval has an optimal root at one of its ends; it follows by the exchange argument of Qian & Wang 2004, Lemma 1) leaves two candidate roots per interval, which gives Theta(n^2) (the T3 step); for the maximum-cost BST with p, q >= 0 this is Theorem E. Exact comparison counts: (3^(n-1) - 1)/2, (n+1)n(n-1)/6 and n(n-1)/2, on every input, in both instance forms and both directions.",
+  "sources": [
+    {
+      "authors": "Qian, J.; Wang, C. A.",
+      "year": 2004,
+      "title": "Maximum weight triangulation of a special convex polygon",
+      "venue": "20th European Workshop on Computational Geometry (EWCG 2004), Seville",
+      "url": "http://hdl.handle.net/11441/55702",
+      "note": "Lemma 1: in a semi-circled convex polygon, one of the two extreme edges belongs to a maximum weight triangulation; its exchange argument uses only that nested chords are shorter, and the README writes it out for interval weights that are monotone under inclusion (Theorem E'). Under the standard correspondence between binary trees on n nodes and triangulations of a convex polygon with vertices v_0..v_(n+1) (interval (i, j) = chord v_i v_(j+1), root k = apex v_k of the triangle on that chord, tree rotation = diagonal flip), a triangulation with chord weights is a tree of this entry's recurrence, up to an additive constant."
+    },
+    {
+      "authors": "Wang, C. A.; Chin, F. Y.; Yang, B. T.",
+      "year": 1999,
+      "title": "Maximum weight triangulation and graph drawing",
+      "venue": "Information Processing Letters 70(1), 17-22",
+      "doi": "10.1016/S0020-0190(99)00037-X",
+      "note": "Related work on maximum weight triangulations (context). Bibliographic data checked against Crossref."
+    },
+    {
+      "authors": "Knuth, D. E.",
+      "year": 1971,
+      "title": "Optimum binary search trees",
+      "venue": "Acta Informatica 1(1), 14-25",
+      "doi": "10.1007/BF00264289",
+      "note": "The cost function (successful and unsuccessful searches) and the interval recurrence with min, used here with max (the main instance). Attribution as commonly cited; the paper's text was not re-read for this entry."
+    },
+    {
+      "authors": "Yao, F. F.",
+      "year": 1980,
+      "title": "Efficient dynamic programming using quadrangle inequalities",
+      "venue": "Proceedings of the 12th Annual ACM Symposium on Theory of Computing (STOC 1980), 429-435",
+      "doi": "10.1145/800141.804691",
+      "note": "The quadrangle-inequality speed-up for min-recurrences of this form, whose hypotheses include monotonicity of the weights under inclusion (statement as commonly cited; text not re-read). Context only; the endpoint DP does not use it."
+    },
+    {
+      "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
+      "year": 2009,
+      "title": "Introduction to Algorithms (3rd ed.)",
+      "venue": "MIT Press",
+      "isbn": "978-0-262-03384-8",
+      "note": "Section 15.5: optimal binary search trees and the Theta(n^3) interval DP (min version; section number as recalled, not re-checked here)."
+    }
+  ],
+  "provenance": {
+    "class": "literature",
+    "bases": [
+      "Qian, J.; Wang, C. A. (2004). Maximum weight triangulation of a special convex polygon. 20th European Workshop on Computational Geometry (EWCG 2004), Seville. http://hdl.handle.net/11441/55702. Lemma 1."
+    ],
+    "note": "The endpoint law for inclusion-monotone interval weights follows by the exchange argument of the cited lemma."
+  },
+  "verification": {
+    "level": "V2",
+    "method": "V1: the three implementations agree with each other and with an independent oracle in harness.py on n = 0..10, 12, 16, 25, 40, 70, 100 with 24 instances per n (408 in all; the plain recursion up to n = 10). The battery draws one of three categories with equal probability, then a family: 14 maximum-cost BST families (form (p, q), frequencies >= 0, many full of ties, plus p = 0 with a single non-zero end gap frequency); 11 families of general monotone weight tables under max (sub-interval maxima, sub-interval sums, non-decreasing length functions, capped and squared frequency sums, range maxima, random tables built upwards, 'tight' tables with many equalities, all-negative tables, exact rationals, products), most of which are not BST weights of any frequencies; 7 families of anti-monotone tables under min (the equivalent form). The battery has 151 BST, 130 general-max and 127 anti-min instances from all 32 families. The oracle has two tiers. For n <= 10 it enumerates every tree shape explicitly (Catalan(n) shapes): BST instances are costed from the level of every key and gap, table instances by summing the weights of the node intervals, with no recurrence (264 battery instances). For 10 < n <= 200 it checks an exact certificate (144 battery instances): an explicit path tree valued from its levels or node intervals, and a table U over all intervals that is checked against U(a, b) >= W(a, b) + U(a, k-1) + U(k, b) for every root k (<= for min), with W summed directly from p and q or read from the input; by induction every tree on (a, b) is worth at most (for min: at least) U(a, b), whatever produced U. The output is accepted only if it equals the certified optimum; all 408 outputs of each DP and all 264 of the recursion were accepted. Oracle control: 18 420 of 18 420 deliberately wrong values were rejected (reference +-1, the opposite direction's optimum, Knuth's root-range restriction, left / right / median-root / random trees, the path through the worse endpoint, a greedy path) on 2528 instances of all three categories (the validator battery plus 40 extra seeds per size, and every family at 15 sizes); the true value was accepted on all 2528; the certificate was valid and tight on 352 of 352 instances with n <= 10 (equal to the enumeration) and on 135 of 135 with n = 11..195; outside the precondition (iid random tables, monotone tables under min, anti-monotone tables under max, BST frequencies -20..20) it never vouched for a wrong value (500 wrong endpoint values at n > 10 undecided, 138 at n <= 10 rejected). Theorem E' was tested with DP code independent of the implementations: every monotone table on n nodes with values 0..V-1 for 13 scopes up to n = 7 (values 0..2, 379 236 tables) and n = 10 (values 0..1), 594 200 tables in all, max form with w and min form with -w: an endpoint optimum in every interval and the endpoint DP exact on every interval of every table; every strictly monotone table with values 0..6 for n = 4, 5 (9438 tables) without an interior optimum; 7200 random instances (n <= 14) and 720 (n = 15..60) of the 18 general and anti-monotone families; the proof run as an algorithm on 108 349 interior-maximiser cases; the BST precondition (the adjacent-sum condition) exhaustively for n = 2, 3 (values -2..2) and n = 4 (values -1..1), 100 933 instances; entries -inf (proved by reduction, tested on 5083 tables, and the +inf mirror under min). V2 (measure 'reported'): the exact number of COMPARISONS of two cost values made by the unchanged implementations, counted by the harness's CountingInt number type; generate_scaling draws the family at random from 29 integer families of all three categories, and the counts depend on n only. Cost expressions are the exact closed forms (RL-062): recursion (3^(n-1) - 1)/2 (n = 5..11), cubic DP (n+1)n(n-1)/6 (n = 16..128), endpoint DP n(n-1)/2 (n = 32..512), each read off the code and checked value by value on every family, form and direction (0 mismatches over 4311 (n, family) runs; comparisons identical across all families, forms and directions; the digest of the count series is identical under CPython 3.12.10 and 3.14.2). Fits at tolerance 0.02 give alpha = 1.000 for all three. Rivals rejected: recursion vs 2^n 1.587, 2.5^n 1.201, 3.5^n 0.878, 4^n 0.794, 4^n/n^1.5 0.923, n 3^n 0.895, 3^n/n 1.136; cubic DP vs n^2 1.501, n^2 log n 1.323, n^3/log n 1.099, n^3 log n 0.918, n^4 0.750; endpoint DP vs n 2.010, n log n 1.660, n^1.5 1.340, n^2/log n 1.124, n^2 log n 0.909, n^3 0.670. Shape diagnostic: MATCH for all three (3^n, n^3, n^2). Every number in this field is printed by experiments/2026-10-07_max_cost_bst_checks.py; tests/test_entry_max_cost_bst.py repeats the essential checks. Theorem E' rests on Qian & Wang 2004, Lemma 1; its proof for general inclusion-monotone weights is written out in the README and is not machine-checked; the level is V2.",
+    "artifacts": [
+      "implementations/recursion.py",
+      "implementations/cubic_dp.py",
+      "implementations/endpoint_dp.py",
+      "harness.py",
+      "../../experiments/2026-10-07_max_cost_bst_checks.py",
+      "../../tests/test_entry_max_cost_bst.py"
+    ],
+    "proofs": [
+      "Theorem E' (README, section 'Theorem E′ and its proof'): for the max-recurrence with real weights that are monotone under inclusion, every interval has a maximising root at an endpoint and some optimal tree is a path; equivalently for the min-recurrence with anti-monotone weights. It follows by the exchange argument of Qian & Wang 2004 (EWCG 2004, Seville), Lemma 1; the README writes the argument out for interval weights, and experiments/2026-10-07_max_cost_bst_checks.py (section E3) runs it as an algorithm. Not machine-checked.",
+      "Theorem E (the maximum-cost BST with p, q >= 0): a corollary of Theorem E', since these BST weights are monotone under inclusion (README, section 'The maximum-cost BST').",
+      "Extension of Theorem E' to weights in R union {-inf} that are monotone in the extended order (README, section 'Theorem E′ and its proof'): by replacing -inf with a sufficiently small real number and applying Theorem E'; tested in experiments/2026-10-07_max_cost_bst_checks.py, section E4.",
+      "Exact comparison counts (3^(n-1) - 1)/2, (n+1)n(n-1)/6 and n(n-1)/2: read off the code in the algorithms' correctness fields, checked value by value in experiments/2026-10-07_max_cost_bst_checks.py, section N."
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      12,
+      16,
+      25,
+      40,
+      70,
+      100
+    ],
+    "trials": 24
+  },
+  "caveats": "The endpoint DP needs its precondition: monotone weights under max, anti-monotone weights under min (for the BST form: q_(l-1) + p_l >= 0 for l = 1..n-1 and p_l + q_l >= 0 for l = 2..n, in particular p, q >= 0). The plain recursion and the cubic DP are correct for any weights and either direction. Without the precondition the endpoint DP fails on many inputs: monotone tables under min were exact on 523 of 3300 random instances, anti-monotone tables under max on 340 of 2100, iid random tables on 798 of 3000 (max) and 816 of 3000 (min). Smallest counterexamples: monotone under min, n = 3, w(0, 2) = w(0, 3) = w(1, 3) = 1 and the other weights 0 (optimum 1, endpoint DP 2); arbitrary weights under max, n = 3, w(0, 1) = w(2, 3) = 1 and the other weights 0 (2 vs 1); BST frequencies, n = 3, p = (0, -1, 0), q = 0 (-1 vs -2; exhaustively over n = 3, values -2..2, 8831 of 78 125 instances fail, all of them outside the precondition). Theorem E' is proved for real weights; its extension to -inf entries that are monotone in the extended order is proved by a reduction in the README; +inf entries under max are not covered. Monotonicity is sufficient, not necessary (some non-monotone inputs are exact). Theta(n^2) is the cost of the endpoint DP, not a lower bound for the problem; no lower bound is claimed (in the table form Theta(n^2) is linear in the input size). Counts measure comparisons of cost values only; additions are also Theta(3^n), Theta(n^3) and Theta(n^2) (exact, checked value by value over the ranges of experiments/2026-10-07_max_cost_bst_checks.py, section N; table form: (11 * 3^(n-2) - 1)/2 for the recursion, n >= 2; n(n+1)(n+2)/6 - n + n(n+1)/2 for the cubic DP; 3n(n-1)/2 for the endpoint DP; the BST form adds n(n+1) for tabulating w), and index arithmetic is not counted. Theorem E' rests on Qian & Wang 2004, Lemma 1; its statement for general inclusion-monotone interval weights and the proof are written out in the README and have not been machine-checked.",
+  "notes": "Studied in the course of this project; the endpoint law is literature-based (see sources: Qian & Wang 2004, Lemma 1). If the monotonicity is strict (w(i, j) > w(i+1, j) and w(i, j) > w(i, j-1) whenever j - i >= 2), every optimal root is an endpoint and every optimal tree is a path; for the BST this holds, for example, if all p_m > 0 and q >= 0."
+}

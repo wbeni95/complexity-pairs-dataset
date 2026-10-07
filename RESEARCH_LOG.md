@@ -1130,3 +1130,55 @@ Ledger: [ledger/runs/20261007T081601Z.json](ledger/runs/20261007T081601Z.json). 
 - **Stability against RL-090:** all 74 exact-count series are identical, so the text corrections changed no measured number.
 - **Machine load:** quiet (no other jobs). The largest change in a timing α was 0.1628, for Fibonacci (0.9264 → 1.0892, tolerance 0.25); every timing fit stayed within its tolerance.
 - **Unit tests:** OK. **Citations:** 202 identifiers, 0 problems (the new Schwartz–Weiss DOI included). **Index:** fresh.
+
+### RL-093 · VERIFIED · Provenance labels and a `theorems/` folder
+- **Schema:** optional `provenance` field. Its `class` is `literature` (the default when absent), `own` or `own-extension`. It may carry `bases` (required for `own-extension`), `pending` with a `pending_note`, and a free `note`. `tools/validate.py` enforces the rules the schema cannot express.
+- **Labels:** `tools/build_index.py` prints an orange label in the dataset table: 🟠 **Own result** or 🟠 **Own extension**, and ⏳ **Pending** where an inaccessible source might already cover a result. The meaning is in [CONTRIBUTING.md](CONTRIBUTING.md#provenance-labels-whose-result-it-is).
+- **`theorems/`:** proved results that are not complexity pairs. Each note has a statement, a proof, sources, a `meta.json` (schema `theorems/meta.schema.json`) and a deterministic `verify.py`. They are listed in the README and in `index.json`.
+- **Tests:** `tests/test_provenance.py` (schema, validator rules, labels).
+
+### RL-094 · VERIFIED · Three new pairs: multi-pattern matching, linear ordering, 3XOR
+- **Entries:**
+  - [multi-pattern matching: naive vs KMP per pattern vs Aho–Corasick](pairs/multi-pattern-matching-naive-vs-aho-corasick) (T3);
+  - [linear ordering: enumeration vs subset DP](pairs/linear-ordering-enumeration-vs-subset-dp) (T6 + T8);
+  - [3XOR: all triples vs a Patricia trie](pairs/three-xor-all-triples-vs-patricia-trie) (T3).
+- **Details:** [research/2026-10-06i_new_entries.md](research/2026-10-06i_new_entries.md).
+- **V2:** 7 exact-count fits, all α = 1.000; 20 of 20 rivals rejected; shape diagnostic 6 MATCH; 9993 deliberately wrong outputs rejected and 0 accepted.
+- **Corrections included before publication:** the KMP comparison bound is stated as 3N / 3(m − 1), as in RL-091, and Aho–Corasick has a stated lower bound of N + L − σ comparisons.
+
+### RL-095 · VERIFIED · Interval DP with inclusion-monotone weights (maximum-cost BST): recursion vs cubic DP vs endpoint DP
+- **Entry:** [pairs/max-cost-bst-recursion-vs-cubic-dp-vs-endpoint-dp](pairs/max-cost-bst-recursion-vs-cubic-dp-vs-endpoint-dp) (T2 + T3, V2).
+- **Result:** if the interval weights are monotone under inclusion, every interval has an optimal root at one of its two ends. This turns the Θ(n³) interval DP into a Θ(n²) one. The plain recursion is Θ(3ⁿ). The law follows by the exchange argument of Qian & Wang (EWCG 2004, Lemma 1); the entry writes the proof out for interval weights, including −∞ entries and the min form.
+- **Provenance:** `literature`.
+- **Checks:** [experiments/2026-10-07_max_cost_bst_checks.py](experiments/2026-10-07_max_cost_bst_checks.py) and [tests/test_entry_max_cost_bst.py](tests/test_entry_max_cost_bst.py).
+
+### RL-096 · VERIFIED · Ordering a first-match rule list: enumeration vs subset DP
+- **Entry:** [pairs/first-match-rule-ordering-enumeration-vs-subset-dp](pairs/first-match-rule-ordering-enumeration-vs-subset-dp) (T6 + T8, V2).
+- **Literature:** the problem generalizes MaxDL (Chakravarthy et al. 2008) and weighted lexicographic fitting (Yee, Dahan, Hauser & Orlin 2007). The subset DP is Yee et al.'s Algorithm 2. The NP-hardness reduction follows Schmitt & Martignon (2006, Theorem 5).
+- **Provenance:** `literature`.
+- **Checks:** [experiments/2026-10-07_first_match_checks.py](experiments/2026-10-07_first_match_checks.py) and [tests/test_entry_first_match.py](tests/test_entry_first_match.py).
+
+### RL-097 · VERIFIED · Two theorem notes
+- [theorems/no-integral-form-z-half-schemes](theorems/no-integral-form-z-half-schemes) (`literature`): the ⟨2,4,5;32⟩ scheme (AlphaEvolve) and Smirnov's ⟨3,3,6;40⟩ scheme, both over ℤ[1/2], have no equivalent form with integer coefficients. It re-derives Moran, Schwartz & Yuan (arXiv:2602.13171, Proposition 3) with independent code. `verify.py` checks both schemes over ℚ and the two trace certificates.
+- [theorems/knuth-window-concave-length-weights](theorems/knuth-window-concave-length-weights) (`literature`, ⏳ **Pending**): Knuth's root window is exact for concave nondecreasing length weights, with an explicit trajectory. It may be an extension of Glassey–Karp (1976) and Batty–Pelling–Rogers (1982), but the latter could not be accessed, so this could not be established. `verify.py` runs exhaustive checks (all supports up to N = 16) and boundary controls.
+
+### RL-098 · VERIFIED · Proofs added to 17 entries
+Short proofs or proof sketches of statements that were cited, stated or measured without proof:
+- Kuhn's per-root bound and the exact Kuhn and Hopcroft–Karp counts on their families;
+- the Hungarian upper bound;
+- the Dijkstra lower bound (the array version reads exactly n(n − 1)/2 distinct weights);
+- the max-flow bounds O((F + 1)(V + E)) and F ≤ C·outdeg(s);
+- the MST and NAND-tree adversaries;
+- the birthday-search mean, the Bernstein–Vazirani randomized bound, Schöning's T(n), the edit-distance call count, the palindrome bounds, the Deutsch–Jozsa scan, trial-division gcd and the merge-sort bounds;
+- the Aho–Corasick lower bound (RL-094).
+
+Every one is checked against the unchanged code. Where a statement remains a measurement, the entry still says so.
+
+### RL-099 · VERIFIED · Recorded run after the batch of RL-093–RL-098
+Ledger: [ledger/runs/20261007T103812Z.json](ledger/runs/20261007T103812Z.json). Base commit `932340d`, with this batch uncommitted; run on a checkout containing only the published entries and this batch.
+- **Result:** 74/74 entries pass (69 before, plus the 5 new pairs). V1 covered 63 entries, 4892 instances and 10504 implementation runs.
+- **V2:** 135 measurements, all passing (86 exact counts, 49 wall-clock); 196 of 196 rivals rejected; log factor resolved in 74 fits.
+- **Shape diagnostic:** 50 MATCH, 6 UNDETERMINED, 0 MISMATCH, 79 SKIPPED.
+- **Stability against RL-092:** all 74 earlier exact-count series are identical.
+- **Machine load:** quiet. The largest change in a timing α was 0.0693 (linear recurrence c1-1-1, 1.0489 → 0.9795, tolerance 0.25).
+- **Unit tests:** OK. **Citations:** 221 identifiers, 0 problems. **Index:** rebuilt; 74 entries and 2 theorem notes.

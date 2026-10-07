@@ -483,6 +483,20 @@ def tag_consistency(entry: dict) -> list[str]:
     return errors
 
 
+def provenance_errors(prov: dict | None) -> list[str]:
+    """Rules the schema cannot express: an own extension names its base, a pending flag explains itself."""
+    if not prov:
+        return []
+    errors = []
+    if prov["class"] == "own-extension" and not prov.get("bases"):
+        errors.append("provenance: class 'own-extension' needs at least one entry in 'bases'")
+    if prov.get("pending") and not prov.get("pending_note"):
+        errors.append("provenance: 'pending' needs a 'pending_note' that names the unchecked source")
+    if prov.get("pending_note") and not prov.get("pending"):
+        errors.append("provenance: 'pending_note' given but 'pending' is not true")
+    return errors
+
+
 def static_checks(entry: dict, entry_dir: Path, validator) -> tuple[list[str], list[str]]:
     errors, warnings = [], []
     for err in sorted(validator.iter_errors(entry), key=lambda e: list(e.path)):
@@ -497,6 +511,7 @@ def static_checks(entry: dict, entry_dir: Path, validator) -> tuple[list[str], l
 
     if entry["id"] != entry_dir.name:
         errors.append(f"id '{entry['id']}' != folder name '{entry_dir.name}'")
+    errors.extend(provenance_errors(entry.get("provenance")))
     if not (entry_dir / "README.md").is_file():
         errors.append("missing README.md (human-readable mirror of entry.json)")
     if tag in entry.get("secondary_tags", []):

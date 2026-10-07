@@ -7,7 +7,7 @@ Answers must always be correct.
 
 | Algorithm | Leaf reads, worst case | Lower bound in its model | Implementation |
 |---|---|---|---|
-| Deterministic left-first | 2ʰ = N | N (adversary argument, sketched in the entry) | [left_first.py](implementations/left_first.py) |
+| Deterministic left-first | 2ʰ = N | N (adversary argument, proved in the entry) | [left_first.py](implementations/left_first.py) |
 | Randomized random order (Snir) | Θ(λʰ) expected, λ = (1+√33)/4 ≈ 1.686, i.e. N^0.7537 | Ω(λʰ) for zero-error algorithms (Saks & Wigderson 1986) | [random_order.py](implementations/random_order.py) |
 
 **Why it's here.** Randomisation changes the exponent, and both bounds are proven optimal in their models: every

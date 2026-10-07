@@ -55,8 +55,10 @@ does not change V2 verdicts. Why it was added, what a MATCH does and does not sh
 
 ## The dataset
 
+Labels: 🟠 **Own result** / 🟠 **Own extension** mark the project's own results; ⏳ **Pending** means an inaccessible source might already cover the result (see [CONTRIBUTING.md](CONTRIBUTING.md#provenance-labels-whose-result-it-is)).
+
 <!-- PAIRS-TABLE:START -->
-**54 validated pairs** (V1+, tagged T1–T5, T8 or T9) · 13 open problems (T6) · 9 proven quantum advantages (T9) · 11 staged (V0) · 12 with a quantum algorithm (⚛)
+**59 validated pairs** (V1+, tagged T1–T5, T8 or T9) · 15 open problems (T6) · 9 proven quantum advantages (T9) · 11 staged (V0) · 12 with a quantum algorithm (⚛)
 
 ### Verified (`pairs/`, V1+)
 
@@ -73,6 +75,7 @@ does not change V2 verdicts. Why it was added, what a MATCH does and does not sh
 | [Longest common subsequence: subsequence enumeration vs dynamic programming](pairs/lcs-brute-vs-dp) | T2 | V2 | subsequence enumeration: Theta(2^n n)<br>dynamic programming: Theta(n^2) |
 | [Longest increasing subsequence: subset enumeration vs quadratic DP vs patience sorting](pairs/longest-increasing-subsequence) | T2+T3 | V2 | subset enumeration: Theta(2^n n) on every input<br>quadratic dynamic programming: Theta(n^2) on every input<br>patience sorting with binary search: O(n log L) <= O(n log n) |
 | [Matrix-chain ordering: plain recursion vs dynamic programming](pairs/matrix-chain-recursion-vs-dp) | T2 | V2 | plain recursion: Theta(3^n)<br>bottom-up dynamic programming: Theta(n^3) |
+| [Interval DP with inclusion-monotone weights (endpoint law; maximum-cost BST): plain recursion vs cubic DP vs endpoint DP](pairs/max-cost-bst-recursion-vs-cubic-dp-vs-endpoint-dp) | T2+T3 | V2 | plain recursion: Theta(3^n) on every input<br>cubic interval DP (every root): Theta(n^3) on every input<br>endpoint DP (two candidate roots per interval): Theta(n^2) on every input |
 | [Maximum-weight independent set on k x n grids with diagonals: exhaustive search vs DP over a path decomposition](pairs/max-weight-independent-set-grid-enumeration-vs-path-decomposition-dp) | T2 | V2 | exhaustive search over all vertex subsets: Theta(N 2^N) on every input<br>DP over the columns (path decomposition of width 2k-1): Theta(F_{k+2}^2 n) = Theta(phi^(2k) n) word operations |
 | [Minimum spanning tree: edge-subset enumeration vs Kruskal (and Prim)](pairs/minimum-spanning-tree-brute-vs-kruskal) | T2+T3 | V2 | enumeration of all (n-1)-edge subsets: Theta(n * C(n(n-1)/2, n-1)) = 2^Theta(n log n)<br>Kruskal with union-find: O(m log m) = O(n^2 log n) on K_n<br>Prim, array version: Theta(n^2) on K_n |
 | [Modular exponentiation: repeated multiplication vs square-and-multiply](pairs/modular-exponentiation-repeated-vs-square-multiply) | T2 | V2 | repeated multiplication: Theta(e) = Theta(2^n) multiplications mod m<br>left-to-right square-and-multiply (binary method): Theta(n) multiplications mod m |
@@ -94,6 +97,7 @@ does not change V2 verdicts. Why it was added, what a MATCH does and does not sh
 | [Matrix multiplication: schoolbook vs Strassen](pairs/matrix-multiplication-naive-vs-strassen) | T3 | V2 | schoolbook: Theta(n^3)<br>Strassen: Theta(n^(log2 7)) ~ Theta(n^2.807) |
 | [Maximum flow: Edmonds-Karp vs Dinic](pairs/max-flow-edmonds-karp-vs-dinic) | T3 | V1 | Edmonds-Karp: O(V E^2)<br>Dinic (blocking flows): O(V^2 E) |
 | [Maximum subarray sum: brute force vs running sums vs Kadane's scan](pairs/maximum-subarray) | T3 | V2 | brute force (sum every subarray): Theta(n^3) on every input<br>running sums: Theta(n^2) on every input<br>Kadane's algorithm (linear scan): Theta(n) |
+| [Multi-pattern string matching: naive matching per pattern vs KMP per pattern vs Aho-Corasick](pairs/multi-pattern-matching-naive-vs-aho-corasick) | T3 | V2 | naive matching per pattern: O(N L) character comparisons<br>Knuth-Morris-Pratt per pattern: Theta(P N + L)<br>Aho-Corasick: Theta(N + L) character comparisons for a fixed alphabet of sigma characters |
 | [OR convolution (covering product): all index pairs vs zeta and Moebius transforms](pairs/or-convolution-naive-vs-zeta-mobius) | T3 | V2 | all index pairs (naive): Theta(4^n) = Theta(N^2)<br>zeta transform, pointwise product, Moebius transform: Theta(n * 2^n) = Theta(N log N) |
 | [Polynomial multiplication over Z_p: schoolbook vs number-theoretic transform (FFT)](pairs/polynomial-multiplication-naive-vs-ntt) | T3 | V2 | schoolbook convolution: Theta(n^2)<br>number-theoretic transform (Cooley-Tukey over Z_p): Theta(n log n). Exact count used for V2 |
 | [Range minimum queries: scanning each range vs a sparse table](pairs/range-minimum-queries-naive-vs-sparse-table) | T3 | V2 | scan each range: Theta(q + sum of the query lengths)<br>sparse table: Theta(n log n) preprocessing plus O(1) per query |
@@ -101,13 +105,16 @@ does not change V2 verdicts. Why it was added, what a MATCH does and does not sh
 | [Exact string matching: naive scan vs Knuth-Morris-Pratt](pairs/string-matching-naive-vs-kmp) | T3 | V2 | naive matching: Theta(n m) character comparisons in the worst case<br>Knuth-Morris-Pratt: Theta(n + m) on every input |
 | [Zeta transform (sums over subsets): submask enumeration vs Yates' method](pairs/subset-sum-zeta-transform-naive-vs-yates) | T3 | V2 | submask enumeration (naive): Theta(3^n) = Theta(N^(log2 3))<br>Yates' method (fast zeta transform): Theta(n * 2^n) = Theta(N log N) |
 | [3SUM: all triples vs sorting with two pointers](pairs/three-sum-cubic-vs-quadratic) | T3 | V2 | all triples: Theta(n^3) worst case<br>sort + two pointers: Theta(n^2) |
+| [3XOR: all triples vs a Patricia trie (deterministic quadratic)](pairs/three-xor-all-triples-vs-patricia-trie) | T3 | V2 | all triples: Theta(n^3) in the worst case. Exactly<br>Patricia trie: O(n^2 + n w) word operations |
 | [XOR convolution: all index pairs vs the fast Walsh-Hadamard transform](pairs/xor-convolution-naive-vs-walsh-hadamard) | T3 | V2 | all index pairs (naive): Theta(4^n) = Theta(N^2)<br>fast Walsh-Hadamard transform (FWHT): Theta(n * 2^n) = Theta(N log N) |
 | [NAND-tree evaluation: deterministic 2^h leaf reads vs randomized ((1+sqrt 33)/4)^h expected](pairs/nand-tree-evaluation-deterministic-vs-randomized) | T4+T3 | V2 | deterministic left-first evaluation: 2^h = N leaf reads in the worst case<br>randomized random-order evaluation: Theta(((1 + sqrt(33))/4)^h) = Theta(N^0.7537) expected leaf reads in the worst case |
 | [Primality testing: Miller-Rabin (randomized) vs AKS (deterministic)](pairs/primality-miller-rabin-vs-aks) | T4 | V1 | Miller-Rabin: O(k n^3) bit operations for k rounds with schoolbook multiplication<br>AKS: Õ(n^(21/2)) as proven in AKS 2004 |
 | [3-SAT: brute force vs Schöning's random walk](pairs/3sat-brute-force-vs-schoening) | T6+T8 | V1 | brute force: O(2^n m) worst case<br>Schöning's random walk (Monte Carlo, one-sided error): O(T(n) n m) with T(n) = ceil(ln(10^6) / p(n)) = Theta((4/3)^n sqrt(n)) tries |
 | [Chromatic number: subset DP over independent sets vs inclusion-exclusion](pairs/chromatic-number-subset-dp-vs-inclusion-exclusion) | T6+T8 | V2 | subset DP over all independent sets: Theta(3^n) on every input<br>inclusion-exclusion (Bjorklund-Husfeldt-Koivisto): (2 chi(G) + 2) 2^n - 2 arithmetic operations |
+| [Ordering a first-match rule list: enumeration of all k! orders vs dynamic programming over subsets of rules](pairs/first-match-rule-ordering-enumeration-vs-subset-dp) | T6+T8 | V2 | enumeration of all orders: O(k! k m)<br>dynamic programming over subsets of rules: Theta(2^k (k + m)) on every input |
 | [Counting Hamiltonian cycles: permutation enumeration vs inclusion-exclusion (and the Held-Karp counting DP)](pairs/hamiltonian-cycle-count-enumeration-vs-inclusion-exclusion) | T6+T8 | V2 | permutation enumeration: Theta(n!) arc tests in the worst case<br>inclusion-exclusion over vertex subsets: Theta(n^3 2^n). Exactly<br>Held-Karp counting DP: Theta(n^2 2^n). Exactly |
 | [0/1 knapsack: subset enumeration vs meet in the middle vs pseudo-polynomial DP](pairs/knapsack-01-brute-vs-dp) | T6+T8 | V2 | subset enumeration: Theta(2^n n)<br>meet in the middle (Horowitz-Sahni): Theta(2^(n/2) n)<br>capacity DP (Bellman): Theta(n W) |
+| [Linear ordering problem: enumeration of all n! orders vs dynamic programming over subsets](pairs/linear-ordering-enumeration-vs-subset-dp) | T6+T8 | V2 | enumeration of all orders: Theta(n! n^2) on every input. Exactly n!<br>dynamic programming over subsets: Theta(n^2 2^n) on every input. Exactly 2^(n-2) |
 | [Permanent: sum over permutations vs Ryser's formula](pairs/permanent-naive-vs-ryser) | T6+T8 | V2 | sum over all permutations: Theta(n * n!) arithmetic operations<br>Ryser's formula with Gray-code ordering: Theta(n 2^n) arithmetic operations |
 | [Travelling salesman: permutation enumeration vs Held-Karp DP](pairs/tsp-brute-vs-held-karp) | T6+T8 | V2 | permutation enumeration: Theta(n!)<br>Held-Karp dynamic programming: Theta(n^2 2^n) |
 | [Bernstein-Vazirani: n classical queries vs 1 quantum query](pairs/bernstein-vazirani-classical-vs-quantum) | T9 | V2 | classical: query the unit vectors: n queries<br>Bernstein-Vazirani quantum algorithm: 1 query ⚛ |
@@ -141,6 +148,13 @@ does not change V2 verdicts. Why it was added, what a MATCH does and does not sh
 | [Synthetic: linear recurrence a(n) = 1 a(n-1) + 1 a(n-2) + 1 a(n-3) (mod 2^64), naive vs DP vs matrix power](synthetic/linear-recurrence-c1-1-1) | T7 | V2 | naive recursion (deliberately wasteful): Theta(lambda^n) calls<br>bottom-up dynamic programming: Theta(k n) word operations<br>companion-matrix power: Theta(k^3 log n) word operations |
 | [Synthetic: linear recurrence a(n) = 1 a(n-1) + 1 a(n-2) + 1 a(n-3) + 1 a(n-4) (mod 2^64), naive vs DP vs matrix power](synthetic/linear-recurrence-c1-1-1-1) | T7 | V2 | naive recursion (deliberately wasteful): Theta(lambda^n) calls<br>bottom-up dynamic programming: Theta(k n) word operations<br>companion-matrix power: Theta(k^3 log n) word operations |
 | [Synthetic: linear recurrence a(n) = 2 a(n-1) + 3 a(n-2) (mod 2^64), naive vs DP vs matrix power](synthetic/linear-recurrence-c2-3) | T7 | V2 | naive recursion (deliberately wasteful): Theta(lambda^n) calls<br>bottom-up dynamic programming: Theta(k n) word operations<br>companion-matrix power: Theta(k^3 log n) word operations |
+
+### Theorems (`theorems/`: results that are not complexity pairs)
+
+| Theorem | Verify |
+|---|---|
+| [Knuth's root window is exact for concave nondecreasing length weights](theorems/knuth-window-concave-length-weights) ⏳ Pending | `python theorems/knuth-window-concave-length-weights/verify.py` |
+| [No integer equivalent form for the ⟨2,4,5;32⟩ and ⟨3,3,6;40⟩ ℤ[1/2] matrix multiplication schemes](theorems/no-integral-form-z-half-schemes) | `python theorems/no-integral-form-z-half-schemes/verify.py` |
 <!-- PAIRS-TABLE:END -->
 
 ## Classical vs quantum
@@ -197,6 +211,7 @@ pairs/<id>/                  V1+ entries: entry.json, README.md, harness.py, imp
 staging/<id>/                V0 entries (cited, not independently checked)
 synthetic/<id>/              T7 entries (never counted as validated)
 notes/                       research notes and material that is not a pair
+theorems/<slug>/             proved results that are not complexity pairs: statement, proof, sources, verify.py
 lib/                         shared code (qsim.py state-vector simulator, qsearch.py quantum search, for T9 entries)
 generators/                  scripts that manufacture candidate pairs (mechanical output is T7 synthetic)
 generators/rules/            speed-up rules as executable templates; mass generation and screening (python -m generators.rules)

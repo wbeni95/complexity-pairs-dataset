@@ -149,6 +149,41 @@
     "notes": {
       "type": "string"
     },
+    "provenance": {
+      "description": "Whose result the entry is (optional; absent means 'literature'). 'literature': the result is in the cited literature and was re-proved or re-checked here. 'own': no prior literature was found after a documented search. 'own-extension': an own generalization or sharpening of the cited base result(s). 'pending': an inaccessible source might already cover the result (see pending_note).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "class"
+      ],
+      "properties": {
+        "class": {
+          "enum": [
+            "literature",
+            "own",
+            "own-extension"
+          ]
+        },
+        "bases": {
+          "description": "Citations of the base result(s); required for 'own-extension'.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "pending": {
+          "type": "boolean"
+        },
+        "pending_note": {
+          "type": "string",
+          "minLength": 10
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
     "lower_bounds": {
       "description": "Known lower bounds for the problem. Required (with a classical model) for T9.",
       "type": "array",

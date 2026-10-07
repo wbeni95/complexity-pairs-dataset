@@ -1,0 +1,75 @@
+{
+  "id": "knuth-window-concave-length-weights",
+  "title": "Knuth's root window is exact for concave nondecreasing length weights",
+  "statement": "Let N ≥ 1 and h: {1..N} → ℝ be concave and nondecreasing, 1 ≤ n ≤ N, and w(i,j) = h(j−i). For the interval recurrence c(i,i) = 0, c(i,j) = w(i,j) + min_{i<k≤j} [c(i,k−1) + c(k,j)], Knuth's restricted run (K(i,i) = i; minimise only over max(K(i,j−1), i+1) ≤ k ≤ min(K(i+1,j), j); K(i,j) = the chosen minimiser) is exact for every interval under the largest-minimiser tie rule and under the smallest-minimiser tie rule. With d = j − i, the chosen roots are K(i,j) = i + 1 + τ*(d) (largest rule) and K(i,j) = i + 1 + min(HR(d), Q − 1) (smallest rule), where τ*(d) = d − 1 − min(HR(d), Q − 1), HR(d) is the number of keys in the right subtree of the heap-shaped (complete, array-layout) tree with d keys, Q = 2^⌊log₂ k_max⌋, and k_max is the largest j ∈ {2..N} with h(j) > h(j−1) (k_max = 1 if h is constant). The value τ*(d) does not depend on N ≥ d, so the statement extends to concave nondecreasing h on {1, 2, ...} and every n.",
+  "provenance": {
+    "class": "literature",
+    "bases": [
+      "Glassey–Karp 1976",
+      "Batty–Pelling–Rogers 1982 (SIAM J. Algebraic Discrete Methods 3(1), doi:10.1137/0603002)",
+      "Cleary–Fischer–St. John, arXiv:2502.12854"
+    ],
+    "pending": true,
+    "pending_note": "This may be an own extension of the cited results; the closest source (Batty–Pelling–Rogers 1982) was not accessible, so this could not be established."
+  },
+  "sources": [
+    {
+      "authors": "Knuth, D. E.",
+      "year": 1971,
+      "title": "Optimum binary search trees",
+      "venue": "Acta Informatica 1(1), 14-25",
+      "doi": "10.1007/BF00264289",
+      "note": "The restricted root window for optimal binary search trees."
+    },
+    {
+      "authors": "Yao, F. F.",
+      "year": 1980,
+      "title": "Efficient dynamic programming using quadrangle inequalities",
+      "venue": "Proceedings of the 12th Annual ACM Symposium on Theory of Computing (STOC '80), 429-435",
+      "doi": "10.1145/800141.804691",
+      "note": "The quadrangle-inequality condition; concave length weights satisfy the reverse inequality."
+    },
+    {
+      "authors": "Fredman, M. L.; Knuth, D. E.",
+      "year": 1974,
+      "title": "Recurrence relations based on minimization",
+      "venue": "Journal of Mathematical Analysis and Applications 48(2), 534-559",
+      "doi": "10.1016/0022-247X(74)90176-0",
+      "note": "Same one-dimensional recurrence (alpha = beta = 1); convex counterpart of the window property (Lemma (1.2), Theorem 1); formula (3.1) is Lemma B."
+    },
+    {
+      "authors": "Glassey, C. R.; Karp, R. M.",
+      "year": 1976,
+      "title": "On the optimality of Huffman trees",
+      "venue": "SIAM Journal on Applied Mathematics 31(2), 368-378",
+      "doi": "10.1137/0131030",
+      "note": "Base. Not read; content as described by Chen and Chen (2003)."
+    },
+    {
+      "authors": "Batty, C. J. K.; Pelling, M. J.; Rogers, D. G.",
+      "year": 1982,
+      "title": "Some recurrence relations of recursive minimization",
+      "venue": "SIAM Journal on Algebraic Discrete Methods 3(1), 13-29",
+      "doi": "10.1137/0603002",
+      "note": "Base. Abstract only (Crossref); full text not accessible."
+    },
+    {
+      "authors": "Chen, W.-M.; Chen, G.-H.",
+      "year": 2003,
+      "title": "Divide-and-conquer recurrences associated with generalized heaps, optimal merge, and related structures",
+      "venue": "Theoretical Computer Science 292(3), 667-677",
+      "doi": "10.1016/S0304-3975(01)00336-X",
+      "note": "Secondary description (pp. 667-669) of the Glassey-Karp and Batty-Pelling-Rogers results for increasing concave g."
+    },
+    {
+      "authors": "Cleary, S.; Fischer, M.; St. John, K.",
+      "year": 2025,
+      "title": "The GFB tree and tree imbalance indices",
+      "venue": "Bulletin of Mathematical Biology 87(10)",
+      "doi": "10.1007/s11538-025-01522-1",
+      "arxiv": "2502.12854",
+      "note": "Base. Theorem 6 with Lemma 22: the complete tree uniquely minimises the sum of a strictly increasing, strictly concave function of the leaf counts; gives Lemma D by a limit argument (not used in the proof)."
+    }
+  ],
+  "verify": "python theorems/knuth-window-concave-length-weights/verify.py"
+}

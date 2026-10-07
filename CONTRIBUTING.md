@@ -94,6 +94,22 @@ supersede them with new ones.
 - Prefer removing an unverifiable detail (page numbers, attributions, "no better algorithm is known") over keeping it.
 - No secrets, credentials or private material in any commit.
 
+## Provenance labels (whose result it is)
+
+Every entry, and every note under `theorems/`, says whose result it is, in the optional `provenance` field
+(absent means `literature`):
+
+- **`literature`**: the result is in the cited literature; this project re-proved or re-checked it. No label.
+- **`own-extension`**: a generalization or sharpening of a cited base result that is not itself in the
+  literature. It must name the base(s) in `bases`. Shown with the orange label **🟠 Own extension**.
+- **`own`**: no prior literature was found after a documented search. Shown with the orange label **🟠 Own result**.
+- **`pending: true`**: an inaccessible source might already cover the result; `pending_note` names it. Shown as
+  **⏳ Pending**. A pending result is published with the class its accessible literature supports, never as `own`.
+
+The orange labels mark the project's own results so that readers can see at once what is new here. If prior
+literature turns up later, the label is corrected in a new RESEARCH_LOG entry; the old entry is not deleted.
+Every labelled result ships with a complete proof and a deterministic check (`verify.py` or a test).
+
 ## Tagging decisions (2026-10)
 
 1. **Exp → better exp gets its own tag, T8** (super-poly → faster super-poly). If polynomial time is open for the

@@ -39,9 +39,9 @@
   "lower_bounds": [
     {
       "model": "classical-randomized",
-      "bound": "Omega(n) queries (n - O(1) for bounded error)",
+      "bound": "n queries for every success probability > 1/2, randomized algorithms included",
       "setting": "query (oracle) model, unconditional",
-      "source": "Information-theoretic: each classical query returns one bit and s is a uniformly random n-bit string; see Bernstein & Vazirani 1997"
+      "source": "Proved in this entry: for a uniformly random s, the answers s.x_1, ..., s.x_q to q queries (chosen adaptively) leave s uniform on the solutions of q linear equations over GF(2), an affine subspace of dimension >= n - q, so a deterministic q-query algorithm outputs s with probability at most 2^(q-n). Averaging over its coins, every randomized q-query algorithm also succeeds with probability at most 2^(q-n) on average over s, hence on some s; success > 1/2 on every s therefore needs q >= n. The problem is from Bernstein & Vazirani 1997"
     }
   ],
   "relationship": "Proven separation in the query model: n classical queries vs 1 quantum query. It is only a linear (polynomial) gap. The recursive version of the problem (Bernstein & Vazirani 1997) gives a superpolynomial separation, and Simon's problem an exponential one (see simon-classical-vs-quantum).",

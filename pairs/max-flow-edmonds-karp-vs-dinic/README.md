@@ -20,6 +20,13 @@ the claimed bounds fail (α = 0.558 against n⁵, α = 0.479 against n⁴). The 
 worst case, so the entry stays at V1 (INCONCLUSIVE). Worst-case constructions for Edmonds–Karp exist in the
 literature (Zadeh 1972) but were not implemented.
 
+**No such family exists with small capacities.** With integer capacities both implementations run in
+O((F + 1)·(V + E)) time for maximum flow value F: every augmentation adds at least 1 to the flow, every BFS reads
+each adjacency list at most once, and every Dinic phase except the last augments. With capacities ≤ 100 and no
+parallel edges out of s, F ≤ 100·(V − 1), so both are O(V·(V + E)) there, including the harness's random
+networks (O(n³)). So in that range Dinic's O(V²·E) is not attained as V → ∞, and Edmonds–Karp's O(V·E²) is not
+attained as E → ∞.
+
 **Verification.** V1: both agree with each other and, for n ≤ 14, with an independent oracle that
 enumerates every s–t cut (max-flow min-cut theorem). The instances are random networks with mixed
 capacities, zero-capacity, parallel and antiparallel edges, layered networks and networks with t

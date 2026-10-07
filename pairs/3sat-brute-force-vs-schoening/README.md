@@ -12,7 +12,8 @@ satisfiable.
 
 **How the error is controlled.** One try (random start, 3n flips of a random variable in a falsified
 clause) succeeds on a satisfiable formula with probability at least
-p(n) = Σⱼ C(n,j)·2⁻ⁿ·C(3j,j)·(1/3)^(2j)·(2/3)^j ≈ 0.88·(3/4)ⁿ/√n. Each flip moves toward a fixed solution
+p(n) = Σⱼ C(n,j)·2⁻ⁿ·C(3j,j)·(1/3)^(2j)·(2/3)^j = Θ((3/4)ⁿ/√n) (Stirling and a Chernoff bound; the
+constant is 0.87–0.89 for n = 14..20). Each flip moves toward a fixed solution
 with probability ≥ 1/3. The implementation runs T(n) = ⌈ln(10⁶)/p(n)⌉ tries (196 at n = 6, 1682 at
 n = 12), so a satisfiable formula is missed with probability ≤ 10⁻⁶. "Satisfiable" answers are always
 correct.

@@ -12,7 +12,7 @@
       "idea": "Query distinct points in uniformly random order until a value repeats.",
       "model": "classical-randomized",
       "pseudocode": "for x in random permutation: if f(x) seen at x': return {x', x}",
-      "time_complexity": "Theta(sqrt N) = Theta(2^(n/2)) queries expected: E[Q] = sum_q prod_{i=1}^{q-1} (N-2i)/(N-i) ~ sqrt(pi N / 2); at most N/2 + 1",
+      "time_complexity": "Theta(sqrt N) = Theta(2^(n/2)) queries expected: E[Q] = sum_q prod_{i=1}^{q-1} (N-2i)/(N-i) ~ sqrt(pi N / 2) (each factor is 1 - i/(N - i) = exp(-i/N + O(i^2/N^2)), so the q-th term is exp(-q^2/(2N) + o(1)) uniformly for q <= N^0.6; the at most N/2 + 1 later terms are each smaller than the term at q = N^0.6, which is exp(-N^0.2/2 + o(1)), so they add o(1); and the sum over q >= 1 of exp(-q^2/(2N)) is (1 + o(1)) sqrt(pi N / 2), a Riemann sum of the Gaussian integral); at most N/2 + 1",
       "space_complexity": "O(sqrt N) stored values (expected)",
       "correctness": "A repeated value is a collision by definition; by pigeonhole one appears within N/2 + 1 queries.",
       "implementation": "implementations/classical.py:collision_classical",

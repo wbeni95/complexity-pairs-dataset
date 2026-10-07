@@ -1,0 +1,108 @@
+{
+  "id": "multi-pattern-matching-naive-vs-aho-corasick",
+  "title": "Multi-pattern string matching: naive matching per pattern vs KMP per pattern vs Aho-Corasick",
+  "problem_statement": "Given a text T of length N and a list of P non-empty patterns of total length L, compute for every pattern the number of positions i with T[i..i+m-1] equal to the pattern (m its length); overlapping occurrences all count, and the counts are returned in the order of the patterns.",
+  "input": {
+    "parameter": "n = number of patterns P. The text length N and the pattern lengths are further parameters: arbitrary in V1; in the V2 family N = n^2 and the patterns are a^(j-1) b, j = 1..n, so L = n(n+1)/2.",
+    "size_measure": "N + L characters over a fixed alphabet. In the V2 family N + L = n^2 + n(n+1)/2 = Theta(n^2), so the costs below are Theta(s^2), Theta(s^1.5) and Theta(s) in the input size s."
+  },
+  "algorithms": [
+    {
+      "name": "naive matching per pattern",
+      "idea": "For every pattern, try every alignment against the text and compare characters left to right until a mismatch or a full match.",
+      "model": "classical-deterministic",
+      "pseudocode": "for each pattern p (length m): count = 0; for i in 0..N-m: j = 0; while j < m and T[i+j] = p[j]: j += 1; if j = m: count += 1",
+      "time_complexity": "O(N L) character comparisons; Theta(sum over patterns of (N - m + 1) m) in the worst case. On the V2 family exactly sum_j j (n^2 - j + 1) = n(n+1)(3n^2 - 2n + 2)/6 comparisons = Theta(n^4) (each of the n^2 - j + 1 alignments of a^(j-1) b matches j - 1 characters and fails on the b).",
+      "space_complexity": "O(1) extra besides the output",
+      "correctness": "Exhaustive: every alignment of every pattern is checked character by character.",
+      "implementation": "implementations/naive.py:count_occurrences_naive",
+      "harness": {
+        "scaling": {
+          "cost": "n*(n+1)*(3*n**2 - 2*n + 2)/6",
+          "n_values": [8, 12, 16, 24, 32],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": ["n**3", "n**5"],
+          "shape": {"sequence": "consecutive", "n_range": [1, 16]}
+        }
+      }
+    },
+    {
+      "name": "Knuth-Morris-Pratt per pattern",
+      "idea": "Run the linear-time KMP matcher (failure table of the pattern, then one left-to-right scan of the text) separately for every pattern.",
+      "model": "classical-deterministic",
+      "pseudocode": "for each pattern p: build fail[] of p; scan T once with the KMP automaton of p, counting full matches (after a match continue from the longest border)",
+      "time_complexity": "Theta(P N + L): Theta(N + m) per pattern (at most 3(m - 1) comparisons for the failure table and 3N for the scan: the implementation compares the current character again after the while loop, as in string-matching-naive-vs-kmp). On the V2 family exactly 3n^3 - 2n^2 - 5n + 6 comparisons for n >= 2 = Theta(n^3): pattern b costs N, pattern ab costs 2N, and a^(j-1) b for j >= 3 costs 3j - 6 (failure table) + 3N - j (scan), with N = n^2.",
+      "space_complexity": "Theta(max m) for one failure table",
+      "correctness": "Knuth, Morris & Pratt 1977, once per pattern.",
+      "implementation": "implementations/kmp_each.py:count_occurrences_kmp_each",
+      "harness": {
+        "scaling": {
+          "cost": "3*n**3 - 2*n**2 - 5*n + 6",
+          "n_values": [8, 16, 24, 32, 48, 64],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": ["n**2", "n**4"],
+          "shape": {"sequence": "consecutive", "n_range": [2, 15], "note": "the closed form holds for n >= 2"}
+        }
+      }
+    },
+    {
+      "name": "Aho-Corasick",
+      "idea": "Build one automaton for all patterns: the trie of the patterns plus failure links (fail(v) = node of the longest proper suffix of v's string that is in the trie), computed in breadth-first order. Scan the text once, following failure links on a missing transition, and count visits per state; the occurrences of a pattern are the visits summed over its subtree of the failure tree, accumulated in reverse breadth-first order.",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation",
+      "time_complexity": "Theta(N + L) character comparisons for a fixed alphabet of sigma characters (children kept as lists scanned linearly, at most sigma comparisons per lookup; at most 2N lookups in the scan and O(L) in the construction; at least N + L - sigma comparisons, since every scan step ends with a lookup in a non-empty child list, at most T of the L insertion lookups find an empty list (T = number of trie nodes created), and every created node of depth >= 2 ends its failure-link search with a lookup in a non-empty list), independent of the number of occurrences. On the V2 family exactly 4n^2 - 3 comparisons for n >= 1 = Theta(n^2): (n-1)^2 to build the trie (inserting a^(j-1) b costs 2(j-2) + 1 comparisons for j >= 2, 0 for j = 1), 3n - 5 for the failure links (n >= 2: 1 for the b-child and 2 for the a-child of every a^d, d = 1..n-1, the a-child only for d <= n-2), and 3n^2 - n + 1 for the scan (n >= 2; 2 per character down the a-chain for the first n - 1 characters, then 3 per character: the b-only node a^(n-1) fails, its failure link a^(n-2) has the a-child at the second position).",
+      "space_complexity": "Theta(L) trie nodes",
+      "correctness": "Aho & Corasick 1975. Invariant: after reading T[0..t], the state is the longest suffix of T[0..t] that is a trie node (a missing transition is resolved by moving to the longest proper suffix in the trie, which is the failure link). A pattern ends at t iff it is a suffix of that state's string, i.e. iff its node lies on the state's failure chain; so its count is the number of visits in its failure-tree subtree, which the reverse breadth-first accumulation computes (every node appears after its failure parent in breadth-first order, because the failure link points to a strictly shallower node).",
+      "implementation": "implementations/aho_corasick.py:count_occurrences_aho_corasick",
+      "harness": {
+        "scaling": {
+          "cost": "4*n**2 - 3",
+          "n_values": [16, 32, 64, 128, 256],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": ["n**3", "n**2*log(n)", "n"],
+          "shape": {"sequence": "consecutive", "n_range": [1, 12]}
+        }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "Theta(N L) -> Theta(P N + L) -> Theta(N + L) character comparisons. On the V2 family (text a^(n^2), patterns a^(j-1) b) this is Theta(n^4) -> Theta(n^3) -> Theta(n^2), i.e. Theta(s^2) -> Theta(s^1.5) -> Theta(s) in the input size s = Theta(n^2). Running a linear-time single-pattern matcher once per pattern still reads the text P times; the automaton reads it once.",
+  "sources": [
+    {
+      "authors": "Aho, A. V.; Corasick, M. J.",
+      "year": 1975,
+      "title": "Efficient string matching: an aid to bibliographic search",
+      "venue": "Communications of the ACM 18(6), 333-340",
+      "doi": "10.1145/360825.360855"
+    },
+    {
+      "authors": "Knuth, D. E.; Morris, J. H., Jr.; Pratt, V. R.",
+      "year": 1977,
+      "title": "Fast pattern matching in strings",
+      "venue": "SIAM Journal on Computing 6(2), 323-350",
+      "doi": "10.1137/0206024"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: the validator runs n = 0..6, 8, 12, 20 and 40 patterns, 8 instances per size: texts over {a, b} or {a, b, c}, random or periodic, of length 0..6n+6; patterns that are substrings of the text, random short strings, prefixes and suffixes of one another, duplicates and patterns longer than the text. All three implementations agree with each other and with check, which counts every pattern with str.find in a loop (stepping one past each match) and shares no code with them. experiments/2026-10-06i_aho_corasick.py adds 1500 instances (n = 0..24; 1379 with at least one occurrence; 4500 runs, 0 failures) and an oracle control: 4556 deliberately wrong outputs (one count + 1, non-overlapping counts from str.count, the counts in reverse order, the counts of the reversed patterns, the total instead of the tuple, a missing or extra entry, a list, bool or float entries, None) all rejected, 480 correct outputs accepted. V2 (exact counts): generate_scaling gives text a^(n^2) and the patterns a^(j-1) b, j = 1..n, as tuples of CountingChar, which count every == and != between characters; the implementations are unchanged (they use only len(), indexing, iteration and ==/!= on characters). Naive: exactly n(n+1)(3n^2 - 2n + 2)/6 (checked for n = 1..20 and up to 40); fit on n = 8..32 against that form; rivals n^3 and n^5. KMP per pattern: exactly 3n^3 - 2n^2 - 5n + 6 for n >= 2 (checked up to 70); fit on n = 8..64; rivals n^2 and n^4. Aho-Corasick: exactly 4n^2 - 3 for n >= 1 (checked for n = 1..20 and up to 300; build n^2 + n - 4 and scan 3n^2 - n + 1, both valid for n >= 2, checked separately at n = 2, 5, 10, 50); fit on n = 16..256; rivals n^3, n^2 log n and n. The experiment also runs Aho-Corasick on text a^N with patterns a, aa, ..., a^n (32272 occurrences at n = 32): the comparisons stay below one per input character, because counts are accumulated along failure links instead of being reported one by one. No counted operation happens inside a CPython built-in.",
+    "artifacts": [
+      "implementations/naive.py",
+      "implementations/kmp_each.py",
+      "implementations/aho_corasick.py",
+      "harness.py",
+      "../../experiments/2026-10-06i_aho_corasick.py",
+      "../../tests/test_entries_2026_10_06i_aho_corasick.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 8, 12, 20, 40],
+    "trials": 8
+  },
+  "caveats": "Costs count character comparisons only. Aho-Corasick's Theta(N + L) assumes a fixed alphabet: with children kept as lists, a lookup costs up to sigma comparisons, so the bound is O(sigma (N + L)) in general (a full transition table or a dictionary gives other trade-offs, not implemented here). Trie-node allocation, the breadth-first queue, failure-link bookkeeping and the visit counters are integer operations that are not counted; there are Theta(N + L) of them. The naive and KMP bounds are worst cases: on random text both are typically much faster, and the V2 family is chosen to be the naive matcher's worst case. Reporting every occurrence individually (instead of counting) would add the number of occurrences to Aho-Corasick's cost; this implementation returns counts only. Stating the costs as functions of n alone relies on the V2 family (N = n^2, patterns of lengths 1..n).",
+  "notes": "Relative in the dataset: string-matching-naive-vs-kmp (one pattern). The three algorithms here form a chain: naive per pattern Theta(N L), KMP per pattern Theta(P N + L), one automaton Theta(N + L)."
+}

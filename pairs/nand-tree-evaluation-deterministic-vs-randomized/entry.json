@@ -14,7 +14,7 @@
       "pseudocode": "eval(node): if leaf: read it; if eval(left) == 0: return 1; return 1 - eval(right)",
       "time_complexity": "2^h = N leaf reads in the worst case (exactly 2^h on inputs where every node of value 1 has its 0-child on the right), which is optimal for deterministic algorithms (lower_bounds)",
       "space_complexity": "O(h)",
-      "correctness": "NAND(0, y) = 1 and NAND(1, y) = NOT y, so short-circuiting on a 0 left child is exact. Worst case: a value-0 node needs both children (both are 1), and a value-1 node whose left child is 1 needs its right child too, so on the right-zero reluctant input every leaf is read (D(h) = 2 D(h-1)). Optimality (adversary argument, sketched here, not checked against a published proof): answer every leaf query with 1 while its sibling subtree is unfinished, which leaves the parent undetermined since NAND(1, y) = NOT y; when the last leaf of a node's two subtrees is queried, choose the answer that gives that node whichever value the adversary wants for it as a 'virtual leaf' one level up. By induction every node is determined only when its last leaf is read, so any deterministic algorithm reads all 2^h leaves.",
+      "correctness": "NAND(0, y) = 1 and NAND(1, y) = NOT y, so short-circuiting on a 0 left child is exact. Worst case: a value-0 node needs both children (both are 1), and a value-1 node whose left child is 1 needs its right child too, so on the right-zero reluctant input every leaf is read (D(h) = 2 D(h-1)). Optimality (adversary argument, proved here by induction on the height; not checked against a published proof): answer every leaf query with 1 while its sibling subtree is unfinished, which leaves the parent undetermined since NAND(1, y) = NOT y; when the last leaf of a node's two subtrees is queried, choose the answer that gives that node whichever value the adversary wants for it as a 'virtual leaf' one level up. By induction on the height, every node stays undetermined until the last leaf below it is read, and its value can then still be chosen: while both subtrees of a node are unfinished, each can still take either value, so the node can be 0 (both children 1) or 1 (a child 0); once one subtree has finished, with value 1, the node equals the negation of the other subtree, which is still open, and the answer to that subtree's last leaf fixes the node to the value wanted. So any deterministic algorithm reads all 2^h leaves.",
       "implementation": "implementations/left_first.py:nand_tree_left_first",
       "harness": {
         "v1_max_n": 12,
@@ -56,7 +56,7 @@
       "model": "classical-deterministic",
       "bound": "2^h = N leaf reads in the worst case",
       "setting": "query (decision-tree) model, unconditional",
-      "source": "Adversary argument sketched in this entry (deterministic algorithm, correctness field); not checked against a published proof"
+      "source": "Adversary argument proved in this entry by induction on the height (deterministic algorithm, correctness field); not checked against a published proof"
     },
     {
       "model": "classical-randomized",
@@ -90,6 +90,6 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 16],
     "trials": 4
   },
-  "caveats": "The randomized V2 fit uses sample means (200 per h), so its alpha is a statistical estimate; it is reproducible because the validator seeds every run. Uniformly random leaves are much easier than reluctant inputs for both algorithms, so V2 uses the worst-case family. The randomized lower bound quoted is for zero-error algorithms (as summarised from Saks & Wigderson 1986 by secondary sources); this entry makes no claim about bounded-error algorithms. The deterministic lower bound rests on the adversary sketch given here.",
+  "caveats": "The randomized V2 fit uses sample means (200 per h), so its alpha is a statistical estimate; it is reproducible because the validator seeds every run. Uniformly random leaves are much easier than reluctant inputs for both algorithms, so V2 uses the worst-case family. The randomized lower bound quoted is for zero-error algorithms (as summarised from Saks & Wigderson 1986 by secondary sources); this entry makes no claim about bounded-error algorithms. The deterministic lower bound rests on the adversary argument proved here (not checked against a published proof).",
   "notes": "Quantum algorithms evaluate NAND trees with about sqrt(N) queries (Farhi, Goldstone & Gutmann 2008 and follow-up work); that line is not recorded here because the source could not be checked by title (Crossref stores no title for doi:10.4086/toc.2008.v004a008). A T9 extension would need a verified quantum algorithm and the classical randomized lower bound above."
 }

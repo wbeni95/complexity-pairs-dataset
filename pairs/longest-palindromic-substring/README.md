@@ -19,7 +19,8 @@ forward, so the total work is linear.
 **Worst case matters.** On random strings the cubic and quadratic algorithms are far below their bounds
 (Θ(n²) and Θ(n) in expectation), so V2 times all three on aⁿ. There every substring is a palindrome.
 The probe counts comparisons exactly on aⁿ: Σ(n−L+1)⌊L/2⌋ ≈ n³/12 for brute force, n²/2 + n/2 for
-expansion and 2n − 3 for Manacher.
+expansion and 2n − 3 for Manacher (for every n ≥ 2: n − 2 in the odd-length scan and n − 1 in the even-length
+scan; proof in `entry.json`).
 
 **Verification.** V1: the three agree with each other and with an independent oracle that verifies the
 answer directly (the reported substring is a palindrome, no window one or two characters longer is, and

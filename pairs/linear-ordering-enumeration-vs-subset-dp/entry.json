@@ -1,0 +1,104 @@
+{
+  "id": "linear-ordering-enumeration-vs-subset-dp",
+  "title": "Linear ordering problem: enumeration of all n! orders vs dynamic programming over subsets",
+  "problem_statement": "Given an n x n integer matrix W (diagonal entries are ignored), find an order (permutation) of the n elements that maximises the sum of W[a][b] over all pairs in which a comes before b. Output the maximum and an order attaining it (ties: any optimal order). Minimising the weight of the backward pairs instead is the same problem (the two sums add up to a constant), and for 0/1 matrices of a digraph it is the feedback arc set problem.",
+  "input": {
+    "parameter": "n = number of elements (rows of W).",
+    "size_measure": "n^2 integer matrix entries."
+  },
+  "algorithms": [
+    {
+      "name": "enumeration of all orders",
+      "idea": "Evaluate the n! orders one by one, summing W over the n(n-1)/2 ordered pairs of each, and keep the best.",
+      "model": "classical-deterministic",
+      "pseudocode": "best = None\nfor order in permutations(0..n-1):\n  value = sum of W[order[p]][order[q]] over p < q\n  if best is None or value > best: best, best_order = value, order\nreturn (best, best_order)",
+      "time_complexity": "Theta(n! n^2) on every input. Exactly n! (n(n-1)/2 + 1) - 1 counted operations for every n >= 0: n(n-1)/2 additions per order and n! - 1 comparisons.",
+      "space_complexity": "Theta(n) besides the input",
+      "correctness": "Exhaustive over all orders.",
+      "implementation": "implementations/enumeration.py:linear_ordering_enumeration",
+      "harness": {
+        "v1_max_n": 8,
+        "scaling": {
+          "cost": "factorial(n)*(n*(n-1)/2 + 1) - 1",
+          "n_values": [4, 5, 6, 7, 8],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": ["factorial(n)*n", "factorial(n)*n**3", "n**2*2**n"]
+        }
+      }
+    },
+    {
+      "name": "dynamic programming over subsets",
+      "idea": "If the set S of elements placed first is known, placing v next contributes W[v][u] for every element u placed later, i.e. for every u outside S + {v}, whatever the order inside S. So best[S + {v}] = max over the last element v of best[S] + sum of W[v][u] over u not in S + {v}.",
+      "model": "classical-deterministic",
+      "pseudocode": "best[{}] = 0\nfor S = 0 .. 2^n - 1 (as integers, so subsets come first):\n  for v not in S:\n    gain = sum of W[v][u] over u not in S + {v}\n    best[S | {v}] = max(best[S | {v}], best[S] + gain)   (remember the maximising v)\nreturn best[all] and the order rebuilt from the remembered elements",
+      "time_complexity": "Theta(n^2 2^n) on every input. Exactly 2^(n-2) (n+4)(n-1) + 1 counted operations for n >= 2: n(n-1) 2^(n-2) gain additions (sum over S of (n - |S|)(n - |S| - 1)), n 2^(n-1) additions best[S] + gain, and n 2^(n-1) - 2^n + 1 comparisons (a set T is reached |T| times; the first arrival is stored without comparison).",
+      "space_complexity": "Theta(2^n) table entries",
+      "correctness": "Induction on |S|: best[S] is the maximum, over the orders of S, of the weight of the pairs with a in S before b (b in S or not). In an order of S with last element v, the pairs starting at v go to the elements outside S, and the pairs starting at the other elements of S do not depend on where v stands among the later elements; so best[S] = max over v in S of best[S - {v}] + sum of W[v][u] over u not in S. The recurrence over (set placed so far, next element) is that of Held & Karp 1962; Bodlaender et al. 2012 treat vertex-ordering problems in this way.",
+      "implementation": "implementations/subset_dp.py:linear_ordering_subset_dp",
+      "harness": {
+        "scaling": {
+          "cost": "2**(n-2)*(n+4)*(n-1) + 1",
+          "n_values": [6, 7, 8, 9, 10, 11, 12, 13, 14],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": ["n*2**n", "n**3*2**n", "3**n", "factorial(n)"],
+          "shape": {"sequence": "consecutive", "n_range": [2, 15], "note": "the closed form holds for n >= 2; a constant-coefficient recurrence of order 4 ((x-2)^3 (x-1)) needs 14 terms"}
+        }
+      }
+    }
+  ],
+  "pair_type": "T6",
+  "secondary_tags": ["T8"],
+  "relationship": "Factorial -> single exponential: Theta(n! n^2) -> Theta(n^2 2^n). Both stay exponential. The linear ordering problem is NP-hard (Grötschel, Jünger & Reinelt 1984; for 0/1 matrices it is the feedback arc set problem, NP-complete by Karp 1972), so a polynomial algorithm would imply P = NP: hence primary T6, with T8 for the verified improvement.",
+  "sources": [
+    {
+      "authors": "Grötschel, M.; Jünger, M.; Reinelt, G.",
+      "year": 1984,
+      "title": "A cutting plane algorithm for the linear ordering problem",
+      "venue": "Operations Research 32(6), 1195-1220",
+      "doi": "10.1287/opre.32.6.1195",
+      "note": "The abstract states that the linear ordering problem is NP-hard."
+    },
+    {
+      "authors": "Karp, R. M.",
+      "year": 1972,
+      "title": "Reducibility among combinatorial problems",
+      "venue": "Complexity of Computer Computations, Plenum Press, 85-103",
+      "doi": "10.1007/978-1-4684-2001-2_9",
+      "note": "NP-completeness of FEEDBACK ARC SET."
+    },
+    {
+      "authors": "Held, M.; Karp, R. M.",
+      "year": 1962,
+      "title": "A dynamic programming approach to sequencing problems",
+      "venue": "Journal of the Society for Industrial and Applied Mathematics 10(1), 196-210",
+      "doi": "10.1137/0110015"
+    },
+    {
+      "authors": "Bodlaender, H. L.; Fomin, F. V.; Koster, A. M. C. A.; Kratsch, D.; Thilikos, D. M.",
+      "year": 2012,
+      "title": "A note on exact algorithms for vertex ordering problems on graphs",
+      "venue": "Theory of Computing Systems 50(3), 420-432",
+      "doi": "10.1007/s00224-011-9312-0"
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: the validator runs n = 0..8, 10 and 12, 5 instances per size: random matrices with entries in -9..9 and in 0..9, tournaments (W[a][b] + W[b][a] = 1), hidden acyclic instances (positive entries only along a hidden order), zero matrices and entries up to 10^6; the diagonal holds random integers that must be ignored; the enumeration runs up to n = 8, the DP on every size. check is independent of both implementations: it requires a permutation, recomputes the value from positions, rejects a value above the upper bound sum over a < b of max(W[a][b], W[b][a]) and certifies a value equal to it, and otherwise computes the optimum by a depth-first branch and bound over prefixes (exact for n <= 8; above, a budget of 300 000 nodes, after which an improving move of one element proves non-optimality and anything else is undecided). experiments/2026-10-06i_linear_ordering.py adds 436 implementation runs on n = 0..12 (412 verdicts exact and true for n <= 8, 24 true above, 0 failures) and an oracle control: 2460 deliberately wrong outputs (value +- 1, worse orders with honest or optimal value, the value of the reversed order, the diagonal added, repeated or missing elements, wrong types) all rejected, 212 correct outputs accepted. V2 (exact counts): generate_scaling gives a matrix of CountingInt entries drawn from rng, which count every comparison and +, - on entry-derived values; the implementations are unchanged and the counts do not depend on the entries (checked on three matrices per n). Enumeration: exactly n! (n(n-1)/2 + 1) - 1 (checked for n = 2..8); fit on n = 4..8; rivals n! n, n! n^3 and n^2 2^n. DP: exactly 2^(n-2)(n+4)(n-1) + 1 (checked for n = 2..15); fit on n = 6..14; rivals n 2^n, n^3 2^n, 3^n and n!. No counted operation happens inside a CPython built-in.",
+    "artifacts": [
+      "implementations/enumeration.py",
+      "implementations/subset_dp.py",
+      "harness.py",
+      "../../experiments/2026-10-06i_linear_ordering.py",
+      "../../tests/test_entries_2026_10_06i_linear_ordering.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12],
+    "trials": 5
+  },
+  "caveats": "Arithmetic is unit cost. The DP recomputes each gain from scratch (n - |S| - 1 additions); keeping running row sums (a table of n 2^n partial sums) lowers the time to Theta(n 2^n) while using Theta(n 2^n) memory instead of Theta(2^n); it is not implemented here, and the rival n 2^n is rejected for this implementation. Loop control and subset arithmetic on plain integers are not counted; they are of the same order as the counted operations. The V1 oracle is exact for n <= 8 and, above, for the instances on which the upper bound is attained or branch and bound finishes within its budget. The entry makes no claim about the fastest known exact algorithms for the linear ordering or feedback arc set problem.",
+  "notes": "Relatives in the dataset: tsp-brute-vs-held-karp and hamiltonian-cycle-count-enumeration-vs-inclusion-exclusion use the same (set, last element) recurrence."
+}

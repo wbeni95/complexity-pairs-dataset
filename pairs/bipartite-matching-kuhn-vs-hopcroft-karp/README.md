@@ -20,9 +20,12 @@ do not show its √V factor. The timing family G_k (V = 4k² + k) is a disjoint 
 - paths P₂, P₄, …, P_{2k}, numbered and ordered so that Hopcroft–Karp's first phase picks the "wrong" edge of
   every path. Phase j can then repair only path j.
 
-Exact counts ([experiment](../../experiments/2026-10-07_bipartite_matching_counts.py)): Hopcroft–Karp ran
-**exactly k + 1 phases** for k = 2, 4, …, 16. Kuhn's edge scans settle at 0.144·V·E, and Hopcroft–Karp's at
-1.01–1.05·E·√V.
+Exact counts, proved for every k ≥ 1 (proof sketches in `entry.json`); the
+[experiment](../../experiments/2026-10-07_bipartite_matching_counts.py) and the V2 counts agree with them. Kuhn
+makes exactly (7k⁶ + 9k⁴ + 11k² − 3k)/6 edge scans, Θ(V·E) = Θ(V³), with ratio to V·E tending to 7/48 ≈ 0.146.
+Hopcroft–Karp runs **exactly k + 1 phases** with (24k⁵ + 9k⁴ + 4k³ + 24k² − 25k + 12)/6 edge scans, with ratio
+to E·√V tending to 1. On every input Kuhn makes at most n_left·E ≤ V·E scans, so over graphs with V vertices
+the worst cases are Θ(V³) for Kuhn against O(V^2.5) for Hopcroft–Karp.
 
 **Verification.** V1: both agree with each other and with an independent algebraic oracle: the rank of the
 Edmonds matrix with random entries mod 2⁶¹ − 1, which equals the matching size except with probability

@@ -15,6 +15,10 @@ minimum spanning tree.
 never need to be undone and no search is needed. Even listing only the spanning trees would not help,
 because Kₙ has n^(n−2) of them (Cayley).
 
+**Prim is optimal on Kₙ.** An adversary that answers 2 to every weight query can still give any unread edge
+weight 1, which changes the answer from 2(n − 1) to 2n − 3. So every correct deterministic algorithm reads all
+n(n−1)/2 weights, and Prim's Θ(n²) is optimal up to a constant factor.
+
 **The longer line (sparse graphs).** Chazelle 2000: O(m α(m, n)) deterministic. Karger–Klein–Tarjan 1995:
 expected O(m), randomized.
 

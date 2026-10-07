@@ -1,29 +1,30 @@
 {
   "schema": "schema/entry.schema.json",
   "counts": {
-    "entries": 69,
-    "validated_pairs": 54,
-    "open_problems_T6": 13,
+    "entries": 74,
+    "validated_pairs": 59,
+    "open_problems_T6": 15,
     "proven_quantum_advantage_T9": 9,
     "synthetic_T7": 4,
     "with_quantum_algorithm": 12,
     "by_level": {
       "V0": 11,
       "V1": 4,
-      "V2": 54,
+      "V2": 59,
       "V3": 0
     },
     "by_type": {
       "T1": 2,
-      "T2": 20,
-      "T3": 20,
+      "T2": 21,
+      "T3": 22,
       "T4": 2,
       "T5": 1,
-      "T6": 12,
+      "T6": 14,
       "T7": 4,
       "T8": 0,
       "T9": 8
-    }
+    },
+    "theorems": 0
   },
   "entries": [
     {
@@ -51,7 +52,10 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "assignment-brute-vs-hungarian",
@@ -74,11 +78,14 @@
         {
           "name": "Hungarian method (shortest augmenting paths with potentials)",
           "model": "classical-deterministic",
-          "time_complexity": "O(n^3) worst case (at most n search steps of Theta(n) per inserted row); Theta(n^3) growth measured on the column-dominant family used for timing (this entry gives no proof)",
+          "time_complexity": "O(n^3) worst case: the search for the i-th inserted row runs at most i iterations of its main loop, because every iteration except the last selects a column that is already matched (the loop stops at the first free column selected), the selected columns are distinct, and only i - 1 columns are matched at that time; iteration t evaluates one reduced cost for each of the n - t + 1 columns not yet selected and does Theta(n) further work. Hence at most n(n + 1)(2n + 1)/6 reduced-cost evaluations and O(n^3) time on every input. Theta(n^3) growth measured on the column-dominant family used for timing (no proof of that lower bound is given here)",
           "implemented": true
         }
       ],
-      "sources": 6
+      "sources": 6,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "determinant-cofactor-vs-gaussian",
@@ -105,7 +112,10 @@
           "implemented": true
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "edit-distance-brute-vs-dp",
@@ -129,7 +139,7 @@
         {
           "name": "plain recursion",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(D(n, n)) = Theta((3 + 2 sqrt 2)^n / sqrt(n)) ~ Theta(5.83^n / sqrt(n)), D = Delannoy numbers",
+          "time_complexity": "Theta(D(n, n)) = Theta((3 + 2 sqrt 2)^n / sqrt(n)) ~ Theta(5.83^n / sqrt(n)), D = Delannoy numbers: the calls d(i, j) with i = n or j = n are the leaves, and the root-to-leaf paths are the lattice paths from (0, 0) with steps (1, 0), (0, 1), (1, 1) stopped at their first point with i = n or j = n; each extends in exactly one way to (n, n), so there are D(n, n) leaves, and since every other call has 3 children the recursion makes exactly (3 D(n, n) - 1)/2 calls. D(n, n) = sum_k C(n, k)^2 2^k = Theta((3 + 2 sqrt 2)^n / sqrt(n)): by Stirling its largest term, near k = (2 - sqrt 2) n, is Theta((3 + 2 sqrt 2)^n / n), and summing the Theta(sqrt n) terms around it gives the 1/sqrt(n) factor (standard Laplace estimate; sketched, not written out here)",
           "implemented": true
         },
         {
@@ -139,7 +149,10 @@
           "implemented": true
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "fibonacci-naive-vs-dp",
@@ -174,7 +187,10 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "gcd-trial-vs-euclid",
@@ -191,7 +207,7 @@
         {
           "name": "trial divisors",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(2^n) iterations in the worst case: exactly min(a, b) - gcd(a, b) + 1 iterations of one or two divisions, i.e. up to 2^n - 2 on coprime n-bit inputs (>= 2^(n-2) on the coprime Fibonacci pairs used for V2). In bit operations, Theta(2^n) times the cost of an n-bit division.",
+          "time_complexity": "Theta(2^n) iterations in the worst case: exactly min(a, b) - gcd(a, b) + 1 iterations of one or two divisions, i.e. up to 2^n - 2 on coprime n-bit inputs (>= 2^(n-2) on the coprime Fibonacci pairs used for V2: the pair is F_(k+1), F_k with F_(k+1) < 2^n <= F_(k+2), and F_(k+2) = F_(k+1) + F_k <= 3 F_k, so min(a, b) = F_k >= 2^n / 3 > 2^(n-2)). In bit operations, Theta(2^n) times the cost of an n-bit division.",
           "implemented": true
         },
         {
@@ -201,7 +217,10 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "global-min-cut-brute-vs-stoer-wagner",
@@ -228,7 +247,10 @@
           "implemented": true
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "horn-sat-brute-force-vs-unit-propagation",
@@ -255,7 +277,10 @@
           "implemented": true
         }
       ],
-      "sources": 5
+      "sources": 5,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "lcs-brute-vs-dp",
@@ -289,7 +314,10 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "longest-increasing-subsequence",
@@ -324,7 +352,10 @@
           "implemented": true
         }
       ],
-      "sources": 5
+      "sources": 5,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "matrix-chain-recursion-vs-dp",
@@ -351,7 +382,52 @@
           "implemented": true
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
+    },
+    {
+      "id": "max-cost-bst-recursion-vs-cubic-dp-vs-endpoint-dp",
+      "title": "Interval DP with inclusion-monotone weights (endpoint law; maximum-cost BST): plain recursion vs cubic DP vs endpoint DP",
+      "path": "pairs/max-cost-bst-recursion-vs-cubic-dp-vs-endpoint-dp",
+      "location": "pairs",
+      "pair_type": "T2",
+      "secondary_tags": [
+        "T3"
+      ],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "plain recursion",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(3^n) on every input: exactly 3^n calls and (3^(n-1) - 1)/2 cost comparisons for n >= 1",
+          "implemented": true
+        },
+        {
+          "name": "cubic interval DP (every root)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^3) on every input: n(n+1)(n+2)/6 candidate roots, (n+1)n(n-1)/6 cost comparisons",
+          "implemented": true
+        },
+        {
+          "name": "endpoint DP (two candidate roots per interval)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2) on every input: n(n+1)/2 intervals with O(1) work each; exactly n(n-1)/2 cost comparisons",
+          "implemented": true
+        }
+      ],
+      "sources": 5,
+      "provenance": {
+        "class": "literature",
+        "bases": [
+          "Qian, J.; Wang, C. A. (2004). Maximum weight triangulation of a special convex polygon. 20th European Workshop on Computational Geometry (EWCG 2004), Seville. http://hdl.handle.net/11441/55702. Lemma 1."
+        ],
+        "note": "The endpoint law for inclusion-monotone interval weights follows by the exchange argument of the cited lemma."
+      }
     },
     {
       "id": "max-weight-independent-set-grid-enumeration-vs-path-decomposition-dp",
@@ -378,7 +454,10 @@
           "implemented": true
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "minimum-spanning-tree-brute-vs-kruskal",
@@ -413,7 +492,10 @@
           "implemented": true
         }
       ],
-      "sources": 6
+      "sources": 6,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "modular-exponentiation-repeated-vs-square-multiply",
@@ -447,7 +529,10 @@
           "implemented": true
         }
       ],
-      "sources": 1
+      "sources": 1,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "optimal-bst-recursion-vs-dp-vs-knuth",
@@ -482,7 +567,10 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "planar-perfect-matchings-enumeration-vs-kasteleyn",
@@ -509,7 +597,10 @@
           "implemented": true
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "regex-matching-backtracking-vs-thompson",
@@ -542,7 +633,10 @@
           "implemented": true
         }
       ],
-      "sources": 1
+      "sources": 1,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "shortest-path-enumeration-vs-dijkstra",
@@ -565,11 +659,14 @@
         {
           "name": "Dijkstra (array version)",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(n^2) with an array (linear in the n x n weight-matrix input); O(m + n log n) with Fibonacci heaps",
+          "time_complexity": "Theta(n^2) with an array (linear in the n x n weight-matrix input; it reads exactly n(n-1)/2 distinct weights, for each pair of vertices the one leaving the vertex settled first), which is optimal up to a constant factor for weight-matrix input: for n >= 4 split the n - 2 vertices other than s, t into U (floor((n-2)/2) of them) and W, and set w(s, u) = 1, w(u, x) = 2 and w(x, t) = 1 for u in U, x in W, all other weights 100; then dist(s, t) = 4, and lowering any one weight w(u, x) to 1 makes it 3, so on this instance every correct deterministic algorithm (and every run of a zero-error randomized one) reads all floor((n-2)^2/4) weights w(u, x). O(m + n log n) with Fibonacci heaps",
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "spanning-tree-count-enumeration-vs-kirchhoff",
@@ -596,7 +693,10 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "two-sat-brute-force-vs-scc",
@@ -623,7 +723,10 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "xor-sat-brute-force-vs-gaussian-elimination",
@@ -650,7 +753,10 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "all-pairs-shortest-paths-bellman-ford-vs-floyd-warshall",
@@ -677,7 +783,10 @@
           "implemented": true
         }
       ],
-      "sources": 6
+      "sources": 6,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "bipartite-matching-kuhn-vs-hopcroft-karp",
@@ -694,17 +803,20 @@
         {
           "name": "Kuhn's augmenting paths (one DFS per left vertex)",
           "model": "classical-deterministic",
-          "time_complexity": "O(V (V + E)), i.e. O(V E) when E = Omega(V): one O(V + E) search per left vertex. measured on the adversarial timing family G_k for k = 4..16: 0.143-0.145 V E edge scans (V E = Theta(V^3) there; this entry gives no proof for all k)",
+          "time_complexity": "O(V (V + E)), i.e. O(V E) when E = Omega(V): one O(V + E) search per left vertex, and at most n_left E <= V E edge scans on every input (in one search a left vertex is pushed at most once, since the root is free and every other pushed vertex is the partner of a right vertex seen for the first time, and a pushed vertex reads each entry of its list at most once). On the adversarial family G_k (V = 4k^2 + k, E = 2k^4 + k^2) exactly (7k^6 + 9k^4 + 11k^2 - 3k)/6 edge scans for every k >= 1. Proof sketch, with a = k^2: before gadget root u < a, gadget left vertex i is matched to right vertex u - 1 - i (i < u), so the search from u runs through all u matched gadget vertices, reads (u + 1)(u + 2)/2 entries and succeeds; each of the other a gadget roots fails after reading a(a + 1) entries (its own list and the lists of the a matched gadget vertices); in path j the roots L_2..L_j read 1 entry each and L_1 reads 2j - 1, so path j costs 3j - 2. The sum C(a + 2, 3) + a^2 (a + 1) + k(3k - 1)/2 is the formula, and it equals the V2 counts listed under verification. So Kuhn makes Theta(V E) = Theta(V^3) scans on G_k; the ratio to V E tends to 7/48",
           "implemented": true
         },
         {
           "name": "Hopcroft-Karp",
           "model": "classical-deterministic",
-          "time_complexity": "O((V + E) sqrt(V)): O(sqrt(V)) phases (Hopcroft & Karp 1973), O(V + E) each; O(V^2.5) on dense graphs (the paper's title bound). measured on the adversarial timing family G_k for k = 4..16: k + 1 phases and 1.01-1.05 E sqrt(V) edge scans (this entry gives no proof for all k)",
+          "time_complexity": "O((V + E) sqrt(V)): O(sqrt(V)) phases (Hopcroft & Karp 1973), O(V + E) each; O(V^2.5) on dense graphs (the paper's title bound). On the adversarial family G_k exactly k + 1 phases (k augmenting phases and a final search that finds no augmenting path) and (24k^5 + 9k^4 + 4k^3 + 24k^2 - 25k + 12)/6 = Theta(E sqrt V) edge scans for every k >= 1; the ratio to E sqrt V tends to 1. Proof sketch, with a = k^2: in phase 1 the breadth-first search reads all E entries, and the depth-first searches read a(a + 1)/2 + a^2 + k(k + 1)/2 entries, match all a gadget right vertices and path 1, and leave path j >= 2 with the j - 1 edges L_i R_(i-1) matched and L_1, R_j free; in phase t (2 <= t <= k) the target level is t, the breadth-first search reads 2a^2 entries in the gadget and 2t - 1 in each path j >= t, and the depth-first searches read 2a^2 in the gadget, 2t - 1 in path t, which they repair, and 2t + 1 in each later path, which they leave unchanged; phase k + 1 reads 2a^2 entries and finds no free right vertex. The per-phase counts sum to the formula, which equals the V2 counts listed under verification",
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "boolean-matrix-multiplication-naive-vs-strassen",
@@ -731,7 +843,10 @@
           "implemented": true
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "closest-pair-brute-vs-divide-conquer",
@@ -758,7 +873,10 @@
           "implemented": true
         }
       ],
-      "sources": 5
+      "sources": 5,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "element-distinctness-pairs-vs-sorting",
@@ -792,7 +910,10 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "integer-multiplication-schoolbook-vs-karatsuba",
@@ -819,7 +940,10 @@
           "implemented": true
         }
       ],
-      "sources": 5
+      "sources": 5,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "inversion-counting-quadratic-vs-merge",
@@ -846,7 +970,10 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "longest-palindromic-substring",
@@ -869,7 +996,7 @@
         {
           "name": "expand around centers",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(n + R) where R = sum of the maximal palindrome radii over all centers: Theta(n^2) worst case (n equal characters: n^2/2 + n/2 comparisons); Theta(n) in expectation on uniformly random strings over two or more letters",
+          "time_complexity": "Theta(n + R) where R = sum of the maximal palindrome radii over all centers: Theta(n^2) worst case (n equal characters: n^2/2 + n/2 comparisons); Theta(n) in expectation on uniformly random strings over sigma >= 2 letters: at a centre, the r-th comparison between distinct positions is made only if the r - 1 before it succeeded, and these test equality at disjoint pairs of positions, independent events of probability 1/sigma each, so it is made with probability at most 2^-(r-1); hence a gap centre costs at most 2 comparisons in expectation and a character centre at most 3 (its first comparison is of the character with itself), at most 5n - 2 in total, and at least n",
           "implemented": true
         },
         {
@@ -879,7 +1006,10 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "matrix-multiplication-naive-vs-strassen",
@@ -906,7 +1036,10 @@
           "implemented": true
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "max-flow-edmonds-karp-vs-dinic",
@@ -933,7 +1066,10 @@
           "implemented": true
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "maximum-subarray",
@@ -966,7 +1102,46 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
+    },
+    {
+      "id": "multi-pattern-matching-naive-vs-aho-corasick",
+      "title": "Multi-pattern string matching: naive matching per pattern vs KMP per pattern vs Aho-Corasick",
+      "path": "pairs/multi-pattern-matching-naive-vs-aho-corasick",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "naive matching per pattern",
+          "model": "classical-deterministic",
+          "time_complexity": "O(N L) character comparisons; Theta(sum over patterns of (N - m + 1) m) in the worst case. On the V2 family exactly sum_j j (n^2 - j + 1) = n(n+1)(3n^2 - 2n + 2)/6 comparisons = Theta(n^4) (each of the n^2 - j + 1 alignments of a^(j-1) b matches j - 1 characters and fails on the b).",
+          "implemented": true
+        },
+        {
+          "name": "Knuth-Morris-Pratt per pattern",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(P N + L): Theta(N + m) per pattern (at most 3(m - 1) comparisons for the failure table and 3N for the scan: the implementation compares the current character again after the while loop, as in string-matching-naive-vs-kmp). On the V2 family exactly 3n^3 - 2n^2 - 5n + 6 comparisons for n >= 2 = Theta(n^3): pattern b costs N, pattern ab costs 2N, and a^(j-1) b for j >= 3 costs 3j - 6 (failure table) + 3N - j (scan), with N = n^2.",
+          "implemented": true
+        },
+        {
+          "name": "Aho-Corasick",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(N + L) character comparisons for a fixed alphabet of sigma characters (children kept as lists scanned linearly, at most sigma comparisons per lookup; at most 2N lookups in the scan and O(L) in the construction; at least N + L - sigma comparisons, since every scan step ends with a lookup in a non-empty child list, at most T of the L insertion lookups find an empty list (T = number of trie nodes created), and every created node of depth >= 2 ends its failure-link search with a lookup in a non-empty list), independent of the number of occurrences. On the V2 family exactly 4n^2 - 3 comparisons for n >= 1 = Theta(n^2): (n-1)^2 to build the trie (inserting a^(j-1) b costs 2(j-2) + 1 comparisons for j >= 2, 0 for j = 1), 3n - 5 for the failure links (n >= 2: 1 for the b-child and 2 for the a-child of every a^d, d = 1..n-1, the a-child only for d <= n-2), and 3n^2 - n + 1 for the scan (n >= 2; 2 per character down the a-chain for the first n - 1 characters, then 3 per character: the b-only node a^(n-1) fails, its failure link a^(n-2) has the a-child at the second position).",
+          "implemented": true
+        }
+      ],
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "or-convolution-naive-vs-zeta-mobius",
@@ -993,7 +1168,10 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "polynomial-multiplication-naive-vs-ntt",
@@ -1020,7 +1198,10 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "range-minimum-queries-naive-vs-sparse-table",
@@ -1047,7 +1228,10 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "sorting-insertion-vs-merge",
@@ -1081,7 +1265,10 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "string-matching-naive-vs-kmp",
@@ -1108,7 +1295,10 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "subset-sum-zeta-transform-naive-vs-yates",
@@ -1135,7 +1325,10 @@
           "implemented": true
         }
       ],
-      "sources": 1
+      "sources": 1,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "three-sum-cubic-vs-quadratic",
@@ -1169,7 +1362,40 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
+    },
+    {
+      "id": "three-xor-all-triples-vs-patricia-trie",
+      "title": "3XOR: all triples vs a Patricia trie (deterministic quadratic)",
+      "path": "pairs/three-xor-all-triples-vs-patricia-trie",
+      "location": "pairs",
+      "pair_type": "T3",
+      "secondary_tags": [],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "all triples",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^3) in the worst case. Exactly, on every instance without a solution (the V2 family is one): C(n, 2) XORs and C(n, 3) equality tests, C(n, 2) + C(n, 3) = C(n + 1, 3) = (n^3 - n)/6 word operations (the middle loop runs once per pair, the inner loop once per triple; Pascal's rule sums the two binomials). With a solution it stops at the first hit.",
+          "implemented": true
+        },
+        {
+          "name": "Patricia trie",
+          "model": "classical-deterministic",
+          "time_complexity": "O(n^2 + n w) word operations; Theta(n^2) in the worst case when w = O(n) (attained on the V2 family). The zero scan is n comparisons, the build at most n w bit tests (each index is tested once per bit until its group is a singleton), and each of the |D| <= n rounds costs O(|D|): |D| - 1 bit tests at branching nodes, |D| XORs and a merge of at most 2|D| - 1 steps. Exactly, on the V2 family (all w-bit words of odd Hamming weight, n = 2^(w-1), no solution): 7n^2 + 2n log2(n) - 3n operations. Derivation: n zero comparisons; the build tests every word once at each of the bits w-1..1 (a group fixed on its top bits holds all suffixes of one parity, 2^(r-1) words for r remaining bits, and splits at the next bit while r >= 2; at r = 1 it is a single word), n(w - 1) = n log2(n) bit tests of 2 operations each (AND, truth test), and the trie has n leaves and n - 1 branching nodes; per a: 2(n - 1) for the bit tests at branching nodes, n XORs, and the merge: {a XOR x} is the set of even-weight words, which interleaves with the odd-weight words (each pair 2t, 2t + 1 holds one of each), so the merge consumes every word up to 2^w - 2, 2n - 1 steps of one equality test and one less-than test, 4n - 2; per a 7n - 4. Total n + 2n log2(n) + n(7n - 4).",
+          "implemented": true
+        }
+      ],
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "xor-convolution-naive-vs-walsh-hadamard",
@@ -1196,7 +1422,10 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "nand-tree-evaluation-deterministic-vs-randomized",
@@ -1214,7 +1443,7 @@
           "model": "classical-deterministic",
           "bound": "2^h = N leaf reads in the worst case",
           "setting": "query (decision-tree) model, unconditional",
-          "source": "Adversary argument sketched in this entry (deterministic algorithm, correctness field); not checked against a published proof"
+          "source": "Adversary argument proved in this entry by induction on the height (deterministic algorithm, correctness field); not checked against a published proof"
         },
         {
           "model": "classical-randomized",
@@ -1238,7 +1467,10 @@
           "implemented": true
         }
       ],
-      "sources": 1
+      "sources": 1,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "primality-miller-rabin-vs-aks",
@@ -1265,7 +1497,10 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "3sat-brute-force-vs-schoening",
@@ -1294,7 +1529,10 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "chromatic-number-subset-dp-vs-inclusion-exclusion",
@@ -1323,7 +1561,46 @@
           "implemented": true
         }
       ],
-      "sources": 5
+      "sources": 5,
+      "provenance": {
+        "class": "literature"
+      }
+    },
+    {
+      "id": "first-match-rule-ordering-enumeration-vs-subset-dp",
+      "title": "Ordering a first-match rule list: enumeration of all k! orders vs dynamic programming over subsets of rules",
+      "path": "pairs/first-match-rule-ordering-enumeration-vs-subset-dp",
+      "location": "pairs",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T8"
+      ],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "enumeration of all orders",
+          "model": "classical-deterministic",
+          "time_complexity": "O(k! k m): k! orders, at most k match tests per item, one addition per item. On the V2 family (m = k, item i matched by rules i and i+1 mod k) exactly k! (k+1)(k+3)/3 - 1 counted operations = Theta(k! k^2) = Theta(k! k m): k! k(k+1)/3 truth tests (the earlier of an item's two rules stands on average at position (k+1)/3 of a random order: P(min >= j) = C(k-j+1, 2)/C(k, 2), summed over j = 1..k this is C(k+1, 3)/C(k, 2)), k! k additions and k! - 1 comparisons (none for the first order).",
+          "implemented": true
+        },
+        {
+          "name": "dynamic programming over subsets of rules",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(2^k (k + m)) on every input: per subset m capture tests and k - |S| transitions; an item matched by t >= 1 rules is uncaptured for 2^(k-t) subsets and then adds t costs, and t 2^(k-t) <= 2^(k-1). Exactly 3k^2 + (7k - 2) 2^(k-1) + 2 counted operations on the V2 family (k >= 2): 3km = 3k^2 for building the rule lists (k truth tests per item) and the masks (k shifts and k additions per item); 2k 2^k for the capture tests (an & and a truth test per item and subset); k 2^(k-1) gain additions (each item is uncaptured for the 2^(k-2) subsets avoiding its two rules and then adds 2 costs); k 2^(k-1) transition additions; k 2^(k-1) - 2^k + 1 comparisons (a subset T is reached |T| times, the first arrival is stored without comparison); 1 final addition.",
+          "implemented": true
+        }
+      ],
+      "sources": 8,
+      "provenance": {
+        "class": "literature",
+        "bases": [
+          "Yee, Dahan, Hauser, Orlin 2007 (Marketing Science)",
+          "Schmitt, Martignon 2006 (JMLR)"
+        ]
+      }
     },
     {
       "id": "hamiltonian-cycle-count-enumeration-vs-inclusion-exclusion",
@@ -1358,7 +1635,10 @@
           "implemented": true
         }
       ],
-      "sources": 6
+      "sources": 6,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "knapsack-01-brute-vs-dp",
@@ -1393,7 +1673,42 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
+    },
+    {
+      "id": "linear-ordering-enumeration-vs-subset-dp",
+      "title": "Linear ordering problem: enumeration of all n! orders vs dynamic programming over subsets",
+      "path": "pairs/linear-ordering-enumeration-vs-subset-dp",
+      "location": "pairs",
+      "pair_type": "T6",
+      "secondary_tags": [
+        "T8"
+      ],
+      "level": "V2",
+      "validated": true,
+      "lower_bounds": [],
+      "has_quantum_algorithm": false,
+      "algorithms": [
+        {
+          "name": "enumeration of all orders",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n! n^2) on every input. Exactly n! (n(n-1)/2 + 1) - 1 counted operations for every n >= 0: n(n-1)/2 additions per order and n! - 1 comparisons.",
+          "implemented": true
+        },
+        {
+          "name": "dynamic programming over subsets",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(n^2 2^n) on every input. Exactly 2^(n-2) (n+4)(n-1) + 1 counted operations for n >= 2: n(n-1) 2^(n-2) gain additions (sum over S of (n - |S|)(n - |S| - 1)), n 2^(n-1) additions best[S] + gain, and n 2^(n-1) - 2^n + 1 comparisons (a set T is reached |T| times; the first arrival is stored without comparison).",
+          "implemented": true
+        }
+      ],
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "permanent-naive-vs-ryser",
@@ -1422,7 +1737,10 @@
           "implemented": true
         }
       ],
-      "sources": 5
+      "sources": 5,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "tsp-brute-vs-held-karp",
@@ -1451,7 +1769,10 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "bernstein-vazirani-classical-vs-quantum",
@@ -1465,9 +1786,9 @@
       "lower_bounds": [
         {
           "model": "classical-randomized",
-          "bound": "Omega(n) queries (n - O(1) for bounded error)",
+          "bound": "n queries for every success probability > 1/2, randomized algorithms included",
           "setting": "query (oracle) model, unconditional",
-          "source": "Information-theoretic: each classical query returns one bit and s is a uniformly random n-bit string; see Bernstein & Vazirani 1997"
+          "source": "Proved in this entry: for a uniformly random s, the answers s.x_1, ..., s.x_q to q queries (chosen adaptively) leave s uniform on the solutions of q linear equations over GF(2), an affine subspace of dimension >= n - q, so a deterministic q-query algorithm outputs s with probability at most 2^(q-n). Averaging over its coins, every randomized q-query algorithm also succeeds with probability at most 2^(q-n) on average over s, hence on some s; success > 1/2 on every s therefore needs q >= n. The problem is from Bernstein & Vazirani 1997"
         }
       ],
       "has_quantum_algorithm": true,
@@ -1485,7 +1806,10 @@
           "implemented": true
         }
       ],
-      "sources": 1
+      "sources": 1,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "collision-problem-classical-vs-quantum",
@@ -1521,7 +1845,7 @@
         {
           "name": "classical birthday search",
           "model": "classical-randomized",
-          "time_complexity": "Theta(sqrt N) = Theta(2^(n/2)) queries expected: E[Q] = sum_q prod_{i=1}^{q-1} (N-2i)/(N-i) ~ sqrt(pi N / 2); at most N/2 + 1",
+          "time_complexity": "Theta(sqrt N) = Theta(2^(n/2)) queries expected: E[Q] = sum_q prod_{i=1}^{q-1} (N-2i)/(N-i) ~ sqrt(pi N / 2) (each factor is 1 - i/(N - i) = exp(-i/N + O(i^2/N^2)), so the q-th term is exp(-q^2/(2N) + o(1)) uniformly for q <= N^0.6; the at most N/2 + 1 later terms are each smaller than the term at q = N^0.6, which is exp(-N^0.2/2 + o(1)), so they add o(1); and the sum over q >= 1 of exp(-q^2/(2N)) is (1 + o(1)) sqrt(pi N / 2), a Riemann sum of the Gaussian integral); at most N/2 + 1",
           "implemented": true
         },
         {
@@ -1537,7 +1861,10 @@
           "implemented": true
         }
       ],
-      "sources": 7
+      "sources": 7,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "deutsch-jozsa-classical-vs-quantum",
@@ -1561,7 +1888,7 @@
         {
           "name": "classical deterministic: scan until a difference or a majority",
           "model": "classical-deterministic",
-          "time_complexity": "2^(n-1) + 1 queries in the worst case (optimal for exact classical algorithms); about 3 queries on average over uniformly random balanced functions",
+          "time_complexity": "2^(n-1) + 1 queries in the worst case (optimal for exact classical algorithms); at most 3 queries on average over uniformly random balanced functions, tending to 3 as n grows: the first j values agree with probability 2 prod_{i<j} (N/2 - i)/(N - i) <= 2^(1-j) (N = 2^n), and the expected number of queries is 1 plus the sum of these probabilities over j >= 1",
           "implemented": true
         },
         {
@@ -1577,7 +1904,10 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "grover-search-classical-vs-quantum",
@@ -1617,7 +1947,10 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "minimum-finding-classical-vs-quantum",
@@ -1657,7 +1990,10 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "simon-classical-vs-quantum",
@@ -1691,7 +2027,10 @@
           "implemented": true
         }
       ],
-      "sources": 2
+      "sources": 2,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "linear-programming-simplex-vs-interior-point",
@@ -1726,7 +2065,10 @@
           "implemented": false
         }
       ],
-      "sources": 5
+      "sources": 5,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "max-flow-edmonds-karp-vs-almost-linear",
@@ -1759,7 +2101,10 @@
           "implemented": false
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "recommendation-systems-dequantization",
@@ -1786,7 +2131,10 @@
           "implemented": false
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "boolean-satisfiability",
@@ -1821,7 +2169,10 @@
           "implemented": false
         }
       ],
-      "sources": 5
+      "sources": 5,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "discrete-logarithm",
@@ -1869,7 +2220,10 @@
           "implemented": false
         }
       ],
-      "sources": 5
+      "sources": 5,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "graph-isomorphism",
@@ -1904,7 +2258,10 @@
           "implemented": false
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "integer-factoring",
@@ -1945,7 +2302,10 @@
           "implemented": false
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "linear-systems-hhl",
@@ -1985,7 +2345,10 @@
           "implemented": false
         }
       ],
-      "sources": 5
+      "sources": 5,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "polynomial-identity-testing",
@@ -2014,7 +2377,10 @@
           "implemented": false
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "linear-recurrence-c1-0-1",
@@ -2047,7 +2413,10 @@
           "implemented": true
         }
       ],
-      "sources": 1
+      "sources": 1,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "linear-recurrence-c1-1-1",
@@ -2080,7 +2449,10 @@
           "implemented": true
         }
       ],
-      "sources": 1
+      "sources": 1,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "linear-recurrence-c1-1-1-1",
@@ -2113,7 +2485,10 @@
           "implemented": true
         }
       ],
-      "sources": 1
+      "sources": 1,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "linear-recurrence-c2-3",
@@ -2146,7 +2521,10 @@
           "implemented": true
         }
       ],
-      "sources": 1
+      "sources": 1,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "element-distinctness-quantum-walk",
@@ -2186,7 +2564,10 @@
           "implemented": false
         }
       ],
-      "sources": 3
+      "sources": 3,
+      "provenance": {
+        "class": "literature"
+      }
     },
     {
       "id": "forrelation",
@@ -2226,7 +2607,11 @@
           "implemented": false
         }
       ],
-      "sources": 4
+      "sources": 4,
+      "provenance": {
+        "class": "literature"
+      }
     }
-  ]
+  ],
+  "theorems": []
 }
