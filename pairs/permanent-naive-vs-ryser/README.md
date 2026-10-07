@@ -11,7 +11,7 @@
 
 **Why it's here.** Inclusion–exclusion over column subsets turns n! into 2ⁿ, and the result is still
 exponential. The permanent is #P-complete even for 0/1 matrices (Valiant 1979), so a polynomial algorithm
-would give FP = #P. No exact (2 − ε)ⁿ algorithm is known for general matrices.
+would give FP = #P.
 
 **Contrast with the determinant.** The determinant is the same sum with signs, and is O(n³)
 ([determinant-cofactor-vs-gaussian](../determinant-cofactor-vs-gaussian/README.md)). Mod 2 the signs

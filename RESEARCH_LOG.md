@@ -1182,3 +1182,124 @@ Ledger: [ledger/runs/20261007T103812Z.json](ledger/runs/20261007T103812Z.json). 
 - **Stability against RL-092:** all 74 earlier exact-count series are identical.
 - **Machine load:** quiet. The largest change in a timing α was 0.0693 (linear recurrence c1-1-1, 1.0489 → 0.9795, tolerance 0.25).
 - **Unit tests:** OK. **Citations:** 221 identifiers, 0 problems. **Index:** rebuilt; 74 entries and 2 theorem notes.
+
+### RL-100 · CORRECTED · Errata: defects in two checks, one implementation and the generated index
+An audit of the public repository at commit `5ca94e7`, claim by claim, found these defects. Each is now fixed, and `tests/test_errata_2026_10_07.py` guards against regressions; each test fails on the old code.
+
+1. **Matrix multiplication, V1 check** (`pairs/matrix-multiplication-naive-vs-strassen/harness.py`).
+   - The check claimed to be a Freivalds test with a random 0/1 vector. It re-seeded a new generator for every coordinate, so the vector was constant. It was all zeros for n ∈ {1, 2, 3, 4, 6, 8, 10, 14, 15, 18, 19, 20, 21, 22, 26, 28, 29, 31, 32} (n ≤ 32), and at those sizes it accepted any output.
+   - The V1 agreement of the two implementations was not affected.
+   - The check now recomputes every entry of A·B exactly, as a row-by-column dot product written independently of both implementations.
+   - The harness comment "(padding zeros included)" is corrected, as RL-091 already did for the entry text: a product of two padding zeros is not counted, and the V2 sizes are powers of two, where no padding occurs.
+2. **3XOR, Patricia trie** (`pairs/three-xor-all-triples-vs-patricia-trie/implementations/patricia_trie.py`, published in RL-094).
+   - The trie was built recursively, so deep tries hit Python's recursion limit. For example, the w distinct powers of two raised RecursionError at w = 1024 and 2048. The V2 sizes did not reach this.
+   - The build now uses an explicit stack and makes the same bit tests in the same order.
+   - Against the old version: 0 output differences on 4 000 seeded random instances, each also confirmed by the all-triples algorithm. The V2 counts are unchanged.
+   - The pending groups on the stack are disjoint, so the build uses Θ(n) words. The docstring states the time as O(n² + n w), not Θ.
+3. **Primality, deterministic test inside the V2 generator** (`pairs/primality-trial-vs-aks/harness.py`).
+   - The Miller–Rabin test with the twelve bases 2..37 had its guard at 3.3·10²⁴, which is the published bound for thirteen bases. It therefore accepted the composite 318665857834031151167461 = 399165290221 · 798330580441, which passes all twelve bases and lies below that guard.
+   - The guard now sits at that composite, the smallest number that passes all twelve bases according to the published tables. That bound is cited, not proved here.
+   - The V2 sizes (at most 40 bits) were never affected.
+4. **The dataset table in README.md** shows only the leading bound of each `time_complexity`.
+   - The cut at the first ", ", ": ", "; " or " (" left dangling fragments in 7 rows, for example "Theta(n! n^2) on every input. Exactly n!".
+   - It now also cuts at ". ", which changes exactly those 7 rows. The column header says "leading bound; exact statement in each entry".
+   - The spanning-tree enumeration's string now leads with its bound (RL-102).
+5. **`index.json`** listed no theorem notes, because `tools/build_index.py` passed the notes to the README table only. This is fixed, and it corrects RL-093 and RL-099, which said index.json lists them.
+6. **The T9 count** in the summary line ("9 proven quantum advantages") included 3 staged (V0) entries.
+   - The line now counts T9 entries in `pairs/` only (6), as "quantum query separations".
+   - The index key `proven_quantum_advantage_T9` is renamed `quantum_separations_T9_in_pairs`.
+   - The tag is now named "quantum separation (query model)". Its classical lower bound may be cited or proved, and each entry says which.
+
+### RL-101 · CORRECTED · Log entries that said more than their evidence
+The earlier entries are not edited. Each item names the entry, what was wrong, and the corrected statement.
+- **RL-002 (heading):** "Fibonacci: φⁿ, n and log n" rests on timing fits only. Corrected: RL-002 records timing fits consistent with φⁿ, n and log n (data, conclusive only up to log factors, RL-048); it does not verify the complexities.
+- **RL-003 (heading):** "The AKS implementation decides primality" was checked on a finite range only, and the correctness of AKS is cited (Agrawal, Kayal and Saxena 2004). Corrected: the AKS implementation agrees with trial division and Miller–Rabin on every N < 3000, and it reports composite for all 13 tested semiprimes whose prime factors both exceed r.
+- **RL-017:** recorded that the uncited sentence "no (2 − ε)ⁿ algorithm is known" was removed from the permanent entry. It had remained in that entry's README, and is removed now (RL-102).
+- **RL-018:** "It does rule out n²" — no fit against n² was recorded at the time. Corrected: timing could not separate n log n from n, and no n² fit was recorded. Exact-count V2 later resolved the log factor for these entries (RL-057, RL-068).
+- **RL-034:** "the quantum count only drops below classical N between N = 2048 and 4096" was measured at 8 sizes. Corrected: with the published constants, the simulated mean quantum count is above N at N = 4, 16, 64, 256, 1024 and 2048, and below N at N = 4096 and 8192. Nothing is claimed between or beyond these sizes.
+- **RL-039:** "memoising the natural key gives a polynomial algorithm for the first three but not for the last two" uses closed forms read off tables. Corrected: on the measured n the distinct subproblems are n + 1, (n+1)², n(n+1)/2, 2ⁿ and n·2^(n−3) + 1. On that range, memoisation stays exponential for the cofactor determinant and the shortest-path search. A statement for all n needs proofs of the closed forms.
+- **RL-047:** "padding zeros included" is false: products of two padding zeros are not counted (n = 17: 24 832 of 28 672 performed products). RL-091 corrected the entry text. The harness comment is corrected now (RL-100).
+- **RL-048:** "None of the 77 timing fits … resolves a log factor". The recorded run has 74 timing fits, 69 of them with a computable diagnostic; 77 also counted 8 exact-count fits. Corrected: none of the 69 timing fits with a diagnostic resolves a log factor; the conclusion is unchanged. RL-057's "0 of 77 under timing" should read 0 of 69.
+- **RL-056 (Karatsuba):** the exact Karatsuba count holds only for inputs with no recursion node whose two factors both have equal halves (the domain of RL-091).
+- **RL-057 (KMP):** "4n − 6" holds for even n ≥ 6 only; odd n give 4n − 7 (RL-089, RL-091).
+- **RL-062 (examples):** "(n+7)·2ⁿ for 2-SAT" and "(n−1)³ for Kirchhoff" are cost expressions in the right Θ classes, not the exact counts. The recorded counts are 3(n+7)·2ⁿ + 12 and (n−1)(n−2)(2n−3)/2.
+- **RL-068:** "all 18 rivals are rejected": the recorded run declares 19 rivals, all rejected.
+- **RL-091:** made the domain n ≥ 1 of the BST recursions' comparison count exact in entry.json only. The README tables and notes now carry it too.
+- **RL-093, RL-099:** index.json did not list the theorem notes (RL-100, item 5).
+- **RL-094:** "Aho–Corasick has a stated lower bound of N + L − σ comparisons" needs at least one pattern; with no patterns it makes none.
+- **RL-097 (no-integral-form note):**
+  - Moran, Schwartz and Yuan (arXiv:2602.13171, §3.2) state the result for Smirnov's ⟨3,3,6,40⟩ scheme, and for a ⟨2,4,5,32⟩ ℤ[1/2] scheme that they attribute to Hopcroft and Kerr. They print neither scheme and do not identify files, so it is not established that their statements concern the two pinned files.
+  - The note proves the statement for the pinned files and now says this precisely.
+- **RL-098:** "Proofs added to 17 entries". Some of these texts are proof sketches, as the entries say. Corrected heading: proofs and proof sketches added to 17 entries; a sketch does not count as a proof.
+- **Cross-references:**
+  - RL-058's "the SCC count 49(n+2) is read off the data" is superseded by RL-091, where it is derived;
+  - RL-081's third observation is proved for concave nondecreasing weights in RL-097.
+
+### RL-102 · CORRECTED · Wording corrections in entries, notes and documentation
+- **Scope:**
+  - This batch changes text only. The exceptions are the fixes of RL-100 and one generator string, which keeps the synthetic entries reproducible.
+  - No algorithm, generator logic, V2 setting, tag or measured number changed.
+  - Each correction makes a statement true and no stronger than its support: a missing domain added, "proved" replaced by what the repository contains, a measurement labelled as one, a wrong number fixed, or a sentence removed.
+- **Interval and classic DP:**
+  - **Maximum-cost BST:** the "smallest counterexamples" now name their scope. The domain n ≥ 1 is added in three places.
+  - **Optimal BST:** the README said the oracle covers n = 0..100; it covers n ≤ 60. Knuth's lower-bound sentence counts the n(n−1)/2 intervals of length ≥ 2.
+  - **Matrix chain:** Hu and Shing's algorithm is not called a T3 improvement; it is not implemented or verified here.
+  - **Knapsack, TSP, permanent:** their T8 improvements are described as V2 runtime fits, not as "verified".
+  - **Edit distance:** the call-tree estimate "~ (3 + 2√2)ⁿ/√n" was false and is replaced by the Θ statement.
+- **Exponential entries:**
+  - **First-match ordering:** the caveat on uncounted plain operations was wrong in general and is corrected. The DP makes k bit tests per subset; the enumeration needs Θ(k) memory; the closed forms need k ≥ 2.
+  - **Hamiltonian cycles:** the Petersen graph gives 0 in the three methods that run at n = 10, not in four.
+  - **3-SAT:** the per-assignment clause-check statements are measurements on n ≤ 14 and n ≤ 12.
+- **Graphs:**
+  - **Spanning trees:** the enumeration's cost leads with O(n² + n α(n) C(m, n−1)) and Ω(n² + n C(m, n−1)). The old O(n α(n) C) was false on sparse graphs.
+  - **MST:** the T3 tag stays. Its basis is stated: Kruskal's log factor rests on the comparison-sorting lower bound (background, not proved here), and the V2 counts show it as a measurement.
+  - **Shortest path:** negative weights are outside the problem.
+  - **Independent set:** the 420-instance check covers n = 1, 4, …, 40.
+- **Logic and strings:**
+  - **Horn-SAT:** unit propagation is Θ(n + L) only without an empty clause. The sentence on random clause order was false and is removed.
+  - **XOR-SAT:** the exact counts need n ≥ 1.
+  - **Regular expressions:** the Thompson invariant was false for starred atoms, and is corrected. "Expected" O(1) dictionary steps (there is no randomness) now says O(1).
+  - **Multi-pattern matching and string matching:** domains are added (P ≥ 1; max(N − m + 1, 0)·m). "KMP much faster on random text" is removed.
+- **Matching, flow, geometry:**
+  - **3XOR:** Θ(n²) is stated for log₂n + 1 ≤ w = O(n); the space is Θ(n) words (RL-100).
+  - **Bipartite matching:** the exact counts are derived in proof sketches. The √V remark is restricted to the graphs measured.
+  - **Maximum flow:** the two cited upper bounds are stated without a claimed separation, and Zadeh 1972 is described by title only.
+  - **Assignment:** the Θ(n³) worst case is a measurement.
+  - **APSP:** the crossover is stated as m = Θ(n).
+  - **Closest pair:** the strip products are counted correctly in the docstrings.
+  - **Element distinctness:** "exactly on yes-instances" was false as an "only if".
+- **Quantum and number theory:**
+  - **Collision, minimum finding, Grover, Simon:** "proven" or "tight" now names the cited bounds. The collision formula gains its missing factor (n = 3: 5.0000 → 4.5714).
+  - **NAND tree:** only the deterministic optimality is proved in the entry.
+  - **V1 sizes:** the V1 size lists now name the sizes actually run.
+  - **Primality:** the docstring of the deterministic test (RL-100).
+- **Algebra, transforms, sorting:**
+  - XOR convolution operands reach 2B + 3n bits.
+  - The NTT count needs n ≥ 2.
+  - Merge and insertion sort domains are added.
+  - The palindrome and Manacher arguments are called proof sketches.
+- **Staging, synthetic, theorem notes, documentation:**
+  - Staging texts say "cited, not checked here" in place of "proven".
+  - The synthetic entries say that `tools/validate.py` checks them, and that their V2 is timing.
+  - The knuth-window note's verification ranges match its `verify.py`, and its remarks on other papers are attributions.
+  - README, CONTRIBUTING, CITATION.cff, .zenodo.json and START_HERE no longer call every algorithm "provably correct". V1's oracle is "where the harness defines one", and V3 is "proof cited".
+  - Older research reports carry dated correction notes where they state superseded numbers.
+
+### RL-103 · DECISION · The green check mark ✅ Proved
+- **Rule:** an entry or theorem note carries ✅ Proved only when every claim it makes has a complete written proof by this project in the repository, and deterministic checks re-run the proofs' computable facts. External citations give credit; they are not part of the proof.
+- **The `proof` field:** the mark is recorded in the new optional field `proof`, which takes `documents`, `checks` and `audit`. `audit` names the log entry with the claim-by-claim audit behind the mark. The field is defined in `schema/entry.schema.json` and `theorems/meta.schema.json`.
+- **Validator:** `tools/validate.py` checks that the listed files exist and that the audit entry is in this log. Staged (V0) entries cannot carry the mark.
+- **Index:** `tools/build_index.py` shows the mark first and counts marked items.
+- **Documentation:** README.md, CONTRIBUTING.md and theorems/README.md.
+- **Tests:** `tests/test_proof_mark.py`. It also validates every theorem note's `meta.json`, which was not tested before.
+- **Present state:** no item carries the mark. The audit behind RL-100–RL-102 found no entry or note whose every claim already has a proof written here. The missing proofs are being written, and each mark will be logged when it is earned.
+- **Background is not a claim.** Statements about the literature or the state of research ("NP-hard", "no polynomial algorithm is known", the T6 status) are background. They are cited, they are not claims of an entry, and the mark does not cover them.
+
+### RL-104 · VERIFIED · Recorded run after the errata of RL-100–RL-103
+Ledger: [ledger/runs/20261007T132759Z.json](ledger/runs/20261007T132759Z.json). Base commit `5ca94e7`, with RL-100–RL-103 uncommitted; run on a checkout containing only the published entries and this batch.
+- **Result:** 74/74 entries pass. V1 covered 63 entries, 4892 instances and 10504 implementation runs. The matrix-multiplication V1 check is now exact at every size (RL-100).
+- **V2:** 135 measurements, all passing (86 exact counts, 49 wall-clock); 196 of 196 rivals rejected; log factor resolved in 74 fits.
+- **Shape diagnostic:** 50 MATCH, 6 UNDETERMINED, 0 MISMATCH, 79 SKIPPED.
+- **Stability against RL-099:** all 86 exact-count series are identical, including the 3XOR trie after its rewrite. The errata changed no measured number.
+- **Machine load:** quiet. The largest change in a timing α was 0.0634 (linear recurrence c1-1-1, 0.9795 → 1.0429, tolerance 0.25).
+- **Unit tests:** 308 OK (the new errata and check-mark tests included). **Citations:** 221 identifiers, 0 problems. **Index:** rebuilt; 74 entries and 2 theorem notes, both now listed in index.json.

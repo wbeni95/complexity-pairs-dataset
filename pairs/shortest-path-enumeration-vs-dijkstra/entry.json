@@ -71,6 +71,6 @@
     "v1_sizes": [1, 2, 3, 4, 5, 6, 7, 8, 50],
     "trials": 5
   },
-  "caveats": "Enumeration cost is graph-dependent; the factorial bound is for complete graphs. Negative weights would require Bellman-Ford (O(nm)).",
+  "caveats": "Enumeration cost is graph-dependent; the factorial bound is for complete graphs. Negative weights are outside the problem: both correctness arguments use non-negative weights.",
   "notes": "Further T3 entries: array Dijkstra Theta(n^2) -> Fibonacci-heap Dijkstra O(m + n log n) -> Duan et al. 2025 O(m log^(2/3) n) on sparse graphs."
 }

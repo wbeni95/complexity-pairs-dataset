@@ -35,8 +35,8 @@ see [two-sat-brute-force-vs-scc](../two-sat-brute-force-vs-scc/) and
   solution for inconsistent ones, a violating or missing witness. That holds both where the exhaustive count is active
   (n ≤ 10: 2868) and where only the certificates decide (n = 11..40: 1480).
 - *V2:* a counting bit type counts every AND, XOR and truth test on input-derived bits; the implementations are
-  unchanged. The family Xₙ (rows: all ones, then x₁ + x_{k+1} + … + xₙ for k = 2..n) has full rank. That makes brute
-  force cost exactly (2n + 1)(2ⁿ⁺¹ − 2), since row i is reached by 2ⁿ⁻ⁱ assignments. It also gives forward elimination
+  unchanged. The family Xₙ (n ≥ 1; rows: all ones, then x₁ + x_{k+1} + … + xₙ for k = 2..n) has full rank. That
+  makes brute force cost exactly (2n + 1)(2ⁿ⁺¹ − 2), since row i is reached by 2ⁿ⁻ⁱ assignments. It also gives forward elimination
   its maximal number of row operations, exactly n(n² + 6n − 4)/3 operations. Both forms are derived in entry.json and
   checked for n = 1..16 and n = 1..200.
 

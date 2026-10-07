@@ -184,6 +184,41 @@
         }
       }
     },
+    "proof": {
+      "description": "Present only when every claim of this item has a complete written proof by this project in the repository, and deterministic checks re-run the proofs' computable facts. Shown as the green check mark (✅ Proved). External citations are credit, not part of the proof. See CONTRIBUTING.md.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "documents",
+        "checks",
+        "audit"
+      ],
+      "properties": {
+        "documents": {
+          "description": "Files, relative to this item's folder, that hold the written proofs of all its claims.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "checks": {
+          "description": "Deterministic scripts or tests, relative to this item's folder, that re-check the proofs' computable facts.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "audit": {
+          "description": "The RESEARCH_LOG entry that records the claim-by-claim audit behind the mark.",
+          "type": "string",
+          "pattern": "^RL-[0-9]{3,}$"
+        }
+      }
+    },
     "lower_bounds": {
       "description": "Known lower bounds for the problem. Required (with a classical model) for T9.",
       "type": "array",
@@ -194,7 +229,7 @@
   },
   "$defs": {
     "pair_type": {
-      "description": "T1 exp->poly; T2 naive-exp->poly; T3 poly->faster poly; T4 randomized<->deterministic; T5 quantum->classical (dequantization); T6 open/unpaired; T7 synthetic/bloated; T8 super-poly->faster super-poly; T9 proven quantum advantage in a query/oracle/black-box model.",
+      "description": "T1 exp->poly; T2 naive-exp->poly; T3 poly->faster poly; T4 randomized<->deterministic; T5 quantum->classical (dequantization); T6 open/unpaired; T7 synthetic/bloated; T8 super-poly->faster super-poly; T9 quantum separation in a query/oracle/black-box model (classical lower bound cited or proved in the entry).",
       "enum": [
         "T1",
         "T2",

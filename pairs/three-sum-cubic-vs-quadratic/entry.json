@@ -44,7 +44,7 @@
       "source": "Gajentaan & Overmars 1995"
     }
   ],
-  "relationship": "Theta(n^3) -> Theta(n^2). Beating n^2 by more than polylogarithmic factors is conjectured impossible (3SUM conjecture). Grønlund & Pettie 2014 gave o(n^2) by log factors, and linear decision trees need only O(n log^2 n) comparisons (Kane, Lovett & Moran 2019), so the conjecture is about algorithms, not decision-tree depth.",
+  "relationship": "Theta(n^3) -> Theta(n^2). The 3SUM conjecture states that no O(n^(2-eps)) algorithm exists for any eps > 0. Grønlund & Pettie 2014 gave o(n^2) by log factors, and linear decision trees need only O(n log^2 n) comparisons (Kane, Lovett & Moran 2019), so the conjecture is about algorithms, not decision-tree depth.",
   "sources": [
     {
       "authors": "Gajentaan, A.; Overmars, M. H.",

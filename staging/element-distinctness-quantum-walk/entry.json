@@ -43,7 +43,7 @@
       "source": "Aaronson & Shi 2004 (from the collision lower bound; Shi's abstract: 'implies a quantum lower bound of Omega(n^(2/3)) queries ... for the element distinctness problem'); Ambainis 2005 extends it to small ranges (all M >= N)"
     }
   ],
-  "relationship": "Proven POLYNOMIAL separation in the query model, tight on both sides: Theta(N) classical queries (even randomized) vs Theta(N^(2/3)) quantum queries. Element distinctness is harder than the collision problem quantumly (N^(2/3) vs N^(1/3)) because it has no 2-to-1 promise: there may be a single colliding pair. The quantum-walk technique that achieves it became a general tool (the abstract notes the generalisation to finding k equal items with O(N^(k/(k+1))) queries).",
+  "relationship": "POLYNOMIAL separation in the query model, established in the literature and tight on both sides by the cited bounds (Ambainis 2007; Aaronson & Shi 2004; Ambainis 2005; cited, not checked here; the classical lower bound is only sketched in lower_bounds): Theta(N) classical queries (even randomized) vs Theta(N^(2/3)) quantum queries. Element distinctness is harder than the collision problem quantumly (N^(2/3) vs N^(1/3)); informally, it has no 2-to-1 promise: there may be a single colliding pair. The quantum-walk technique that achieves it became a general tool (the abstract notes the generalisation to finding k equal items with O(N^(k/(k+1))) queries).",
   "sources": [
     {
       "authors": "Ambainis, A.",

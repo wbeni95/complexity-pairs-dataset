@@ -8,7 +8,7 @@ frequencies q₀..qₙ (all non-negative integers). Find the minimum over all BS
 
 | Algorithm | Time (n keys) | Exact cost comparisons | Implementation |
 |---|---|---|---|
-| Plain recursion over the root | Θ(3ⁿ) | (3ⁿ⁻¹ − 1)/2, with exactly 3ⁿ calls | [recursion.py](implementations/recursion.py) |
+| Plain recursion over the root | Θ(3ⁿ) | (3ⁿ⁻¹ − 1)/2 (n ≥ 1), with exactly 3ⁿ calls | [recursion.py](implementations/recursion.py) |
 | Interval DP, every root | Θ(n³) | (n+1)n(n−1)/6 | [cubic_dp.py](implementations/cubic_dp.py) |
 | Knuth: root of [i..j] in r[i][j−1]..r[i+1][j] | Θ(n²) on every input | Σ_{L=2..n} (r[n−L+1][n] − r[0][L−1]) ≤ (n−1)² | [knuth.py](implementations/knuth.py) |
 
@@ -30,11 +30,13 @@ property of arbitrary optimal roots, though: mixing "largest" and "smallest" ove
 non-monotone tables (3417 of the 6006).
 
 **Verification.**
-- **V1.** The three implementations agree with each other and with an independent oracle on n = 0..100, using ten
-  families of instances, most of them full of ties. For n ≤ 10 the oracle enumerates every tree shape explicitly
-  and computes the cost from the levels. For n ≤ 60 it uses a separately written memoised recursion.
-- **V2.** Exact counts of cost comparisons on Knuth's worst-case family: p₁ = pₙ heavy, so every prefix interval
-  has root 1, every suffix interval has root n, and the count is (n−1)². The fits use tolerance 0.04 and give
+- **V1.** The three implementations agree with each other on n = 0..10, 13, 20, 40, 70, 100, using ten families of
+  instances, most of them full of ties, and with an independent oracle on n ≤ 60. For n ≤ 10 the oracle
+  enumerates every tree shape explicitly and computes the cost from the levels. For 10 < n ≤ 60 it uses a
+  separately written memoised recursion. At n = 70 and 100 only the agreement of the implementations is checked.
+- **V2.** Exact counts of cost comparisons on Knuth's worst-case family: p₁ = pₙ heavy, so every proper prefix
+  interval (0, m) has root 1 and every proper suffix interval (m, n) has root n (1 ≤ m ≤ n − 1), and the count is
+  (n−1)² (n ≥ 1). The fits use tolerance 0.04 and give
   α = 1.002 (3ⁿ), 1.001 (n³) and 1.010 (n²).
 - **Rivals rejected.** 2ⁿ, 4ⁿ and 4ⁿ/n^1.5 for the recursion (α = 1.587, 0.794, 0.923); n² and n⁴ for the cubic DP
   (1.501, 0.750); n³, n, n log n and n² log n for Knuth (0.674, 2.021, 1.668, 0.914).

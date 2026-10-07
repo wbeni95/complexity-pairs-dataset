@@ -1,7 +1,7 @@
 <!-- generated from entry.json by tools/build_index.py; edit entry.json, not this file -->
 # Element distinctness: Theta(N) classical queries vs Theta(N^(2/3)) quantum queries (Ambainis quantum walk)
 
-**Type:** T9 (proven quantum advantage (query model)) · **Verification:** V0
+**Type:** T9 (quantum separation (query model)) · **Verification:** V0
 
 **Problem.** Given oracle access to x_1, ..., x_N (values from a set of size M >= N), decide whether all N values are distinct, and if not, find i != j with x_i = x_j.
 
@@ -12,7 +12,7 @@
 | classical: read everything, sort, scan | classical-deterministic | N queries; O(N log N) comparisons | O(N) values |
 | Ambainis quantum walk algorithm | quantum | O(N^(2/3)) queries, bounded error (running time is also analysed in the paper; not recorded here) | O(N^(2/3)) values held in quantum registers |
 
-**Relationship.** Proven POLYNOMIAL separation in the query model, tight on both sides: Theta(N) classical queries (even randomized) vs Theta(N^(2/3)) quantum queries. Element distinctness is harder than the collision problem quantumly (N^(2/3) vs N^(1/3)) because it has no 2-to-1 promise: there may be a single colliding pair. The quantum-walk technique that achieves it became a general tool (the abstract notes the generalisation to finding k equal items with O(N^(k/(k+1))) queries).
+**Relationship.** POLYNOMIAL separation in the query model, established in the literature and tight on both sides by the cited bounds (Ambainis 2007; Aaronson & Shi 2004; Ambainis 2005; cited, not checked here; the classical lower bound is only sketched in lower_bounds): Theta(N) classical queries (even randomized) vs Theta(N^(2/3)) quantum queries. Element distinctness is harder than the collision problem quantumly (N^(2/3) vs N^(1/3)); informally, it has no 2-to-1 promise: there may be a single colliding pair. The quantum-walk technique that achieves it became a general tool (the abstract notes the generalisation to finding k equal items with O(N^(k/(k+1))) queries).
 
 **Caveats.** A separation relative to an oracle, and only polynomial; it does not imply BQP != BPP. The classical lower bound counts queries; in the comparison model, classical TIME is Theta(N log N). The quantum algorithm has bounded error. The quantum lower bound of Aaronson & Shi was first proven for large ranges; the small-range case (M close to N) is due to Ambainis 2005.
 

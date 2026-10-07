@@ -1,10 +1,15 @@
 # No integer equivalent form for two ℤ[1/2] matrix multiplication schemes
 
-> **Provenance: literature.** The result is stated by Moran, Schwartz and Yuan (2026) in §3.2 of *Complex to
-> Rational Fast Matrix Multiplication* (arXiv:2602.13171), with their Proposition 3 as the tool. This note is an
-> independent re-derivation: the proof below is written out in full, and [verify.py](verify.py) is independent code
-> (its own parser, exact Brent check and trace computation, Python standard library only). Both certificates are of
-> the type used by their Proposition 3: the trace of a product of term matrices.
+> **Provenance: literature.** In §3.2 of *Complex to Rational Fast Matrix Multiplication* (arXiv:2602.13171),
+> Moran, Schwartz and Yuan (2026) state, with their Proposition 3 as the tool, that the ⟨3,3,6,40⟩ ℤ[1/2] algorithm
+> of Smirnov cannot be transformed into an integer algorithm, and that the same holds for a ⟨2,4,5,32⟩ algorithm
+> over ℤ[1/2] which they attribute to Hopcroft and Kerr (1971). They print neither scheme, name no certificate terms
+> for either, and do not identify the files they used, so it is not established that their statements concern the
+> schemes S₁ and S₂ below or schemes equivalent to them (see [Relation to the source](#relation-to-the-source)).
+> This note proves the statement directly for the two pinned files: the proof below is written out in full, and
+> [verify.py](verify.py) is independent code (its own parser, exact Brent check and trace computation, Python
+> standard library only). Both certificates are of the type used by their Proposition 3: the trace of a product of
+> term matrices.
 
 ## Statement
 
@@ -33,7 +38,7 @@ This is the sandwich action together with term scalings. By Lemma 1 below it map
 | | Scheme | File (under `schemes/known/`) | SHA-256 | Denominators |
 |---|---|---|---|---|
 | S₁ | ⟨2,4,5;32⟩ of AlphaEvolve (Novikov et al. 2025) | [`tensor/2x4x5_tensor.mpl`](https://raw.githubusercontent.com/dronperminov/FastMatrixMultiplication/64f58a5e40806bc47847b11dd8aceec043fa895d/schemes/known/tensor/2x4x5_tensor.mpl) | `e03c7743a60f53ae21a3413af4a5f019600a12befc8ed22ffdf2baa8b0f7dd4b` | 1, 2 |
-| S₂ | ⟨3,3,6;40⟩ of Smirnov (2013) | [`tensor/3x3x6_tensor.mpl`](https://raw.githubusercontent.com/dronperminov/FastMatrixMultiplication/64f58a5e40806bc47847b11dd8aceec043fa895d/schemes/known/tensor/3x3x6_tensor.mpl) | `3e79357c5d2540e5c54c2a5f484f17009f70799b10bd45ed8e4bf893b5e223ab` | 1, 8 |
+| S₂ | ⟨3,3,6;40⟩, attributed to Smirnov (2013) | [`tensor/3x3x6_tensor.mpl`](https://raw.githubusercontent.com/dronperminov/FastMatrixMultiplication/64f58a5e40806bc47847b11dd8aceec043fa895d/schemes/known/tensor/3x3x6_tensor.mpl) | `3e79357c5d2540e5c54c2a5f484f17009f70799b10bd45ed8e4bf893b5e223ab` | 1, 8 |
 
 In each file the r-th `Triad` is the term (a_r, b_r, c_r), with matrices of sizes n×m, m×p and p×n in this order.
 Terms are numbered r = 1, …, R in file order. The Maple check line at the end of each file subtracts from A.B the
@@ -42,7 +47,8 @@ AB = Σ_r ⟨a_r, A⟩⟨b_r, B⟩ c_rᵀ above. All coefficients lie in ℤ[1/2
 agrees term by term, in the same order, with the decomposition `decomposition_245` in the notebook
 `mathematical_results.ipynb` of the repository `google-deepmind/alphaevolve_results` (commit
 `4226acbf237ff9ad10ba7673a2af127a2d8a5971`). This identity was checked once; `verify.py` does not re-check it,
-because it downloads only the two scheme files.
+because it downloads only the two scheme files. The file for S₂ is not compared with Smirnov (2013), here or
+in `verify.py`; the attribution is not checked in this note.
 
 **Theorem.** Let K be a field of characteristic 0.
 
@@ -119,11 +125,13 @@ contradiction. ∎
   sandwich action conjugates while the term scalings cancel. Lemmas 2 and 3 above are this argument, and both
   certificates are of the type their Proposition 3 uses.
 - **S₂.** §3.2 states that the ⟨3,3,6,40⟩ ℤ[1/2] algorithm of Smirnov cannot be transformed into an integer
-  algorithm, because Trace(O_j P_j Q_j) ∉ ℤ for some j. Part 2 above gives such a j explicitly.
-- **S₁.** §3.2 states that the ⟨2,4,5,32⟩ algorithm over ℤ[1/2] has no ℤ equivalent form "for the same reason" as
-  the ⟨4,4,4,48⟩ scheme over ℚ[i] treated just before it: all single traces are integers, and the trace of a product
-  of two term matrices, Trace(O_{j_1}P_{j_1}Q_{j_1} · O_{j_2}P_{j_2}Q_{j_2}), is not. Part 1 above gives such a pair
-  explicitly.
+  algorithm, because Trace(O_j P_j Q_j) ∉ ℤ for some j; it does not say which j. Part 2 above gives such a j
+  explicitly for the pinned file S₂.
+- **S₁.** §3.2 states that a ⟨2,4,5,32⟩ algorithm over ℤ[1/2], the one they attribute to Hopcroft and Kerr (see
+  below), has no ℤ equivalent form "for the same reason" as the ⟨4,4,4,48⟩ scheme over ℚ[i] treated just before it:
+  all single traces are integers, and the trace of a product of two term matrices,
+  Trace(O_{j_1}P_{j_1}Q_{j_1} · O_{j_2}P_{j_2}Q_{j_2}), is not. It does not say which pair. Part 1 above gives such a
+  pair explicitly for the pinned file S₁.
 - **Attribution of the ⟨2,4,5⟩ scheme.** Moran, Schwartz and Yuan attribute the ⟨2,4,5,32⟩ algorithm over ℤ[1/2]
   to Hopcroft and Kerr (1971), their reference [24]. By its abstract, that paper multiplies a p×2 by a 2×n matrix
   with ⌈(3pn + max(n, p))/2⌉ multiplications. For {p, n} = {4, 5}, which corresponds to the format ⟨2,4,5⟩ under the

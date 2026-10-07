@@ -17,8 +17,11 @@ distance grows every phase.
 dense networks the [probe](../../experiments/2026-10-07_max_flow_probe.py) found Edmonds–Karp making only
 about n augmentations (176 at n = 160, against V·E ≈ 2·10⁶) and Dinic needing 2–4 phases. The fits against
 the claimed bounds fail (α = 0.558 against n⁵, α = 0.479 against n⁴). The timings say nothing about the
-worst case, so the entry stays at V1 (INCONCLUSIVE). Worst-case constructions for Edmonds–Karp exist in the
-literature (Zadeh 1972) but were not implemented.
+worst case, so the entry stays at V1 (INCONCLUSIVE). Zadeh (1972) studies the efficiency of Edmonds–Karp (per its
+title; the paper was not read here); no worst-case construction is claimed or implemented in this entry.
+
+**Upper bounds only.** Both time bounds are cited upper bounds, and no lower bound for Edmonds–Karp is shown here,
+so this entry does not show that Dinic is asymptotically faster.
 
 **No such family exists with small capacities.** With integer capacities both implementations run in
 O((F + 1)·(V + E)) time for maximum flow value F: every augmentation adds at least 1 to the flow, every BFS reads

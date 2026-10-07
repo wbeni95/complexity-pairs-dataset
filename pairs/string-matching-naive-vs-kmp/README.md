@@ -6,7 +6,7 @@
 
 | Algorithm | Time | Implementation |
 |---|---|---|
-| Naive matching | Θ(nm) worst case | [naive.py](implementations/naive.py) |
+| Naive matching | Θ((n − m + 1)·m) worst case (m ≤ n), so Θ(nm) for m ≤ cn, c < 1 | [naive.py](implementations/naive.py) |
 | Knuth–Morris–Pratt | Θ(n + m) always | [kmp.py](implementations/kmp.py) |
 
 **Why it's a pair.** After a mismatch the naive matcher slides P one place and re-reads text it has already

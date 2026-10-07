@@ -1,6 +1,6 @@
 # Deutsch–Jozsa: 2ⁿ⁻¹+1 exact classical queries vs 1 exact quantum query
 
-**Type:** T9 (proven quantum advantage, query model) · **Verification:** V2 (query counts)
+**Type:** T9 (quantum separation, query model) · **Verification:** V2 (query counts)
 
 > **Read this first.** The exponential gap is against **exact** (zero-error) classical algorithms only.
 > A classical randomized algorithm that may err with small probability needs only **O(1)** queries.
@@ -20,8 +20,8 @@ unqueried points are consistent with those answers, so the algorithm cannot yet 
 2ⁿ⁻¹ + 1 queries. The same argument applies to every run of a zero-error randomized algorithm on a constant input.
 
 **Why randomness removes the gap.** For a balanced f, each random query is a fair coin, so K random queries all
-agree with probability 2¹⁻ᴷ. For a constant f they always agree. Checked empirically: error rates for k = 2..8 match
-2¹⁻ᵏ with |z| ≤ 0.98 ([experiment](../../experiments/2026-10-07_deutsch_jozsa_checks.py)).
+agree with probability 2¹⁻ᴷ. For a constant f they always agree. Checked empirically: error rates for k = 2, 3, 4, 6, 8
+match 2¹⁻ᵏ with |z| ≤ 0.98 ([experiment](../../experiments/2026-10-07_deutsch_jozsa_checks.py)).
 
 **Why one quantum query suffices.** After H⊗ⁿ, one phase query and H⊗ⁿ, the amplitude of |0…0⟩ is
 (1/N)·Σₓ(−1)^f(x), which is ±1 for constant f and exactly 0 for balanced f.

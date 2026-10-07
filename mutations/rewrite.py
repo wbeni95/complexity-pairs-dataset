@@ -5,7 +5,8 @@ whose `__file__` names the original and whose `__mutation__` records the transfo
 
 Transforms are targeted: each names the exact source segments (as returned by `ast.get_source_segment`) it applies
 to, so a rewrite never touches index arithmetic or loop bounds by accident. A transform whose pattern matches
-nothing raises `RewriteError`, so silent no-op mutants cannot occur.
+nothing raises `RewriteError`, so a mistyped pattern cannot silently yield an unchanged copy. A matched pattern can
+still leave the code unchanged (for example a compare flip applied to `==`, or a constant swap to the same value).
 """
 from __future__ import annotations
 

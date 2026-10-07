@@ -44,7 +44,8 @@ positive, so a polynomial-time counting algorithm would imply P = NP.
 - *Experiment* ([script](../../experiments/2026-10-06f_entries_hamiltonian.py)):
   - 400 more instances (n = 3..12, 388 judged exactly): 0 failures;
   - every closed form against the exhaustive depth-first count on 39 graphs: 0 mismatches. The Petersen graph
-    gives 0 in all four methods;
+    gives 0 in the three methods that run at n = 10 (inclusion–exclusion, Held–Karp and the oracle's
+    depth-first count; the enumeration runs only up to n = 9);
   - **oracle control:** 3535 deliberately wrong outputs on 410 instances (off by one, doubled, halved = the
     undirected count, times n = counted once per start vertex, (n−1)!, negative, float, bool, None). 3471 were
     rejected, 64 left undecided (all at n = 11..14, where no exact rule applied), and **0 accepted**. Of the

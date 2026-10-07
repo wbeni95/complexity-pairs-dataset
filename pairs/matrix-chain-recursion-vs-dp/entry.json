@@ -36,7 +36,7 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Plain recursion is Theta(3^n) (full enumeration of parenthesisations would be Catalan, ~4^n / n^1.5); memoising the Theta(n^2) subchains gives Theta(n^3). Hu and Shing (1982, 1984) gave an O(n log n) algorithm, a further T3 improvement. Schwartz & Weiss (2019) show that its original correctness proof is wrong; their abstract states that they 'present an alternative proof for the correctness of the first two algorithms' they discuss.",
+  "relationship": "Plain recursion is Theta(3^n) (full enumeration of parenthesisations would be Catalan, ~4^n / n^1.5); memoising the Theta(n^2) subchains gives Theta(n^3). Hu and Shing (1982, 1984) published an O(n log n) algorithm (not implemented or verified here). Schwartz & Weiss (2019) report that its original correctness proof is wrong; their abstract states that they 'present an alternative proof for the correctness of the first two algorithms' they discuss.",
   "sources": [
     {
       "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
@@ -80,5 +80,5 @@
     "trials": 5
   },
   "caveats": "Dimensions are small integers, so arithmetic is unit cost.",
-  "notes": "A faster known algorithm exists (Hu-Shing, O(n log n); on its correctness proof see Schwartz & Weiss 2019 in the relationship); it is not implemented in this entry."
+  "notes": "Hu and Shing published an O(n log n) algorithm (on its correctness proof see Schwartz & Weiss 2019 in the relationship); it is not implemented or verified in this entry."
 }

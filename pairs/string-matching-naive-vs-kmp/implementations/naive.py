@@ -1,6 +1,7 @@
 """Naive matching: compare P against every alignment of T, character by character.
 
-At most (n - m + 1) * m character comparisons: Theta(n m) in the worst case (e.g. T = a^n, P = a^(m-1) b).
+At most max(n - m + 1, 0) * m character comparisons, attained e.g. by T = a^n, P = a^(m-1) b: Theta(n m) in the
+worst case when m <= c n for a constant c < 1.
 """
 
 

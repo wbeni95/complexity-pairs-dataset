@@ -71,6 +71,7 @@ The unit tests pass: `python -m unittest discover -s tests`, 84 tests, OK.
   It is **not** Lawler's algorithm, which restricts T to maximal independent sets and runs in O((1+3^(1/3))ⁿ) ≈ O(2.4423ⁿ). The entry says this explicitly.
 - **Inclusion–exclusion.** c_k = Σ_S (−1)^(n−|S|) a(S)^k, where a(S) counts the non-empty independent sets inside S. a is tabulated with BHK's recurrence (4.1), in complemented form. Then k = 1, 2, … is tried with one multiplication and one addition per subset per round.
   - Exact operation count: (2χ(G) + 2)·2ⁿ arithmetic operations on integers of at most n·χ(G) bits (≤ 180 bits at n = 18 here).
+    *Correction (2026-10-07): the exact count is (2χ(G) + 2)·2ⁿ − 2 (RESEARCH_LOG.md RL-091).*
   - That is O(n·2ⁿ) with unit-cost arithmetic and O(n⁴·2ⁿ) bit operations with schoolbook multiplication.
   - BHK's own Proposition 1 uses repeated squaring instead: O(2ⁿ n k polylog(nk)) time to decide χ ≤ k.
 - **Timing family.** G(n, 0.8). The χ of the V2 instances is 4, 5, 4, 6, 6, 7, 7, 8, 8, 8, 8, 9, 10 for n = 6..18, so χ/n ∈ [0.50, 0.71] and the number of rounds grows linearly over the measured range. The entry states that this is not an asymptotic claim about G(n, 0.8).
@@ -162,7 +163,7 @@ The unit tests pass: `python -m unittest discover -s tests`, 84 tests, OK.
 | LPS timing on aⁿ only | random strings | The counts show random strings are Θ(n²)/Θ(n) for brute force/expansion, so only aⁿ tests the stated worst cases. |
 | Explicit merge sort in element distinctness | `sorted()` (Timsort, C code) | It keeps the comparison-model cost explicit and both timings in pure-Python bytecode. Hashing was not implemented, because it is randomized and Python's integer hash is not universal. |
 | Plain subset DP for χ (3ⁿ − 2ⁿ exactly) | Lawler's maximal-IS version | The brief asks for the variant actually implemented to be stated. The plain DP has an exact count; Lawler's needs an MIS enumerator and has no exact count. |
-| BHK with k = 1, 2, … and non-empty independent sets | binary search on k with repeated squaring (BHK Prop. 1); counting the empty set too | The count (2χ+2)·2ⁿ is exact and simple. Non-empty sets match BHK's Lemma 7 and recurrence (4.1). |
+| BHK with k = 1, 2, … and non-empty independent sets | binary search on k with repeated squaring (BHK Prop. 1); counting the empty set too | The count (2χ+2)·2ⁿ is exact and simple. Non-empty sets match BHK's Lemma 7 and recurrence (4.1). *Correction (2026-10-07): the exact count is (2χ+2)·2ⁿ − 2 (RESEARCH_LOG.md RL-091).* |
 | G(n, 0.8) as the χ timing family | G(n, ½) (smaller χ, fewer rounds); K_n (χ = n but trivial) | χ/n ∈ [0.50, 0.71] for n ≤ 18, so the rounds grow linearly over the measured range on non-trivial graphs. |
 | RMQ: q = n long queries; explicit scan loop | `min(a[l:r+1])` (C speed) | Pure-Python loops on both sides keep the per-operation cost uniform. Long queries are needed for the quadratic worst case. |
 | Iterative DFS in Kuhn, HK and Dinic | recursion with a raised recursion limit | Search paths can be long: in the K_{2a,a} gadget a Kuhn search descends through chains of matched vertices, and flow paths can have up to V − 1 edges. The depth was not measured. An iterative DFS avoids any dependence on Python's recursion limit. |

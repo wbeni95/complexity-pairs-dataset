@@ -13,7 +13,7 @@
 | ellipsoid method | classical-deterministic | polynomial in n and L: O(n^2 L) iterations of O(n^2) arithmetic operations | O(n^2) numbers of O(L) bits |
 | interior-point method (Karmarkar) | classical-deterministic | O(n^3.5 L) arithmetic operations | O(mn) numbers |
 
-**Relationship.** Simplex (with the classical pivot rules) is exponential in the worst case; ellipsoid and interior-point methods are polynomial in the input bit length L.
+**Relationship.** Simplex with Dantzig's pivot rule takes 2^n - 1 pivots on the Klee-Minty cube, so it is exponential in the worst case (cited); worst-case constructions for other pivot rules are not cited here. Ellipsoid and interior-point methods are polynomial in the input bit length L (cited).
 
 **Caveats.** Ellipsoid and interior-point methods are WEAKLY polynomial (polynomial in L, not only in n and m). Whether LP has a STRONGLY polynomial algorithm is open (Smale's 9th problem), hence secondary tag T6. Whether some simplex pivot rule is polynomial is also open. In practice simplex is fast; smoothed analysis (Spielman-Teng) explains part of this.
 

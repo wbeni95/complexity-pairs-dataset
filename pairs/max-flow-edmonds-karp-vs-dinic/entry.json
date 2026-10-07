@@ -29,7 +29,7 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "O(V E^2) -> O(V^2 E), an improvement whenever E = omega(V) (O(V^5) -> O(V^4) on dense graphs). Edmonds-Karp spends a full BFS on each augmenting path. Dinic finds all augmenting paths of the current shortest length in one O(V E) blocking-flow phase. Both are worst-case bounds; the measured growth on random networks is far below both (see verification).",
+  "relationship": "Upper bounds O(V E^2) -> O(V^2 E) (O(V^5) -> O(V^4) on dense graphs), both cited (Edmonds & Karp 1972; Dinic 1970); the second upper bound is smaller whenever E = omega(V). No lower bound for Edmonds-Karp is shown here, so this entry does not show that Dinic is asymptotically faster. Edmonds-Karp spends a full BFS on each augmenting path. Dinic finds all augmenting paths of the current shortest length in one O(V E) blocking-flow phase. Both are worst-case upper bounds; the measured growth on random networks is far below both (see verification).",
   "sources": [
     {
       "authors": "Edmonds, J.; Karp, R. M.",
@@ -58,7 +58,7 @@
       "title": "Theoretical efficiency of the Edmonds-Karp algorithm for computing maximal flows",
       "venue": "Journal of the ACM 19(1), 184-192",
       "doi": "10.1145/321679.321693",
-      "note": "Worst-case analysis of the Edmonds-Karp algorithm (per its title); its constructions were not read or implemented for this entry."
+      "note": "Studies the theoretical efficiency of the Edmonds-Karp algorithm (per its title); the paper was not read for this entry, and nothing from it is used or implemented."
     }
   ],
   "verification": {
@@ -71,6 +71,6 @@
     "v1_sizes": [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 30, 60],
     "trials": 6
   },
-  "caveats": "Both time bounds are worst-case bounds that random networks do not approach; this entry does not demonstrate them empirically (V1). With integer capacities both implementations run in O((F + 1)(V + E)) time, where F is the maximum flow value: every augmentation raises the flow by at least 1, so there are at most F augmentations; every breadth-first search reads each adjacency list at most once; and every Dinic phase except the last augments at least once, so there are at most F + 1 phases, each costing O(V + E) plus O(V) per augmenting path. Since F <= C outdeg(s) for maximum capacity C (the cut around s), capacities <= 100 without parallel edges out of s give F <= 100 (V - 1) and O(V (V + E)) time. So in that range, which includes generate_scaling, Dinic's O(V^2 E) is not attained along any sequence of networks with V -> infinity, and Edmonds-Karp's O(V E^2) along none with E -> infinity; on generate_scaling both run in O(n^3). Worst-case constructions exist in the literature (e.g. Zadeh 1972 for Edmonds-Karp), but none was implemented here. Faster algorithms are catalogued in staging/max-flow-edmonds-karp-vs-almost-linear. On the random networks measured here Dinic was also faster in practice (6.0 ms vs 39 ms at n = 160 in one console run), but that is not evidence for the worst-case bounds.",
+  "caveats": "Both time bounds are worst-case bounds that random networks do not approach; this entry does not demonstrate them empirically (V1). With integer capacities both implementations run in O((F + 1)(V + E)) time, where F is the maximum flow value: every augmentation raises the flow by at least 1, so there are at most F augmentations; every breadth-first search reads each adjacency list at most once; and every Dinic phase except the last augments at least once, so there are at most F + 1 phases, each costing O(V + E) plus O(V) per augmenting path. Since F <= C outdeg(s) for maximum capacity C (the cut around s), capacities <= 100 without parallel edges out of s give F <= 100 (V - 1) and O(V (V + E)) time. So in that range, which includes generate_scaling, Dinic's O(V^2 E) is not attained along any sequence of networks with V -> infinity, and Edmonds-Karp's O(V E^2) along none with E -> infinity; on generate_scaling both run in O(n^3). Zadeh 1972 studies the efficiency of Edmonds-Karp (per its title; the paper was not read here); no worst-case construction is claimed or implemented in this entry. Faster algorithms are catalogued in staging/max-flow-edmonds-karp-vs-almost-linear. On the random networks measured here Dinic was also faster in practice (6.0 ms vs 39 ms at n = 160 in one console run), but that is not evidence for the worst-case bounds.",
   "notes": "Maximum bipartite matching is the unit-capacity special case (compare pairs/bipartite-matching-kuhn-vs-hopcroft-karp). The two algorithms here differ only in how much is done per BFS: one augmenting path (Edmonds-Karp) or a blocking flow (Dinic)."
 }

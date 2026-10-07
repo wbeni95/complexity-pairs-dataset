@@ -23,9 +23,9 @@ restricted the search for the root. With K(i, i) = i, the *restricted run* compu
 and stores the chosen minimiser as K(i, j). For j = i + 1 the window is {i + 1}. Under the **largest tie rule**
 K(i, j) is the largest minimiser in W(i, j), under the **smallest tie rule** the smallest one. The run is *exact* if
 c′(i, j) = c(i, j) for all 0 ≤ i < j ≤ n. When the windows are non-empty, their sizes telescope along each diagonal,
-so the run examines O(n²) candidate roots in total instead of the Θ(n³) of (R). The classical sufficient condition
-for exactness is the quadrangle inequality (Yao 1980). This note concerns **length weights** w(i, j) = h(j − i). For
-concave h they satisfy the reverse inequality (Remark 3).
+so the run examines O(n²) candidate roots in total instead of the Θ(n³) of (R). Yao (1980) gives the classical
+sufficient condition for exactness, based on the quadrangle inequality (cited; not used or re-proved here). This
+note concerns **length weights** w(i, j) = h(j − i). For concave h they satisfy the reverse inequality (Remark 3).
 
 ## Statement
 
@@ -207,8 +207,9 @@ E(e) = E(P) − J(P − e) = Je − P + 1. The sum is J(P + e) + 2δ. If e < P/2
 parts below P ≤ k + 1, and f_k(a) + f_k(b) = 2E(P/2) + Je + 2k = (J − 2)P + 2 + Je + 2(P + δ − 1) = J(P + e) + 2δ.
 The case a < P ≤ b cannot occur, since a ≥ b. ∎
 
-(Lemma D also follows from Theorem 6 and Lemma 22 of Cleary, Fischer and St. John (2025) by a limit argument; the
-proof above does not use it. See [Literature](#literature).)
+(Theorem 6 and Lemma 22 of Cleary, Fischer and St. John (2025) would also give Lemma D by a limit argument; that
+route rests on their theorem, which is cited and not re-proved here, and the proof above does not use it. See
+[Literature](#literature).)
 
 **Lemma E (additivity).** Let h be as in Lemma A, N ≥ 2 and 1 ≤ d ≤ N. Then
 
@@ -342,14 +343,16 @@ restriction of h to {1, …, n} for each n, and use Proposition 5.
 ## Literature
 
 - **Knuth (1971)** introduced the restricted root window for optimal binary search trees. **Yao (1980)** is the
-  standard reference for the quadrangle-inequality condition under which the restriction is exact. By Remark 3,
-  length weights with concave h satisfy the reverse inequality, so that condition does not apply here.
+  standard reference for a sufficient condition for exactness based on the quadrangle inequality (cited; not
+  re-proved here). By Remark 3, length weights with concave h satisfy the reverse inequality, so that condition
+  does not apply here in general (for affine h both inequalities hold with equality).
 - **Fredman and Knuth (1974)** study M(0) = g(0), M(n+1) = g(n+1) + min_{0≤k≤n} (αM(k) + βM(n−k)). With
   α = β = 1, g(0) = 0 and g = h this is the one-dimensional recurrence of §1. For convex g (with a condition at the
   start; their Theorem 1) they prove that M is convex. Their Lemma, formula (1.2), after de Bruijn, implies that if
   k is a minimiser at n, then k or k + 1 is a minimiser at n + 1: this is the convex counterpart of the window
-  property. For affine nondecreasing h the hypotheses of their Theorem 1 and of this note overlap, and the exactness
-  part of the Theorem then follows from their results with the reduction of §1. The formula of Lemma B is their
+  property. For affine nondecreasing h the hypotheses of their Theorem 1 and of this note overlap; a derivation of
+  the exactness part of the Theorem from their results in that case is not written out here (the case is covered
+  by the proof of §4). The formula of Lemma B is their
   formula (3.1). Their method rests on the convexity of M, which fails for concave h (Remark 3).
 - **Glassey and Karp (1976)** and **Batty, Pelling and Rogers (1982).** The abstract of Batty, Pelling and Rogers
   (Crossref record) treats f(n) = min Σ_{i≤r} f(a_i) + g(n) over r-tuples of integers 0 ≤ a_i < n with Σ a_i = n. For
@@ -359,13 +362,15 @@ restriction of h to {1, …, n} for each n, and use Proposition 5.
   accessible. Chen and Chen (2003, pp. 667–669) describe these results as follows. For increasing concave g, the best
   dividing rule is the "balanced power-of-d" rule underlying their heap recurrence; for two parts this is the heap
   split (S) of this note. For two parts they cite Glassey and Karp (1976), among others. They describe the result of
-  Batty, Pelling and Rogers as covering any number of parts and generalizing it. This covers the heap-optimality
-  ingredient (Lemma D, and its consequence for h through Lemma E) for increasing concave h, with priority to 1976
-  and 1982.
+  Batty, Pelling and Rogers as covering any number of parts and generalizing it. By this secondary description,
+  these results cover the heap-optimality ingredient (Lemma D, and its consequence for h through Lemma E) for
+  increasing concave h, with priority to 1976 and 1982.
 - **Cleary, Fischer and St. John (2025)**, Theorem 6 with Lemma 22: for f strictly increasing and strictly concave,
   Σ_{internal v} f(number of leaves below v) has the GFB tree as its unique minimiser, and the GFB tree is the
-  complete tree, the heap-shaped tree of this note. Lemma D for every concave nondecreasing h follows by a limit
-  argument: apply the theorem to the piecewise-linear interpolation of x ↦ h(x − 1) plus ε·log x, and let ε → 0.
+  complete tree, the heap-shaped tree of this note. Lemma D for every concave nondecreasing h would also follow by
+  a limit argument: apply the theorem to the piecewise-linear interpolation of x ↦ h(x − 1) plus ε·log x, and let
+  ε → 0. This route rests on their theorem, which is cited and not re-proved here; the proof of Lemma D in §3 does
+  not use it.
 - **What this note adds, as far as could be established.** The bases give the optimal value and one optimal split,
   the heap split, of the one-dimensional recurrence. For concave h, the sources listed above, as far as they were
   read, do not address Knuth's restricted window in the interval recurrence, the tie rules, the trajectory once h
@@ -394,8 +399,9 @@ The script is deterministic (fixed seeds), uses the Python standard library only
 about 15 seconds on a laptop. It exits with code 0 only if every check passes. It checks:
 
 - the heap facts: formula (S) against the array layout, and Lemma H (a)–(c), for d ≤ 20 000;
-- Lemmas B, C (closed form, F1, F2), D, F and G against the dynamic program (caps k ≤ 64, up to 521 leaves; F1 for
-  k < 300), and Lemmas A and E on 200 seeded random h;
+- Lemmas B, C (closed form), D, F and G against the dynamic program (caps k ≤ 64, up to 521 leaves; Lemma B for
+  h(s) = s up to 1201 leaves, and its increment formula for λ < 5000); the steps F1 (k < 300) and F2 (k ≤ 24,
+  a, b < 120) of Lemma C by direct evaluation of the closed forms; and Lemmas A and E on 200 seeded random h;
 - the Theorem (largest rule exact, trajectory τ*, smallest rule exact, mirrored trajectory):
   - on all 2^(N−1) supports of (c_2, …, c_{N−1}, a) for N = 2, …, 16 (65 534 supports), with unit weights and with
     seeded random weights 1…7;

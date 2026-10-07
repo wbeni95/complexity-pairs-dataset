@@ -32,8 +32,8 @@ def check(instance, output):
 #   schoolbook: every a * b (exactly n^2 when no coefficient is 0; `if a:` skips zero rows);
 #   NTT: butterfly products a[k + half] * w, pointwise products and the final scaling by n^-1. NOT seen:
 #   twiddle updates w * w_len and pow() (plain ints created from literals inside the implementation) and the
-#   first-stage butterflies whose a[k + half] is a padding zero (plain int). For n a power of two (size 2n)
-#   the count is exactly 3 n log2(n) + 5 n.
+#   first-stage butterflies whose a[k + half] is a padding zero (plain int). For n a power of two with n >= 2
+#   (size 2n) the count is exactly 3 n log2(n) + 5 n (n = 1 gives 2).
 
 _mults = 0
 

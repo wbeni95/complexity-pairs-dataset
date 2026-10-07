@@ -13,14 +13,15 @@
 augments along a maximal set of vertex-disjoint shortest paths per traversal, and the shortest length
 grows every phase, which leaves only O(√V) phases.
 
-**Worst cases have to be built.** On random graphs Hopcroft–Karp needed only 2 to 5 phases, so random inputs
-do not show its √V factor. The timing family G_k (V = 4k² + k) is a disjoint union of two gadgets:
+**Worst cases have to be built.** On the 8 random graphs measured (V = 100..800, p = 0.05 and 0.5) Hopcroft–Karp
+needed only 2 to 5 phases, so these inputs do not show its √V factor. The timing family G_k (V = 4k² + k) is a
+disjoint union of two gadgets:
 - a dense K_{2a,a} with a = k². Its a unmatchable left vertices make each of Kuhn's failing searches, and
   every Hopcroft–Karp phase, scan the whole gadget;
 - paths P₂, P₄, …, P_{2k}, numbered and ordered so that Hopcroft–Karp's first phase picks the "wrong" edge of
   every path. Phase j can then repair only path j.
 
-Exact counts, proved for every k ≥ 1 (proof sketches in `entry.json`); the
+Exact counts for every k ≥ 1 (derived in proof sketches in `entry.json`); the
 [experiment](../../experiments/2026-10-07_bipartite_matching_counts.py) and the V2 counts agree with them. Kuhn
 makes exactly (7k⁶ + 9k⁴ + 11k² − 3k)/6 edge scans, Θ(V·E) = Θ(V³), with ratio to V·E tending to 7/48 ≈ 0.146.
 Hopcroft–Karp runs **exactly k + 1 phases** with (24k⁵ + 9k⁴ + 4k³ + 24k² − 25k + 12)/6 edge scans, with ratio

@@ -6,7 +6,8 @@ into three parts, two of which depend on n alone:
   strip filter  S(n) = 0 for n <= 3, else n + S(n // 2) + S(n - n // 2)   (one squaring per point per
                 internal node of the recursion);
   base cases    B(n) = 2 for n = 2, 6 for n = 3, else B(n // 2) + B(n - n // 2)   (2 per pair);
-  strip scan    the rest (dy^2 per examined pair, plus dx^2 for pairs not stopped at): data-dependent.
+  strip scan    the rest (dy*dy per examined pair, plus dx*dx and a second dy*dy for each pair not stopped
+                at): data-dependent.
 The instrumentation must not change the answers: outputs on the counting instance (unwrapped) are compared
 with outputs on the same points as plain ints.
 

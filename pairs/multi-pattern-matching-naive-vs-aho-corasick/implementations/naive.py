@@ -1,8 +1,9 @@
 """Naive multi-pattern matching: run the naive matcher once for every pattern.
 
 For each pattern p of length m, try every alignment i of p against the text and compare characters left to right
-until a mismatch or a full match. At most (N - m + 1) m comparisons per pattern, so O(N L) for total pattern length
-L; Theta(sum over patterns of (N - m_p + 1) m_p) in the worst case (e.g. text a^N, patterns a^(m-1) b).
+until a mismatch or a full match. At most max(N - m + 1, 0) m comparisons per pattern (none when the pattern is
+longer than the text), so O(N L) for total pattern length L; Theta(sum over patterns of max(N - m_p + 1, 0) m_p) in
+the worst case (e.g. text a^N, patterns a^(m-1) b).
 """
 
 

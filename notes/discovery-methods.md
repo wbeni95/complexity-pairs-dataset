@@ -7,8 +7,9 @@ the code is in [methods/](../methods/).
 
 ## The one principle
 
-Every method that has produced new algorithms or formulas pairs a **proposer** (enumeration, stochastic search, RL,
-an LLM) with an **exact verifier**. Finite outputs (a program for bounded inputs, a matrix-multiplication scheme, a
+Every method in the survey of [research/2026-10-06d_methodology.md](../research/2026-10-06d_methodology.md) §1 that
+has produced new algorithms or formulas pairs a **proposer** (enumeration, stochastic search, RL, an LLM) with an
+**exact verifier**. Finite outputs (a program for bounded inputs, a matrix-multiplication scheme, a
 constant's minimal polynomial, a guessed recurrence) are only as good as their verification. An *asymptotic* cost
 needs one of three things: an amplification mechanism (a small bilinear scheme applied recursively), a proof, or a
 guessed recurrence that is then proven. This is START_HERE section 6 restated as a method.
@@ -27,13 +28,16 @@ guessed recurrence that is then proven. This is START_HERE section 6 restated as
 2. **Log-factor identifiability.**
    - On the grids of ledger run 20261006T105123Z, with perfect noise-free data, 0 of 44 timing fits could resolve a
      log factor at tolerance ±0.25. The largest tolerance that would resolve one is 0.1015.
-   - Counts at n = 2^k gave the exponent and the log power exactly through Berlekamp–Massey: NTT (x−2)² → n log n;
-     Karatsuba x−3; Strassen x−7; Yates (x−2)² → N log N.
+   - On counts at n = 2^k, Berlekamp–Massey found recurrences with characteristic polynomials NTT (x−2)² (n log n),
+     Karatsuba x−3, Strassen x−7 (from 4 terms) and Yates (x−2)² (N log N), consistent with the claims. These are
+     guesses on finitely many k; they fix the exponent and the log power for all n only together with a proof of the
+     recurrence.
    - Monte Carlo (truth n log n, 8 points on [10³, 10⁵]): the correct model was chosen 81.0% of the time at σ = 0.03
      and 57.8% at σ = 0.1. The usual confusion was with n^1.1.
 3. **Polynomial-method certificates** (`methods/boolean.py`).
    - Exact adeg₁/₃(ORₙ) for 70 values of n ≤ 256, each with a primal and a dual certificate. Fit 0.7246·√n, log-log
-     slope 0.4748 for n ≥ 16: the Ω(√N) bound behind Grover's optimality.
+     slope 0.4748 for 16 ≤ n ≤ 256: consistent with, not a proof of, the cited Θ(√n) bound behind Grover's
+     optimality.
    - Parity has adeg = n for n ≤ 16. Majority has slope 0.8738 on odd n ≤ 41 against the theorem's linear growth:
      INCONCLUSIVE as an asymptotic statement on this range.
    - On all 222 NPN classes of 4-bit functions, deg ≤ s² (Huang 2019), s ≤ bs ≤ C ≤ D and deg ≤ D hold.

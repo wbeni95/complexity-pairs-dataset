@@ -8,11 +8,12 @@
 | Meet in the middle (Horowitz–Sahni 1974) | Θ(2^(n/2)·n) | [meet_in_the_middle.py](implementations/meet_in_the_middle.py) |
 | Capacity DP | Θ(n·W), **pseudo-polynomial** | [dp.py](implementations/dp.py) |
 
-**The pair (T8).** Enumeration → meet in the middle halves the exponent. The improvement is real and
-verified, and the result is still exponential.
+**The pair (T8).** Enumeration → meet in the middle halves the exponent. The improvement is measured
+(V2 runtime fits; the meet-in-the-middle bound is not derived here), and the result is still exponential.
 
 **The cautionary point.** W is a *number*, and the input contains only log W bits for it. Adding one
-bit to W doubles the DP's running time, so Θ(nW) is exponential in the input size. Knapsack is
+bit to W roughly doubles the DP's running time when W is much larger than the item weights, so Θ(nW) is
+exponential in the input size. Knapsack is
 NP-hard (Karp 1972), and a truly polynomial algorithm would imply P = NP.
 
 **Verification.** V1: all three agree, and the result respects a greedy lower bound. V2: the fits are

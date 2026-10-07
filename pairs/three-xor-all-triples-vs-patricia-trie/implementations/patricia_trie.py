@@ -1,4 +1,4 @@
-"""3XOR with a Patricia trie: deterministic Theta(n^2 + n w) word operations.
+"""3XOR with a Patricia trie: deterministic, O(n^2 + n w) word operations.
 
 Input: (w, values), values a tuple of n integers in [0, 2^w) (the precondition matters: the trie looks only at bits
 w-1..0). Output: indices (i, j, k) with i < j < k and values[i] ^ values[j] ^ values[k] == 0, or None.
@@ -42,22 +42,41 @@ def _build(values, group, bit, leaves):
 
     Returns a leaf (a plain int: the first index of a value) or a branching node (mask, left, right). Leaves are
     appended to `leaves` (lists of indices of equal values) from left to right, i.e. in ascending value order.
+
+    Written with an explicit stack instead of recursion, so the trie depth (up to min(n, w) branching levels) is not
+    limited by Python's recursion limit. It performs the same bit tests in the same order as the recursive form:
+    the 0-subtree is built completely before the 1-subtree.
     """
-    while True:
-        if len(group) == 1 or bit < 0:
-            leaves.append(group)
-            return group[0]
-        mask = 1 << bit
-        zero, one = [], []
-        for i in group:
-            if values[i] & mask:
-                one.append(i)
-            else:
-                zero.append(i)
-        bit -= 1
-        if zero and one:
-            return (mask, _build(values, zero, bit, leaves), _build(values, one, bit, leaves))
-        group = zero or one            # no split at this bit: skip it (path compression)
+    done = []                                   # finished subtrees, in construction order
+    todo = [(group, bit)]                       # (group, bit) = build a subtree; (mask,) = assemble a node
+    while todo:
+        task = todo.pop()
+        if len(task) == 1:                      # both children are finished: assemble the branching node
+            right = done.pop()
+            left = done.pop()
+            done.append((task[0], left, right))
+            continue
+        group, bit = task
+        while True:
+            if len(group) == 1 or bit < 0:
+                leaves.append(group)
+                done.append(group[0])
+                break
+            mask = 1 << bit
+            zero, one = [], []
+            for i in group:
+                if values[i] & mask:
+                    one.append(i)
+                else:
+                    zero.append(i)
+            bit -= 1
+            if zero and one:
+                todo.append((mask,))
+                todo.append((one, bit))
+                todo.append((zero, bit))        # popped first: the 0-subtree is built first
+                break
+            group = zero or one                 # no split at this bit: skip it (path compression)
+    return done[0]
 
 
 def _xor_ascending(root, a, values):

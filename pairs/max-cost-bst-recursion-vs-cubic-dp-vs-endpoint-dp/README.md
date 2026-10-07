@@ -21,7 +21,7 @@ w(i, j) = qᵢ + Σ_{l=i+1..j} (p_l + q_l); the implementations also accept it i
 
 | Algorithm | Time (n nodes) | Exact cost comparisons (every input) | Implementation |
 |---|---|---|---|
-| Plain recursion over the root | Θ(3ⁿ) | (3ⁿ⁻¹ − 1)/2, with exactly 3ⁿ calls | [recursion.py](implementations/recursion.py) |
+| Plain recursion over the root | Θ(3ⁿ) | (3ⁿ⁻¹ − 1)/2 (n ≥ 1), with exactly 3ⁿ calls | [recursion.py](implementations/recursion.py) |
 | Interval DP, every root | Θ(n³) | (n+1)n(n−1)/6 | [cubic_dp.py](implementations/cubic_dp.py) |
 | Endpoint DP: roots i+1 and j only | Θ(n²) | n(n−1)/2 | [endpoint_dp.py](implementations/endpoint_dp.py) |
 
@@ -203,9 +203,10 @@ the adjacent-sum condition, as E′ predicts. It cannot fail for n ≤ 2, where 
 - **Controls: the precondition matters** (section C). Without it, the endpoint DP fails on many inputs.
   - *Monotone weights under MIN.* This is the setting of Knuth's speed-up, and the endpoint DP fails there. The
     classical optimal BST with p = (1, 1, 1), q = 0 has w(i, j) = j − i, minimum 5 (root k₂, the balanced tree) and
-    endpoint DP 6. The smallest failure among n = 3 tables with values 0..2 is w(0, 2) = w(0, 3) = w(1, 3) = 1,
+    endpoint DP 6. The smallest failure among n = 3 tables with values 0..2 (smallest sum of the entries) is w(0, 2) = w(0, 3) = w(1, 3) = 1,
     other weights 0 (minimum 1, endpoint DP 2). Random instances of the 11 general families: exact on 523 of 3300.
-  - *Arbitrary weights under max.* The smallest failure is n = 3, w(0, 1) = w(2, 3) = 1, all other weights 0
+  - *Arbitrary weights under max.* The smallest failure among n = 3 tables with values 0..2 (smallest sum of the
+    entries) is w(0, 1) = w(2, 3) = 1, all other weights 0
     (maximum 2 from root 2; endpoint DP 1). iid random tables, values 0..20, n = 3..12: exact on 798 of 3000, and on
     816 of 3000 under min.
   - *Anti-monotone weights under max:* exact on 340 of 2100 (the 7 anti-monotone families).

@@ -9,7 +9,7 @@ algorithms may return different triples.
 | Algorithm | Time (n words of w bits) | Space | Implementation |
 |---|---|---|---|
 | All triples: t = aᵢ ⊕ aⱼ for every pair, then scan k > j for aₖ = t | Θ(n³) worst case; exactly (n³ − n)/6 word operations on every no-instance | O(1) | [all_triples.py](implementations/all_triples.py) |
-| Patricia trie: zero scan, trie over the nonzero values, then for each a one linear pass that lists a ⊕ x in ascending order and merges it with the sorted values | O(n² + n·w); Θ(n²) worst case for w = O(n); exactly 7n² + 2n·log₂n − 3n on the V2 family | Θ(n) words | [patricia_trie.py](implementations/patricia_trie.py) |
+| Patricia trie: zero scan, trie over the nonzero values, then for each a one linear pass that lists a ⊕ x in ascending order and merges it with the sorted values | O(n² + n·w); Θ(n²) worst case for log₂n + 1 ≤ w = O(n); exactly 7n² + 2n·log₂n − 3n on the V2 family | Θ(n) words (the build's pending index groups are disjoint) | [patricia_trie.py](implementations/patricia_trie.py) |
 
 **Why it is here.** If three values at distinct indices XOR to 0, then either two of them are equal and the third is
 0, or all three are distinct and nonzero. The first case needs only a zero scan and the multiplicities of the
@@ -62,7 +62,8 @@ but the cost expressions are the exact closed forms (RL-062). CPython 3.14.2 and
 **Caveats.**
 - Word operations on w-bit words are counted at unit cost, as on a word RAM.
 - Building the trie takes up to n·w bit tests, so the trie algorithm is O(n² + n·w). The Θ(n²) bound needs
-  w = O(n). On the V2 family w = log₂n + 1, and the build is the lower-order term 2n·log₂n.
+  w = O(n); its lower half is stated only for w ≥ log₂n + 1, where n distinct odd-weight words form a no-instance
+  with n rounds of n XORs each. On the V2 family w = log₂n + 1, and the build is the lower-order term 2n·log₂n.
 - Θ(n³) is the worst case of all triples, reached on every no-instance. On yes-instances both algorithms stop at the
   first triple they find.
 - Loop control, index bookkeeping and the allocation of tuples and trie nodes on plain integers are not counted.

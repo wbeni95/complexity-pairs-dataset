@@ -239,7 +239,7 @@ def section4():
     print(f"   exhaustive search: count == N 2^(N-1) on {checked_bf} random instances (N <= 15, zero weights "
           f"included): {ok_bf}")
     print(f"   column DP, positive weights: count == n P_k + (n-1) F_(k+2) and value == oracle on {checked_dp} "
-          f"instances (n = 1..40, k = 1..6, all diagonal patterns): {ok_dp}")
+          f"instances (n = 1, 4, ..., 40, k = 1..6, all diagonal patterns): {ok_dp}")
     print(f"   column DP, weights in {{0, 1}}: uncounted additions (formula - count): min {min(zero_dev)}, "
           f"max {max(zero_dev)}, nonzero in {sum(1 for x in zero_dev if x)} of {len(zero_dev)}")
     rows = []

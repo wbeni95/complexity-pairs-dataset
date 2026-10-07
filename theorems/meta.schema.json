@@ -59,6 +59,31 @@
         }
       ]
     },
+    "proof": {
+      "description": "Present only when every claim of the note has a complete written proof by this project in the repository, and deterministic checks re-run the proof's computable facts. Shown as the green check mark (✅ Proved). External citations are credit, not part of the proof. See CONTRIBUTING.md.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["documents", "checks", "audit"],
+      "properties": {
+        "documents": {
+          "description": "Files, relative to the note's folder, that hold the written proofs.",
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "checks": {
+          "description": "Deterministic scripts, relative to the note's folder, that re-check the proof's computable facts.",
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "audit": {
+          "description": "The RESEARCH_LOG entry that records the claim-by-claim audit behind the mark.",
+          "type": "string",
+          "pattern": "^RL-[0-9]{3,}$"
+        }
+      }
+    },
     "sources": {
       "type": "array",
       "minItems": 1,

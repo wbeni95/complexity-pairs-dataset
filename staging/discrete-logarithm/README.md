@@ -14,11 +14,11 @@
 | number field sieve for discrete logs in GF(q) | classical-randomized | L_q[1/3, (64/9)^(1/3)]: sub-exponential (heuristic); applies to finite fields, NOT to generic groups such as elliptic curves | L_q[1/3, ...] |
 | Shor's algorithm | quantum | polynomial in n (O(n^3) gates with schoolbook arithmetic) | O(n) qubits |
 
-**Relationship.** In the generic group model a classical algorithm provably needs Omega(sqrt(p)) group operations (Shoup 1997), while Shor's algorithm uses polynomially many. In concrete groups such as GF(q)* classical sub-exponential algorithms exist; for elliptic-curve groups nothing better than generic O(sqrt(p)) is known classically.
+**Relationship.** Shoup (1997) gives an Omega(sqrt(p)) lower bound on the group operations of generic classical algorithms (cited, not checked here), while Shor's algorithm uses polynomially many (cited). In GF(q)* the number field sieve is sub-exponential under heuristic assumptions (cited). For general elliptic-curve groups, apart from known special classes, no classical algorithm better than the generic O(sqrt(p)) is known (a statement about the state of knowledge, not a theorem; not checked here).
 
 **Caveats.** Shoup's lower bound holds only for GENERIC algorithms (which use the group as a black box); it says nothing about algorithms that exploit the representation. Not targeted operationally (START_HERE section 10).
 
-**Notes.** Notable for the classical-vs-quantum question: in the black-box (generic group) model the classical/quantum gap is PROVEN (Omega(sqrt p) vs poly), unlike in the plain Turing-machine setting, where it is only conjectured.
+**Notes.** Notable for the classical-vs-quantum question: in the black-box (generic group) model the classical/quantum gap (Omega(sqrt p) vs poly) is established in the literature (Shoup 1997; Shor 1997; cited, not checked here), unlike in the plain Turing-machine setting, where it is only conjectured.
 
 **Verification.** Cited from the literature.
 

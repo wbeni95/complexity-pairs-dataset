@@ -17,8 +17,9 @@ The paper reports up to 70% speedups for short sequences and about 1.7% for sequ
 
 ## Why it matters here
 
-- **Exact verifier.** For fixed k, the 0-1 principle reduces correctness to finitely many inputs, so every
-  candidate can be checked exhaustively. This is the property START_HERE section 5 asks for.
+- **Exact verifier.** For fixed k, a candidate that is a network of compare-exchange (min/max) operations can be
+  checked exhaustively: by the 0-1 principle (cited, not proved here) its correctness reduces to the 2^k inputs of
+  0s and 1s. This is the property START_HERE section 5 asks for.
 - **A proposer, not an oracle.** The learned agent proposes, and the exact check decides (START_HERE section 6).
 
 ## When fixed-size results *are* in scope

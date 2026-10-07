@@ -12,7 +12,8 @@
    failure parent in reverse breadth-first order.
 Every failure-link step in the scan lowers the depth of the state, and each text character raises it by at most
 one, so the scan makes at most 2N lookups; building takes O(L) lookups (amortised in the same way along each
-pattern). With a fixed alphabet: Theta(N + L) character comparisons, independent of the number of occurrences.
+pattern). With a fixed alphabet and at least one pattern: Theta(N + L) character comparisons, independent of the
+number of occurrences (with no patterns nothing is compared).
 """
 from collections import deque
 

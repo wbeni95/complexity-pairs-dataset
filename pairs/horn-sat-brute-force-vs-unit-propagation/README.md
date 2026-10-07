@@ -10,7 +10,7 @@ intersection.
 | Algorithm | Time | Implementation |
 |---|---|---|
 | Brute force over all 2ⁿ assignments (stops at the first satisfying one) | O(2ⁿ·L); Θ(2ⁿ·m) on the worst-case family | [brute_force.py](implementations/brute_force.py) |
-| Unit propagation with clause counters (Dowling–Gallier 1984) | Θ(n + L) | [unit_propagation.py](implementations/unit_propagation.py) |
+| Unit propagation with clause counters (Dowling–Gallier 1984) | O(n + L); Θ(n + L) when no clause is empty | [unit_propagation.py](implementations/unit_propagation.py) |
 
 L is the total number of literal occurrences, m the number of clauses.
 
@@ -49,10 +49,10 @@ compares them with `==`.
 | unit propagation vs 12n − 7, n = 1000..32000 | 1.000 | n log n: 0.895, n²: 0.500 |
 
 **Caveats.** On satisfiable formulas brute force stops early. A formula without facts is satisfied by mask 0 at once, so
-the worst-case family must be unsatisfiable, with its clauses ordered so that assignments fail late. With clauses in
-random order the count grows like 2ⁿ, not m·2ⁿ. The fitted cost is the exact count's form; the bare n·2ⁿ gives α = 0.961.
-The propagation count leaves out the counter decrements, which use plain clause indices. Each negative literal is
-decremented at most once and costs a counted operation when it is read, so the uncounted part is O(L).
+the worst-case family must be unsatisfiable, with its clauses ordered so that assignments fail late. The fitted cost
+is the exact count's form; the bare n·2ⁿ gives α = 0.961. The propagation count leaves out the counter decrements,
+which use plain clause indices. Each negative literal is decremented at most once and costs a counted operation when
+it is read, so the uncounted part is O(L).
 
 **Sources.** Dowling & Gallier, J. Logic Programming 1984. Horn, J. Symbolic Logic 1951. Minoux, IPL 1988. Schaefer,
 STOC 1978. Cook, STOC 1971.

@@ -9,7 +9,8 @@ Stated precondition (Yao 1980) [recalled]: w satisfies the quadrangle inequality
     w(a, c) + w(b, d) <= w(a, d) + w(b, c)   for a <= b <= c <= d
 and is monotone on the lattice of intervals: w(b, c) <= w(a, d) whenever [b, c] is inside [a, d].
 Recorded per instance: QI violations, monotonicity violations, and whether the largest optimal roots of the
-cubic DP are monotone (root_monotone; this is exactly what makes the restricted search see the optimum).
+cubic DP are monotone (root_monotone; this is sufficient, not necessary, for the restricted search to see the
+optimum: research/2026-10-06d_rule_mining.md section 5.3 records exact runs without it).
 
 Families (n = number of keys):
   bst            prefix sums of random positive frequencies (QI with equality, monotone)

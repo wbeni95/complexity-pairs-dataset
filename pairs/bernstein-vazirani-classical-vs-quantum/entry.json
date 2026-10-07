@@ -56,7 +56,7 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both algorithms return s, which an independent check confirms against the full truth table, for n = 0..10 (quantum, simulated exactly with lib/qsim.py) and up to 16 (classical). V2 measures QUERY COUNTS reported through lib.qsim.Oracle: classical fits n exactly, and quantum is constant (1 query) for every n. Simulation time is exponential in n and is not the claim.",
+    "method": "V1: both algorithms return s, which an independent check confirms against the full truth table, for n = 0, ..., 6, 8, 10 (quantum, simulated exactly with lib/qsim.py) and also 16 (classical). V2 measures QUERY COUNTS reported through lib.qsim.Oracle: classical fits n exactly, and quantum is constant (1 query) for every n. Simulation time is exponential in n and is not the claim.",
     "artifacts": ["implementations/classical.py", "implementations/quantum.py", "harness.py", "../../lib/qsim.py"]
   },
   "test_harness": {

@@ -9,7 +9,7 @@ it occurs in the text. Overlapping occurrences all count, and the counts come ba
 |---|---|---|---|
 | Naive matching per pattern | O(N·L) | exactly n(n+1)(3n²−2n+2)/6 = Θ(n⁴) | [naive.py](implementations/naive.py) |
 | KMP per pattern | Θ(P·N + L) | exactly 3n³−2n²−5n+6 = Θ(n³) (n ≥ 2) | [kmp_each.py](implementations/kmp_each.py) |
-| Aho–Corasick | Θ(N + L) (fixed alphabet) | exactly 4n²−3 = Θ(n²) (n ≥ 1) | [aho_corasick.py](implementations/aho_corasick.py) |
+| Aho–Corasick | Θ(N + L) (fixed alphabet, P ≥ 1) | exactly 4n²−3 = Θ(n²) (n ≥ 1) | [aho_corasick.py](implementations/aho_corasick.py) |
 
 The input of the V2 family has s = Θ(n²) characters, so the chain is Θ(s²) → Θ(s^1.5) → Θ(s).
 
@@ -43,7 +43,8 @@ comparisons.
   Shape blocks on consecutive grids check the exact polynomial degree.
 
 **Caveats.** Only character comparisons are counted. Aho–Corasick keeps each node's children in a list, which costs
-up to σ comparisons per lookup, so its bound is Θ(N + L) for a fixed alphabet and O(σ(N + L)) in general. Reporting
-each occurrence individually would add the number of occurrences; this implementation returns counts only.
+up to σ comparisons per lookup, so its bound is Θ(N + L) for a fixed alphabet and P ≥ 1 (with no patterns it compares
+nothing) and O(σ(N + L)) in general. Reporting each occurrence individually would add the number of occurrences; this
+implementation returns counts only.
 
 **Sources.** Aho & Corasick, CACM 1975. Knuth, Morris & Pratt, SIAM J. Comput. 1977.

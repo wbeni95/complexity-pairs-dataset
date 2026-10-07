@@ -5,9 +5,9 @@ uniform costs in [0, 99], costs in [-3, 3] (many ties, negatives), and the colum
 family used for timing (below).
 
 generate_scaling: C[i][j] = 1000 j + r(i, j) with r uniform in [0, 999]. Every row ranks the columns
-in the same order, so each newly inserted row's shortest-path search visits every already matched
-column before it reaches a free one: ~n^2/2 search steps of Theta(n) each, the Theta(n^3) worst case
-of the Hungarian implementation. (On uniformly random matrices the search usually stops much earlier.)
+in the same order. It is the timing family because the Hungarian runtimes on it grow like n^3
+(measured); no proof is given here that each newly inserted row's search visits every already matched
+column, or of a Theta(n^3) lower bound. (On uniformly random matrices the search usually stops much earlier.)
 """
 
 

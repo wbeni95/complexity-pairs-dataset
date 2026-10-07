@@ -99,7 +99,8 @@ supersede them with new ones.
 Every entry, and every note under `theorems/`, says whose result it is, in the optional `provenance` field
 (absent means `literature`):
 
-- **`literature`**: the result is in the cited literature; this project re-proved or re-checked it. No label.
+- **`literature`**: the result is in the cited literature; this project re-proved or re-checked it (staging
+  entries, at V0, are cited only). No label.
 - **`own-extension`**: a generalization or sharpening of a cited base result that is not itself in the
   literature. It must name the base(s) in `bases`. Shown with the orange label **🟠 Own extension**.
 - **`own`**: no prior literature was found after a documented search. Shown with the orange label **🟠 Own result**.
@@ -110,6 +111,25 @@ The orange labels mark the project's own results so that readers can see at once
 literature turns up later, the label is corrected in a new RESEARCH_LOG entry; the old entry is not deleted.
 Every labelled result ships with a complete proof and a deterministic check (`verify.py` or a test).
 
+## The green check mark (✅ Proved)
+
+An entry or a theorem note gets the green check mark **✅ Proved** only when a reader can check every claim it
+makes from the repository alone:
+
+1. **Our own written proof of every claim:** correctness of each algorithm, every stated complexity and exact count
+   on its domain, every lower bound, and every factual caveat. The proofs are in the files listed in
+   `proof.documents`. External citations are credit (who published first), never a substitute for the proof.
+2. **Deterministic checks:** the scripts or tests in `proof.checks` re-run the proofs' computable facts on stated
+   ranges with fixed inputs and seeds, and they pass in the recorded run. A check covers its finite range; the
+   written proof covers the general statement.
+3. **A logged audit:** `proof.audit` names the RESEARCH_LOG entry that records the claim-by-claim audit behind
+   the mark.
+
+The validator checks that the listed files exist and that the audit entry is in the log. It cannot check the
+mathematics; the audit and the readers do. Staged entries (V0) cannot carry the mark. If a gap is found, the mark
+is removed in a new RESEARCH_LOG entry, and the old entry is not deleted. The verification level (V0–V2) is a
+separate statement about the measurements; the check mark is about proofs.
+
 ## Tagging decisions (2026-10)
 
 1. **Exp → better exp gets its own tag, T8** (super-poly → faster super-poly). If polynomial time is open for the
@@ -119,9 +139,10 @@ Every labelled result ships with a complete proof and a deterministic check (`ve
    difference. AlphaDev-style results are kept as methodology notes in `notes/`, since they matter for the
    search pipeline. A fixed-size scheme that yields an asymptotic bound when applied recursively (e.g. an
    AlphaTensor rank) is in scope through that bound.
-3. **Proven quantum separations in query / oracle / black-box models get tag T9.** The validator requires a quantum
-   algorithm *and* a classical lower bound in `lower_bounds`. For T9, the cost that matters is queries, not
-   simulation time, so V2 uses `"measure": "reported"` with the harness's `reported_cost(output)`. T9 shows
+3. **Quantum separations in query / oracle / black-box models get tag T9.** The validator requires a quantum
+   algorithm *and* a classical lower-bound record in `lower_bounds`; it checks that the record exists, not that the
+   bound is proved (the bound may be cited). For T9, the cost that matters is queries, not
+   simulation time, so V2 uses `"measure": "reported"` with the harness's `reported_cost(output)`. T9 records
    separations *relative to an oracle*. It does not prove BQP ≠ BPP.
 
 ## License of contributions

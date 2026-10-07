@@ -23,7 +23,8 @@ Result (console, 2026-10-06, CPython 3.14.2; about 35 s):
  1. 112 instances, 296 implementation runs, 104 instances with >= 2 implementations compared; 109 judged exactly,
     3 (n = 14) by necessary conditions only; 0 failures.
  2. 400 instances, 388 judged exactly; 0 failures.
- 3. 39 graphs, 0 mismatches; the Petersen graph gives 0 in all four methods.
+ 3. 39 graphs, 0 mismatches; the Petersen graph gives 0 in the three methods that run at n = 10
+    (inclusion-exclusion, Held-Karp and the oracle's depth-first count; the enumeration is capped at n = 9).
  4. 3535 wrong outputs on 410 instances: 3471 rejected, 64 undecided (n = 11: 4, 12: 30, 13: 16, 14: 14),
     0 accepted. Correct outputs: 398 accepted, 12 undecided, 0 rejected.
  5. Counts equal the closed forms for every n: enumeration n = 2..10 (n!), inclusion-exclusion n = 2..13,

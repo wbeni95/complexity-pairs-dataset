@@ -1,7 +1,7 @@
 """Straight insertion sort (Knuth 5.2.1, Algorithm S) on a copy of the input.
 
-Each element is shifted left past every larger element before it, so the work is n - 1 plus the number
-of inversions: Theta(n^2) in the worst case (reversed input) and on average (n(n-1)/4 expected inversions).
+Each element is shifted left past every larger element before it, so for n >= 1 the work is n - 1 plus the
+number of inversions: Theta(n^2) in the worst case (reversed input) and on average (n(n-1)/4 expected inversions).
 """
 
 

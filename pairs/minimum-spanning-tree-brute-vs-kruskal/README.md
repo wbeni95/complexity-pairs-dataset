@@ -34,7 +34,8 @@ each edge into the key w·n² + u·n + v, and that key stays a counting value, s
   1.18 million subsets. α = 0.995 against n·C(m, n−1). The rivals C(m, n−1), n²·C(m, n−1) and n^(n−2)
   are rejected.
 
-Tolerance is 0.03. The log factor between Kruskal and Prim is now resolved. Kruskal's sort comparisons
+Tolerance is 0.03. On these draws the counts resolve the log factor between Kruskal and Prim; this is a
+measurement, since no worst-case lower bound for Kruskal is proved here. Kruskal's sort comparisons
 depend on the Python version: under 3.12.10 they are 0.17–0.30% fewer than under 3.14.2, with the same α
 and the same verdicts.
 

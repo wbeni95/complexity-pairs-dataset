@@ -103,7 +103,7 @@ Held–Karp 1962, Bodlaender et al. 2012.
 
 **Algorithms.**
 - **All triples:** Θ(n³). On a no-instance, exactly C(n, 2) XORs + C(n, 3) equality tests = (n³ − n)/6.
-- **Patricia trie:** a deterministic Θ(n² + n·w) algorithm, following the idea in the abstract of Dietzfelbinger,
+- **Patricia trie:** a deterministic O(n² + n·w) algorithm, following the idea in the abstract of Dietzfelbinger,
   Schlag & Walzer: "a version of the Patricia trie for X, which makes it possible to traverse the set a ⊕ X in
   ascending order for arbitrary a … in linear time".
   - Zero and duplicate cases are handled first. The proof that a solution has either three distinct nonzero values or

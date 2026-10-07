@@ -12,7 +12,7 @@
       "idea": "Try every alignment i of P against T and compare characters left to right until a mismatch or a full match.",
       "model": "classical-deterministic",
       "pseudocode": "count = 0; for i in 0..n-m: j = 0; while j < m and T[i+j] = P[j]: j = j + 1; if j = m: count = count + 1; return count",
-      "time_complexity": "Theta(n m) character comparisons in the worst case (at most (n - m + 1) m, attained e.g. by T = a^n, P = a^(m-1) b); Theta(n^2) for the m = n // 2 instances used in V2",
+      "time_complexity": "Theta(max(n - m + 1, 0) m) character comparisons in the worst case (at most max(n - m + 1, 0) m, attained e.g. by T = a^n, P = a^(m-1) b), so Theta(n m) when m <= c n for a constant c < 1; Theta(n^2) for the m = n // 2 instances used in V2",
       "space_complexity": "O(1) extra",
       "correctness": "Exhaustive: each of the n - m + 1 alignments is checked character by character.",
       "implementation": "implementations/naive.py:count_naive",
@@ -35,7 +35,7 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "The naive matcher re-reads up to m - 1 text characters after every mismatch, giving Theta(nm) in the worst case. KMP never moves backwards in the text, giving Theta(n + m). With m = Theta(n) this is Theta(n^2) versus Theta(n).",
+  "relationship": "The naive matcher re-reads up to m - 1 text characters after every mismatch, giving Theta(max(n - m + 1, 0) m) in the worst case, which is Theta(nm) when m <= c n for a constant c < 1. KMP never moves backwards in the text, giving Theta(n + m). With m = n // 2 (as in V2), or any m = Theta(n) with m <= c n for a constant c < 1, this is Theta(n^2) versus Theta(n).",
   "sources": [
     {
       "authors": "Knuth, D. E.; Morris, J. H., Jr.; Pratt, V. R.",
@@ -63,6 +63,6 @@
     "v1_sizes": [0, 1, 2, 3, 5, 8, 13, 20, 50, 200, 1000],
     "trials": 8
   },
-  "caveats": "The naive bound is a worst case. On uniformly random text over an alphabet of size sigma >= 2 the naive matcher averages O(n) comparisons, since an alignment survives j comparisons with probability sigma^(-j). The V2 instances are chosen to be its worst case. Stating the costs as functions of n alone relies on m = n // 2 in the scaling generator; in general the comparison is Theta(nm) versus Theta(n + m). KMP is optimal up to a constant factor for m <= n: on T = a^n with P = a, changing any unread text character would change the count, so every algorithm must read all n text characters.",
+  "caveats": "The naive bound is a worst case. On uniformly random text over an alphabet of size sigma >= 2 the naive matcher averages O(n) comparisons, since an alignment survives j comparisons with probability sigma^(-j). The V2 instances are chosen to be its worst case. Stating the costs as functions of n alone relies on m = n // 2 in the scaling generator; in general the worst-case comparison is Theta(max(n - m + 1, 0) m) versus Theta(n + m). KMP is optimal up to a constant factor for m <= n: on T = a^n with P = a, changing any unread text character would change the count, so every algorithm must read all n text characters.",
   "notes": "Related linear-time matchers: Boyer-Moore (sublinear on average), Rabin-Karp (randomized, expected linear), and the Z-algorithm."
 }

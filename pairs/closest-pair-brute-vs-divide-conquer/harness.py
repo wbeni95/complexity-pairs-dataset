@@ -9,8 +9,8 @@ coordinate in CountingInt, whose differences, products and sums stay CountingInt
 multiplication of such values, a squaring `** 2` counted as one. reported_cost() returns that count. The
 UNCHANGED brute force squares dx and dy for every pair: exactly n(n-1). Divide and conquer multiplies in
 its base cases (2 per pair), in the strip filter (one squaring per point per internal node) and in the strip
-scan (dy^2 per examined pair, plus dx^2 for the pairs it does not stop at). Comparisons are NOT part of
-the reported cost: the initial sorted() and the min() calls compare inside CPython's C code, and their
+scan (dy*dy for every examined pair, plus dx*dx and a second dy*dy for each pair it does not stop at).
+Comparisons are NOT part of the reported cost: the initial sorted() and the min() calls compare inside CPython's C code, and their
 comparison counts differ between Python 3.12.10 and 3.14.2 (experiments/2026-10-07b_count_v2_cross_version.py);
 multiplications all happen in the implementations' own Python code and are identical under both. They are tallied separately in _comparisons for experiments only.
 """

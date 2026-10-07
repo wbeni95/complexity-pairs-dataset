@@ -14,7 +14,8 @@ tau*(d) = d - 1 - min(HR(d), Q - 1).
 
 Checks:
   H  heap facts: leaf-split formula, Lemma H (a)-(c).
-  L  lemmas B, C (closed form, F1, F2), D, F, G against the dynamic program, A and E on seeded random h.
+  L  lemmas B, C (closed form), D, F, G against the dynamic program; steps F1, F2 of Lemma C by direct
+     evaluation of the closed forms; A and E on seeded random h.
   T  theorem (largest rule exact, trajectory = tau*, smallest rule exact, smallest = mirror) on
        - all supports of (c_2..c_{N-1}, a), N = 2..16, unit weights and seeded random weights 1..7;
        - all integer h with h(1) = 0 and nonincreasing differences in [0, B] for several (B, N);

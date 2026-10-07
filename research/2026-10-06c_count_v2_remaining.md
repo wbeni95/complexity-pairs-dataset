@@ -32,6 +32,8 @@ Author: delegated research agent (Claude), for the maintainer.
 - **Scale:** 7 algorithm fits converted, 18 declared rivals, all rejected. Common tolerance window
   [0.0073, 0.0652): largest |α − 1| = 0.0073 (RMQ sparse table), smallest rival distance 0.0652 (MST
   enumeration against C(m, n−1)).
+  *Correction (2026-10-07): the number of declared rivals is 19, as the table above shows (3 + 3 + 2 + 3 + 3 + 2 + 3)
+  and as ledger/runs/20261006T104637Z.json records; all 19 are rejected.*
 - **Log factor:** the validator's log-factor diagnostic is resolved in all 7 fits
   (`experiments/2026-10-06c_count_v2_summary.py`). All 7 were timing fits before.
 - **Implementations unchanged:** every file under `implementations/` of the five entries is dated
@@ -263,6 +265,7 @@ Fits of the χ·2ⁿ counts, for information only:
   grows in steps.
 - The implementation's own operation total, (2χ + 2)·2ⁿ, is a formula evaluated with the measured χ, not a
   count. It gives α 0.9638 against n·2ⁿ, which would **fail** at 0.03, and 1.0652 against 2ⁿ.
+  *Correction (2026-10-07): the exact total is (2χ + 2)·2ⁿ − 2 (RESEARCH_LOG.md RL-091).*
 - **Consequence for F4:** the "factor n" is really a factor χ(G). On this instance family χ/n stays between 0.500 and
   0.636 over n = 10..18 (6/10 … 10/18; 8/16 at the minimum), without settling. So even exact counts would separate n·2ⁿ from 2ⁿ only narrowly here. The obstacle
   is the instance family as well as the measurement method.

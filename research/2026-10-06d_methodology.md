@@ -41,6 +41,8 @@ Status words: **theorem** (proven, cited), **conjecture**, **observation** (my c
    timing grid is **0.1015** [exp: log_identifiability]. This sharpens RL-048. Exact counts at n = 2ᵏ fix the problem
    completely: Berlekamp–Massey on the doubling sequence gives the exponent *and* the log power exactly (NTT: (x−2)²,
    so n log n; Karatsuba: x − 3, so n^log₂3; Strassen: x − 7; Yates: (x−2)², so N log N).
+   *Correction (2026-10-07): these recurrences are guesses on finitely many terms (Strassen from 4 terms, see §5.2
+   Part 4). They identify the exponent and the log power for all n only together with a proof of the recurrence.*
 4. **Quantum: what is provable is query-model separation; the polynomial method makes it checkable by machine.** Exact
    approximate degrees with primal and dual certificates: adeg₁/₃(ORₙ) for 70 values of n ≤ 256 grows like
    **0.7246·√n** (log-log slope **0.4748** for n ≥ 16), the Ω(√N) behind Grover's optimality via Q₂ ≥ adeg/2;
@@ -170,11 +172,15 @@ section 2.
 ### 4.4 How this serves the project (proposal)
 
 - The owner's thesis ("quantum ≠ classical capability") is **proven in the query model** and is exactly what T9
-  records. The polynomial method makes the quantum *lower* bounds (optimality of Grover, of minimum finding) checkable
+  records. *(Correction 2026-10-07: it is a theorem of the query-model literature; T9 entries record such
+  separations with the classical lower bound proved in the entry or only cited, and three T9-tagged entries are
+  staging entries at V0, cited only.)* The polynomial method makes the quantum *lower* bounds (optimality of Grover, of minimum finding) checkable
   by machine for small N, with exact rational certificates (section 5.3). The *classical* lower bounds of T9 entries
   are combinatorial.
 - Exponential T9 separations require promises (theorem: total functions allow only polynomial gaps). This explains
   why every exponential T9 entry (Simon, Deutsch–Jozsa exact, Bernstein–Vazirani) is a promise problem.
+  *(Correction 2026-10-07: Bernstein–Vazirani is not an exponential separation: n classical vs 1 quantum query is a
+  linear gap. It is a promise problem too.)*
 
 ---
 
@@ -257,6 +263,8 @@ claim of n^1.1 gives α = 1.0094 and passes tolerance 0.25.
 The dominant root gives the exponent exactly (log₂ λ), and its multiplicity m gives the log power (log n)^(m−1). For
 exact counts this **settles log factors with no tolerance at all**. The cost is that n must be restricted to powers of
 2 (or another fixed ratio) and enough terms are needed: (2L + 2 + held-out) for order L.
+*Correction (2026-10-07): "settles" holds only for the guessed recurrence. The guess is checked on finitely many
+terms; it settles the log factor of the count for all n only together with a proof of the recurrence.*
 
 ### 5.3 (c) Boolean-function measures [exp: boolean_measures]
 

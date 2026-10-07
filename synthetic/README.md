@@ -1,8 +1,9 @@
 # synthetic/ (T7 entries)
 
 This folder holds **deliberately bloated** pairs: a cheap algorithm rewritten in a wasteful, exponential
-form. Producing these costs nothing. A model trained only on them learns to "un-bloat the obvious",
-and that skill does not transfer to genuinely hard problems (START_HERE section 5).
+form. Producing these costs nothing. We expect (an untested hypothesis, START_HERE section 5) that a model
+trained only on them learns to "un-bloat the obvious", and that this skill does not transfer to genuinely hard
+problems.
 
 Rules, enforced by `tools/validate.py`:
 

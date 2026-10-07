@@ -52,6 +52,7 @@ import json
 import math
 import platform
 import random
+import re
 import subprocess
 import sys
 import time
@@ -477,7 +478,7 @@ def tag_consistency(entry: dict) -> list[str]:
         if "quantum" not in models:
             errors.append("T9 needs a quantum algorithm")
         if not any(lb["model"] != "quantum" for lb in entry.get("lower_bounds", [])):
-            errors.append("T9 needs a classical lower bound in lower_bounds (the advantage must be proven)")
+            errors.append("T9 needs a classical lower bound in lower_bounds (cited or proved in the entry)")
     if "T7" in tags and entry["pair_type"] != "T7":
         errors.append("T7 must be the primary tag when present")
     return errors
@@ -497,6 +498,29 @@ def provenance_errors(prov: dict | None) -> list[str]:
     return errors
 
 
+def proof_errors(proof: dict | None, item_dir: Path) -> list[str]:
+    """The green check mark: listed proof documents and checks exist in the repo, and the audit is logged."""
+    if not proof:
+        return []
+    errors = []
+    for kind in ("documents", "checks"):
+        for rel in proof.get(kind, []):
+            try:
+                path = resolve_in_repo(item_dir, rel)
+            except ValueError:
+                errors.append(f"proof: {kind} path escapes the repository: {rel}")
+                continue
+            if not path.is_file():
+                errors.append(f"proof: {kind} file not found: {rel}")
+            elif kind == "documents" and not path.read_text(encoding="utf-8").strip():
+                errors.append(f"proof: document is empty: {rel}")
+    audit = proof.get("audit", "")
+    log = REPO / "RESEARCH_LOG.md"
+    if audit and not re.search(rf"^### {re.escape(audit)} ", log.read_text(encoding="utf-8"), re.M):
+        errors.append(f"proof: audit entry {audit} not found in RESEARCH_LOG.md")
+    return errors
+
+
 def static_checks(entry: dict, entry_dir: Path, validator) -> tuple[list[str], list[str]]:
     errors, warnings = [], []
     for err in sorted(validator.iter_errors(entry), key=lambda e: list(e.path)):
@@ -512,6 +536,9 @@ def static_checks(entry: dict, entry_dir: Path, validator) -> tuple[list[str], l
     if entry["id"] != entry_dir.name:
         errors.append(f"id '{entry['id']}' != folder name '{entry_dir.name}'")
     errors.extend(provenance_errors(entry.get("provenance")))
+    errors.extend(proof_errors(entry.get("proof"), entry_dir))
+    if entry.get("proof") and loc == "staging":
+        errors.append("proof: staging/ entries (V0) cannot carry the check mark; promote the entry first")
     if not (entry_dir / "README.md").is_file():
         errors.append("missing README.md (human-readable mirror of entry.json)")
     if tag in entry.get("secondary_tags", []):

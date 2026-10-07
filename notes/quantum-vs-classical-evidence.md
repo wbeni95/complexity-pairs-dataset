@@ -13,7 +13,8 @@ make the evidence explicit, checkable and queryable.
 
 ## Tier 1: proven, relative to an oracle (black-box models)
 
-In the query model, separations are **theorems**:
+In the query model, separations are **theorems** of the cited literature (see each entry for what it proves itself
+and what it only cites; the staging entries are cited only):
 
 | Separation | Classical | Quantum | Entry |
 |---|---|---|---|
@@ -36,14 +37,16 @@ expected to solve NP-complete problems by brute force.
 | Discrete log in GF(p)* and on elliptic curves | L[1/3] / O(√p) | polynomial (Shor) | `staging/discrete-logarithm` |
 
 No classical polynomial algorithm is known, and none is ruled out. Factoring is in NP ∩ coNP and not believed
-to be NP-complete. A classical polynomial algorithm would contradict no theorem; it would "only" break widely
-deployed cryptography.
+to be NP-complete. No theorem we know of rules out a classical polynomial algorithm; one would "only" break
+widely deployed cryptography.
 
 ## Tier 3: hardness of classical *simulation* (sampling)
 
-If classical computers could efficiently sample from certain quantum distributions, the polynomial hierarchy
-would collapse. This holds for IQP circuits (Bremner–Jozsa–Shepherd 2011) and for BosonSampling (Aaronson–Arkhipov
-2013), the latter built on the #P-hardness of the permanent (see `pairs/permanent-naive-vs-ryser`). Experiments such as
+If classical computers could efficiently sample exactly (or to within multiplicative error) from certain quantum
+distributions, the polynomial hierarchy would collapse. This is shown for IQP circuits (Bremner–Jozsa–Shepherd 2011)
+and for BosonSampling (Aaronson–Arkhipov 2013), the latter built on the #P-hardness of the permanent (see
+`pairs/permanent-naive-vs-ryser`); cited, not checked here. For approximate sampling, the hardness rests on further
+conjectures. Experiments such as
 Google's Sycamore (2019) and USTC's Jiuzhang (2020) target this regime.
 
 These experiments are **fixed-size instances**, not problem families, so they are outside the dataset's pair
@@ -60,10 +63,10 @@ Each such case shows the speedup came from the input model, not from quantum mec
 ## How the dataset tracks this
 
 - Every algorithm has `model` ∈ {classical-deterministic, classical-randomized, quantum}.
-- `lower_bounds[]` records proven or conditional lower bounds together with their setting (query model, generic group,
-  SETH, …), so "proven" and "believed" stay distinguishable.
-- T9 is proven in a query model, T5 is dequantized, and T6 with a quantum algorithm is a conjectured
-  advantage. `index.json` counts each.
+- `lower_bounds[]` records each lower bound with its setting (query model, generic group, SETH, …) and its source
+  (proved in the entry, cited, or conditional), so unconditional and conditional bounds stay distinguishable.
+- T9 marks a separation in a query model whose classical lower bound is proved in the entry or cited (see each
+  entry), T5 is dequantized, and T6 with a quantum algorithm is a conjectured advantage. `index.json` counts each.
 
 A fair one-line summary of the current evidence is that quantum advantage is proven in black-box models,
 strongly believed for factoring and discrete log, contested for sampling experiments, and has evaporated for

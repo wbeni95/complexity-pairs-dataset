@@ -15,8 +15,9 @@ about 1.44 n steps, with consecutive Fibonacci numbers as the worst case.
 
 **Verification.** V1: agreement with each other and with `math.gcd` (oracle only), including zeros and
 large common factors. V2 uses consecutive Fibonacci numbers, which are coprime and are Lamé's worst case.
-Trial divisors fit 2ⁿ at n = 14–22 bits. Euclid fits n² at n = 4000–64000 bits, which is its bit
-complexity. The O(n) step count is not timed, because at word size interpreter overhead dominates.
+Trial divisors fit 2ⁿ at n = 14–22 bits. Euclid's runtimes fit n² at n = 4000–64000 bits; this is a
+measurement, not a check of its O(n²) bit complexity. The O(n) step count is not timed, because at word size
+interpreter overhead dominates.
 
 **Beyond the pair.** Half-gcd algorithms (Knuth–Schönhage) reach O(M(n) log n) bit operations.
 

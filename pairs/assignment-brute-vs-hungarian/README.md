@@ -14,8 +14,9 @@ column (minimum-cost perfect matching in K_{n,n}).
 certify optimality, and each new row needs only one Dijkstra-like search on non-negative reduced costs.
 
 **Worst case for timing.** On uniformly random matrices the search usually stops early, so the timing
-uses C[i][j] = 1000·j + noise. Every row then ranks the columns the same way, and each search visits every
-matched column (~n²/2 steps of Θ(n) each).
+uses C[i][j] = 1000·j + noise. Every row then ranks the columns the same way. On this family the runtimes grow
+like n³ (V2 timing fit); no proof is given here that each search visits every matched column, or of a Θ(n³) lower
+bound.
 
 **Verification.** V1: both agree, and for n ≤ 12 they also match an independent O(n·2ⁿ) subset DP.
 V2: runtimes fit n·n! and n³.

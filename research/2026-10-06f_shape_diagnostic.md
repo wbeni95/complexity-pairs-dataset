@@ -38,6 +38,9 @@ No ledger file was written in this round. The recorded run is left to the mainta
   (Strassen, Karatsuba, KMP). In each case the grid started before the count's regular regime (schoolbook cutoffs,
   a degenerate pattern for n ≤ 5), so this was a limit of the grid choice, not of the claim. With the grid starting
   at the regular regime, all three are MATCH.
+  *Correction (2026-10-07): "no entry claim is in question" says too much. A MATCH is evidence, not a proof (§2
+  of this report), and side finding (1) below shows a count statement (RL-057's KMP 4n − 6) that was wrong. What
+  holds is that no V2 cost expression's shape was contradicted by its exact counts on the declared grids.*
 - **Side findings.** (1) The KMP count is 4n − 6 for even n and 4n − 7 for odd n (n = 6..60); RL-057 quoted 4n − 6
   from its even-n V2 grid [exp: closed_forms]. (2) The RMQ sparse-table count includes comparisons inside
   two-argument `min()`. RL-069 reports these counts identical under CPython 3.12.10 and 3.14.2 (agent report), and
@@ -232,7 +235,8 @@ grid can see. "terms used/checked" counts the training terms and all terms.
 **Totals:** 59 series; 40 MATCH (all with an entry block); 0 MISMATCH; 19 UNDETERMINED: 6
 `instance_dependent_counts` (entry block), 10 `randomised_counts`, 2 `count_failed`, 1 `too_few_terms` (no block).
 
-**MISMATCH investigation.** None occurred with the final grids, so no entry claim is questioned. Before the grids
+**MISMATCH investigation.** None occurred with the final grids, so no entry claim is questioned (*correction
+2026-10-07: see the note in the Summary; a MATCH does not establish an entry claim*). Before the grids
 were tuned, the automatic first pass [console] gave 37 MATCH and 22 UNDETERMINED. The cases that changed:
 
 - *Strassen*, doubling n = 2..256: `holdout_not_reproduced` (the guess x − 7 failed at index 4). For n ≤ 16 the

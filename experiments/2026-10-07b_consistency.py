@@ -4,8 +4,9 @@
 Checks (scope: every entry.json under pairs/, staging/, synthetic/; index.json; the newest ledger run):
   1. index.json counts (entries, validated_pairs, T6/T9/T7 counts, with_quantum_algorithm, by_level, by_type)
      recomputed from the entry files on disk, using the counting rule of START_HERE (validated = V1+ in pairs/
-     with any of T1-T5, T8, T9, primary or secondary; "open_problems_T6" and "proven_quantum_advantage_T9"
-     counted as primary-or-secondary, by_type as primary only).
+     with any of T1-T5, T8, T9, primary or secondary; "open_problems_T6" counted as primary-or-secondary,
+     "quantum_separations_T9_in_pairs" (renamed 2026-10-07 from "proven_quantum_advantage_T9") as primary-or-
+     secondary in pairs/ only, by_type as primary only).
   2. Every index.json entry row against its entry.json: level, pair_type, secondary_tags, path, algorithm names,
      time_complexity text, implemented flag.
   3. Latest ledger run against entry.json: claimed level equals entry level; each V2 measurement's cost,
@@ -56,7 +57,7 @@ def main():
         "validated_pairs": sum(loc == "pairs" and e["verification"]["level"] >= "V1" and bool(tags(e) & VALID_TAGS)
                                for loc, _, e in es),
         "open_problems_T6": sum("T6" in tags(e) for _, _, e in es),
-        "proven_quantum_advantage_T9": sum("T9" in tags(e) for _, _, e in es),
+        "quantum_separations_T9_in_pairs": sum("T9" in tags(e) and loc == "pairs" for loc, _, e in es),
         "synthetic_T7": sum(e["pair_type"] == "T7" for _, _, e in es),
         "with_quantum_algorithm": sum(any(a["model"] == "quantum" for a in e["algorithms"]) for _, _, e in es),
         "by_level": dict(Counter(e["verification"]["level"] for _, _, e in es)),

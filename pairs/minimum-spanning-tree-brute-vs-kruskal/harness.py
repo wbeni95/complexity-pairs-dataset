@@ -1,8 +1,8 @@
 """Instances: complete undirected graph on n vertices as a symmetric n x n weight matrix (diagonal 0).
 
 generate uses integer weights in [1, 100] (many ties) or, in some trials, in [1, 3] (massive ties).
-generate_scaling uses weights in [1, 10^9] (distinct with high probability), so sorting the edges
-really costs Theta(m log m) comparisons.
+generate_scaling uses weights in [1, 10^9] (distinct with high probability); on these draws sorting the
+edges took 1.095 to 1.179 m log2 m comparisons (measured for n = 50..800 under CPython 3.14.2).
 """
 
 

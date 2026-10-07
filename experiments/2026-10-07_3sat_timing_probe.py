@@ -10,8 +10,9 @@ Part 3 (timing, console): validator-style fits against several cost expressions.
 Run from the repository root:  python experiments/2026-10-07_3sat_timing_probe.py
 
 Outcome (2026-10-07). Parts 1-2 (deterministic): brute force makes 6.81, 8.12, 6.56, 8.23, 7.20, 7.87 clause checks
-per assignment for n = 4..14 (step 2), i.e. Theta(1), falling from 0.24 m to 0.10 m. Schöning (T = 88, 196, 416, 848,
-1682 tries for n = 4..12) scans 8.1 to 17.3 clauses per step (0.20 m to 0.30 m), i.e. Theta(m).
+per assignment for n = 4..14 (step 2), 0.24 m at n = 4 and 0.10 m at n = 14 (measured on this range only; no
+asymptotic claim). Schöning (T = 88, 196, 416, 848, 1682 tries for n = 4..12) scans 8.1 to 17.3 clauses per step
+(0.20 m to 0.30 m; measured).
 Part 3 (console): brute force alpha = 1.016 vs 2^n and 0.899 vs 2^n n (n = 8..16). Schöning (n = 4..12):
 alpha = 0.960 vs (4/3)^n n^2.5, 1.225 vs (4/3)^n n^1.5, 2.082 vs (4/3)^n alone, and 0.865 vs 2^n.
 Conclusion: over the timeable range the polynomial factors dominate and the fit cannot separate Schöning's claimed

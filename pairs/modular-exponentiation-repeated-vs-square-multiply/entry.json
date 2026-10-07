@@ -12,7 +12,7 @@
       "idea": "Start from 1 and multiply by a (mod m) e times.",
       "model": "classical-deterministic",
       "pseudocode": "r = 1; repeat e times: r = r * a mod m; return r",
-      "time_complexity": "Theta(e) = Theta(2^n) multiplications mod m (exactly e of them, and e >= 2^(n-1))",
+      "time_complexity": "Theta(e) = Theta(2^n) multiplications mod m (exactly e of them, and e >= 2^(n-1) for e >= 1)",
       "space_complexity": "O(1) words besides the input",
       "correctness": "Invariant: after k iterations r = a^k mod m.",
       "implementation": "implementations/repeated.py:modpow_repeated",
@@ -26,7 +26,7 @@
       "idea": "Scan the bits of e from the most significant one; for each bit square the accumulator, and multiply it by a when the bit is 1.",
       "model": "classical-deterministic",
       "pseudocode": "r = 1; for each bit b of e, most significant first: r = r * r mod m; if b = 1: r = r * a mod m; return r",
-      "time_complexity": "Theta(n) multiplications mod m: n squarings plus one multiplication per 1-bit of e (at most n), and Theta(n) work to read the bits of e",
+      "time_complexity": "Theta(n) multiplications mod m: for e >= 1, n squarings plus one multiplication per 1-bit of e (at most n), and Theta(n) work to read the bits of e (e = 0 costs one squaring)",
       "space_complexity": "O(n) bits (the exponent; the implementation also materialises its n-character binary string)",
       "correctness": "Invariant: after processing the top j bits of e, whose value is k, r = a^k mod m; a further bit b gives a^(2k + b) = (a^k)^2 * a^b (Knuth TAOCP Vol. 2, 4.6.3).",
       "implementation": "implementations/square_multiply.py:modpow_square_multiply",
@@ -36,7 +36,7 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Repeated multiplication is linear in the VALUE of e, hence exponential, Theta(2^n), in its bit length n. Square-and-multiply reuses the powers a^(2^i) by squaring and needs at most 2n multiplications: Theta(n), polynomial (linear) in the input size.",
+  "relationship": "Repeated multiplication is linear in the VALUE of e, hence exponential, Theta(2^n), in its bit length n. Square-and-multiply reuses the powers a^(2^i) by squaring and needs at most 2n multiplications for e >= 1: Theta(n), polynomial (linear) in the input size.",
   "sources": [
     {
       "authors": "Knuth, D. E.",
@@ -65,6 +65,6 @@
       "source": "Knuth TAOCP Vol. 2 (1997), 4.6.3"
     }
   ],
-  "caveats": "Bit-size view: n is the bit length of e. In the VALUE e, repeated multiplication is linear; it is exponential only in the input length. The fixed 64-bit modulus makes every multiplication O(1); for a k-bit modulus multiply both costs by the cost M(k) of one k-bit modular multiplication. Square-and-multiply is within a factor 2 of the addition-chain lower bound; the 2^k-ary and sliding-window methods (Knuth 4.6.3) bring the count to n + O(n / log n).",
+  "caveats": "Bit-size view: n is the bit length of e. In the VALUE e, repeated multiplication is linear; it is exponential only in the input length. The fixed 64-bit modulus makes every multiplication O(1); for a k-bit modulus multiply both costs by the cost M(k) of one k-bit modular multiplication. Square-and-multiply is within a factor 2 of the addition-chain lower bound once its two trivial products (the first squaring of 1 and the first multiplication of 1 by a) are left out: (n - 1) + (popcount(e) - 1) <= 2(n - 1) <= 2 ceil(log2 e) for e >= 1; counting every executed multiplication, n + popcount(e) can exceed twice the bound (e = 2: 3 multiplications, bound 1); the 2^k-ary and sliding-window methods (Knuth 4.6.3) bring the count to n + O(n / log n).",
   "notes": "Same doubling idea as fast doubling in fibonacci-naive-vs-dp. Square-and-multiply is the inner loop of Miller-Rabin (see primality-miller-rabin-vs-aks), RSA and Diffie-Hellman."
 }

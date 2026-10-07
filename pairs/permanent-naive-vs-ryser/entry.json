@@ -45,7 +45,7 @@
   "secondary_tags": [
     "T8"
   ],
-  "relationship": "Super-exponential -> single exponential: Theta(n * n!) vs Theta(n 2^n), a verified improvement that stays exponential. No polynomial algorithm is expected: computing the permanent is #P-complete, even for 0/1 matrices (Valiant 1979), so a polynomial-time algorithm would give FP = #P and in particular P = NP. Glynn's formula (2010) gives the same Theta(n 2^n) bound as Ryser's.",
+  "relationship": "Super-exponential -> single exponential: Theta(n * n!) vs Theta(n 2^n), an improvement that stays exponential (the V2 check is a runtime fit). No polynomial algorithm is expected: computing the permanent is #P-complete, even for 0/1 matrices (Valiant 1979), so a polynomial-time algorithm would give FP = #P and in particular P = NP. Glynn's formula (2010) gives the same Theta(n 2^n) bound as Ryser's.",
   "sources": [
     {
       "authors": "Ryser, H. J.",

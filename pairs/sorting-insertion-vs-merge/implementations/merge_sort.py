@@ -1,6 +1,7 @@
 """Top-down merge sort: sort each half recursively, then merge. Theta(n log n) on every input.
 
-The recursion has ceil(log2 n) levels and the merges on each level touch every element once.
+The recursion merges on ceil(log2 n) levels (n >= 1), and the merges on each level touch every element at most once
+(exactly once when n is a power of two).
 """
 
 

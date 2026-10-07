@@ -44,7 +44,8 @@ Formally, one pair entry =
     - algorithm A_slow solving P with time complexity C_slow(n),
     - algorithm A_fast solving P with time complexity C_fast(n),
     - C_fast asymptotically better than C_slow,
-    - both PROVABLY correct on P.
+    - both correct on P (V1 tests this on a battery; a proof is part of
+      the entry only where the entry says so).
 
 WHAT IS NOT A PAIR (reject these):
     - A constant written two ways: "4 = 2^2 = 1+1+1+1". A number has no
@@ -68,8 +69,9 @@ PAIR TYPE TAGS (every entry must carry exactly one primary tag):
                                                rewritten as a wasteful one;
                                                LOW signal — see section 5)
     T8  SUPER-POLY -> FASTER SUPER-POLY.      (e.g. TSP n! -> n^2 2^n; added 2026-10)
-    T9  PROVEN QUANTUM ADVANTAGE (query /     (quantum algorithm + cited classical
-        oracle / black-box model).             lower bound; added 2026-10)
+    T9  QUANTUM SEPARATION (query /           (quantum algorithm + a classical
+        oracle / black-box model).             lower bound, cited or proved in
+                                               the entry; added 2026-10)
 
     Rule: if polynomial time is open, T6 is primary and the improvement goes
     in secondary_tags. "Validated pairs" = V1+ in /pairs/ with any of
@@ -93,7 +95,7 @@ possible, runnable implementations. entry.json fields:
                           space_complexity
                           correctness         (proof sketch or citation)
                           implementation      (path, or null)
-    pair_type           one of T1..T7
+    pair_type           one of T1..T9
     relationship        which algo improves which, and in what measure
     sources[]           citations: author, year, title, link/DOI
     verification        { level: V0..V3, method, artifacts[] }
@@ -107,14 +109,19 @@ Keep entry.json machine-readable. README.md is the human-friendly mirror.
 -------------------------------------------------------------------------------
     V0  CLAIMED        cited from a source, not independently checked.
     V1  CORRECT        both algorithms implemented; they agree with each other
-                       and with a reference oracle on a test battery.
-    V2  SCALING        empirical runtime measured across growing n; the measured
-                       growth matches the claimed asymptotics (log-log slope).
-    V3  PROVEN         a complexity proof is cited or linked; ideally a
-                       machine-checked proof.
+                       on a test battery, and with a reference oracle where
+                       the harness defines one.
+    V2  SCALING        runtime or an exact operation count measured across
+                       growing n; the log-log slope agrees with the claimed
+                       cost on the measured range (a measurement, not a proof;
+                       timing fits are conclusive only up to log factors).
+    V3  PROOF CITED    a complexity proof is cited or linked (a citation is
+                       credit, not an own proof); ideally a machine-checked
+                       proof.
 
-A pair counts as "validated" for the dataset only at V1 or higher AND with a
-complexity basis (a citation at minimum). V0 entries live in a staging area.
+A pair counts as "validated" for the dataset only at V1 or higher AND with at
+least one cited source (credit for the complexity claim; a citation is not a
+proof). V0 entries live in a staging area.
 The headline "number of validated pairs" counts V1+ only.
 
 
@@ -178,9 +185,10 @@ Pipeline:
 
 HONESTY WARNING — do not poison the dataset:
     Taking a cheap algorithm and rewriting it in a deliberately wasteful,
-    exponential form is FREE and produces T7 "bloated" pairs. A model trained
-    only on T7 learns to "un-bloat the obvious", which does NOT transfer to
-    genuinely hard problems. Therefore:
+    exponential form is FREE and produces T7 "bloated" pairs. We expect
+    (untested) that a model trained only on T7 learns to "un-bloat the
+    obvious", and that this does NOT transfer to genuinely hard problems.
+    Therefore:
       - T7 entries are allowed but MUST be tagged T7 and stored separately.
       - T7 does not count toward the "validated pairs" headline.
       - Signal for the moonshot comes from T1/T2/T3 discovered by real search,
@@ -198,8 +206,10 @@ Honest limits (these are not pessimism, they are facts):
     - A null result never proves impossibility: "found nothing" looks the same
       whether the door is hidden or there is no door.
     - A general machine that converts any exponential algorithm into a
-      polynomial one cannot exist (it would decide undecidable questions and
-      settle P vs NP). A neural net is still an algorithm and does not escape
+      polynomial one cannot exist: by the time hierarchy theorem
+      (Hartmanis-Stearns 1965; cited, not proved here), some problems
+      solvable in exponential time have no polynomial-time algorithm at all.
+      A neural net is still an algorithm and does not escape
       this; its only honest role is PROPOSER feeding an exact VERIFIER.
     - An approximately-correct proposal is not an algorithm; only exactly
       correct, verified programs enter the dataset.

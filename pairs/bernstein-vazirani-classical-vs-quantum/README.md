@@ -1,6 +1,6 @@
 # Bernstein–Vazirani: n classical queries vs 1 quantum query
 
-**Type:** T9 (proven quantum advantage, query model) · **Verification:** V2 (query counts)
+**Type:** T9 (quantum separation, query model) · **Verification:** V2 (query counts)
 
 **Problem.** f(x) = s·x mod 2 for a hidden n-bit string s. Find s.
 

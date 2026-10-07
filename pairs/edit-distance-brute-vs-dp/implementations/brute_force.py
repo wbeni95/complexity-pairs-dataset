@@ -1,6 +1,7 @@
 """Plain recursion over the three edit operations, no memoisation.
 
-The call tree for two length-n strings has Delannoy-number size D(n, n) ~ (3 + 2 sqrt 2)^n / sqrt(n).
+The call tree for two length-n strings has (3 D(n, n) - 1)/2 nodes, where D(n, n) is the central Delannoy
+number; D(n, n) = Theta((3 + 2 sqrt 2)^n / sqrt(n)).
 """
 
 

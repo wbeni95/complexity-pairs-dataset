@@ -50,7 +50,7 @@
       "source": "Bennett, Bernstein, Brassard & Vazirani 1997"
     }
   ],
-  "relationship": "Proven, tight quadratic separation in the query model: Theta(N) classically, Theta(sqrt N) quantumly. The quantum lower bound shows that a black-box quantum computer cannot solve NP-complete problems by brute-force search in polynomial time: generic quantum search buys a square root, not an exponential.",
+  "relationship": "Quadratic separation in the query model: Theta(N) classically, Theta(sqrt N) quantumly, by cited results: the classical Omega(N) bound, the quantum Omega(sqrt N) bound (Bennett, Bernstein, Brassard & Vazirani 1997) and Grover's success-probability law (Grover 1996) are not proved here. The cited quantum lower bound shows that a black-box quantum computer cannot solve NP-complete problems by brute-force search in polynomial time: generic quantum search buys a square root, not an exponential.",
   "sources": [
     {
       "authors": "Grover, L. K.",
@@ -69,7 +69,7 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both algorithms return the marked element (independently checked against the table) for n = 1..10 (Grover simulated exactly with lib/qsim.py) and up to 14 (classical). V2 measures QUERY COUNTS reported through lib.qsim.Oracle, averaged over random instances: classical fits 2^n and Grover fits 2^(n/2). Simulation time is exponential in n and is not the claim.",
+    "method": "V1: both algorithms return the marked element (independently checked against the table) for n = 1, ..., 6, 8, 10 (Grover simulated exactly with lib/qsim.py) and also 14 (classical). V2 measures QUERY COUNTS reported through lib.qsim.Oracle, averaged over random instances: classical fits 2^n and Grover fits 2^(n/2). Simulation time is exponential in n and is not the claim.",
     "artifacts": ["implementations/classical.py", "implementations/grover.py", "harness.py", "../../lib/qsim.py"]
   },
   "test_harness": {
@@ -78,5 +78,5 @@
     "trials": 4
   },
   "caveats": "A separation relative to an oracle; it does not imply BQP != BPP. The diffusion step is simulated as 'reflect about the mean' (2|u><u| - I), which equals H^n (2|0><0| - I) H^n and uses no oracle query. For tiny N (n = 1) one attempt succeeds only with probability 1/2, so the expected query count is above the asymptotic formula there.",
-  "notes": "Relevant to the classical-vs-quantum question in both directions: a proven quantum advantage, and a proven LIMIT on it (only quadratic for unstructured search)."
+  "notes": "Relevant to the classical-vs-quantum question in both directions: a quantum advantage, and a LIMIT on it (only quadratic for unstructured search), both resting on the cited theorems (see relationship and lower_bounds)."
 }

@@ -1,7 +1,8 @@
 """Compare every pair of positions: n(n-1)/2 equality tests when the values are distinct.
 
-The scan stops at the first equal pair, so the worst case (Theta(n^2)) is exactly the "all distinct"
-answer: every pair must be compared before the algorithm can say yes.
+The scan stops at the first equal pair, so every "all distinct" input costs the maximum n(n-1)/2 (Theta(n^2)):
+every pair must be compared before the algorithm can say yes. A no-instance whose only equal pair is the last pair
+scanned costs n(n-1)/2 as well.
 """
 
 

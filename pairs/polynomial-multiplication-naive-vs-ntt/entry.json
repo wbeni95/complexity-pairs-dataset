@@ -84,6 +84,6 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 7, 8, 9, 16, 17, 33, 100, 257],
     "trials": 3
   },
-  "caveats": "The V2 count sees only multiplications with an input-derived operand. Not counted: the NTT's twiddle-factor updates w * w_len (one per butterfly) and pow() calls, which work on plain ints the implementation creates from literals; the first-stage butterfly products whose operand is a padding zero; and all additions, subtractions and reductions mod p in both algorithms. In the NTT every counted butterfly product has a plain-int twiddle factor; only the 2n pointwise products have two input-derived operands.",
+  "caveats": "The V2 count sees only multiplications with an input-derived operand. Not counted: the NTT's twiddle-factor updates w * w_len (one per butterfly) and pow() calls, which work on plain ints the implementation creates from literals; the first-stage butterfly products whose operand is a padding zero; and all additions, subtractions and reductions mod p in both algorithms. In the NTT every counted butterfly product has a plain-int twiddle factor; only the pointwise products (2n of them for n a power of two, n >= 2) have two input-derived operands.",
   "notes": "Compare integer-multiplication-schoolbook-vs-karatsuba (n^2 -> n^1.585) and matrix-multiplication-naive-vs-strassen (n^3 -> n^2.807)."
 }

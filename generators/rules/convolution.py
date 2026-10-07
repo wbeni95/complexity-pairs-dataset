@@ -18,7 +18,8 @@ transform. The structure detector is preprocessing on the fixed operation (not c
 If no structure matches exactly, the rule still applies the transform of the best-scoring structure
 ("blind" application); the screen measures how close that gets (fraction of output coordinates correct).
 The repaired rule (`fast_repaired`) adds a sparse correction for the table entries that disagree with the
-structure: exact for every table, cost = transform + 2 |D| (|D| = number of disagreeing entries).
+structure: exact for every table, cost = transform + 3 |D| counted operations (one multiplication, one addition
+and one subtraction per disagreeing entry; |D| = number of disagreeing entries).
 
 Families generated (each with a random relabelling): xor, cyclic, prod, or, and, max, min, sat (structured);
 sub (i - j mod N), random, random_comm, latin (Latin squares isotopic to Z_N); perturbed_xor / _or / _cyclic
@@ -43,8 +44,8 @@ CATALOGUE = {
     "failure_mode": "no structure: non-associative or non-commutative tables, Latin squares that are not groups, or "
                     "perturbed tables; the transform of the nearest structure is then wrong on the outputs that the "
                     "disagreeing entries feed",
-    "repair": "transform + sparse correction over the disagreeing entries D: exact, cost N log N + 2|D|; beats naive iff "
-              "2|D| < 2N^2 - cost(transform)",
+    "repair": "transform + sparse correction over the disagreeing entries D: exact, cost = cost(transform) + 3|D| "
+              "counted operations; beats naive iff 3|D| < 2N^2 - cost(transform)",
     "literature": "Cooley-Tukey 1965 (doi:10.1090/S0025-5718-1965-0178586-1) [recalled]; Yates 1937 [recalled]; dataset "
                   "entries polynomial-multiplication-naive-vs-ntt, xor-convolution, subset-sum-zeta-transform",
 }

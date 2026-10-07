@@ -29,11 +29,13 @@ keywords:
   - matrix multiplication
 abstract: >-
   An open, machine-readable dataset of complexity pairs: computational problems for which two or more
-  provably correct algorithms of different asymptotic cost are recorded. Every entry carries an explicit
+  correct algorithms of different asymptotic cost are recorded. Every entry carries an explicit
   verification level that is enforced by the included validator: V1 for implementations that agree with
-  each other and an independent oracle, and V2 for measured growth (wall-clock time or exact operation
-  counts) that fits the claimed cost and rejects declared rival costs. Results, refutations, corrections
-  and null results are documented in a research log, with machine-recorded evidence for every validation run.
+  each other on a test battery (and with an independent oracle where the harness defines one), and V2 for
+  measured growth (wall-clock time or exact operation counts) that fits the claimed cost and rejects declared
+  rival costs. Proofs of correctness and cost are part of an entry only where the entry gives them. Results,
+  refutations, corrections and null results are documented in a research log, and recorded validation runs
+  store every measured value.
   Nearly all of the code, entries and documentation were written by an AI system (Claude, by Anthropic) under
   the author's direction; the author is responsible for the content, and the README section "How this project
   is made" describes the roles.

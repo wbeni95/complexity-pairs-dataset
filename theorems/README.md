@@ -34,11 +34,18 @@ of its README.
 not be accessed might already cover the result. The class is then provisional, and `pending_note` says which
 source is missing and what remains open. A pending note never claims more novelty than its class states.
 
+## The green check mark
+
+A note whose every claim has its proof in the note's own README, re-checked by its `verify.py`, carries the
+`proof` field in `meta.json` and shows **✅ Proved** in the tables. The criteria are the same as for entries
+([CONTRIBUTING.md](../CONTRIBUTING.md#the-green-check-mark-proved)): our own written proof of every claim,
+deterministic checks, and a logged audit. A citation in a note is credit, not part of the proof.
+
 ## Notes
 
 | Note | Provenance | Statement (short) |
 |---|---|---|
-| [no-integral-form-z-half-schemes](no-integral-form-z-half-schemes/) | literature | AlphaEvolve's ⟨2,4,5;32⟩ and Smirnov's ⟨3,3,6;40⟩ matrix multiplication schemes, both with coefficients in ℤ[1/2], have no equivalent form with integer coefficients. |
+| [no-integral-form-z-half-schemes](no-integral-form-z-half-schemes/) | literature | The ⟨2,4,5;32⟩ scheme of AlphaEvolve and the ⟨3,3,6;40⟩ scheme attributed to Smirnov, in the pinned files, both with coefficients in ℤ[1/2], have no equivalent form with integer coefficients. |
 | [knuth-window-concave-length-weights](knuth-window-concave-length-weights/) | literature, **pending** | Knuth's restricted root window is exact for the interval recurrence with concave nondecreasing length weights, under the largest and the smallest tie rule, with an explicit trajectory of chosen roots. |
 
 ## Running the checks

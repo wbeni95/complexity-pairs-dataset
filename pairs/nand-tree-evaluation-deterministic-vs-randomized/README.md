@@ -10,9 +10,10 @@ Answers must always be correct.
 | Deterministic left-first | 2ʰ = N | N (adversary argument, proved in the entry) | [left_first.py](implementations/left_first.py) |
 | Randomized random order (Snir) | Θ(λʰ) expected, λ = (1+√33)/4 ≈ 1.686, i.e. N^0.7537 | Ω(λʰ) for zero-error algorithms (Saks & Wigderson 1986) | [random_order.py](implementations/random_order.py) |
 
-**Why it's here.** Randomisation changes the exponent, and both bounds are proven optimal in their models: every
-deterministic algorithm must read all N leaves on some input, while a zero-error randomized algorithm needs only
-Θ(N^0.7537) reads in expectation. The tag follows RESEARCH_LOG RL-042: T4 primary, with T3 secondary because the
+**Why it's here.** Randomisation changes the exponent. Every deterministic algorithm must read all N leaves on some
+input (proved in the entry), while the zero-error randomized algorithm here needs only Θ(N^0.7537) reads in
+expectation, which is optimal for zero-error algorithms by the cited lower bound of Saks & Wigderson (1986; not proved
+here). The tag follows RESEARCH_LOG RL-042: T4 primary, with T3 secondary because the
 gap is polynomial to a smaller polynomial in N. The expected cost on the worst-case ("reluctant") inputs obeys
 R0(h) = 2R1(h−1), R1(h) = R0(h−1) + R1(h−1)/2, whose dominant eigenvalue is λ.
 

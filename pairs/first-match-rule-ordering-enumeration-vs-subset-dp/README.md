@@ -23,8 +23,8 @@ the hardness reduction below carry over unchanged.
 
 | Algorithm | Time (k rules, m items) | Space | Implementation |
 |---|---|---|---|
-| Enumeration of all k! orders | O(k!·k·m); exactly k!(k+1)(k+3)/3 − 1 counted operations on the V2 family | Θ(k + m) | [enumeration.py](implementations/enumeration.py) |
-| Dynamic programming over subsets of rules (Yee et al. 2007) | Θ(2^k·(k + m)) on every input; exactly 3k² + (7k−2)·2^(k−1) + 2 on the V2 family | Θ(2^k) | [subset_dp.py](implementations/subset_dp.py) |
+| Enumeration of all k! orders | O(k!·k·m); exactly k!(k+1)(k+3)/3 − 1 counted operations on the V2 family (k ≥ 2) | Θ(k) | [enumeration.py](implementations/enumeration.py) |
+| Dynamic programming over subsets of rules (Yee et al. 2007) | Θ(2^k·(k + m)) on every input; exactly 3k² + (7k−2)·2^(k−1) + 2 on the V2 family (k ≥ 2) | Θ(2^k) | [subset_dp.py](implementations/subset_dp.py) |
 
 **Why it works.** The DP is Algorithm 2 of Yee et al. (2007). They note that it is similar to the Held–Karp
 recurrence (1962), and they present it as turning a search over n! orders into a search over 2^n subsets. Its
@@ -37,7 +37,7 @@ then adds t costs, and t·2^(k−t) ≤ 2^(k−1), so the whole DP is Θ(2^k·(k
 same fact when it learns rule lists. Its equivalent-support bound and symmetry-aware map keep only the best
 ordering of each set of antecedents.
 
-**Why it stays exponential.** The problem is NP-hard. The reduction is the one Schmitt & Martignon (2006,
+**NP-hardness.** The problem is NP-hard. The reduction is the one Schmitt & Martignon (2006,
 Theorem 5) give for lexicographic cue orders, from feedback arc set (NP-complete, Karp 1972). Every arc u → v
 becomes an item that only u and v match, with cost 0 for u and 1 for v. An order then pays exactly for its backward
 arcs, and the minimum equals the minimum feedback arc set. When every item matches at most two rules, the problem

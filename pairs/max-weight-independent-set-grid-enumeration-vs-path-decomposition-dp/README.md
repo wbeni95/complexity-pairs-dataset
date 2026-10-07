@@ -58,7 +58,7 @@ flow method is not implemented here.
   integer type that counts additions on weight-derived values; comparisons are tallied separately and not
   included. The implementations are unchanged. The counts are exactly 3n·2^(3n−1) for exhaustive search (n = 1..6;
   the same formula N·2ᴺ⁻¹ holds on 77 random instances with any k, any diagonals and zero weights) and 10n − 5 for
-  the DP. The DP form n·P_k + (n − 1)·F_{k+2} holds on 420 random instances with n = 1..40, k = 1..6, every
+  the DP. The DP form n·P_k + (n − 1)·F_{k+2} holds on 420 random instances with n = 1, 4, ..., 40, k = 1..6, every
   diagonal pattern and positive weights.
 
 | Fit (tolerance 0.02) | α | Rivals (must not fit) |

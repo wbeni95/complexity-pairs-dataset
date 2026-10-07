@@ -16,7 +16,7 @@
 
 **Caveats.** Deterministic polynomial-time PIT is known for many restricted circuit classes (e.g. read-once formulas, bounded-depth special cases). AKS primality is a derandomization of one specific identity test, (X + a)^N = X^N + a.
 
-**Notes.** The canonical example where randomness is known to help and nobody can remove it. Compare primality-miller-rabin-vs-aks, where the derandomization succeeded.
+**Notes.** The canonical problem with a known randomized polynomial algorithm and no known deterministic one (that randomness is necessary here is not proved). Compare primality-miller-rabin-vs-aks, where the derandomization succeeded.
 
 **Verification.** Cited from the literature.
 

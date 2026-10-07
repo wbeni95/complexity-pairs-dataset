@@ -61,7 +61,7 @@
   "secondary_tags": [
     "T8"
   ],
-  "relationship": "Enumeration Theta(2^n n) -> meet in the middle Theta(2^(n/2) n): a verified exponential-to-better-exponential improvement (T8). The DP Theta(nW) beats both whenever W << 2^(n/2), but it is NOT polynomial in the input size: adding one bit to W adds one bit to the input yet doubles the DP's running time. No algorithm polynomial in the input size is known; 0/1 knapsack is NP-hard (Karp 1972), so one would imply P = NP.",
+  "relationship": "Enumeration Theta(2^n n) -> meet in the middle Theta(2^(n/2) n): an exponential-to-better-exponential improvement (T8), measured by V2 runtime fits (the meet-in-the-middle bound is not derived here). The DP Theta(nW) beats both whenever W << 2^(n/2), but it is NOT polynomial in the input size: adding one bit to W adds one bit to the input yet roughly doubles the DP's running time when W is much larger than the item weights. No algorithm polynomial in the input size is known; 0/1 knapsack is NP-hard (Karp 1972), so one would imply P = NP.",
   "sources": [
     {
       "authors": "Karp, R. M.",

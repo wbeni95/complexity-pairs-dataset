@@ -7,7 +7,7 @@ Input: a simple undirected graph on n ≥ 1 vertices as an n × n 0/1 adjacency 
 
 | Algorithm | Cost (n vertices, m edges) | Implementation |
 |---|---|---|
-| Try all (n−1)-edge subsets, union-find acyclicity test | O(n α(n) C(m, n−1)), Ω(n C(m, n−1)); on K_n C(n(n−1)/2, n−1) = 2^Θ(n log n) subsets | [enumeration.py](implementations/enumeration.py) |
+| Try all (n−1)-edge subsets, union-find acyclicity test | O(n² + n α(n) C(m, n−1)), Ω(n² + n C(m, n−1)); on K_n C(n(n−1)/2, n−1) = 2^Θ(n log n) subsets | [enumeration.py](implementations/enumeration.py) |
 | Kirchhoff's matrix-tree theorem, Bareiss fraction-free determinant | Θ(n³) arithmetic operations: exactly (n−2)(n−1)(2n−3)/2 multiplications and exact divisions on every connected graph | [kirchhoff_bareiss.py](implementations/kirchhoff_bareiss.py) |
 
 **Why it is here.** Listing is hopeless on dense graphs: K_n alone has n^(n−2) spanning trees (Cayley), and the

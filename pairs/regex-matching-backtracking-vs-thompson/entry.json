@@ -33,7 +33,7 @@
       "idea": "The same recursion with a table indexed by (atom index i, text position j): each of the at most (m + 1)(|t| + 1) subproblems is solved once.",
       "model": "classical-deterministic",
       "pseudocode": "as backtracking, but match(i, j) first looks (i, j) up in a dictionary and stores its result",
-      "time_complexity": "O((m + 1)(|t| + 1)) subproblems with O(1) work each (expected O(1) dictionary operations), i.e. O(n^2) for the stated n. On P_n exactly n(n + 1) symbol-character comparisons, Theta(n^2).",
+      "time_complexity": "O((m + 1)(|t| + 1)) subproblems with O(1) work each (O(1) dictionary operations, each counted as one step), i.e. O(n^2) for the stated n. On P_n exactly n(n + 1) symbol-character comparisons, Theta(n^2).",
       "space_complexity": "O(m |t|)",
       "correctness": "Same recursion as backtracking; the result of match(i, j) depends only on (i, j), so caching it does not change the answer. Count on P_n (proof): one comparison per distinct visited state (i, j) with i < m and j < |t| whose atom is a letter; the visited states are (i, j) with 0 <= j <= i < n (n(n+1)/2 comparisons) and the chains (n + s, j + s) with j + s < n (another n(n+1)/2).",
       "implementation": "implementations/memoized.py:match_memoized",
@@ -55,7 +55,7 @@
       "pseudocode": "S = closure({0}); for each character x of t: S = closure({i or i+1 : i in S, i < m, atom i matches x}); if S is empty: reject. Accept iff m in S. ('c*' stays at i, 'c' and 'c?' move to i + 1; closure follows optional atoms forward.)",
       "time_complexity": "O(m (|t| + 1)): at most m + 1 states per step with O(1) work each, plus an O(m) closure per step; O(n^2) for the stated n. On P_n exactly n(n + 1) symbol-character comparisons, Theta(n^2).",
       "space_complexity": "O(m)",
-      "correctness": "Thompson 1968. Invariant: after reading t[:j], S is exactly the set of atom positions i such that t[:j] fully matches atoms[:i] (closed under skipping optional atoms). Count on P_n (proof): the active set before reading character j + 1 is {j, ..., n + j} (n + 1 states, all < 2n), one comparison each, over n characters: n(n + 1).",
+      "correctness": "Thompson 1968. Invariant: after reading t[:j], S is exactly the set of atom positions i (0 <= i <= m) such that t[:j] fully matches atoms[:i] followed by c* when atom i is a starred atom c* (atoms[:i] alone otherwise); this set is closed under skipping optional atoms. Count on P_n (proof): the active set before reading character j + 1 is {j, ..., n + j} (n + 1 states, all < 2n), one comparison each, over n characters: n(n + 1).",
       "implementation": "implementations/thompson.py:match_thompson",
       "harness": {
         "scaling": {
@@ -96,6 +96,6 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 24],
     "trials": 6
   },
-  "caveats": "The exponential cost of backtracking is family-specific: on most patterns it is fast, and P_n is one witness family (both pattern and text grow with n). Counts are symbol-character comparisons; loop control, the epsilon-closure and dictionary operations are not counted (they are O(1) per counted comparison or per state, so the asymptotic claims are unaffected). Backreferences are excluded: they make the language non-regular and are handled by neither the NFA simulation nor this entry. Python's re is used only as the V1 oracle, never timed.",
+  "caveats": "The exponential cost of backtracking is family-specific: on most patterns it is fast, and P_n is one witness family (both pattern and text grow with n). Counts are symbol-character comparisons; loop control, the epsilon-closure and dictionary operations are not counted (they are O(1) per counted comparison or per state, so the asymptotic claims are unaffected). Backreferences are excluded: they can make the language non-regular and are handled by neither the NFA simulation nor this entry. Python's re is used only as the V1 oracle, never timed.",
   "notes": "Real backtracking engines add heuristics (and some memoise), but the consume-first depth-first strategy shown here is the classic source of 'catastrophic backtracking'. The memoised matcher and Thompson's simulation make the same number of comparisons on P_n, n(n + 1); they differ in that the simulation needs no table and reads the text strictly left to right once."
 }

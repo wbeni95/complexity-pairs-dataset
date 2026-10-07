@@ -18,7 +18,7 @@
 
 **Caveats.** Factoring is NOT known to be NP-hard and is in NP intersect coNP, so it is not believed to be NP-complete. Catalogued as OPEN (T6). This project does not target factoring operationally (START_HERE section 10).
 
-**Notes.** Central evidence for quantum advantage: a problem believed hard classically with a polynomial quantum algorithm. A classical polynomial algorithm would not contradict any proven theorem; it would only break the belief that factoring is hard (and much deployed cryptography).
+**Notes.** Central evidence for quantum advantage: a problem believed hard classically with a polynomial quantum algorithm. No theorem we know of rules out a classical polynomial algorithm; one would only break the belief that factoring is hard (and much deployed cryptography).
 
 **Verification.** Cited from the literature.
 

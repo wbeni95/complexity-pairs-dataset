@@ -40,7 +40,7 @@
   ],
   "pair_type": "T1",
   "secondary_tags": ["T6"],
-  "relationship": "Simplex (with the classical pivot rules) is exponential in the worst case; ellipsoid and interior-point methods are polynomial in the input bit length L.",
+  "relationship": "Simplex with Dantzig's pivot rule takes 2^n - 1 pivots on the Klee-Minty cube, so it is exponential in the worst case (cited); worst-case constructions for other pivot rules are not cited here. Ellipsoid and interior-point methods are polynomial in the input bit length L (cited).",
   "sources": [
     {
       "authors": "Dantzig, G. B.",

@@ -24,16 +24,16 @@ are limits of the fit itself, not of measurement noise.
 
 | Limit | Example from this dataset | Fit slope α (tolerance) | Fit accepts? | Shape diagnostic on an exact count of the true shape |
 |---|---|---|---|---|
-| Confirms only approximately | Strassen counts are n^log₂7; claim n^2.8 instead | 1.0026 (0.02) | yes | MISMATCH (polynomial_factor) |
+| Confirms only approximately | Strassen counts grow as n^log₂7 (exactly 7^k·16³ on n = 16·2^k); claim n^2.8 instead | 1.0026 (0.02) | yes | MISMATCH (polynomial_factor) |
 | Cannot see constants in the base | edit distance grows like (3+2√2)ⁿ/√n, base 5.8284…; claim 5.8ⁿ/√n | 1.0029 (0.03) | yes | MISMATCH (base), with the claim given exactly |
 | Cannot see polynomial corrections | the same count, claim (3+2√2)ⁿ without the 1/√n, on the entry's V2 grid n = 5..9 | 0.9585 (0.25) | yes | MISMATCH (polynomial_factor) |
 | Rejects only declared rivals | Fibonacci's naive recursion is Θ(φⁿ); claim 1.7ⁿ | 0.9069 (0.25) | yes | MISMATCH (base) |
-| Log factors | the NTT count is n(3 log₂n + 5); claim n, on the entry's V2 grid | 1.1107 (0.25) | yes | MISMATCH (log_power) |
+| Log factors | the NTT count is n(3 log₂n + 5) for n a power of two, n ≥ 2; claim n, on the entry's V2 grid | 1.1107 (0.25) | yes | MISMATCH (log_power) |
 
 The NTT row is rejected at the entry's actual tolerance of 0.03; the V2 fit then says only "the slope is off",
-not what is wrong. Earlier rounds measured the log-factor limit for the whole dataset: none of the 77 timing fits
-resolved a log factor (RL-048), and with perfect data none of the 44 timing grids could have done so at ±0.25
-(RL-082).
+not what is wrong. Earlier rounds measured the log-factor limit for the whole dataset: none of the 69 timing fits
+with a computable diagnostic resolved a log factor (RL-048, which gives the number as 77; that figure also counts 8
+exact-count fits), and with perfect data none of the 44 timing grids could have done so at ±0.25 (RL-082).
 
 ## What changes, and what does not
 
@@ -136,8 +136,8 @@ was never identified. Whatever was found is recorded in every case.
 
 ## Edge cases, and why they are handled this way
 
-- **Lower-order terms and parity effects.** Exact counts carry terms such as −n or (−1)ⁿ (KMP with m = n//2 counts
-  4n − 6 for even n and 4n − 7 for odd n). A root with the same modulus as the dominant root but a *lower*
+- **Lower-order terms and parity effects.** Exact counts carry terms such as −n or (−1)ⁿ (for n ≥ 6, KMP with
+  m = n//2 counts 4n − 6 for even n and 4n − 7 for odd n). A root with the same modulus as the dominant root but a *lower*
   multiplicity does not change the growth, and the dominance certificate accepts it exactly (cyclotomic test). Equal
   multiplicity (2ⁿ + (−2)ⁿ) is not accepted.
 - **Small-n irregularities and cutoffs.** A count that changes regime (a schoolbook cutoff, a degenerate pattern for

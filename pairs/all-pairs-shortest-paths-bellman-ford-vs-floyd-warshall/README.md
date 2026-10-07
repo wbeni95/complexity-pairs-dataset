@@ -12,8 +12,9 @@ shortest-path distance between every ordered pair of vertices (None if unreachab
 
 **Why it's a pair.** A single-source algorithm run n times recomputes, for every source, information
 that Floyd–Warshall shares across all sources: its recursion over the set of allowed intermediate
-vertices fills the whole matrix in n³ steps. The gain depends on density. With m = O(n) edges the two
-bounds coincide, so the pair is about dense graphs.
+vertices fills the whole matrix in n³ steps. The gain depends on density. With m = Θ(n) edges the two
+bounds coincide; Floyd–Warshall gains the factor m/n when m = ω(n) (the factor n on dense graphs), and for m = o(n)
+Bellman–Ford from every source is faster.
 
 **Early exit.** The usual "stop when a pass changes nothing" optimisation does not change Bellman–Ford's
 worst case. It does make random complete digraphs easy: a mean of 3.25 to 5.22 passes per source for

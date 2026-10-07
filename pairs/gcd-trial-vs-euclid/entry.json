@@ -56,7 +56,7 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree with each other and with math.gcd (used only as the oracle) on random pairs with max(a, b) of bit length n = 0..16, 32, 64, 256, 1024 and 4096 (trial divisors up to n = 16), including pairs with a large common factor and pairs with a zero. V2 uses consecutive Fibonacci numbers, the largest pair below 2^n: they are coprime (worst case for trial divisors) and Lame's worst case for Euclid. Trial divisors fit 2^n at n = 14..22. Euclid is timed at n = 4000..64000 bits against n^2, its bit complexity: at this size every division step on CPython's multi-digit integers costs Theta(n). The O(n) step count itself is not timed: at word size (n <= 64) wall-clock time is dominated by interpreter overhead and CPython's 30-bit digit boundaries (a trial fit against n gave alpha ~1.34), so it does not isolate the step count.",
+    "method": "V1: both implementations agree with each other and with math.gcd (used only as the oracle) on random pairs with max(a, b) of bit length n = 0..16, 32, 64, 256, 1024 and 4096 (trial divisors up to n = 16), including pairs with a large common factor and pairs with a zero. V2 uses consecutive Fibonacci numbers, the largest pair below 2^n: they are coprime (worst case for trial divisors) and Lame's worst case for Euclid. Trial divisors fit 2^n at n = 14..22. Euclid is timed at n = 4000..64000 bits against n^2; the fit is a measurement on these Fibonacci pairs, not a check of the O(n^2) bit-operation bound (the cost of a division step on CPython's multi-digit integers is not analysed here). The O(n) step count itself is not timed: at word size (n <= 64) wall-clock time is dominated by interpreter overhead and CPython's 30-bit digit boundaries (a trial fit against n gave alpha ~1.34), so it does not isolate the step count.",
     "artifacts": ["implementations/trial.py", "implementations/euclid.py", "harness.py"]
   },
   "test_harness": {
@@ -64,6 +64,6 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 32, 64, 256, 1024, 4096],
     "trials": 6
   },
-  "caveats": "Bit-size view: trial divisors are polynomial (linear) in the VALUE of the inputs and exponential only in their length. Euclid's O(n^2) bit cost assumes schoolbook division; subquadratic half-gcd algorithms (Knuth-Schonhage) reach O(M(n) log n). V2 times Euclid on numbers with thousands of bits, so it checks the bit-operation bound, not the O(n) division-step bound.",
+  "caveats": "Bit-size view: trial divisors are polynomial (linear) in the VALUE of the inputs and exponential only in their length. Euclid's O(n^2) bit cost assumes schoolbook division; subquadratic half-gcd algorithms (Knuth-Schonhage) reach O(M(n) log n). V2 times Euclid on numbers with thousands of bits; that fit is a measurement on Fibonacci pairs, not a check of the O(n^2) bit-operation bound, and the O(n) division-step bound is not measured at all.",
   "notes": "Euclid's algorithm (Elements, Book VII, c. 300 B.C.) is among the oldest nontrivial algorithms still in use; Lame's 1844 bound is often cited as one of the earliest worst-case analyses of an algorithm."
 }

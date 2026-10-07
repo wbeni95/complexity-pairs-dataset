@@ -13,8 +13,9 @@ n is the bit length of e.
 **Why it's a pair.** Multiplying by a, e times, is linear in the *value* of e and therefore exponential in its
 length. Squaring reuses a^(2^i) and turns each bit of e into at most two multiplications.
 
-**Lower bound.** In the addition-chain model at least ⌈log₂ e⌉ ≥ n − 1 multiplications are needed, so
-square-and-multiply is optimal up to a factor 2. Window methods get to n + O(n / log n).
+**Lower bound.** In the addition-chain model at least ⌈log₂ e⌉ ≥ n − 1 multiplications are needed (e ≥ 1). Without
+its two trivial products (1·1 and 1·a), square-and-multiply makes (n − 1) + (popcount(e) − 1) ≤ 2(n − 1) ≤ 2⌈log₂ e⌉
+multiplications, so it is optimal up to a factor 2 in that count. Window methods get to n + O(n / log n).
 
 **Caveat (input size).** The fixed modulus makes each multiplication O(1). For a k-bit modulus, multiply both
 costs by the cost of one k-bit modular multiplication.

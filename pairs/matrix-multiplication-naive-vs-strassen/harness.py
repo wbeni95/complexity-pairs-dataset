@@ -8,23 +8,24 @@ def generate(n, rng):
 
 
 def check(instance, output):
-    """Freivalds-style spot check: A(Bx) == Cx for a random 0/1 vector x (independent of both algorithms)."""
-    import random
+    """Exact check, independent of both algorithms: recompute every entry of A·B as a dot product of a row of A
+    with a column of B and compare it with the output (deterministic; no sampling)."""
     A, B = instance
     n = len(A)
     if n == 0:
         return output == []
-    x = [random.Random(n).randint(0, 1) for _ in range(n)]
-    Bx = [sum(B[i][j] * x[j] for j in range(n)) for i in range(n)]
-    ABx = [sum(A[i][j] * Bx[j] for j in range(n)) for i in range(n)]
-    Cx = [sum(output[i][j] * x[j] for j in range(n)) for i in range(n)]
-    return ABx == Cx
+    if len(output) != n or any(len(row) != n for row in output):
+        return False
+    columns = list(zip(*B))
+    return all(output[i][j] == sum(a * b for a, b in zip(A[i], columns[j]))
+               for i in range(n) for j in range(n))
 
 
 # --- Exact multiplication counting for V2 (measure: "reported") -------------------------------------
 # Wall-clock timing cannot separate n^3 from n^2.807 at feasible sizes (RESEARCH_LOG RL-006). Instead the
 # scaling instances use a number type that counts every scalar multiplication the UNCHANGED implementations
-# perform (padding zeros included), and reported_cost returns that count.
+# perform with at least one instrumented operand (a product of two padding zeros is not counted; the V2 sizes are
+# powers of two, where no padding occurs), and reported_cost returns that count.
 
 _mults = 0
 

@@ -42,12 +42,18 @@ problem, and the cost is measured, never assumed.
   q = (0,0,0,1) (recursion 3, Knuth 2). Among the tested selective structures, it survives exactly on the absorptive
   ones. Its literature status is [recalled]; we did not read Knuth 1971 or Yao 1980 beyond their bibliographic records.
 
+*Correction (2026-10-07):* the "needs" and "only" statements above are separations observed on the 6–13 structures
+tested per algorithm (§4: correlation, not proof), not proved conditions. For example, for the left-to-right
+powering method `generators/rules/magma_power.py` argues that the weaker square condition p_a·p_a = p_2a is what is
+needed, so "needs power-associativity" is not shown. "Every survival … is a known fact" is a belief: the literature
+status in §8 is recalled, with only bibliographic records checked.
+
 ## 2. What was built
 
 | Module | Content |
 |---|---|
 | `mutations/algebra.py` | 12 semirings and probes: Z, Z7, GF2, (min,+), (max,+), (max,min), (min,max), Bool, Viterbi = (max,×) on [0,1], (min,×) on Z>0, (max,×) on Z with negatives (not a semiring), and (min,+) with negatives. Also 10 ⊕-monoids/magmas (Sum, Min, Max, Xor, Or, And, Gcd, Concat, Minus, LeftZero), 8 ⊗-magmas (MulMod, AddMod, Min, Circle, Mat2, Octonion, Skew, CommNA) and Z_p for p = 998244353, 7681, 97, 17, 1000003. Element wrappers: `make_ring_elem` for (+,×)-origin code and `make_tropical_elem` for (min/max,+)-origin code, where `+` means ⊗ and `<` is the ⊕-order, checked for selectivity at run time. `Rev` reverses comparisons. `check_properties` tests the algebraic laws. |
-| `mutations/rewrite.py` | `load_copy`: source → AST → targeted transforms → fresh module object. Transforms: compare flip, call swap, `sorted(reverse=True)`, selection → ⊕ (IfExp), relaxation → ⊕-accumulation, module-constant swap, expression replace (sentinel flip). A pattern that matches nothing raises an error, so silent no-op mutants cannot occur. |
+| `mutations/rewrite.py` | `load_copy`: source → AST → targeted transforms → fresh module object. Transforms: compare flip, call swap, `sorted(reverse=True)`, selection → ⊕ (IfExp), relaxation → ⊕-accumulation, module-constant swap, expression replace (sentinel flip). A pattern that matches nothing raises an error, so silent no-op mutants cannot occur (*correction 2026-10-07: a matched pattern can still leave the code unchanged, e.g. a compare flip on `==`; see the module docstring*). |
 | `mutations/engine.py` | `Mutant`, differential testing on seeded instances, a 5 s per-call watchdog, shrinking (smallest failing size first, then simpler values), classification, NEAR-MISS flags, and cost fitting. Fitting **imports** `tools/validate.py` (`fit_slope`, `eval_cost`), which is not modified. |
 | `mutations/oracles.py` | Generic brute-force oracles over any structure: ⊕ over simple paths, over spanning trees and over subarrays; max cut; longest simple path. |
 | `mutations/targets.py` | The 369 mutants: 14 OPSWAP builders and 1 MIRROR builder. |
