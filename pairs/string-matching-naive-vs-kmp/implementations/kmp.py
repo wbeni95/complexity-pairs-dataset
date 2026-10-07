@@ -2,8 +2,10 @@
 
 fail[q] = length of the longest proper border (prefix that is also a suffix) of pattern[:q + 1].
 On a mismatch after q matched characters, the next alignment worth trying keeps fail[q - 1] of them,
-so no text character is ever re-read. Each step either advances the text position or strictly
-shrinks q, which bounds the total work by 2n (scan) + 2m (failure table).
+so no text character is ever re-read. Per text character the scan makes one comparison in the if test
+after the while loop and at most one failing while test; every succeeding while test strictly shrinks q,
+which grows by at most 1 per character. This bounds the comparisons by 3n (scan) + 3(m - 1) (failure
+table, by the same argument); T = a^n, P = a^(m-1) b (m >= 3, n >= m - 1) attains 3n - m and 3m - 6.
 """
 
 

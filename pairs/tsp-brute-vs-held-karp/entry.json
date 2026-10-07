@@ -42,7 +42,7 @@
     }
   ],
   "pair_type": "T6",
-  "relationship": "Factorial -> single exponential: n! vs n^2 2^n. A real, large improvement that still stays exponential. No polynomial algorithm is known; TSP is NP-hard, so one would imply P = NP. Held-Karp's 2^n base has not been improved for general (asymmetric, unbounded-weight) TSP in over 60 years.",
+  "relationship": "Factorial -> single exponential: n! vs n^2 2^n. A real, large improvement that still stays exponential. No polynomial algorithm is known; TSP is NP-hard, so one would imply P = NP.",
   "sources": [
     {
       "authors": "Held, M.; Karp, R. M.",

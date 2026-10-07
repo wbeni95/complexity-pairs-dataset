@@ -12,7 +12,7 @@
       "idea": "f(e_i) is the i-th bit of s.",
       "model": "classical-deterministic",
       "pseudocode": "for i in 0..n-1: s_i = f(e_i)",
-      "time_complexity": "n queries (optimal classically, even for randomized algorithms)",
+      "time_complexity": "n queries (optimal classically, also for randomized algorithms that succeed with probability > 1/2)",
       "space_complexity": "O(n)",
       "correctness": "f(e_i) = s_i by definition.",
       "implementation": "implementations/classical.py:bv_classical",

@@ -7,7 +7,7 @@
 | Algorithm | Time (n vertices) | Implementation |
 |---|---|---|
 | Subset DP over all independent sets | Θ(3ⁿ): exactly 3ⁿ − 2ⁿ inner iterations | [subset_dp.py](implementations/subset_dp.py) |
-| Inclusion–exclusion (Björklund–Husfeldt–Koivisto 2009) | (2χ + 2)·2ⁿ arithmetic operations = O(n·2ⁿ) unit-cost | [inclusion_exclusion.py](implementations/inclusion_exclusion.py) |
+| Inclusion–exclusion (Björklund–Husfeldt–Koivisto 2009) | (2χ + 2)·2ⁿ − 2 arithmetic operations = O(n·2ⁿ) unit-cost | [inclusion_exclusion.py](implementations/inclusion_exclusion.py) |
 
 **What exactly is implemented.** The DP removes one independent set T ⊆ S at a time and lets T range over
 *all* independent subsets of S, which gives Σ_S 2^|S| = 3ⁿ. Lawler (1976) lets T range only over

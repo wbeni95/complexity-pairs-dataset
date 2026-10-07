@@ -36,7 +36,7 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Plain recursion is Theta(3^n) (full enumeration of parenthesisations would be Catalan, ~4^n / n^1.5); memoising the Theta(n^2) subchains gives Theta(n^3). Hu and Shing later reached O(n log n), a further T3 improvement.",
+  "relationship": "Plain recursion is Theta(3^n) (full enumeration of parenthesisations would be Catalan, ~4^n / n^1.5); memoising the Theta(n^2) subchains gives Theta(n^3). Hu and Shing (1982, 1984) gave an O(n log n) algorithm, a further T3 improvement. Schwartz & Weiss (2019) show that its original correctness proof is wrong; their abstract states that they 'present an alternative proof for the correctness of the first two algorithms' they discuss.",
   "sources": [
     {
       "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
@@ -59,6 +59,14 @@
       "title": "Computation of Matrix Chain Products. Part II",
       "venue": "SIAM Journal on Computing 13(2), 228-251",
       "doi": "10.1137/0213017"
+    },
+    {
+      "authors": "Schwartz, O.; Weiss, E.",
+      "year": 2019,
+      "title": "Revisiting \"Computation of Matrix Chain Products\"",
+      "venue": "SIAM Journal on Computing 48(5), 1481-1486",
+      "doi": "10.1137/18M1195401",
+      "note": "Only the abstract (Crossref record) was consulted. It states that the correctness proof of Hu and Shing's O(N log N) algorithm is wrong and that the authors present an alternative proof for the correctness of the first two algorithms."
     }
   ],
   "verification": {
@@ -72,5 +80,5 @@
     "trials": 5
   },
   "caveats": "Dimensions are small integers, so arithmetic is unit cost.",
-  "notes": "A faster known algorithm exists (Hu-Shing, O(n log n)); it is not implemented in this entry."
+  "notes": "A faster known algorithm exists (Hu-Shing, O(n log n); on its correctness proof see Schwartz & Weiss 2019 in the relationship); it is not implemented in this entry."
 }

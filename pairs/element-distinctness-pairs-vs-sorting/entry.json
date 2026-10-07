@@ -44,7 +44,7 @@
       "source": "Ben-Or 1983"
     }
   ],
-  "relationship": "Theta(n^2) -> Theta(n log n). Sorting brings equal values together, so n - 1 neighbour comparisons replace n(n-1)/2 pair comparisons. In the algebraic computation tree model, Theta(n log n) is optimal (Ben-Or 1983), so sorting-based algorithms are optimal there.",
+  "relationship": "Theta(n^2) -> Theta(n log n). Sorting brings equal values together, so n - 1 neighbour comparisons replace n(n-1)/2 pair comparisons. In the algebraic computation tree model on real-valued inputs, Theta(n log n) is optimal (Ben-Or 1983), so sorting-based algorithms are optimal there; the caveats discuss this entry's integer inputs.",
   "sources": [
     {
       "authors": "Ben-Or, M.",

@@ -74,7 +74,7 @@
         {
           "name": "Hungarian method (shortest augmenting paths with potentials)",
           "model": "classical-deterministic",
-          "time_complexity": "O(n^3) worst case (at most n search steps of Theta(n) per inserted row); Theta(n^3) on the column-dominant family used for timing",
+          "time_complexity": "O(n^3) worst case (at most n search steps of Theta(n) per inserted row); Theta(n^3) growth measured on the column-dominant family used for timing (this entry gives no proof)",
           "implemented": true
         }
       ],
@@ -351,7 +351,7 @@
           "implemented": true
         }
       ],
-      "sources": 3
+      "sources": 4
     },
     {
       "id": "max-weight-independent-set-grid-enumeration-vs-path-decomposition-dp",
@@ -374,7 +374,7 @@
         {
           "name": "DP over the columns (path decomposition of width 2k-1)",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(F_{k+2}^2 n) = Theta(phi^(2k) n) word operations (F_{k+2}^2 compatibility tests per column; F_{k+2} = 2, 3, 5, 8, 13, 21 for k = 1..6): Theta(n) for every fixed k, exponential in k. Weight additions: exactly n P_k + (n-1) F_{k+2} on every instance with positive weights, where P_k is the total number of rows over all column states; 10n - 5 for k = 3 (P_3 = 5, F_5 = 5), the V2 family.",
+          "time_complexity": "Theta(F_{k+2}^2 n) = Theta(phi^(2k) n) word operations (F_{k+2}^2 compatibility tests per column; F_{k+2} = 2, 3, 5, 8, 13, 21 for k = 1..6): Theta(n) for every fixed k, exponential in k. Weight additions: exactly n P_k + (n-1) F_{k+2} on every instance with n >= 1 and positive weights, where P_k is the total number of rows over all column states; 10n - 5 for k = 3 (P_3 = 5, F_5 = 5), the V2 family.",
           "implemented": true
         }
       ],
@@ -466,7 +466,7 @@
         {
           "name": "plain recursion",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(3^n) on every input: exactly 3^n calls and (3^(n-1) - 1)/2 cost comparisons for n >= 1",
+          "time_complexity": "Theta(3^n) on every input: exactly 3^n calls (n >= 0) and (3^(n-1) - 1)/2 cost comparisons (n >= 1)",
           "implemented": true
         },
         {
@@ -478,7 +478,7 @@
         {
           "name": "Knuth's speed-up (monotone roots)",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(n^2) on every input. Upper bound: for each length L >= 2 the range widths telescope, sum_i (r[i+1][i+L] - r[i][i+L-1] + 1) = (n - L + 1) + r[n-L+1][n] - r[0][L-1] <= 2n - L; lower bound: n(n+1)/2 intervals, each doing at least one candidate. Exactly sum_{L=2..n} (r[n-L+1][n] - r[0][L-1]) <= (n-1)^2 cost comparisons, with equality on the V2 family (two heavy end keys).",
+          "time_complexity": "Theta(n^2) on every input. Upper bound: for each length L >= 2 the range widths telescope, sum_i (r[i+1][i+L] - r[i][i+L-1] + 1) = (n - L + 1) + r[n-L+1][n] - r[0][L-1] <= 2n - L; lower bound: n(n+1)/2 intervals, each doing at least one candidate. Exactly sum_{L=2..n} (r[n-L+1][n] - r[0][L-1]) <= (n-1)^2 cost comparisons, with equality on the V2 family (two heavy end keys) for n >= 1.",
           "implemented": true
         }
       ],
@@ -565,7 +565,7 @@
         {
           "name": "Dijkstra (array version)",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(n^2) with an array (optimal for dense input); O(m + n log n) with Fibonacci heaps",
+          "time_complexity": "Theta(n^2) with an array (linear in the n x n weight-matrix input); O(m + n log n) with Fibonacci heaps",
           "implemented": true
         }
       ],
@@ -694,13 +694,13 @@
         {
           "name": "Kuhn's augmenting paths (one DFS per left vertex)",
           "model": "classical-deterministic",
-          "time_complexity": "O(V (V + E)), i.e. O(V E) when E = Omega(V): one O(V + E) search per left vertex. Theta(V E) on the adversarial timing family: 0.143-0.145 V E edge scans for k = 4..16",
+          "time_complexity": "O(V (V + E)), i.e. O(V E) when E = Omega(V): one O(V + E) search per left vertex. measured on the adversarial timing family G_k for k = 4..16: 0.143-0.145 V E edge scans (V E = Theta(V^3) there; this entry gives no proof for all k)",
           "implemented": true
         },
         {
           "name": "Hopcroft-Karp",
           "model": "classical-deterministic",
-          "time_complexity": "O((V + E) sqrt(V)): O(sqrt(V)) phases (Hopcroft & Karp 1973), O(V + E) each; O(V^2.5) on dense graphs (the paper's title bound). Theta(E sqrt V) on the adversarial timing family: exactly k + 1 phases and 1.01-1.05 E sqrt(V) edge scans for k = 4..16",
+          "time_complexity": "O((V + E) sqrt(V)): O(sqrt(V)) phases (Hopcroft & Karp 1973), O(V + E) each; O(V^2.5) on dense graphs (the paper's title bound). measured on the adversarial timing family G_k for k = 4..16: k + 1 phases and 1.01-1.05 E sqrt(V) edge scans (this entry gives no proof for all k)",
           "implemented": true
         }
       ],
@@ -989,7 +989,7 @@
         {
           "name": "zeta transform, pointwise product, Moebius transform",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(n * 2^n) = Theta(N log N): exactly 3n 2^(n-1) additions and subtractions plus 2^n multiplications, (3n + 2) 2^(n-1) ring operations for n >= 1.",
+          "time_complexity": "Theta(n * 2^n) = Theta(N log N): exactly 3n 2^(n-1) additions and subtractions plus 2^n multiplications, (3n + 2) 2^(n-1) ring operations for every n >= 0.",
           "implemented": true
         }
       ],
@@ -1016,7 +1016,7 @@
         {
           "name": "number-theoretic transform (Cooley-Tukey over Z_p)",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(n log n). Exact count used for V2: 3 n log2(n) + 5 n multiplications on input-derived values for n a power of two (see verification.method)",
+          "time_complexity": "Theta(n log n). Exact count used for V2: 3 n log2(n) + 5 n multiplications on input-derived values for n a power of two with n >= 2 (n = 1 gives 2; see verification.method)",
           "implemented": true
         }
       ],
@@ -1104,7 +1104,7 @@
         {
           "name": "Knuth-Morris-Pratt",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(n + m) on every input: at most 2n comparisons in the scan and 2m to build the failure table (amortised: each comparison either advances the text position or shrinks the matched length); Theta(n) when m = Theta(n)",
+          "time_complexity": "Theta(n + m) on every input: at most 3n comparisons in the scan and 3(m - 1) to build the failure table (this implementation compares the current character again in the if test after the while loop: per text character one if test and at most one failing while test, and every succeeding while test shrinks the matched length, which grows by at most 1 per character; the failure table is the same argument over the pattern). The bounds are tight up to lower-order terms: T = a^n, P = a^(m-1) b with m >= 3 and n >= m - 1 gives 3n - m and 3m - 6. Theta(n) when m = Theta(n)",
           "implemented": true
         }
       ],
@@ -1290,7 +1290,7 @@
         {
           "name": "Schöning's random walk (Monte Carlo, one-sided error)",
           "model": "classical-randomized",
-          "time_complexity": "O(T(n) n m) with T(n) = ceil(ln(10^6) / p(n)) = Theta((4/3)^n sqrt(n)) tries: O((4/3)^n n^1.5 m) on every input, attained on unsatisfiable formulas; p(n) is the per-try success lower bound in caveats",
+          "time_complexity": "O(T(n) n m) with T(n) = ceil(ln(10^6) / p(n)) = Theta((4/3)^n sqrt(n)) tries: O((4/3)^n n^1.5 m) on every input; on unsatisfiable formulas every try runs to the end, i.e. all T(n)(3n + 1) clause scans, each stopping at the first falsified clause (between 1 and m clause checks); p(n) is the per-try success lower bound in caveats",
           "implemented": true
         }
       ],
@@ -1319,7 +1319,7 @@
         {
           "name": "inclusion-exclusion (Bjorklund-Husfeldt-Koivisto)",
           "model": "classical-deterministic",
-          "time_complexity": "(2 chi(G) + 2) 2^n arithmetic operations: one pass of two additions per subset to tabulate a, then chi(G) rounds of one multiplication and one addition per subset. The integers have at most n chi(G) bits. That is O(n 2^n) arithmetic operations in the unit-cost model (chi(G) <= n), Theta(n 2^n) whenever chi(G) = Theta(n), and O(n^4 2^n) bit operations with schoolbook multiplication",
+          "time_complexity": "(2 chi(G) + 2) 2^n - 2 arithmetic operations: one pass of two additions per non-empty subset to tabulate a, then chi(G) rounds of one multiplication and one addition per subset. The integers have at most n chi(G) bits. That is O(n 2^n) arithmetic operations in the unit-cost model (chi(G) <= n), Theta(n 2^n) whenever chi(G) = Theta(n), and O(n^4 2^n) bit operations with schoolbook multiplication",
           "implemented": true
         }
       ],
@@ -1342,19 +1342,19 @@
         {
           "name": "permutation enumeration",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(n!) arc tests in the worst case: exactly n! on the complete digraph (the V2 family), where no test fails; at least (n-1)! orders are generated on every input.",
+          "time_complexity": "Theta(n!) arc tests in the worst case: exactly n! on the complete digraph with n >= 2 (the V2 family), where no test fails; at least (n-1)! orders are generated on every input.",
           "implemented": true
         },
         {
           "name": "inclusion-exclusion over vertex subsets",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(n^3 2^n). Exactly, on every input with n >= 2 vertices: n(n-1)(n+2)2^(n-3) multiplications and n(n-1)(n+2)2^(n-3) + 2^(n-1) - 1 additions/subtractions, in total n(n-1)(n+2)2^(n-2) + 2^(n-1) - 1 operations (for |T| = t the DP makes n steps of t(t-1) products and t(t-1) additions, and sum over S of (|S|+1)|S| = (n-1)(n+2)2^(n-3); the extra 2^(n-1) - 1 are the signed accumulations, the one for T = {0} adds a plain 0).",
+          "time_complexity": "Theta(n^3 2^n). Exactly, on every input with n >= 1 vertices: n(n-1)(n+2)2^(n-3) multiplications and n(n-1)(n+2)2^(n-3) + 2^(n-1) - 1 additions/subtractions, in total n(n-1)(n+2)2^(n-2) + 2^(n-1) - 1 operations (for |T| = t the DP makes n steps of t(t-1) products and t(t-1) additions, and sum over S of (|S|+1)|S| = (n-1)(n+2)2^(n-3); the extra 2^(n-1) - 1 are the signed accumulations, the one for T = {0} adds a plain 0).",
           "implemented": true
         },
         {
           "name": "Held-Karp counting DP",
           "model": "classical-deterministic",
-          "time_complexity": "Theta(n^2 2^n). Exactly, on every input with n >= 2 vertices: (n-1)(n-2)2^(n-3) + (n-1) multiplications and as many additions, in total (n-1)(n-2)2^(n-2) + 2(n-1) operations (a set S of size s >= 2 costs s(s-1) products, sum over s of C(n-1, s) s(s-1) = (n-1)(n-2)2^(n-3), plus n-1 closing products).",
+          "time_complexity": "Theta(n^2 2^n). Exactly, on every input with n >= 1 vertices: (n-1)(n-2)2^(n-3) + (n-1) multiplications and as many additions, in total (n-1)(n-2)2^(n-2) + 2(n-1) operations (a set S of size s >= 2 costs s(s-1) products, sum over s of C(n-1, s) s(s-1) = (n-1)(n-2)2^(n-3), plus n-1 closing products).",
           "implemented": true
         }
       ],
@@ -1475,7 +1475,7 @@
         {
           "name": "classical: query the unit vectors",
           "model": "classical-deterministic",
-          "time_complexity": "n queries (optimal classically, even for randomized algorithms)",
+          "time_complexity": "n queries (optimal classically, also for randomized algorithms that succeed with probability > 1/2)",
           "implemented": true
         },
         {

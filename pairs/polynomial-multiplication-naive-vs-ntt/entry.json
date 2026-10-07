@@ -32,7 +32,7 @@
       "idea": "Evaluate A and B at the 2^k-th roots of unity in Z_p with a radix-2 FFT, multiply pointwise, and interpolate with the inverse transform.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(n log n). Exact count used for V2: 3 n log2(n) + 5 n multiplications on input-derived values for n a power of two (see verification.method)",
+      "time_complexity": "Theta(n log n). Exact count used for V2: 3 n log2(n) + 5 n multiplications on input-derived values for n a power of two with n >= 2 (n = 1 gives 2; see verification.method)",
       "space_complexity": "Theta(n)",
       "correctness": "The DFT over Z_p diagonalises cyclic convolution. p - 1 = 119 * 2^23, so primitive 2^k-th roots of unity exist for k <= 23 (sizes up to 2^23), and padding to size >= 2n - 1 makes cyclic convolution equal to the ordinary product (Cooley & Tukey 1965 for the FFT recursion).",
       "implementation": "implementations/ntt.py:polymul_ntt",

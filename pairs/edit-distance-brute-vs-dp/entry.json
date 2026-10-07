@@ -87,7 +87,7 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 20, 100],
     "trials": 5
   },
-  "caveats": "The recursion analysed here always branches three ways; skipping to d(i+1, j+1) on a character match is a valid optimisation that makes the cost input-dependent. Conditional lower bound: no O(n^(2-eps)) algorithm unless SETH fails (Backurs-Indyk), so the DP is essentially optimal up to log factors.",
+  "caveats": "The recursion analysed here always branches three ways; skipping to d(i+1, j+1) on a character match is a valid optimisation that makes the cost input-dependent. Conditional lower bound: no O(n^(2-eps)) algorithm unless SETH fails (Backurs-Indyk), so under SETH the DP is optimal up to sub-polynomial factors.",
   "notes": "Pair with lcs-brute-vs-dp: same DP template, different scoring.",
   "lower_bounds": [
     {

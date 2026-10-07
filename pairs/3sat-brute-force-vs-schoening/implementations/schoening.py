@@ -18,8 +18,9 @@ Error control: T(n) = ceil(ln(1/DELTA) / p(n)) independent tries. A satisfiable 
 unsatisfiable with probability <= (1 - p(n))^T(n) <= exp(-p(n) T(n)) <= DELTA = 10^-6. An unsatisfiable
 formula is always reported unsatisfiable (no try can succeed).
 
-Cost: at most T(n) (3n + 1) clause scans of O(m) each: O((4/3)^n sqrt(n) n m) time on every input, attained
-on unsatisfiable formulas, where every try runs to the end.
+Cost: at most T(n) (3n + 1) clause scans of O(m) each: O((4/3)^n sqrt(n) n m) time on every input. On
+unsatisfiable formulas every try runs to the end (all T(n) (3n + 1) scans); a scan stops at the first falsified
+clause, so how many of the m clauses it checks depends on the formula.
 
 Uses the global `random` module (the validator re-seeds it before every call, so runs are reproducible).
 Formula format as in brute_force.py. Returns True iff a satisfying assignment was found.

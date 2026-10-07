@@ -36,7 +36,7 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "Both polynomial: Theta(n^2) -> Theta(n log n). Divide and conquer is optimal in the algebraic computation-tree model, where element uniqueness (and hence closest pair, whose answer is 0 exactly when two points coincide) needs Omega(n log n) (Ben-Or 1983). Allowing randomization and the floor function (grid hashing) gives expected O(n) (Rabin 1976; Khuller & Matias 1995), outside that model.",
+  "relationship": "Both polynomial: Theta(n^2) -> Theta(n log n). Divide and conquer is optimal up to a constant factor among algebraic computation trees on real-valued inputs, where element uniqueness (and hence closest pair, whose answer is 0 exactly when two points coincide) needs Omega(n log n) (Ben-Or 1983). Ben-Or's theorem is about real-valued inputs; it does not by itself give a lower bound for the integer coordinates used here. Allowing randomization and the floor function (grid hashing) gives expected O(n) (Rabin 1976; Khuller & Matias 1995), outside that model.",
   "sources": [
     {
       "authors": "Shamos, M. I.; Hoey, D.",
@@ -84,6 +84,6 @@
     "v1_sizes": [2, 3, 4, 5, 6, 7, 8, 9, 16, 17, 33, 100, 500, 3000],
     "trials": 5
   },
-  "caveats": "Squared distances on integer coordinates keep everything exact; with floating-point coordinates the same algorithm works but comparisons are subject to rounding. V2 counts multiplications, not time: 61.5% to 66.5% of the divide-and-conquer count (n = 1000..64000) is the strip filter's one squaring per point per recursion level (n per level over about log2 n levels); the comparisons of the initial sort and of the merges are not counted. The earlier timing fit could not distinguish n log n from n over the measured range (the log factor varies by only ~1.6x); the exact counts do. The Omega(n log n) lower bound holds in the algebraic computation-tree model and does not apply to the randomized grid-hashing algorithms.",
+  "caveats": "Squared distances on integer coordinates keep everything exact; with floating-point coordinates the same algorithm works but comparisons are subject to rounding. V2 counts multiplications, not time: 61.5% to 66.5% of the divide-and-conquer count (n = 1000..64000) is the strip filter's one squaring per point per recursion level (n per level over about log2 n levels); the comparisons of the initial sort and of the merges are not counted. The earlier timing fit could not distinguish n log n from n over the measured range (the log factor varies by only ~1.6x); the exact counts do. The Omega(n log n) lower bound holds for algebraic computation trees on real-valued inputs; it is not a theorem about this entry's integer inputs, and it does not apply to the randomized grid-hashing algorithms.",
   "notes": "The same divide-and-conquer pattern extends to d dimensions in O(n log n) for fixed d (Bentley & Shamos 1976)."
 }

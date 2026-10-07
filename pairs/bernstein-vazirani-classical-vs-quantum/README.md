@@ -6,7 +6,7 @@
 
 | Algorithm | Model | Queries | Implementation |
 |---|---|---|---|
-| Query the unit vectors | classical | n (optimal, even randomized) | [classical.py](implementations/classical.py) |
+| Query the unit vectors | classical | n (optimal, also randomized with success > 1/2) | [classical.py](implementations/classical.py) |
 | Bernstein–Vazirani | quantum | **1** | [quantum.py](implementations/quantum.py) |
 
 **Proven gap.** Each classical query returns one bit, and s carries n bits, so any classical algorithm needs

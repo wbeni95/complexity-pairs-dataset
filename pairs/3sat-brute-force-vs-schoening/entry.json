@@ -23,7 +23,7 @@
       "idea": "Repeat T(n) times: start from a uniformly random assignment, and 3n times pick the first falsified clause and flip a uniformly random one of its variables. Answer True as soon as an assignment satisfies the formula; False after all tries.",
       "model": "classical-randomized",
       "pseudocode": "see implementation",
-      "time_complexity": "O(T(n) n m) with T(n) = ceil(ln(10^6) / p(n)) = Theta((4/3)^n sqrt(n)) tries: O((4/3)^n n^1.5 m) on every input, attained on unsatisfiable formulas; p(n) is the per-try success lower bound in caveats",
+      "time_complexity": "O(T(n) n m) with T(n) = ceil(ln(10^6) / p(n)) = Theta((4/3)^n sqrt(n)) tries: O((4/3)^n n^1.5 m) on every input; on unsatisfiable formulas every try runs to the end, i.e. all T(n)(3n + 1) clause scans, each stopping at the first falsified clause (between 1 and m clause checks); p(n) is the per-try success lower bound in caveats",
       "space_complexity": "O(n + m)",
       "correctness": "Schöning 1999. A True answer is always correct (a satisfying assignment was found). For a satisfiable formula fix a solution a*. Every flip of a variable in a falsified clause decreases the distance to a* with probability >= 1/3, so one try succeeds with probability >= p(n) = sum_j C(n,j) 2^-n C(3j,j) (1/3)^(2j) (2/3)^j, and T(n) tries miss with probability <= exp(-p(n) T(n)) <= 10^-6.",
       "implementation": "implementations/schoening.py:sat_schoening"

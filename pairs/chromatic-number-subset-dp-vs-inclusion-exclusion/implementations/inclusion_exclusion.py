@@ -13,7 +13,7 @@ Step 2 tries k = 1, 2, ... and stops at the first k with c_k > 0, i.e. after chi
 p(S) = a(S)^k by one multiplication p(S) * a(S) and adds +-p(S) to the sum: two arithmetic operations per
 subset. All numbers are exact integers of at most n * chi(G) bits (a(S) < 2^n).
 
-Total: (2 chi(G) + 2) 2^n arithmetic operations, O(n 2^n) in the unit-cost model since chi(G) <= n;
+Total: (2 chi(G) + 2) 2^n - 2 arithmetic operations, O(n 2^n) in the unit-cost model since chi(G) <= n;
 Theta(2^n) space for the tables.
 
 The graph is (n, edges) with vertices 0..n-1 and edges a tuple of pairs (u, v), u < v.

@@ -20,7 +20,8 @@ Harvey–van der Hoeven 2021, O(n log n) (bit operations, multitape Turing machi
 **Verification.** V1: both agree with each other and with Python's built-in integer product, which is used
 only as the oracle in `harness.check`. V2 counts **digit multiplications exactly** with an int-like digit type
 (`CountingDigit`); the implementations are unchanged. Schoolbook makes exactly n², and Karatsuba (cutoff 32)
-exactly 3^(log₂(n/32))·32², on n = 64..2048. Both fit at tolerance 0.02 with α = 1.000. Each rival is
+exactly 3^(log₂(n/32))·32², on n = 64..2048 (the closed form needs inputs in which no recursion node has equal
+halves in both factors; the random digits used meet this). Both fit at tolerance 0.02 with α = 1.000. Each rival is
 rejected: Karatsuba's counts against n² give α = 0.792, and the schoolbook counts against n^log₂3 give 1.262.
 The earlier timing fit could not reject n² for Karatsuba (RL-056).
 

@@ -21,7 +21,8 @@ periodic texts with frequent overlapping matches. V2 counts **character comparis
 above. A str's characters cannot be instrumented, so the harness passes the same characters as tuples of an
 instrumented character type (`CountingChar`); the implementations are unchanged and give the same answers.
 The naive matcher makes exactly (n − m + 1)·m with m = n // 2 (α = 0.998 against n², n = 200..3200), and KMP
-exactly 4n − 6 (α = 1.000 against n, n = 3000..300000). With tolerance 0.03 every declared rival is rejected:
+exactly 3n + 2m − 6, which is 4n − 6 at these even n and 4n − 7 at odd n ≥ 7 (α = 1.000 against n,
+n = 3000..300000). With tolerance 0.03 every declared rival is rejected:
 n (α = 1.997) and n² log n (0.928) for the naive matcher; n log n (0.910) and n² (0.500) for KMP. Details:
 `experiments/2026-10-07b_count_v2_apsp_strings.py` and `research/2026-10-07b_count_based_v2.md`.
 

@@ -1107,3 +1107,26 @@ Ledger: [ledger/runs/20261006T162402Z.json](ledger/runs/20261006T162402Z.json). 
 - **Machine load:** the machine was not quiet (other jobs were running). The largest change in a timing α was 0.1705, for Fibonacci fast doubling (1.0969 → 0.9264, tolerance 0.25). The next largest were 0.1177 and 0.0912, all on series with sub-millisecond runtimes, and every timing fit stayed within its tolerance.
 - **Unit tests:** OK. **Citations:** 201 identifiers, 0 problems.
 - **Index:** rebuilt; 69 entries.
+
+## 2026-10-07
+
+### RL-091 · CORRECTED · Wording of exact counts, bounds and citations in 21 entries
+A line-by-line audit of the published entries against their own code found statements that were false, unsupported or stated without their domain. Code, harness blocks, levels and tags are unchanged; only text was corrected (four module docstrings included).
+- **KMP (string matching):** "at most 2n / 2m comparisons" was false for this implementation, which compares the current character again after the while loop. Now: at most 3n (scan) and 3(m − 1) (failure table); T = aⁿ, P = a^(m−1)b gives 3n − m and 3m − 6. The entry states 3n + 2m − 6 (n ≥ 6), i.e. 4n − 6 for even n and 4n − 7 for odd n (RL-089). V2 sizes are even, so no V2 number changes.
+- **Matrix multiplication:** "(padding zeros included)" was false; products of two padding zeros are not counted (n = 17: 24 832 counted of 28 672 performed). The Strassen closed form holds for n = 16·2^k.
+- **Chromatic number, inclusion–exclusion:** the exact count is (2χ + 2)·2ⁿ − 2 (single vertex: 6, not 8).
+- **Matrix chain:** Hu and Shing's O(n log n) algorithm now carries Schwartz & Weiss, SIAM J. Comput. 48(5):1481–1486, 2019 (doi:10.1137/18M1195401), whose abstract states that the original correctness proof is wrong; only the abstract was consulted.
+- **Closest pair, element distinctness:** Ben-Or's Ω(n log n) is now stated for real-valued inputs only.
+- **Domains made exact:** NTT n ≥ 2; Karatsuba needs inputs without a recursion node whose two factors both have equal halves; Hamiltonian enumeration n ≥ 2; MIS DP n ≥ 1; optimal-BST comparisons n ≥ 1. Widened: zeta–Möbius n ≥ 0, Hamiltonian DPs n ≥ 1, optimal-BST calls n ≥ 0.
+- **2-SAT:** the Aspvall–Plass–Tarjan count 49(n + 2) is now stated as derived (28n + 28 to build the graph, 21n + 70 for the search). **Horn-SAT:** "by inspection" is replaced by "derived".
+- **Hedged or removed (no support in the entries):** Schöning "attained on unsatisfiable formulas"; edit distance "up to log factors" (now: sub-polynomial factors under SETH); Dijkstra "optimal for dense input"; TSP "not improved in over 60 years" (removed); Bernstein–Vazirani randomized optimality now stated with success probability > 1/2; the bipartite-matching and assignment family bounds are marked as measured.
+- **Index and README:** regenerated.
+
+### RL-092 · VERIFIED · Recorded run after the corrections of RL-091
+Ledger: [ledger/runs/20261007T081601Z.json](ledger/runs/20261007T081601Z.json). Base commit `833f616`, with the RL-091 corrections uncommitted; run on a checkout containing only the published entries.
+- **Result:** 69/69 entries pass. V1 covered 58 entries, 4121 instances and 8640 implementation runs.
+- **V2:** 123 measurements, all passing (74 exact counts, 49 wall-clock); 151 of 151 rivals rejected; log factor resolved in 62 fits.
+- **Shape diagnostic:** 40 MATCH, 6 UNDETERMINED, 0 MISMATCH, 77 SKIPPED (unchanged from RL-090).
+- **Stability against RL-090:** all 74 exact-count series are identical, so the text corrections changed no measured number.
+- **Machine load:** quiet (no other jobs). The largest change in a timing α was 0.1628, for Fibonacci (0.9264 → 1.0892, tolerance 0.25); every timing fit stayed within its tolerance.
+- **Unit tests:** OK. **Citations:** 202 identifiers, 0 problems (the new Schwartz–Weiss DOI included). **Index:** fresh.

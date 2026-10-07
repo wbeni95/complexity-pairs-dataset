@@ -14,7 +14,7 @@ p = 998244353 = 119·2²³ + 1, the roots of unity live in Z_p and all arithmeti
 passes. V2 uses exact counts of multiplications with an input-derived operand. The coefficients are
 wrapped in a counting type, and the implementations are unchanged.
 - Schoolbook: exactly n². α = 1.000, and the rivals n log n and n² log n are rejected.
-- NTT, n a power of two: exactly 3n·log₂n + 5n, which is the cost expression used. α = 1.000, and the
+- NTT, n a power of two (n ≥ 2): exactly 3n·log₂n + 5n, which is the cost expression used. α = 1.000, and the
   rivals n (α 1.111), n log² n and n² are rejected.
 
 Tolerance is 0.03. The log factor is now resolved; the earlier timing fit could not resolve it.

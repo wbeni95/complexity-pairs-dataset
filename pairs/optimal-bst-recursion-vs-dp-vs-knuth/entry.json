@@ -12,7 +12,7 @@
       "idea": "c(i, j) = w(i, j) + min over roots k of c(i, k-1) + c(k, j), evaluated top-down without memoisation, so the Theta(n^2) subproblems are solved again and again.",
       "model": "classical-deterministic",
       "pseudocode": "cost(i, j): if i = j return 0; return w(i, j) + min over i < k <= j of (cost(i, k-1) + cost(k, j)), with w(i, j) = q_i + sum_{m=i+1..j} (p_m + q_m); answer cost(0, n)",
-      "time_complexity": "Theta(3^n) on every input: exactly 3^n calls and (3^(n-1) - 1)/2 cost comparisons for n >= 1",
+      "time_complexity": "Theta(3^n) on every input: exactly 3^n calls (n >= 0) and (3^(n-1) - 1)/2 cost comparisons (n >= 1)",
       "space_complexity": "Theta(n) (recursion depth)",
       "correctness": "Optimal substructure: the subtrees of an optimal tree's root k are optimal for (i, k-1) and (k, j), and the cost of a tree is w(i, j) plus the costs of its two subtrees (every node's level grows by one under the root). Count: calls K(m) = 1 + 2 sum_{t<m} K(t), K(0) = 1, so K(m) = 3 K(m-1) = 3^m; comparisons C(m) = (m-1) + 2 sum_{t<m} C(t), C(0) = 0, so C(m) = 3 C(m-1) + 1 (m >= 2), C(1) = 0, i.e. C(m) = (3^(m-1) - 1)/2. Both confirmed by exact counts for n = 0..11.",
       "implementation": "implementations/recursion.py:obst_recursive",
@@ -73,7 +73,7 @@
       "idea": "Same recurrence, but the root of (i, j) is searched only between r[i][j-1] and r[i+1][j], the roots chosen for the two intervals one shorter; the implementation keeps the largest minimiser in the range.",
       "model": "classical-deterministic",
       "pseudocode": "as the cubic DP, but for j - i >= 2 the min runs over r[i][j-1] <= k <= r[i+1][j] (r[i][i+1] = i + 1), and r[i][j] = the largest k attaining the min",
-      "time_complexity": "Theta(n^2) on every input. Upper bound: for each length L >= 2 the range widths telescope, sum_i (r[i+1][i+L] - r[i][i+L-1] + 1) = (n - L + 1) + r[n-L+1][n] - r[0][L-1] <= 2n - L; lower bound: n(n+1)/2 intervals, each doing at least one candidate. Exactly sum_{L=2..n} (r[n-L+1][n] - r[0][L-1]) <= (n-1)^2 cost comparisons, with equality on the V2 family (two heavy end keys).",
+      "time_complexity": "Theta(n^2) on every input. Upper bound: for each length L >= 2 the range widths telescope, sum_i (r[i+1][i+L] - r[i][i+L-1] + 1) = (n - L + 1) + r[n-L+1][n] - r[0][L-1] <= 2n - L; lower bound: n(n+1)/2 intervals, each doing at least one candidate. Exactly sum_{L=2..n} (r[n-L+1][n] - r[0][L-1]) <= (n-1)^2 cost comparisons, with equality on the V2 family (two heavy end keys) for n >= 1.",
       "space_complexity": "Theta(n^2)",
       "correctness": "With non-negative frequencies, w(i, j) is an interval sum, so it satisfies the quadrangle inequality (with equality) and is monotone under interval inclusion; then c satisfies the quadrangle inequality and the optimal roots can be chosen monotone, r[i][j-1] <= r[i][j] <= r[i+1][j] (Knuth 1971 for optimum BSTs; Yao 1980 for the general quadrangle-inequality recurrence; statements as commonly cited, texts not re-read here). Ties (derivation, ours, consistent with the experiment): if every chosen root lies in its range, r[i][j-1] <= r[i+1][j-1] <= r[i+1][j] by induction, so no range is empty; and the quadrangle inequality of c gives c_k'(i, j) <= c_k(i, j) for ANY optimal root k' of (i, j-1) and every k < k' (symmetrically at the upper end), so the range contains an optimal root of (i, j) whatever minimiser was kept before. experiments/2026-10-07b_optimal_bst_ties.py confirms: largest, smallest, random and two deliberately inconsistent tie rules give the correct value on 6006 tie-heavy instances.",
       "implementation": "implementations/knuth.py:obst_knuth",
@@ -104,7 +104,7 @@
   "secondary_tags": [
     "T3"
   ],
-  "relationship": "Plain recursion over the root is exponential, Theta(3^n), because it recomputes the Theta(n^2) interval subproblems; memoising them gives the Theta(n^3) DP (the T2 step). Knuth's monotone-root restriction makes the DP's root searches telescope to Theta(n^2) in total (the T3 step). Exact comparison counts: (3^(n-1) - 1)/2, (n+1)n(n-1)/6 and at most (n-1)^2.",
+  "relationship": "Plain recursion over the root is exponential, Theta(3^n), because it recomputes the Theta(n^2) interval subproblems; memoising them gives the Theta(n^3) DP (the T2 step). Knuth's monotone-root restriction makes the DP's root searches telescope to Theta(n^2) in total (the T3 step). Exact comparison counts: (3^(n-1) - 1)/2 (n >= 1), (n+1)n(n-1)/6 and at most (n-1)^2.",
   "sources": [
     {
       "authors": "Knuth, D. E.",

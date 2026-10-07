@@ -26,7 +26,7 @@
       "idea": "Repeatedly settle the unsettled vertex with the smallest tentative distance and relax its out-edges.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(n^2) with an array (optimal for dense input); O(m + n log n) with Fibonacci heaps",
+      "time_complexity": "Theta(n^2) with an array (linear in the n x n weight-matrix input); O(m + n log n) with Fibonacci heaps",
       "space_complexity": "Theta(n)",
       "correctness": "Dijkstra 1959: with non-negative weights, the minimum tentative distance is final when a vertex is settled.",
       "implementation": "implementations/dijkstra.py:shortest_path_dijkstra",

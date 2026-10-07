@@ -32,7 +32,7 @@
       "idea": "The zeta transform (sums over subsets) turns the covering product into a pointwise product: zeta(h) = zeta(f) . zeta(g). Compute zeta(f) and zeta(g) with Yates' method, multiply pointwise, and invert with the Moebius transform (Yates' method with subtraction).",
       "model": "classical-deterministic",
       "pseudocode": "zf = zeta(f); zg = zeta(g)   (for each bit i, for each S containing i: z[S] += z[S without i])\np = zf * zg pointwise\nh = moebius(p)                (for each bit i, for each S containing i: p[S] -= p[S without i])",
-      "time_complexity": "Theta(n * 2^n) = Theta(N log N): exactly 3n 2^(n-1) additions and subtractions plus 2^n multiplications, (3n + 2) 2^(n-1) ring operations for n >= 1.",
+      "time_complexity": "Theta(n * 2^n) = Theta(N log N): exactly 3n 2^(n-1) additions and subtractions plus 2^n multiplications, (3n + 2) 2^(n-1) ring operations for every n >= 0.",
       "space_complexity": "Theta(2^n)",
       "correctness": "zeta(h)[S] = sum over T subset of S of h[T] = sum of f[A] g[B] over pairs with A | B subset of S = (sum over A subset of S of f[A]) (sum over B subset of S of g[B]) = zeta(f)[S] zeta(g)[S], because A | B is a subset of S iff A and B are. The Moebius transform is the inverse of zeta, so h = moebius(zeta(f) . zeta(g)) (the covering product of Bjorklund, Husfeldt, Kaski & Koivisto 2007). Yates' passes: after the passes for bits 0..i-1, z[S] sums f over the subsets of S that agree with S on bits >= i; each pass does 2^(n-1) additions, n passes per transform; the Moebius passes undo them in the same way with subtractions. Count: 3 transforms of n 2^(n-1) operations plus 2^n products.",
       "implementation": "implementations/zeta_mobius.py:or_convolution_zeta_mobius",

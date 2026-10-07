@@ -14,7 +14,8 @@ between two of them. Integers keep the answer exact.
 closer pair, and in y order each one needs only a constant number of comparisons. The y-sorted lists are
 merged on the way up rather than re-sorted, so the cost is n log n and not n log² n.
 
-**Optimality.** Ω(n log n) in the algebraic computation-tree model (Ben-Or 1983, via element uniqueness).
+**Optimality.** Ω(n log n) for algebraic computation trees on real-valued inputs (Ben-Or 1983, via element
+uniqueness); the theorem does not by itself cover the integer coordinates used here.
 Randomized grid hashing with the floor function gets expected O(n) (Rabin 1976; Khuller & Matias 1995).
 
 **Verification.** V1: both agree with each other and with an independent plane-sweep oracle, including
