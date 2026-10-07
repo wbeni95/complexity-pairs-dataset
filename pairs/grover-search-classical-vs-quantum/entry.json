@@ -13,8 +13,8 @@
       "model": "classical-randomized",
       "pseudocode": "for x in random permutation of 0..N-1: if f(x) = 1: return x",
       "time_complexity": "(N + 1) / 2 queries expected = Theta(2^n)",
-      "space_complexity": "O(N) for the permutation (O(n) with a pseudo-random permutation)",
-      "correctness": "Exhaustive over a permutation of the domain.",
+      "space_complexity": "O(N): the list of N indices that the random order is drawn into (PROOFS.md §2)",
+      "correctness": "It queries the positions in a uniformly random order until it finds the marked one, so it is always correct, and its number of queries is uniform on 1..N (PROOFS.md §2).",
       "implementation": "implementations/classical.py:search_classical",
       "harness": {
         "scaling": { "cost": "2**n", "n_values": [2, 4, 6, 8, 10, 12, 14], "measure": "reported", "samples": 40 }
@@ -25,9 +25,9 @@
       "idea": "Start in the uniform superposition and repeat (phase-flip the marked state; reflect about the mean) about (pi/4) sqrt(N) times; each repetition rotates the state by a fixed angle toward the marked state.",
       "model": "quantum",
       "pseudocode": "see implementation",
-      "time_complexity": "(pi/4) sqrt(N) + O(1) queries = Theta(2^(n/2))",
+      "time_complexity": "(pi/4) sqrt(N) + O(1) = Theta(2^(n/2)) queries expected: exactly (k + 1)/sin^2((2k + 1) theta), which lies strictly between (pi/4) sqrt(N) and (pi/4) sqrt(N) + 2.9 for every n with k = floor(pi/4 sqrt(N)); the code's floating-point k equals that floor for n <= 64 (checked), so this holds for the code there (PROOFS.md §1, §4)",
       "space_complexity": "n qubits",
-      "correctness": "Grover 1996. After k iterations the success probability is sin^2((2k+1) theta) with sin(theta) = 1/sqrt(N), which is 1 - O(1/N) for k = floor(pi/4 sqrt(N)). The final classical check makes the output always correct, at the cost of an expected O(1) extra queries.",
+      "correctness": "Each iteration rotates the state by 2 theta in the plane of the uniform superpositions over the marked and the unmarked positions, sin(theta) = 1/sqrt(N), so after k iterations the success probability is sin^2((2k+1) theta) (PROOFS.md §3, Lemma G; credit: Grover 1996). For k = floor(pi/4 sqrt(N)) it is at least 1 - (1 + pi/(4 sqrt(N-1)))^2/(N-1) = 1 - O(1/N) for N >= 2, and at least 1/2, for every n with k = floor(pi/4 sqrt(N)), so for the code for n <= 64, where its floating-point k equals that floor (checked; PROOFS.md §1, §4). The final classical check makes the output always correct, at the cost of an expected O(1) extra queries (fewer than 3.9 beyond the k iterations).",
       "implementation": "implementations/grover.py:search_grover",
       "harness": {
         "v1_max_n": 10,
@@ -39,18 +39,18 @@
   "lower_bounds": [
     {
       "model": "classical-randomized",
-      "bound": "Omega(N) = Omega(2^n) queries",
+      "bound": "Omega(N) = Omega(2^n) queries: at least pN - 1 queries for success probability p on every input, and at least (N - 1)/2 expected queries on some input for always-correct algorithms",
       "setting": "query (oracle) model, unconditional",
-      "source": "Standard adversary/averaging argument; see Bennett, Bernstein, Brassard & Vazirani 1997"
+      "source": "Proved in this entry (PROOFS.md §5): with the marked position uniform, an algorithm with at most q queries is correct only if the marked position is among its queries on the all-zero branch or is its final guess, so it succeeds with probability at most (q + 1)/N; averaging over the coins covers randomized algorithms. Credit: Bennett, Bernstein, Brassard & Vazirani 1997"
     },
     {
       "model": "quantum",
-      "bound": "Omega(sqrt(N)) = Omega(2^(n/2)) queries (Grover is optimal)",
+      "bound": "at least (pN - 1)/(4 sqrt(N)) queries for success probability p on every input: Omega(sqrt(N)) = Omega(2^(n/2)) (Grover is optimal up to a constant factor)",
       "setting": "query (oracle) model, unconditional",
-      "source": "Bennett, Bernstein, Brassard & Vazirani 1997"
+      "source": "Proved in this entry (PROOFS.md §6, the hybrid argument: the final states for the N inputs differ from the state of a reference oracle by at most 2T sqrt(N) in total). Credit: Bennett, Bernstein, Brassard & Vazirani 1997"
     }
   ],
-  "relationship": "Quadratic separation in the query model: Theta(N) classically, Theta(sqrt N) quantumly, by cited results: the classical Omega(N) bound, the quantum Omega(sqrt N) bound (Bennett, Bernstein, Brassard & Vazirani 1997) and Grover's success-probability law (Grover 1996) are not proved here. The cited quantum lower bound shows that a black-box quantum computer cannot solve NP-complete problems by brute-force search in polynomial time: generic quantum search buys a square root, not an exponential.",
+  "relationship": "Quadratic separation in the query model: Theta(N) classically and Theta(sqrt N) quantumly, both sides proved in PROOFS.md (classical upper and lower bounds: §2, §5; Grover's success probability and expected count: §3, §4; the quantum lower bound: §6). Credit: Grover 1996; Bennett, Bernstein, Brassard & Vazirani 1997. The quantum lower bound shows that black-box search over N = 2^n candidates needs Omega(2^(n/2)) quantum queries: generic quantum search buys a square root, not an exponential.",
   "sources": [
     {
       "authors": "Grover, L. K.",
@@ -69,14 +69,25 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both algorithms return the marked element (independently checked against the table) for n = 1, ..., 6, 8, 10 (Grover simulated exactly with lib/qsim.py) and also 14 (classical). V2 measures QUERY COUNTS reported through lib.qsim.Oracle, averaged over random instances: classical fits 2^n and Grover fits 2^(n/2). Simulation time is exponential in n and is not the claim.",
-    "artifacts": ["implementations/classical.py", "implementations/grover.py", "harness.py", "../../lib/qsim.py"]
+    "method": "V1: both algorithms return the marked element (independently checked against the table) for n = 1, ..., 6, 8, 10 (Grover simulated exactly with lib/qsim.py) and also 14 (classical). V2 measures QUERY COUNTS reported through lib.qsim.Oracle, averaged over random instances: classical fits 2^n and Grover fits 2^(n/2). Simulation time is exponential in n and is not the claim. Proofs: PROOFS.md proves every claim of this entry (the exact count per attempt, the correctness and expected counts of both algorithms, Grover's success probability, and the classical and quantum lower bounds) and names the deterministic checks of each (tests/test_proofs_query.py, the count-check script).",
+    "artifacts": ["PROOFS.md", "implementations/classical.py", "implementations/grover.py", "harness.py", "../../lib/qsim.py", "../../tests/test_proofs_query.py"]
   },
   "test_harness": {
     "module": "harness.py",
     "v1_sizes": [1, 2, 3, 4, 5, 6, 8, 10, 14],
     "trials": 4
   },
-  "caveats": "A separation relative to an oracle; it does not imply BQP != BPP. The diffusion step is simulated as 'reflect about the mean' (2|u><u| - I), which equals H^n (2|0><0| - I) H^n and uses no oracle query. For tiny N (n = 1) one attempt succeeds only with probability 1/2, so the expected query count is above the asymptotic formula there.",
-  "notes": "Relevant to the classical-vs-quantum question in both directions: a quantum advantage, and a LIMIT on it (only quadratic for unstructured search), both resting on the cited theorems (see relationship and lower_bounds)."
+  "caveats": "A separation relative to an oracle; it does not imply BQP != BPP. The diffusion step is simulated as 'reflect about the mean' (2|u><u| - I), which equals H^n (2|0><0| - I) H^n and uses no oracle query (PROOFS.md §3). For tiny N (n = 1) one attempt succeeds only with probability 1/2, so the expected query count (4) is above the asymptotic formula there (PROOFS.md §4).",
+  "notes": "Relevant to the classical-vs-quantum question in both directions: a quantum advantage, and a LIMIT on it (only quadratic for unstructured search), both proved in PROOFS.md (§4 and §6).",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_query.py",
+      "../../experiments/2026-10-07_count_proof_checks.py",
+      "../../tests/test_qsim.py"
+    ],
+    "audit": "RL-107"
+  }
 }

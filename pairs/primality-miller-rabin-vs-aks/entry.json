@@ -9,12 +9,12 @@
   "algorithms": [
     {
       "name": "Miller-Rabin",
-      "idea": "Write N - 1 = 2^s d. A random base a is a witness of compositeness unless a^d = 1 or a^(2^j d) = -1 mod N for some j < s. At least 3/4 of bases are witnesses for any odd composite.",
+      "idea": "Write N - 1 = 2^s d with d odd. A base a is a witness of compositeness unless a^d = 1 or a^(2^j d) = -1 mod N for some j < s. For every odd composite N at least 3/4 of the bases 1..N-1 are witnesses.",
       "model": "classical-randomized",
       "pseudocode": "see implementation",
-      "time_complexity": "O(k n^3) bit operations for k rounds with schoolbook multiplication (Õ(k n^2) with fast multiplication)",
+      "time_complexity": "O(k n^3) bit operations for k rounds with schoolbook arithmetic, assuming (machine model, see background) that three-argument pow makes O(n) multiplications mod N, so O(n) per round; Õ(k n^2) if multiplication and division of m-bit integers cost Õ(m)",
       "space_complexity": "O(n) bits",
-      "correctness": "Rabin 1980: a composite passes one round with probability <= 1/4; primes always pass (one-sided error). Error <= 4^(-k).",
+      "correctness": "Primes always pass. With independent uniformly random bases from 2..N-2, an odd composite passes one round with probability < 1/4, so with k >= 1 rounds it is accepted with probability < 4^(-k) (one-sided error). Proved in PROOFS.md, after Rabin 1980.",
       "implementation": "implementations/miller_rabin.py:is_prime_miller_rabin"
     },
     {
@@ -22,15 +22,15 @@
       "idea": "Deterministic polynomial-identity test (X + a)^N = X^N + a mod (X^r - 1, N).",
       "model": "classical-deterministic",
       "pseudocode": "see ../primality-trial-vs-aks",
-      "time_complexity": "Õ(n^(21/2)) as proven in AKS 2004; Õ(n^6) for the Lenstra-Pomerance variant",
-      "space_complexity": "Õ(n^6) bits",
-      "correctness": "Agrawal, Kayal, Saxena 2004, Theorem 4.1.",
+      "time_complexity": "Õ(n^(21/2)) bit operations if multiplication and division of m-bit integers cost Õ(m), and O(n^(33/2)) with schoolbook arithmetic: polynomial; at least (n - 1)^4 n coefficient operations on every n-bit prime with n >= 24 (proved in ../primality-trial-vs-aks/PROOFS.md, Part A). Faster analyses and variants: see background.",
+      "space_complexity": "O(n^6) bits",
+      "correctness": "Returns True iff N is prime, for every N >= 0 (proved in ../primality-trial-vs-aks/PROOFS.md, Part A, after Agrawal, Kayal, Saxena 2004).",
       "implementation": "../primality-trial-vs-aks/implementations/aks.py:is_prime_aks",
       "harness": { "v1_max_n": 16 }
     }
   ],
   "pair_type": "T4",
-  "relationship": "Both are polynomial. Miller-Rabin is far faster but randomized (PRIMES in coRP); AKS removes the randomness unconditionally at the price of a much larger polynomial degree.",
+  "relationship": "Both are polynomial. Miller-Rabin is randomized with one-sided error (it never rejects a prime and accepts a composite with probability < 4^-k for k >= 1 rounds, so PRIMES is in coRP) and takes O(k n^3) bit operations. AKS is deterministic and correct on every input without assumptions, but it performs at least (n - 1)^4 n operations on every n-bit prime with n >= 24: for a fixed number of rounds Miller-Rabin is asymptotically faster on primes, and the proved bounds of AKS have a much larger degree.",
   "sources": [
     {
       "authors": "Miller, G. L.",
@@ -52,18 +52,51 @@
       "title": "PRIMES is in P",
       "venue": "Annals of Mathematics 160(2), 781-793",
       "doi": "10.4007/annals.2004.160.781"
+    },
+    {
+      "authors": "Lenstra, H. W., Jr.; Pomerance, C.",
+      "year": 2019,
+      "title": "Primality testing with Gaussian periods",
+      "venue": "Journal of the European Mathematical Society 21(4), 1229-1269",
+      "doi": "10.4171/JEMS/861",
+      "note": "Background only (abstract read): a variant of AKS based on Gaussian periods."
     }
   ],
   "verification": {
     "level": "V1",
-    "method": "Both implementations agree with each other and with a sieve oracle on random n-bit integers, n = 0..20 (AKS up to 16 bits). Miller-Rabin runs 32 rounds, so a false 'prime' has probability <= 4^-32 per composite.",
-    "artifacts": ["implementations/miller_rabin.py", "../primality-trial-vs-aks/implementations/aks.py", "../primality-trial-vs-aks/harness.py"]
+    "method": "Both implementations agree with each other and with a sieve oracle on random n-bit integers, n = 0..20 (AKS up to 16 bits). Miller-Rabin runs 32 rounds with pseudo-random bases (Python's random module, re-seeded by the validator before every call, so the run is reproducible); with independent uniform bases a composite would be accepted with probability < 4^-32. Proofs: PROOFS.md proves the Miller-Rabin claims (the round test, primes always pass, at least 3/4 witnesses, the error bound, time and space, PRIMES in coRP, the comparison with AKS); the AKS claims are proved in ../primality-trial-vs-aks/PROOFS.md. Both name the deterministic tests that check them.",
+    "artifacts": ["PROOFS.md", "../primality-trial-vs-aks/PROOFS.md", "implementations/miller_rabin.py", "../primality-trial-vs-aks/implementations/aks.py", "../primality-trial-vs-aks/harness.py"]
   },
   "test_harness": {
     "module": "../primality-trial-vs-aks/harness.py",
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
     "trials": 6
   },
-  "caveats": "The V1 run of a randomized algorithm is itself probabilistic (failure probability <= 4^-32 per composite tested). Miller's 1976 deterministic variant (bases up to O(log^2 N)) is polynomial only assuming the generalized Riemann hypothesis.",
-  "notes": "Also an instance of the general derandomization question (BPP vs P); compare polynomial-identity-testing (staging), where deterministic polynomial time is open."
+  "caveats": "The V1 run uses pseudo-random bases, so it is a fixed, reproducible computation; the error bound 4^-k is a statement about independent uniform bases. Miller's deterministic variant: see background.",
+  "notes": "Compare polynomial-identity-testing (staging). The history of the tests: see background.",
+  "background": [
+    {
+      "statement": "Rabin gives the randomized test; Miller gives a deterministic test that runs in polynomial time assuming the extended Riemann hypothesis; Agrawal, Kayal and Saxena give an unconditional deterministic polynomial-time test.",
+      "source": "Rabin 1980; Miller 1976; Agrawal, Kayal, Saxena 2004"
+    },
+    {
+      "statement": "Lenstra and Pomerance give a deterministic primality test that runs in time (log N)^6 (2 + log log N)^c for an effectively computable constant c; according to their abstract, the same result with 21/2 in place of 6 was proved by Agrawal, Kayal and Saxena.",
+      "source": "Lenstra and Pomerance 2019, abstract"
+    },
+    {
+      "statement": "Machine-model assumption, not proved here: Python's three-argument pow(a, d, N) makes O(bitlen(d)) multiplications modulo N (the left-to-right binary method, for example, makes at most 2 bitlen(d)). PROOFS.md, M.5, uses it for the running time.",
+      "source": "machine-model assumption (PROOFS.md, M.5)"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "../primality-trial-vs-aks/PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_primality.py",
+      "../../experiments/2026-10-07_primality_proof_checks.py"
+    ],
+    "audit": "RL-107"
+  }
 }

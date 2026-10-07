@@ -1,7 +1,7 @@
 """Knuth-Morris-Pratt once for every pattern.
 
 Each run is Theta(N + m) (failure table in at most 3(m - 1) comparisons, scan in at most 3N, because the current
-character is compared again after the while loop), so P patterns of total
+character is compared again after the while loop), so P >= 1 patterns of total
 length L cost Theta(P N + L): linear in the text for each pattern, but the text is read P times.
 """
 

@@ -13,7 +13,8 @@ v means x_v, -v means NOT x_v). An empty clause is unsatisfiable; a unit clause 
    iff comp[x_v] comes AFTER comp[NOT x_v] in topological order, i.e. iff comp[x_v] < comp[NOT x_v] in Tarjan's
    emission numbering, satisfies every clause (Aspvall, Plass & Tarjan 1979).
 
-Time Theta(n + m), space Theta(n + m). Returns a tuple of n booleans or None.
+Time O(n + m), and Theta(n + m) when no clause is empty (an empty clause ends the build pass at once); space
+Theta(n + m) with the input. Proofs: PROOFS.md. Returns a tuple of n booleans or None.
 """
 
 

@@ -2,7 +2,8 @@
 
 Instance: an n x n integer matrix W (tuple of tuples; the diagonal is ignored). The value of an order is the sum of
 W[a][b] over all pairs with a before b. Output (maximum value, an order attaining it).
-Each order is summed from scratch over its n(n-1)/2 ordered pairs: Theta(n! n^2) on every input.
+Each order is summed from scratch over its n(n-1)/2 ordered pairs: Theta(n! n^2) on every input, given the
+documented cost of itertools.permutations (amortised O(n) per order; PROOFS.md section 6).
 """
 from itertools import permutations
 

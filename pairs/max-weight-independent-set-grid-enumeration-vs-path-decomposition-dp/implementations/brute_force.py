@@ -8,7 +8,8 @@ adds (r, c+1)-(r+1, c), code 3 adds both, code 0 neither.
 Every subset of the N = k n vertices is examined in full, with no early exit: its weight is summed over all its
 members and its independence is tested at every member (neighbour bitmask AND subset). The heaviest independent
 subset found first (in increasing bitmask order) is returned. Weight additions: exactly N 2^(N-1) (every vertex
-lies in half of the subsets). Time Theta(N 2^N) on every input, space Theta(N).
+lies in half of the subsets). Time Theta(N 2^N) on every input with N >= 1 (the final sorted() of at most N
+vertices taken as O(N log N), see entry.json), space Theta(N).
 
 Returns (maximum weight, sorted tuple of the chosen vertices (r, c)).
 """

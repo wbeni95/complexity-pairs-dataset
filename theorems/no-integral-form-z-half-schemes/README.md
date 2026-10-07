@@ -1,11 +1,14 @@
 # No integer equivalent form for two ℤ[1/2] matrix multiplication schemes
 
-> **Provenance: literature.** In §3.2 of *Complex to Rational Fast Matrix Multiplication* (arXiv:2602.13171),
+> **Provenance: literature, ⏳ pending.** In §3.2 of *Complex to Rational Fast Matrix Multiplication* (arXiv:2602.13171),
 > Moran, Schwartz and Yuan (2026) state, with their Proposition 3 as the tool, that the ⟨3,3,6,40⟩ ℤ[1/2] algorithm
 > of Smirnov cannot be transformed into an integer algorithm, and that the same holds for a ⟨2,4,5,32⟩ algorithm
 > over ℤ[1/2] which they attribute to Hopcroft and Kerr (1971). They print neither scheme, name no certificate terms
-> for either, and do not identify the files they used, so it is not established that their statements concern the
-> schemes S₁ and S₂ below or schemes equivalent to them (see [Relation to the source](#relation-to-the-source)).
+> for either, and do not identify the files they used. No source checked supports a rank-32 Hopcroft–Kerr scheme for
+> ⟨2,4,5⟩, and the pinned ⟨3,3,6;40⟩ file is attributed to Smirnov but not compared with his paper. The evidence (the
+> ring ℤ[1/2] and the trace properties they describe hold for both pinned files) points to the schemes S₁ and S₂
+> below, but it does not establish that their statements concern these schemes or schemes equivalent to them; this
+> is why the label is pending (see [Relation to the source](#relation-to-the-source)).
 > This note proves the statement directly for the two pinned files: the proof below is written out in full, and
 > [verify.py](verify.py) is independent code (its own parser, exact Brent check and trace computation, Python
 > standard library only). Both certificates are of the type used by their Proposition 3: the trace of a product of
@@ -46,9 +49,11 @@ sum over r of Trace(Transpose(a_r).A) · Trace(Transpose(b_r).B) · Transpose(c_
 AB = Σ_r ⟨a_r, A⟩⟨b_r, B⟩ c_rᵀ above. All coefficients lie in ℤ[1/2], and some are not integers. The file for S₁
 agrees term by term, in the same order, with the decomposition `decomposition_245` in the notebook
 `mathematical_results.ipynb` of the repository `google-deepmind/alphaevolve_results` (commit
-`4226acbf237ff9ad10ba7673a2af127a2d8a5971`). This identity was checked once; `verify.py` does not re-check it,
-because it downloads only the two scheme files. The file for S₂ is not compared with Smirnov (2013), here or
-in `verify.py`; the attribution is not checked in this note.
+`4226acbf237ff9ad10ba7673a2af127a2d8a5971`, file SHA-256
+`2cce2543e48c89aa3e91614272a698a0147dd2548ea11cf92f1292b7435d38ff`). Its three factor matrices use the same
+convention: column r holds a_r[i][j] in row i·m + j, b_r[j][k] in row j·p + k and c_r[k][i] in row k·n + i (the
+notebook's own check builds the tensor with entries at these positions). `verify.py` checks this identity. The file
+for S₂ is not compared with Smirnov (2013), here or in `verify.py`; the attribution is not checked in this note.
 
 **Theorem.** Let K be a field of characteristic 0.
 
@@ -126,17 +131,21 @@ contradiction. ∎
   certificates are of the type their Proposition 3 uses.
 - **S₂.** §3.2 states that the ⟨3,3,6,40⟩ ℤ[1/2] algorithm of Smirnov cannot be transformed into an integer
   algorithm, because Trace(O_j P_j Q_j) ∉ ℤ for some j; it does not say which j. Part 2 above gives such a j
-  explicitly for the pinned file S₂.
+  explicitly for the pinned file S₂. The pinned file is attributed to Smirnov (2013) but is not compared with his
+  paper, so it is not established that it is the scheme they treated (pending).
 - **S₁.** §3.2 states that a ⟨2,4,5,32⟩ algorithm over ℤ[1/2], the one they attribute to Hopcroft and Kerr (see
   below), has no ℤ equivalent form "for the same reason" as the ⟨4,4,4,48⟩ scheme over ℚ[i] treated just before it:
   all single traces are integers, and the trace of a product of two term matrices,
   Trace(O_{j_1}P_{j_1}Q_{j_1} · O_{j_2}P_{j_2}Q_{j_2}), is not. It does not say which pair. Part 1 above gives such a
-  pair explicitly for the pinned file S₁.
+  pair explicitly for the pinned file S₁, which has the property they describe; this is consistent with their
+  statement but does not identify their scheme (pending).
 - **Attribution of the ⟨2,4,5⟩ scheme.** Moran, Schwartz and Yuan attribute the ⟨2,4,5,32⟩ algorithm over ℤ[1/2]
   to Hopcroft and Kerr (1971), their reference [24]. By its abstract, that paper multiplies a p×2 by a 2×n matrix
   with ⌈(3pn + max(n, p))/2⌉ multiplications. For {p, n} = {4, 5}, which corresponds to the format ⟨2,4,5⟩ under the
-  usual permutation symmetry of formats, this is 33. Their text does not identify the file they used. The proof
-  above does not depend on this question, because it proves the statement directly for the AlphaEvolve scheme S₁.
+  usual permutation symmetry of formats, this is 33. No source checked supports a rank-32 Hopcroft–Kerr scheme for
+  ⟨2,4,5⟩; the rank-32 scheme in the pinned file is AlphaEvolve's (2025). Their text does not identify the file they
+  used, so whether their statement concerns S₁ or a scheme equivalent to it remains open (pending). The proof above
+  does not depend on this question, because it proves the statement directly for the AlphaEvolve scheme S₁.
 
 ## Scope
 
@@ -150,21 +159,31 @@ contradiction. ∎
 ## Verification
 
 ```bash
-python theorems/no-integral-form-z-half-schemes/verify.py              # downloads the two files
-python theorems/no-integral-form-z-half-schemes/verify.py --cache DIR  # reads local copies, no network
+python theorems/no-integral-form-z-half-schemes/verify.py              # offline: the copies in data/
+python theorems/no-integral-form-z-half-schemes/verify.py --download   # fetches the three pinned URLs instead
+python theorems/no-integral-form-z-half-schemes/verify.py --cache DIR  # reads other local copies, no network
 ```
 
-The script obtains the two files, either by two HTTPS downloads from the pinned URLs above (with a generic
-User-Agent and nothing else sent) or, with `--cache DIR`, from `DIR/<sha1 of the URL>` or `DIR/<file name>`. It then
-checks:
+The script uses three files: the two scheme files and AlphaEvolve's notebook `mathematical_results.ipynb` at
+the commit named above
+([pinned URL](https://raw.githubusercontent.com/google-deepmind/alphaevolve_results/4226acbf237ff9ad10ba7673a2af127a2d8a5971/mathematical_results.ipynb)).
+Unmodified copies are kept in [data/](data/) under their own licences (MIT for the two scheme files; Apache-2.0 for software and CC BY 4.0 for other materials
+for the notebook; see
+[data/README.md](data/README.md)), so the check runs offline. With `--download` the script fetches them by HTTPS from
+the pinned URLs (with a fixed User-Agent that names this project, and nothing else sent); with `--cache DIR` it reads
+`DIR/<sha1 of the URL>` or `DIR/<file name>`. In every case it then checks:
 
 1. the SHA-256 of each file;
 2. the number of terms, the factor shapes, and that all coefficients lie in ℤ[1/2], not all in ℤ;
 3. validity over ℚ: all n²m²p² Brent equations, in exact rational arithmetic (1 600 for S₁, 2 916 for S₂);
 4. the certificates with `fractions.Fraction`, from the term matrices M_j = a_j b_j c_j: tr(M_1) = 3/2 for S₂, and
-   tr(M_2 M_5) = 1/2 for S₁; for S₁ also that every single trace tr(M_j) is an integer;
+   tr(M_2 M_5) = 1/2 for S₁; for S₁ also that every single trace tr(M_j) is 1 or 2;
 5. as an illustration of Lemmas 2 and 3 (not part of the proof): after a seeded random rational sandwich with random
-   term scalings, the scheme still satisfies the Brent equations and the certificate value is unchanged.
+   term scalings, the scheme still satisfies the Brent equations and the certificate value is unchanged;
+6. that the matrices printed in the proof above (a_1, b_1, c_1 and M_1 of S₂; a_2, b_2, c_2, a_5, b_5, c_5, M_2, M_5
+   and M_2 M_5 of S₁), which it reads from this README, equal the terms of the files and the products computed from
+   them, and that the printed certificate values are the computed ones;
+7. that `decomposition_245` in the notebook equals the file for S₁ term by term, in the same order.
 
 It exits with code 0 only if every check passes. Without network delays it runs in under a second.
 
@@ -176,7 +195,8 @@ It exits with code 0 only if every check passes. Without network delays it runs 
   F. J. R. Ruiz, A. Mehrabian, M. P. Kumar, A. See, S. Chaudhuri, G. Holland, A. Davies, S. Nowozin, P. Kohli,
   M. Balog (2025). *AlphaEvolve: A coding agent for scientific and algorithmic discovery*. arXiv:2506.13131.
   <https://arxiv.org/abs/2506.13131>. Published decomposition: <https://github.com/google-deepmind/alphaevolve_results>
-  (commit `4226acbf237ff9ad10ba7673a2af127a2d8a5971`, `mathematical_results.ipynb`, `decomposition_245`).
+  (commit `4226acbf237ff9ad10ba7673a2af127a2d8a5971`, `mathematical_results.ipynb`, `decomposition_245`; the
+  notebook is a pinned input of `verify.py`).
 - A. V. Smirnov (2013). *The bilinear complexity and practical algorithms for matrix multiplication*. Computational
   Mathematics and Mathematical Physics 53(12), 1781–1795.
   [doi:10.1134/S0965542513120129](https://doi.org/10.1134/S0965542513120129)

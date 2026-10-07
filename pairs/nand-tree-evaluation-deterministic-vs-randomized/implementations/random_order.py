@@ -1,8 +1,9 @@
-"""Randomized evaluation of a complete binary NAND tree (Snir's directional algorithm, as analysed by Saks and
-Wigderson 1986): at every node, evaluate the two subtrees in a uniformly random order and short-circuit.
+"""Randomized evaluation of a complete binary NAND tree: at every node, evaluate the two subtrees in a uniformly
+random order and short-circuit.
 
-The answer is always correct (zero error, Las Vegas); only the number of leaves read is random. On the worst-case
-("reluctant") inputs its expected number of leaf reads satisfies R0(h) = 2 R1(h-1), R1(h) = R0(h-1) + R1(h-1)/2
+The answer is always correct (zero error, Las Vegas); only the number of leaves read is random. On "reluctant"
+inputs (the worst case is a reluctant input with root value 0; PROOFS.md, section 4) its expected number of leaf
+reads satisfies R0(h) = 2 R1(h-1), R1(h) = R0(h-1) + R1(h-1)/2
 with R0(0) = R1(0) = 1, which grows like ((1 + sqrt(33)) / 4)^h ~ 1.686^h = N^0.7537 for N = 2^h leaves.
 Uses the global `random` module (the validator seeds it before every call).
 """

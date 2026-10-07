@@ -4,7 +4,7 @@
   "problem_statement": "Given a CNF formula over Boolean variables x_1..x_n in which every clause has at most one positive literal (a Horn formula), decide whether it is satisfiable and, if it is, output its least model (the satisfying assignment whose set of true variables is contained in that of every other satisfying assignment; it exists for every satisfiable Horn formula because Horn models are closed under intersection). Clauses are a list (repetitions, repeated literals and tautologies allowed); an empty clause is unsatisfiable.",
   "input": {
     "parameter": "n = number of variables; m = number of clauses, L = total number of literal occurrences. In the V2 family H_n, m = n + 1 and L = 3n - 2.",
-    "size_measure": "Theta(n + L) numbers (L literals of O(log n) bits each, plus n). Literals are small integers (unit-cost word operations); brute force also uses n-bit masks, one machine word for the n it can reach."
+    "size_measure": "Theta(n + m + L) numbers (L literals of O(log n) bits each, one boundary for each of the m clauses, plus n; every clause except an empty one has a literal, so m <= L + the number of empty clauses). Literals are small integers (unit-cost word operations); brute force also uses n-bit masks, one machine word for the n it can reach."
   },
   "algorithms": [
     {
@@ -12,9 +12,9 @@
       "idea": "Enumerate the 2^n assignments as integers mask = 0, 1, ..., 2^n - 1 and check each clause by clause, abandoning an assignment at its first falsified clause; stop at the first satisfying assignment. For a Horn formula that first assignment is the least model: every model contains the least model bit by bit, so its mask is at least as large.",
       "model": "classical-deterministic",
       "pseudocode": "for mask in 0 .. 2^n - 1: (bit v-1 = value of x_v)\n  for clause in clauses:\n    if no literal of clause is true under mask: next mask\n  return mask as an assignment\nreturn UNSAT",
-      "time_complexity": "O(2^n * L) always; Theta(2^n * n) = Theta(2^n * m) on the V2 family H_n, where every assignment is examined (unsatisfiable) and the 2^(n-1) assignments with x1 false pass n - 2 clauses before failing: exactly (2n + 13) 2^(n-2) - 2n - 4 literal evaluations.",
-      "space_complexity": "Theta(n + L) (the input; O(1) extra words besides the output)",
-      "correctness": "Exhaustive: every assignment is examined until one satisfies all clauses, so the satisfiability verdict is correct by definition. Least model: the models of a Horn formula are closed under intersection, so a satisfiable Horn formula has a least model M, and every model M' satisfies M subset of M', hence mask(M') >= mask(M) with equality only for M' = M; scanning masks in increasing order therefore returns M. Count on H_n (literal evaluations): the half with x1 false evaluates one literal in each of the n - 2 clauses S_j and one in F1: (n - 1) 2^(n-1). In the half with x1 true, clause S_j (scanned for j = n-1 down to 2) is reached exactly when x_{j+1..n} is non-decreasing, by (n - j + 1) 2^(j-1) assignments, which spend 2 evaluations if x_j is false and 3 if it is true, 5 (n - j + 1) 2^(j-2) in total; summed over j this is 15 * 2^(n-2) - 5n - 5. The n assignments that pass every S_j then spend 3 evaluations on F1 and F2, and the all-true one 1 more on G: 3n + 1. Total (2n + 13) 2^(n-2) - 2n - 4, checked against the counts for every n = 3..16.",
+      "time_complexity": "O(2^n * (L + 1)) always; Theta(2^n * n) = Theta(2^n * m) on the V2 family H_n, where every assignment is examined (unsatisfiable) and the 2^(n-1) assignments with x1 false pass n - 2 clauses before failing: exactly (2n + 13) 2^(n-2) - 2n - 4 literal evaluations.",
+      "space_complexity": "Theta(n + m + L) (the input; O(1) extra words besides the output)",
+      "correctness": "Exhaustive: every assignment is examined until one satisfies all clauses, so the satisfiability verdict is correct by definition. Least model: the models of a Horn formula are closed under intersection, so a satisfiable Horn formula has a least model M, and every model M' satisfies M subset of M', hence mask(M') >= mask(M) with equality only for M' = M; scanning masks in increasing order therefore returns M. Count on H_n (literal evaluations): the half with x1 false evaluates one literal in each of the n - 2 clauses S_j and one in F1: (n - 1) 2^(n-1). In the half with x1 true, clause S_j (scanned for j = n-1 down to 2) is reached exactly when x_{j+1..n} is non-decreasing, by (n - j + 1) 2^(j-1) assignments, which spend 2 evaluations if x_j is false and 3 if it is true, 5 (n - j + 1) 2^(j-2) in total; summed over j this is 15 * 2^(n-2) - 5n - 5. The n assignments that pass every S_j then spend 3 evaluations on F1 and F2, and the all-true one 1 more on G: 3n + 1. Total (2n + 13) 2^(n-2) - 2n - 4, checked against the counts for every n = 3..16. Full proofs: PROOFS.md, sections 4 and 5 (correctness, least model), 8 (bounds) and 1 (count).",
       "implementation": "implementations/brute_force.py:horn_sat_brute_force",
       "harness": {
         "v1_max_n": 14,
@@ -32,9 +32,9 @@
       "idea": "Read each clause y_1 AND ... AND y_k -> h as an implication (h absent for a goal clause). Keep, per clause, a counter of negative literals whose variable is not yet true and, per variable, the list of clauses in which it occurs negatively. Start from the facts (counter 0), and each time a variable becomes true decrement the counters of its clauses; a clause whose counter reaches 0 makes its head true, or proves unsatisfiability if it is a goal.",
       "model": "classical-deterministic",
       "pseudocode": "for each clause c: head[c] = positive variable or 0; counter[c] = #negative literals; occurs[v] += [c] for each NOT v in c\n  if counter[c] == 0: if head[c] == 0: return UNSAT else push head[c]\nwhile queue: v = pop\n  if v already true: continue; set v true\n  for c in occurs[v]: counter[c] -= 1\n    if counter[c] == 0: if head[c] == 0: return UNSAT; if head[c] not true: push head[c]\nreturn the true variables",
-      "time_complexity": "O(n + L) on every input: every variable is set true at most once, so every negative literal occurrence is decremented at most once and every clause fires at most once. Theta(n + L) on every input without an empty clause, since the build pass then reads every literal; at an empty clause the build pass stops at once. On H_n exactly 12n - 7 counted operations.",
-      "space_complexity": "Theta(n + L)",
-      "correctness": "Dowling & Gallier 1984. Every variable set true is true in every model (induction on the order of setting: its clause's other variables are already true), so a firing goal clause proves unsatisfiability. If propagation ends without that, every clause is satisfied by 'exactly the derived variables are true': a clause whose negative variables are all true has fired and made its head true; any other clause has a false negative literal. That assignment is contained in every model, so it is the least model. Count on H_n, derived from the code: building costs 7n - 5 counted operations (3 per negative literal: comparison, negation, index; 1 per positive literal; 1 for the fact test of F1) and propagation 5n - 2 (3 per variable set true, 2 per firing clause with a head; the head 0 of the goal G is a plain integer, not counted), confirmed for every n = 3..300 and at the V2 sizes.",
+      "time_complexity": "O(n + L + 1) on every input: every variable is set true at most once, so every negative literal occurrence is decremented at most once and every clause fires at most once. Theta(n + L) on every input without an empty clause, since the build pass then reads every literal; at an empty clause the build pass stops at once. On H_n exactly 12n - 7 counted operations.",
+      "space_complexity": "Theta(n + m + L) with the input; working storage O(n + L + 1)",
+      "correctness": "The method is Dowling & Gallier's (1984); the proof is in PROOFS.md, sections 6 (correctness) and 7 (bounds). Every variable set true is true in every model (induction on the order of setting: its clause's other variables are already true), so a firing goal clause proves unsatisfiability. If propagation ends without that, every clause is satisfied by 'exactly the derived variables are true': a clause whose negative variables are all true has fired and made its head true; any other clause has a false negative literal. That assignment is contained in every model, so it is the least model. Count on H_n, derived from the code: building costs 7n - 5 counted operations (3 per negative literal: comparison, negation, index; 1 per positive literal; 1 for the fact test of F1) and propagation 5n - 2 (3 per variable set true, 2 per firing clause with a head; the head 0 of the goal G is a plain integer, not counted), confirmed for every n = 3..300 and at the V2 sizes (PROOFS.md, section 2).",
       "implementation": "implementations/unit_propagation.py:horn_sat_unit_propagation",
       "harness": {
         "scaling": {
@@ -48,7 +48,7 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Same problem. Brute force is exponential, Theta(2^n * m) on the worst-case family; unit propagation is linear, O(n + L) on every input (Theta(n + L) when no clause is empty), so Horn-SAT is in P. The structure used: a Horn clause is an implication with a single conclusion, so the set of forced variables can be computed forward, each clause firing at most once. Boundary: Horn formulas are one of Schaefer's (1978) tractable classes of Boolean constraints, while satisfiability of general CNF formulas is NP-complete (Cook 1971). See also pairs/two-sat-brute-force-vs-scc (another Schaefer class) and pairs/3sat-brute-force-vs-schoening.",
+  "relationship": "Same problem. Brute force is exponential, Theta(2^n * m) on the worst-case family; unit propagation is linear, O(n + L + 1) on every input (Theta(n + L) when no clause is empty), so Horn-SAT is in P. The structure used: a Horn clause is an implication with a single conclusion, so the set of forced variables can be computed forward, each clause firing at most once. Boundary (cited background, see `background`; not proved here): Horn formulas are one of Schaefer's (1978) tractable classes of Boolean constraints, while satisfiability of general CNF formulas is NP-complete (Cook 1971). See also pairs/two-sat-brute-force-vs-scc (another Schaefer class) and pairs/3sat-brute-force-vs-schoening.",
   "sources": [
     {
       "authors": "Dowling, W. F.; Gallier, J. H.",
@@ -62,8 +62,7 @@
       "year": 1951,
       "title": "On sentences which are true of direct unions of algebras",
       "venue": "Journal of Symbolic Logic 16(1), 14-21",
-      "doi": "10.2307/2268661",
-      "note": "The paper after which Horn clauses are named."
+      "doi": "10.2307/2268661"
     },
     {
       "authors": "Minoux, M.",
@@ -77,8 +76,7 @@
       "year": 1978,
       "title": "The complexity of satisfiability problems",
       "venue": "Proceedings of the 10th Annual ACM Symposium on Theory of Computing (STOC 1978), 216-226",
-      "doi": "10.1145/800133.804350",
-      "note": "Dichotomy for Boolean constraint satisfaction; Horn (and dual-Horn) relations form one of the tractable classes."
+      "doi": "10.1145/800133.804350"
     },
     {
       "authors": "Cook, S. A.",
@@ -86,17 +84,19 @@
       "title": "The complexity of theorem-proving procedures",
       "venue": "Proceedings of the 3rd Annual ACM Symposium on Theory of Computing (STOC 1971), 151-158",
       "doi": "10.1145/800157.805047",
-      "note": "NP-completeness of satisfiability for general CNF formulas (the other side of the boundary)."
+      "note": "Background: Theorem 1 (every set accepted by a nondeterministic Turing machine within polynomial time is P-reducible to the DNF tautologies; Cook's P-reducibility is defined with query machines)."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations return the same least model (compared with ==) on n = 0..8, 10, 12, 14 (brute force up to n = 14; unit propagation also on n = 50, 300), 4 formulas per size: random Horn CNF at clause/variable ratios 0.5-4 with widths 1-4, planted derivation chains (satisfiable) and the same chains with a goal on derived variables (unsatisfiable), edge cases with repeated literals, tautologies, unit goals and empty clauses, the V2 family under random renaming, and definite-clause formulas. The independent check() recomputes the derived set by naive forward chaining (repeated full passes; no counters or occurrence lists) and accepts an assignment only if it equals that set and satisfies every clause, and None only if the derived set violates a clause (a proof of unsatisfiability); for n <= 10 it also cross-checks the verdict by exhaustive search. Oracle control (experiments/2026-10-06f_entries_horn_sat.py): on 1040 seeded instances (n = 0..12) it accepts all 1040 correct outputs and rejects all 2816 wrong ones (465 flipped bits, 271 strictly larger models, 505 None for satisfiable formulas, 535 all-false assignments for unsatisfiable formulas, 1040 wrong lengths). V2 (exact counts, RESEARCH_LOG RL-047 method): the deterministic unsatisfiable family H_n = (NOT x1 OR NOT x_j OR x_{j+1}) for j = n-1 down to 2, then (x1), (NOT x1 OR x2), (NOT x_n), built from a harness literal type CountingLit that counts every operation on input-derived values; the implementations are unchanged. Brute force: exactly 6 * ((2n + 13) 2^(n-2) - 2n - 4) operations (6 per literal evaluation; derived by hand, checked for every n = 3..16); fit against (2n + 13) 2^n - 8n - 16 on n = 8..16: alpha = 1.000 (tol 0.02); rivals 2^n (alpha 1.081) and n^2 2^n (0.865) rejected. Unit propagation: exactly 12n - 7 operations (derived in the correctness note; checked for every n = 3..300 and at the V2 sizes); fit against 12n - 7 on n = 1000..32000: alpha = 1.000; rivals n log n (0.895) and n^2 (0.500) rejected, so the counts also resolve the log factor. On the same family naive forward chaining needs exactly n full passes (checked for n = 3..200), i.e. Theta(n^2) clause visits.",
+    "method": "V1: both implementations return the same least model (compared with ==) on n = 0..8, 10, 12, 14 (brute force up to n = 14; unit propagation also on n = 50, 300), 4 formulas per size: random Horn CNF at clause/variable ratios 0.5-4 with widths 1-4, planted derivation chains (satisfiable) and the same chains with a goal on derived variables (unsatisfiable), edge cases with repeated literals, tautologies, unit goals and empty clauses, the V2 family under random renaming, and definite-clause formulas. The independent check() recomputes the derived set by naive forward chaining (repeated full passes; no counters or occurrence lists) and accepts an assignment only if it equals that set and satisfies every clause, and None only if the derived set violates a clause (a proof of unsatisfiability); for n <= 10 it also cross-checks the verdict by exhaustive search. Oracle control (experiments/2026-10-06f_entries_horn_sat.py): on 1040 seeded instances (n = 0..12) it accepts all 1040 correct outputs and rejects all 2816 wrong ones (465 flipped bits, 271 strictly larger models, 505 None for satisfiable formulas, 535 all-false assignments for unsatisfiable formulas, 1040 wrong lengths). V2 (exact counts, RESEARCH_LOG RL-047 method): the deterministic unsatisfiable family H_n = (NOT x1 OR NOT x_j OR x_{j+1}) for j = n-1 down to 2, then (x1), (NOT x1 OR x2), (NOT x_n), built from a harness literal type CountingLit that counts every operation on input-derived values; the implementations are unchanged. Brute force: exactly 6 * ((2n + 13) 2^(n-2) - 2n - 4) operations (6 per literal evaluation; derived by hand, checked for every n = 3..16); fit against (2n + 13) 2^n - 8n - 16 on n = 8..16: alpha = 1.000 (tol 0.02); rivals 2^n (alpha 1.081) and n^2 2^n (0.865) rejected. Unit propagation: exactly 12n - 7 operations (derived in the correctness note; checked for every n = 3..300 and at the V2 sizes); fit against 12n - 7 on n = 1000..32000: alpha = 1.000; rivals n log n (0.895) and n^2 (0.500) rejected, so the counts also resolve the log factor. On the same family naive forward chaining needs exactly n full passes (checked for n = 3..200), i.e. Theta(n^2) clause visits. Proofs: PROOFS.md proves every claim of this entry (the exact operation counts for all sizes of their domains, the least model, the correctness, time and space of both algorithms, the worst case for every L and the caveats) and names the scripts and tests that check each one (tests/test_proofs_horn_sat.py and the count-check scripts).",
     "artifacts": [
+      "PROOFS.md",
       "implementations/brute_force.py",
       "implementations/unit_propagation.py",
       "harness.py",
-      "../../experiments/2026-10-06f_entries_horn_sat.py"
+      "../../experiments/2026-10-06f_entries_horn_sat.py",
+      "../../tests/test_proofs_horn_sat.py"
     ]
   },
   "test_harness": {
@@ -104,6 +104,33 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 50, 300],
     "trials": 4
   },
-  "caveats": "Brute force stops at the first satisfying assignment (for a Horn formula, the least model), so on satisfiable formulas its cost depends on where the least model lies in mask order: a formula with no facts is satisfied by mask 0 after one pass over the clauses. The V2 family is therefore unsatisfiable, and its clauses are ordered so that half of all assignments pass n - 2 clauses before failing. The worst case Theta(2^n * L) for general L needs repeated or long clauses; the family shows it for m = Theta(n). The fitted brute-force cost is the exact count's form: the bare n 2^n gives alpha = 0.961 at n <= 16, outside the 0.02 band (experiment, section 5). The unit-propagation count measures operations on input-derived values: the counter decrements use plain clause indices and are not counted, but each negative literal occurrence is decremented at most once and costs at least one counted operation when it is read, so the uncounted part is O(L). Counted operations measure Python-level work, not machine instructions.",
-  "notes": "Horn-SAT is the satisfiability problem of one of Schaefer's tractable classes; 2-SAT (pairs/two-sat-brute-force-vs-scc) and XOR-SAT (pairs/xor-sat-brute-force-vs-gaussian-elimination) are two others. Dual-Horn formulas (at most one negative literal per clause) are handled by the same algorithm after negating every variable. Minoux (1988) gives a simplified linear-time unit-resolution algorithm for Horn formulae; the implementation here follows the counter scheme described above."
+  "caveats": "Brute force stops at the first satisfying assignment (for a Horn formula, the least model), so on satisfiable formulas its cost depends on where the least model lies in mask order: a formula with neither facts nor empty clauses is satisfied by mask 0 after one pass over the clauses. The V2 family is therefore unsatisfiable, and its clauses are ordered so that half of all assignments pass n - 2 clauses before failing. The worst case Theta(2^n * L) holds for every L >= 3n - 2: inserting L - 3n + 2 copies of (NOT x1) before (x1) in H_n gives at least 2^n L / 6 literal evaluations (PROOFS.md, section 8); the V2 family itself has L = 3n - 2. The fitted brute-force cost is the exact count's form: the bare n 2^n gives alpha = 0.961 at n <= 16, outside the 0.02 band (experiment, section 5). The unit-propagation count measures operations on input-derived values: the counter decrements use plain clause indices and are not counted, but each negative literal occurrence is decremented at most once and costs at least one counted operation when it is read, so at most L decrements are uncounted (PROOFS.md, section 7). Counted operations measure Python-level work, not machine instructions.",
+  "notes": "By Schaefer's dichotomy (cited background), Horn-SAT is the satisfiability problem of one of the tractable classes; 2-SAT (pairs/two-sat-brute-force-vs-scc) and XOR-SAT (pairs/xor-sat-brute-force-vs-gaussian-elimination) are two others. Dual-Horn formulas (at most one negative literal per clause) are handled by the same algorithm after negating every variable (PROOFS.md, section 9). Minoux (1988) gives a simplified linear-time unit-resolution algorithm for Horn formulae (cited background); the implementation here follows the counter scheme described above.",
+  "background": [
+    {
+      "statement": "Satisfiability of general CNF formulas is NP-complete.",
+      "source": "Cook 1971, Theorem 1 (stated there for the DNF tautologies, the negations of CNF formulas, with Cook's P-reducibility; its proof constructs, for a nondeterministic polynomial-time machine M and an input w, a formula in conjunctive normal form that is satisfiable iff M accepts w)"
+    },
+    {
+      "statement": "Horn formulas form one of the tractable classes of Schaefer's dichotomy for Boolean constraint satisfaction; 2-CNF and affine (XOR) constraints form two others.",
+      "source": "Schaefer 1978, the dichotomy theorem"
+    },
+    {
+      "statement": "Minoux gives a simplified linear-time unit-resolution algorithm for Horn formulae.",
+      "source": "Minoux 1988 (the title of the paper)"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_horn_sat.py",
+      "../../tests/test_entries_2026_10_06f.py",
+      "../../experiments/2026-10-06f_entries_horn_sat.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py"
+    ],
+    "audit": "RL-107"
+  }
 }

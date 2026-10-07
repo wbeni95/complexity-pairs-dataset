@@ -42,7 +42,7 @@
       "pseudocode": "see implementation (two scans: odd-length radii d1 and even-length radii d2)",
       "time_complexity": "Theta(n) on every input (at most 2n successful comparisons and at most 2n failed ones)",
       "space_complexity": "Theta(n)",
-      "correctness": "Manacher 1975. Mirror property: if center i lies inside the palindrome s[l..r], the palindrome at the mirror center l + r - i, cut off at the boundary of s[l..r], reappears around i. So the radius at i is at least min(radius at the mirror, r - i + 1), and it is exactly the mirror's radius when that one ends strictly inside s[l..r].",
+      "correctness": "Manacher 1975. Mirror property: if center i lies inside the rightmost palindrome s[l..r] found so far, whose center precedes i, the palindrome at the mirror center l + r - i, cut off at the boundary of s[l..r], reappears around i. So the radius at i is at least min(radius at the mirror, r - i + 1), and it is exactly the mirror's radius when that one ends strictly inside s[l..r]. PROOFS.md sections 3 and 6 prove this, the correctness of both scans and of the final selection.",
       "implementation": "implementations/manacher.py:lps_manacher",
       "harness": {
         "scaling": { "cost": "n", "n_values": [3000, 10000, 30000, 100000, 300000] }
@@ -50,7 +50,7 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "Theta(n^3) -> Theta(n^2) -> Theta(n), all worst case. Expanding around centers stops re-testing the nested palindromes that share a center. Manacher's mirror property removes the remaining recomputation between overlapping centers. Theta(n) is optimal up to a constant factor: on a^n, changing any character other than the middle one makes the whole string a non-palindrome, so a correct algorithm must read at least n - 1 characters.",
+  "relationship": "Theta(n^3) -> Theta(n^2) -> Theta(n), all worst case. Expanding around centers stops re-testing the nested palindromes that share a center. Manacher's mirror property removes the remaining recomputation between overlapping centers. Theta(n) is optimal up to a constant factor: on a^n, changing any character other than the middle one makes the whole string a non-palindrome, so a correct deterministic algorithm must read at least n - 1 characters.",
   "sources": [
     {
       "authors": "Manacher, G.",
@@ -58,7 +58,7 @@
       "title": "A new linear-time \"on-line\" algorithm for finding the smallest initial palindrome of a string",
       "venue": "Journal of the ACM 22(3), 346-351",
       "doi": "10.1145/321892.321896",
-      "note": "The paper's stated application is the smallest initial palindrome (per its title); the radius computation used here comes from it."
+      "note": "The paper's stated application is the smallest initial palindrome (per its title)."
     },
     {
       "authors": "Apostolico, A.; Breslauer, D.; Galil, Z.",
@@ -71,8 +71,8 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: all three agree with each other and with an independent oracle (harness.check verifies the claimed (L, i) directly: s[i..i+L-1] is a palindrome, no window of length L+1 or L+2 is one, and no palindrome of length L starts before i) on six kinds of strings (random over {a,b}, {a,b,c} and 26 letters, all-equal, planted palindromes, periodic), n = 0..10, 15, 20, 40, 80 (brute force up to 80), 200, 1000 (expand up to 1000) and 5000 (Manacher). V2 on the worst-case family a^n: runtimes fitted against n^3 (brute force, n = 40..320), n^2 (expand, n = 200..3200) and n (Manacher, n = 3000..300000). experiments/2026-10-07_palindrome_probe.py checks the comparison counts on a^n exactly: brute force equals sum_{L} (n-L+1) floor(L/2) (2743440 at n = 320), expand equals n^2/2 + n/2 (51360 at n = 320), Manacher 2n - 3 for every n >= 2 (637 at n = 320): every comparison on a^n succeeds, and in each scan every success moves the right end r of the rightmost palindrome found one position to the right; r rises from -1 to n - 1, and apart from these steps it rises only when a centre beyond r starts its scan, by 2 in the odd-length scan (centres 0 and 1) and by 1 in the even-length scan (centre 1), so the odd-length scan makes n - 2 comparisons and the even-length scan n - 1.",
-    "artifacts": ["implementations/brute_force.py", "implementations/expand_centers.py", "implementations/manacher.py", "harness.py", "../../experiments/2026-10-07_palindrome_probe.py"]
+    "method": "V1: all three agree with each other and with an independent oracle (harness.check verifies the claimed (L, i) directly: s[i..i+L-1] is a palindrome, no window of length L+1 or L+2 is one, and no palindrome of length L starts before i) on six kinds of strings (random over {a,b}, {a,b,c} and 26 letters, all-equal, planted palindromes, periodic), n = 0..10, 15, 20, 40, 80 (brute force up to 80), 200, 1000 (expand up to 1000) and 5000 (Manacher). V2 on the worst-case family a^n: runtimes fitted against n^3 (brute force, n = 40..320), n^2 (expand, n = 200..3200) and n (Manacher, n = 3000..300000). experiments/2026-10-07_palindrome_probe.py checks the comparison counts on a^n exactly, on instrumented copies of the code: brute force equals sum_{L} (n-L+1) floor(L/2) (2743440 at n = 320), expand equals n^2/2 + n/2 (51360 at n = 320), Manacher 2n - 3 for every n >= 2 (637 at n = 320), n - 2 in the odd-length scan and n - 1 in the even-length scan. Proofs: PROOFS.md proves every claim of this entry (the correctness of the three algorithms, the counts on a^n, the bounds on every input and in expectation, Manacher's linear bound, the lower bound, the oracle and the radius-array remark), and tests/test_proofs_palindrome.py checks them on the unchanged code (the a^n counts for n = 0..60, 0..300 and 0..2000).",
+    "artifacts": ["PROOFS.md", "implementations/brute_force.py", "implementations/expand_centers.py", "implementations/manacher.py", "harness.py", "../../experiments/2026-10-07_palindrome_probe.py", "../../tests/test_proofs_palindrome.py"]
   },
   "test_harness": {
     "module": "harness.py",
@@ -80,5 +80,15 @@
     "trials": 6
   },
   "caveats": "The quadratic and cubic bounds are worst-case bounds, attained on strings with many long palindromes such as a^n; on random strings over two or more letters brute force costs Theta(n^2) and expanding around centers Theta(n) in expectation (the probe measured 100431 and 1596 comparisons at n = 320 on a random {a, b} string). So the pair, and its V2 check, concern worst-case inputs. The returned position is the leftmost among the longest palindromes; other conventions (e.g. returning the substring) are equivalent up to O(n).",
-  "notes": "The same linear-time radius array also lists every maximal palindrome and counts all palindromic substrings (the sum of the radii)."
+  "notes": "The same linear-time radius array also lists every maximal palindrome and counts all palindromic substrings (the sum of the radii).",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_palindrome.py",
+      "../../experiments/2026-10-07_oracle_controls.py"
+    ],
+    "audit": "RL-107"
+  }
 }

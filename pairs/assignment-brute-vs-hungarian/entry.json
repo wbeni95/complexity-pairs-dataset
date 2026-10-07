@@ -12,9 +12,9 @@
       "idea": "Evaluate the cost of every one of the n! assignments and keep the cheapest.",
       "model": "classical-deterministic",
       "pseudocode": "for each permutation p of 0..n-1: best = min(best, sum_i C[i][p[i]])",
-      "time_complexity": "Theta(n * n!) (n! permutations, Theta(n) to cost each)",
-      "space_complexity": "Theta(n)",
-      "correctness": "Exhaustive: every perfect matching of K_{n,n} is a permutation.",
+      "time_complexity": "Theta(n * n!) under the machine-model assumption on itertools.permutations listed under background, and Omega(n * n!) unconditionally: n! permutations, Theta(n) to cost each, exactly n * n! matrix reads on every input (PROOFS.md section 1)",
+      "space_complexity": "Theta(n) under the same assumption: the current permutation tuple (n slots) and the generator's O(n) state (PROOFS.md section 1)",
+      "correctness": "Exhaustive: every perfect matching of K_{n,n} is a permutation, and itertools.permutations yields each permutation of range(n) exactly once (its documented behaviour, part of the background assumption; PROOFS.md section 1).",
       "implementation": "implementations/brute_force.py:assignment_brute",
       "harness": {
         "v1_max_n": 8,
@@ -23,12 +23,12 @@
     },
     {
       "name": "Hungarian method (shortest augmenting paths with potentials)",
-      "idea": "Insert rows one at a time. For each new row, run an array-based Dijkstra over the columns on reduced costs C[i][j] - u[i] - v[j] >= 0 to find a cheapest augmenting path to a free column, augment, and update the potentials so reduced costs stay non-negative and are zero on matched pairs.",
+      "idea": "Insert rows one at a time. For each new row, run an array-based Dijkstra over the columns on the reduced costs C[i][j] - u[i] - v[j], which are non-negative on the rows already inserted (the arcs out of the new row may be negative), to find a cheapest augmenting path to a free column, augment, and update the potentials so that the reduced costs of the inserted rows stay non-negative and are zero on matched pairs.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "O(n^3) worst case: the search for the i-th inserted row runs at most i iterations of its main loop, because every iteration except the last selects a column that is already matched (the loop stops at the first free column selected), the selected columns are distinct, and only i - 1 columns are matched at that time; iteration t evaluates one reduced cost for each of the n - t + 1 columns not yet selected and does Theta(n) further work. Hence at most n(n + 1)(2n + 1)/6 reduced-cost evaluations and O(n^3) time on every input. Theta(n^3) growth measured on the column-dominant family used for timing (no proof of that lower bound is given here)",
-      "space_complexity": "Theta(n) besides the input",
-      "correctness": "Kuhn 1955 and Munkres 1957 (primal-dual method; Kuhn's original version runs in O(n^4)). The O(n^3) shortest-augmenting-path form with potentials is due to Edmonds & Karp 1972 (and independently Tomizawa 1971). Invariants: (u, v) is dual feasible (all reduced costs >= 0) and every matched pair is tight. So each partial matching is optimal for the rows inserted so far, and after n rows LP duality certifies the perfect matching as optimal.",
+      "time_complexity": "O(n^3) worst case: the search for the i-th inserted row runs at most i iterations of its main loop, because every iteration except the last selects a column that is already matched (the loop stops at the first free column selected), the selected columns are distinct, and only i - 1 columns are matched at that time; iteration t evaluates one reduced cost for each of the n - t + 1 columns not yet selected and does Theta(n) further work. Hence at most n(n + 1)(2n + 1)/6 reduced-cost evaluations and O(n^3) time on every input (PROOFS.md Lemma H0). Theta(n^3) growth measured on the column-dominant family used for timing (no proof of that lower bound is given here)",
+      "space_complexity": "Theta(n) besides the input: six lists of n + 1 entries (PROOFS.md section 4)",
+      "correctness": "Invariants before each row: (u, v) is dual feasible on the rows inserted so far (all their reduced costs >= 0) and every matched pair is tight. Each search is Dijkstra's algorithm on the reduced costs (the arcs out of the new row may be negative, but every path starts with exactly one of them) and finds a cheapest augmenting path; the potential update keeps the invariants. After n rows the potentials certify the perfect matching as optimal by weak duality: every assignment costs at least sum(u) + sum(v), with equality for the final matching. Complete proof: PROOFS.md sections 2-3. Credit: Kuhn 1955; Munkres 1957; Edmonds & Karp 1972; Tomizawa 1971.",
       "implementation": "implementations/hungarian.py:assignment_hungarian",
       "harness": {
         "scaling": { "cost": "n**3", "n_values": [30, 50, 75, 100, 150, 200] }
@@ -36,7 +36,7 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Factorial -> cubic: Theta(n * n!) vs O(n^3). The waste in enumeration is ignoring the linear-programming structure: the assignment LP has integral optimal vertices (Birkhoff-von Neumann), so dual potentials certify optimality and guide a polynomial search. For integer costs bounded by N, cost scaling gives O(n^2.5 log(nN)) (Gabow & Tarjan 1989), a further T3 step on dense inputs.",
+  "relationship": "Factorial -> cubic: Theta(n * n!) (under the background assumption on itertools.permutations; Omega(n * n!) unconditionally) vs O(n^3). The separation needs only Omega(n * n!) and the proved O(n^3) (PROOFS.md section 5). The waste in enumeration is ignoring the linear-programming structure: dual potentials u, v with C[i][j] >= u_i + v_j certify optimality (every assignment costs at least sum(u) + sum(v)) and guide a polynomial search. A cost-scaling algorithm from the literature, whose bound O(n^2.5 log(nN)) is below O(n^3) when log(nN) = o(sqrt(n)) (for example for integer costs of polynomial magnitude), is listed under background.",
   "sources": [
     {
       "authors": "Kuhn, H. W.",
@@ -57,16 +57,14 @@
       "year": 1972,
       "title": "Theoretical improvements in algorithmic efficiency for network flow problems",
       "venue": "Journal of the ACM 19(2), 248-264",
-      "doi": "10.1145/321694.321699",
-      "note": "Shortest augmenting paths with node potentials; O(n^3) for the assignment problem."
+      "doi": "10.1145/321694.321699"
     },
     {
       "authors": "Tomizawa, N.",
       "year": 1971,
       "title": "On some techniques useful for solution of transportation network problems",
       "venue": "Networks 1(2), 173-194",
-      "doi": "10.1002/net.3230010206",
-      "note": "Independently introduced the potentials that keep reduced costs non-negative for Dijkstra."
+      "doi": "10.1002/net.3230010206"
     },
     {
       "authors": "Jonker, R.; Volgenant, A.",
@@ -81,18 +79,50 @@
       "title": "Faster scaling algorithms for network problems",
       "venue": "SIAM Journal on Computing 18(5), 1013-1036",
       "doi": "10.1137/0218069"
+    },
+    {
+      "authors": "Python Software Foundation",
+      "year": 2026,
+      "title": "itertools - Functions creating iterators for efficient looping: itertools.permutations",
+      "venue": "The Python Standard Library documentation, Python 3.14",
+      "url": "https://docs.python.org/3.14/library/itertools.html#itertools.permutations",
+      "note": "Background only: the documented behaviour (successive permutations, lexicographic order, n!/(n - r)! of them) and the 'roughly equivalent' Python code, read on 2026-10-07."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree on n = 0..8 (enumeration capped at n = 8) over three instance kinds: uniform costs in [0, 99], costs in [-3, 3] (many ties and negative entries), and the column-dominant worst-case family. For n <= 12 harness.check compares against an independent exact O(n 2^n) DP over column subsets; for n = 30 and 100 (Hungarian only) it checks the row-minimum and column-minimum lower bounds and the identity-assignment upper bound. V2: enumeration fitted against n * n!; the Hungarian method fitted against n^3 on worst-case instances from generate_scaling (C[i][j] = 1000 j + noise in [0, 999]). On uniformly random matrices its search stops early and the measured growth is visibly below n^3, which is why the worst-case family is used for timing.",
-    "artifacts": ["implementations/brute_force.py", "implementations/hungarian.py", "harness.py"]
+    "method": "V1: both implementations agree on n = 0..8 (enumeration capped at n = 8) over three instance kinds: uniform costs in [0, 99], costs in [-3, 3] (many ties and negative entries), and the column-dominant worst-case family. For n <= 12 harness.check compares against an independent exact O(n 2^n) DP over column subsets; for n = 30 and 100 (Hungarian only) it checks the row-minimum and column-minimum lower bounds and the identity-assignment upper bound. V2: enumeration fitted against n * n!; the Hungarian method fitted against n^3 on worst-case instances from generate_scaling (C[i][j] = 1000 j + noise in [0, 999]). On uniformly random matrices its searches stop early (measured: 8% to 28% of the iteration bound n(n + 1)/2 on [0, 99] matrices, n = 30..200, experiments/2026-10-07_assignment_random_matrix_counts.py), which is why the column-dominant family is used for timing. Proofs: PROOFS.md proves the correctness, counts, bounds and space of both implementations (the enumeration's upper bounds under the background assumption on itertools.permutations) and the maximisation remark, and names their deterministic checks (tests/test_proofs_assignment.py and the experiment above).",
+    "artifacts": ["PROOFS.md", "implementations/brute_force.py", "implementations/hungarian.py", "harness.py", "../../tests/test_proofs_assignment.py", "../../experiments/2026-10-07_assignment_random_matrix_counts.py"]
   },
   "test_harness": {
     "module": "harness.py",
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 30, 100],
     "trials": 5
   },
-  "caveats": "The O(n^3) bound counts arithmetic and comparisons on integers as unit cost. It is a worst-case bound; on typical random matrices the implementation is faster. The maximisation version reduces to this one by negating costs.",
-  "notes": "Rectangular (n x m) versions and sparse graphs are handled by the same shortest-augmenting-path framework (Jonker & Volgenant 1987)."
+  "caveats": "The O(n^3) bound counts arithmetic and comparisons on integers as unit cost. It is a worst-case bound; on uniformly random matrices with entries in [0, 99] the searches used only 8% to 28% of its iteration bound n(n + 1)/2 (n = 30..200, three matrices each; measured, experiments/2026-10-07_assignment_random_matrix_counts.py). The maximisation version reduces to this one by negating costs (PROOFS.md section 6). The upper bounds for the enumeration rest on a machine-model assumption about itertools.permutations (background); the lower bound Omega(n * n!) does not depend on it.",
+  "notes": "Related algorithms from the literature are listed under background.",
+  "background": [
+    {
+      "statement": "Machine-model assumption of this entry: CPython's itertools.permutations(range(n)) behaves as its documented 'roughly equivalent' Python code. It yields every permutation of range(n) exactly once, as n-tuples in lexicographic order (documented behaviour); it does O(n * n!) work in total over the n! permutations, that is amortised O(n) per permutation, while a single step can take Theta(n^2); and it keeps O(n) words of state (pool, indices, cycles). PROOFS.md section 1 proves the two cost properties for the documented code; that the C implementation has the same costs is assumed, not proved.",
+      "source": "Python Software Foundation 2026, itertools documentation: permutations, description and 'roughly equivalent' code"
+    },
+    {
+      "statement": "For integer costs of magnitude at most N, the assignment problem (minimum-cost bipartite matching) can be solved by cost scaling in O(sqrt(n) m log(nN)) time on a graph with n vertices and m edges; for an n x n cost matrix this is O(n^2.5 log(nN)).",
+      "source": "Gabow & Tarjan 1989, abstract"
+    },
+    {
+      "statement": "Jonker and Volgenant give a shortest augmenting path algorithm for dense and sparse linear assignment problems.",
+      "source": "Jonker & Volgenant 1987 (title)"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_assignment.py",
+      "../../experiments/2026-10-07_assignment_random_matrix_counts.py"
+    ],
+    "audit": "RL-107"
+  }
 }

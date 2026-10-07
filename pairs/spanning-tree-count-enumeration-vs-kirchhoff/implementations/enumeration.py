@@ -5,9 +5,9 @@ n-1 edges has exactly n - (n-1) = 1 component). Acyclicity is tested with a fres
 subset (union by size, path halving): an edge whose endpoints already have the same root closes a cycle,
 and the subset is rejected at that edge.
 
-Cost per subset: Theta(n) to reset the two arrays, plus at most n-1 unions (2(n-1) finds), O(n alpha(n))
-amortized. With the Theta(n^2) scan of the matrix for the edge list, the total is
-O(n^2 + n alpha(n) C(m, n-1)) and Omega(n^2 + n C(m, n-1)); on K_n, m = n(n-1)/2.
+Cost per subset: Theta(n) to reset the two arrays, plus at most n-1 unions (2(n-1) finds), O(n log n) because
+union by size keeps every tree of height at most log2 n. With the Theta(n^2) scan of the matrix for the edge list,
+the total is O(n^2 + n log n C(m, n-1)) and Omega(n^2 + n C(m, n-1)); on K_n, m = n(n-1)/2.
 """
 from itertools import combinations
 

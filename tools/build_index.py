@@ -201,6 +201,10 @@ def entry_readme(entry: dict) -> str:
         out += [f"**Caveats.** {entry['caveats']}", ""]
     if entry["notes"]:
         out += [f"**Notes.** {entry['notes']}", ""]
+    if entry.get("background"):
+        out += ["**Background** (cited; not claims of this entry, and not covered by the check mark).", ""]
+        out += [f"- {item['statement']} ({item['source']})" for item in entry["background"]]
+        out.append("")
     out += [f"**Verification.** {entry['verification']['method']}", "", "**Sources.**", ""]
     for s in entry["sources"]:
         ref = f"- {s['authors']} ({s['year']}). *{s['title']}*."

@@ -9,14 +9,15 @@ two non-empty sides. Disconnected graphs have answer 0. For n < 2 no such partit
 | Algorithm | Weight operations (n ≥ 2, exact) | Time | Implementation |
 |---|---|---|---|
 | All 2ⁿ⁻¹ − 1 bipartitions (vertex 0 fixed) | n(n−1)2ⁿ⁻³ additions + 2ⁿ⁻¹ − 2 comparisons | Θ(n²·2ⁿ) | [brute_force.py](implementations/brute_force.py) |
-| Stoer–Wagner, array version (1997) | (n−1)(n−2)(n+3)/6 additions + n(n−1)(n−2)/6 + n − 2 comparisons | Θ(n³) | [stoer_wagner.py](implementations/stoer_wagner.py) |
+| Stoer–Wagner, array version (1997) | (n−1)(n−2)(n+3)/6 additions + n(n−1)(n−2)/6 + n − 2 comparisons | Θ(n³) (each dictionary access counted as one operation) | [stoer_wagner.py](implementations/stoer_wagner.py) |
 
 **Why it's here.** The brute force ignores the structure of minimum cuts. In a maximum-adjacency ordering that ends
 in s, t, the cut separating t from everything else is a minimum s–t cut (the "cut of the phase"). So after each
 phase either the global minimum separates s and t, and it has just been seen, or s and t can be merged. Then n − 1
-phases suffice. Stoer and Wagner found this simple proof for the earlier Nagamochi–Ibaraki algorithm. Their
-Fibonacci-heap bound O(nm + n² log n) is Θ(n³) on dense matrix input, so the array version is the natural one here.
-Karger–Stein (randomized) is faster but is not implemented (see `notes` in entry.json).
+phases suffice. Stoer and Wagner present it as a simplification of the earlier Nagamochi–Ibaraki algorithm. Their
+Fibonacci-heap bound O(nm + n² log n) (background in entry.json) is O(n³) on dense matrix input, so the array version
+is the natural one here. Karger and Stein's randomized algorithm has the smaller published bound O(n² log³ n)
+(background); it is not implemented (see `notes` in entry.json).
 
 **Where the closed forms come from.** Brute force: summed over all S ⊆ {1..n−1}, the number of S × T pairs is
 Σₖ C(n−1,k)·k(n−k) = n(n−1)2ⁿ⁻³. Each pair is one addition, and each bipartition after the first costs one
@@ -42,6 +43,11 @@ n = 2..14, Stoer–Wagner at n = 2..40 and 48..256). The counts do not depend on
 
 **Caveats.** Additions and comparisons are unit cost. With b-bit weights, each costs O(b + log n) bit operations. In
 the input size N = n² the brute force is 2^Θ(√N), not 2^Θ(N).
+
+**Proofs.** [PROOFS.md](PROOFS.md) proves the exact operation counts of this entry for all sizes of their domains,
+from the code, and names the scripts and sizes that check each count. It also proves the correctness of both
+algorithms (with the cut-of-the-phase lemma), the time and space bounds, the sizes of the numbers and the oracle;
+[tests/test_proofs_mincut.py](../../tests/test_proofs_mincut.py) checks their computable parts.
 
 **Sources.** Stoer & Wagner, J. ACM 44(4) 1997. Nagamochi & Ibaraki, SIAM J. Discrete Math. 5(1) 1992. Karger &
 Stein, J. ACM 43(4) 1996 (context only). Edmonds & Karp, J. ACM 19(2) 1972 (the oracle's max flow). Experiment:

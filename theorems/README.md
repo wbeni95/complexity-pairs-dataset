@@ -7,7 +7,9 @@ them.
 
 ## What every note contains
 
-Each note is a folder `theorems/<id>/` with three files:
+Each note is a folder `theorems/<id>/` with three files, and, where the proof is checked against third-party
+input files, a `data/` folder holding unmodified copies of them under their own licences (see `data/README.md`
+in that note):
 
 | File | Content |
 |---|---|
@@ -45,7 +47,7 @@ deterministic checks, and a logged audit. A citation in a note is credit, not pa
 
 | Note | Provenance | Statement (short) |
 |---|---|---|
-| [no-integral-form-z-half-schemes](no-integral-form-z-half-schemes/) | literature | The ⟨2,4,5;32⟩ scheme of AlphaEvolve and the ⟨3,3,6;40⟩ scheme attributed to Smirnov, in the pinned files, both with coefficients in ℤ[1/2], have no equivalent form with integer coefficients. |
+| [no-integral-form-z-half-schemes](no-integral-form-z-half-schemes/) | literature, **pending** | The ⟨2,4,5;32⟩ scheme of AlphaEvolve and the ⟨3,3,6;40⟩ scheme attributed to Smirnov, in the pinned files, both with coefficients in ℤ[1/2], have no equivalent form with integer coefficients. |
 | [knuth-window-concave-length-weights](knuth-window-concave-length-weights/) | literature, **pending** | Knuth's restricted root window is exact for the interval recurrence with concave nondecreasing length weights, under the largest and the smallest tie rule, with an explicit trajectory of chosen roots. |
 
 ## Running the checks
@@ -53,7 +55,7 @@ deterministic checks, and a logged audit. A citation in a note is credit, not pa
 From the repository root:
 
 ```bash
-python theorems/no-integral-form-z-half-schemes/verify.py           # downloads two pinned files (or: --cache DIR)
+python theorems/no-integral-form-z-half-schemes/verify.py           # offline: the three pinned files in data/ (or: --download)
 python theorems/knuth-window-concave-length-weights/verify.py       # offline, well under a minute
 ```
 

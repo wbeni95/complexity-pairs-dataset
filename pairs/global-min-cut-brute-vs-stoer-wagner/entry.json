@@ -4,7 +4,7 @@
   "problem_statement": "Given an undirected graph on n vertices as an n x n symmetric matrix W of non-negative integer edge weights with zero diagonal (W[u][v] = 0 means no edge), compute the global minimum cut weight: the minimum, over all partitions of the vertex set into two non-empty sides S and V - S, of the total weight of the edges with one end in S and one in V - S. The graph need not be connected (then the answer is 0). Convention: for n < 2 no such partition exists and the answer is None.",
   "input": {
     "parameter": "n = number of vertices.",
-    "size_measure": "n^2 matrix entries (n(n-1)/2 independent weights). Weights are small integers in the harness; costs count weight additions and comparisons as unit-cost operations (with b-bit weights each one costs O(b + log n) bit operations, since every cut weight is at most n^2 2^b / 4)."
+    "size_measure": "n^2 matrix entries (n(n-1)/2 independent weights). Weights are small integers in the harness; costs count weight additions and comparisons as unit-cost operations (with b-bit weights each one costs O(b + log n) bit operations, since every value computed is at most n^2 2^b / 4; PROOFS.md, section 7)."
   },
   "algorithms": [
     {
@@ -12,9 +12,9 @@
       "idea": "Fix vertex 0 on one side and enumerate the other side S over all 2^(n-1) - 1 non-empty subsets of {1, ..., n-1}; sum the weights over S x (V - S) for each and keep the minimum.",
       "model": "classical-deterministic",
       "pseudocode": "best = None\nfor each non-empty S subset of {1..n-1}:\n    w = sum of W[u][v] over u in S, v not in S\n    if best is None or w < best: best = w\nreturn best",
-      "time_complexity": "Theta(n^2 2^n): exactly n(n-1)2^(n-3) weight additions and 2^(n-1) - 2 weight comparisons (n >= 2). In terms of the input size N = n^2 entries this is 2^Theta(sqrt(N)), still super-polynomial.",
-      "space_complexity": "Theta(n) besides the input",
-      "correctness": "Exhaustive: every partition into two non-empty sides has exactly one side not containing vertex 0, and that side is one of the enumerated sets S.",
+      "time_complexity": "Theta(n^2 2^n): exactly n(n-1)2^(n-3) weight additions and 2^(n-1) - 2 weight comparisons (n >= 2), plus Theta(n) other work per subset (PROOFS.md, sections 1 and 6). In terms of the input size N = n^2 entries this is 2^Theta(sqrt(N)), still super-polynomial.",
+      "space_complexity": "Theta(n) besides the input (PROOFS.md, section 6)",
+      "correctness": "Exhaustive: every partition into two non-empty sides has exactly one side not containing vertex 0, and that side is one of the enumerated sets S (PROOFS.md, section 4).",
       "implementation": "implementations/brute_force.py:min_cut_brute_force",
       "harness": {
         "v1_max_n": 12,
@@ -44,9 +44,9 @@
       "idea": "n - 1 phases. Each phase orders the current vertices by maximum adjacency (repeatedly add the vertex most tightly connected to the set built so far); the last vertex t against the rest is a minimum s-t cut for the last two vertices s, t. Record it, merge t into s, repeat; the answer is the lightest recorded cut.",
       "model": "classical-deterministic",
       "pseudocode": "best = None; active = all vertices\nwhile |active| > 1:\n    a = first active vertex; key[v] = W[a][v] for the others\n    repeat |active| - 1 times: sel = argmax key over unadded vertices; mark sel added; key[v] += W[sel][v] for the unadded v\n    s, t = last two vertices added; best = min(best, key[t])\n    merge t into s: W[s][v] += W[t][v] for every other active v; remove t\nreturn best",
-      "time_complexity": "Theta(n^3) with plain arrays: a phase on k vertices costs Theta(k^2); exactly (n-1)(n-2)(n+3)/6 weight additions and n(n-1)(n-2)/6 + n - 2 weight comparisons (n >= 2).",
-      "space_complexity": "Theta(n^2) (working copy of the matrix)",
-      "correctness": "Stoer & Wagner 1997, Theorem (cut-of-the-phase lemma): in a maximum-adjacency ordering ending in s, t, the cut ({t}, rest) is a minimum s-t cut. The global minimum cut either separates s and t (and weighs at least the cut of the phase) or does not (and survives merging s and t). Induction over the n - 1 phases. Same argument as Nagamochi & Ibaraki 1992 in simplified form.",
+      "time_complexity": "Theta(n^3) with plain arrays (each access to the dictionary key counted as one word operation): a phase on k vertices costs Theta(k^2); exactly (n-1)(n-2)(n+3)/6 weight additions and n(n-1)(n-2)/6 + n - 2 weight comparisons (n >= 2) (PROOFS.md, sections 2 and 6).",
+      "space_complexity": "Theta(n^2) (working copy of the matrix; PROOFS.md, section 6)",
+      "correctness": "PROOFS.md, section 5 (Stoer & Wagner 1997, Lemma 3.1 and Theorem 2.1): in a maximum-adjacency ordering ending in s, t, the cut ({t}, rest) is a minimum s-t cut (cut-of-the-phase lemma, proved there). The global minimum cut either separates s and t (and weighs at least the cut of the phase) or does not (and survives merging s and t). Induction over the n - 1 phases. Stoer & Wagner present it as a simplification of the algorithm of Nagamochi & Ibaraki 1992.",
       "implementation": "implementations/stoer_wagner.py:min_cut_stoer_wagner",
       "harness": {
         "scaling": {
@@ -71,7 +71,17 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Exponential -> polynomial on the same problem: the brute force performs Theta(n^2 2^n) weight operations (exactly n(n-1)2^(n-3) additions + 2^(n-1) - 2 comparisons), Stoer-Wagner Theta(n^3) (exactly (n-2)(2n^2+n+3)/6 additions + comparisons). The brute force ignores the structure of minimum cuts: the cut-of-the-phase lemma lets Stoer-Wagner merge two vertices after each phase instead of trying all partitions. Stoer & Wagner 1997 also give O(nm + n^2 log n) with a Fibonacci heap (m = number of edges); on dense matrix input (m = Theta(n^2)) that is Theta(n^3) as well, so the array version is the right one here. Karger-Stein's randomized recursive contraction (1996; O(n^2 log^3 n), recalled, not re-checked against the paper) is faster but not implemented.",
+  "relationship": "Exponential -> polynomial on the same problem: the brute force performs Theta(n^2 2^n) weight operations (exactly n(n-1)2^(n-3) additions + 2^(n-1) - 2 comparisons), Stoer-Wagner Theta(n^3) (exactly (n-2)(2n^2+n+3)/6 additions + comparisons). The brute force ignores the structure of minimum cuts: the cut-of-the-phase lemma lets Stoer-Wagner merge two vertices after each phase instead of trying all partitions. Stoer & Wagner 1997 also give O(nm + n^2 log n) with a Fibonacci heap (m = number of edges; background); on dense matrix input (m = Theta(n^2)) that bound is O(n^3) as well, so the array version is the natural one here. Karger and Stein's randomized recursive contraction has the smaller published bound O(n^2 log^3 n) (background); it is not implemented.",
+  "background": [
+    {
+      "statement": "With a Fibonacci-heap priority queue, one phase of the Stoer-Wagner algorithm takes O(m + n log n) time, and the whole algorithm O(nm + n^2 log n), for a graph with n vertices and m edges.",
+      "source": "Stoer & Wagner 1997, Section 4"
+    },
+    {
+      "statement": "Karger and Stein's randomized recursive contraction algorithm finds a minimum cut with high probability in O(n^2 log^3 n) time.",
+      "source": "Karger & Stein 1996, abstract"
+    }
+  ],
   "sources": [
     {
       "authors": "Stoer, M.; Wagner, F.",
@@ -86,7 +96,7 @@
       "title": "Computing edge-connectivity in multigraphs and capacitated graphs",
       "venue": "SIAM Journal on Discrete Mathematics 5(1), 54-66",
       "doi": "10.1137/0405004",
-      "note": "The maximum-adjacency-ordering approach that Stoer-Wagner simplifies."
+      "note": "The algorithm that Stoer & Wagner 1997 simplify (Stoer & Wagner 1997, Section 1)."
     },
     {
       "authors": "Karger, D. R.; Stein, C.",
@@ -94,7 +104,7 @@
       "title": "A new approach to the minimum cut problem",
       "venue": "Journal of the ACM 43(4), 601-640",
       "doi": "10.1145/234533.234534",
-      "note": "Randomized O(n^2 log^3 n) recursive contraction; cited for context only, not implemented."
+      "note": "Randomized recursive contraction, O(n^2 log^3 n) time by its abstract; cited as background only, not implemented."
     },
     {
       "authors": "Edmonds, J.; Karp, R. M.",
@@ -107,12 +117,14 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree with each other and with an independent harness.check on 96 instances (sizes 0-12, 16, 20, 24; 6 trials; brute force up to n = 12). generate mixes six families: dense weights 0..9, sparse (often disconnected), two components by construction, a planted light cut between two dense halves, a weakly attached vertex, and the all-zero matrix; on the validator's seeds the minimum cut is 0 in 47 of the 84 instances with n >= 2 and 79 contain zero off-diagonal entries. check computes min over t = 1..n-1 of the maximum 0-t flow (Edmonds-Karp written in the harness; max-flow = min-cut, and every global cut separates 0 from some t) and, for n <= 10, also enumerates all vertex subsets with a different formula (degree sum minus twice the inside weight); for n < 2 it requires None. Negative controls (experiments/2026-10-07b_global_min_cut_counts.py): check rejects answer+1 on 84/84 instances, the minimum weighted degree on 28/84, Stoer-Wagner's first phase alone on 34/84. V2 (exact counts, RL-047 method): the harness's CountingWeight counts every weight addition and order comparison made by the UNCHANGED implementations; reported_cost = additions + comparisons. Proven closed forms, checked for brute force n = 2..14 and Stoer-Wagner n = 2..40, 48..256: brute force n(n-1)2^(n-3) + 2^(n-1) - 2; Stoer-Wagner (n-1)(n-2)(n+3)/6 + n(n-1)(n-2)/6 + n - 2 = (n-2)(2n^2+n+3)/6; neither depends on the weights. Fits at tolerance 0.03: brute force on n = 6..14 (even) alpha = 1.002 against n^2 2^n, rivals n^3 2.838, 2^n 1.305, n 2^n 1.134, n^3 2^n 0.897 rejected; Stoer-Wagner on n = 32, 64, 128, 256 alpha = 1.007 against n^3, rivals n^2 2^n 0.037, n^4 0.755, n^2 1.510, n^2 log^3 n 1.128 rejected. |alpha - 1| comes only from lower-order terms; both fits also resolve the log-factor diagnostic (0.951/1.058 and 0.936/1.088). Timing is not used.",
+    "method": "V1: both implementations agree with each other and with an independent harness.check on 96 instances (sizes 0-12, 16, 20, 24; 6 trials; brute force up to n = 12). generate mixes six families: dense weights 0..9, sparse (often disconnected), two components by construction, a planted light cut between two dense halves, a weakly attached vertex, and the all-zero matrix; on the validator's seeds the minimum cut is 0 in 47 of the 84 instances with n >= 2 and 79 contain zero off-diagonal entries. check computes min over t = 1..n-1 of the maximum 0-t flow (Edmonds-Karp written in the harness; max-flow = min-cut, and every global cut separates 0 from some t) and, for n <= 10, also enumerates all vertex subsets with a different formula (degree sum minus twice the inside weight); for n < 2 it requires None. Negative controls (experiments/2026-10-07b_global_min_cut_counts.py): check rejects answer+1 on 84/84 instances, the minimum weighted degree on 28/84, Stoer-Wagner's first phase alone on 34/84. V2 (exact counts, RL-047 method): the harness's CountingWeight counts every weight addition and order comparison made by the UNCHANGED implementations; reported_cost = additions + comparisons. Proven closed forms, checked for brute force n = 2..14 and Stoer-Wagner n = 2..40, 48..256: brute force n(n-1)2^(n-3) + 2^(n-1) - 2; Stoer-Wagner (n-1)(n-2)(n+3)/6 + n(n-1)(n-2)/6 + n - 2 = (n-2)(2n^2+n+3)/6; neither depends on the weights. Fits at tolerance 0.03: brute force on n = 6..14 (even) alpha = 1.002 against n^2 2^n, rivals n^3 2.838, 2^n 1.305, n 2^n 1.134, n^3 2^n 0.897 rejected; Stoer-Wagner on n = 32, 64, 128, 256 alpha = 1.007 against n^3, rivals n^2 2^n 0.037, n^4 0.755, n^2 1.510, n^2 log^3 n 1.128 rejected. |alpha - 1| comes only from lower-order terms; both fits also resolve the log-factor diagnostic (0.951/1.058 and 0.936/1.088). Timing is not used. Exact counts: PROOFS.md proves the exact operation counts of this entry for all sizes of their domains, from the code, and names the scripts and sizes that check each count. Proofs of the other claims: PROOFS.md, sections 3-8 (problem facts, correctness of both algorithms including the cut-of-the-phase lemma, time and space bounds, sizes of the numbers, the oracle); tests/test_proofs_mincut.py checks their computable parts (132 instances against a subset enumeration, the cut-of-the-phase lemma on 210 random graphs, disconnected graphs and diagonals, value sizes on 102 instances, tracemalloc peaks).",
     "artifacts": [
+      "PROOFS.md",
       "implementations/brute_force.py",
       "implementations/stoer_wagner.py",
       "harness.py",
-      "../../experiments/2026-10-07b_global_min_cut_counts.py"
+      "../../experiments/2026-10-07b_global_min_cut_counts.py",
+      "../../tests/test_proofs_mincut.py"
     ]
   },
   "test_harness": {
@@ -137,6 +149,19 @@
     ],
     "trials": 6
   },
-  "caveats": "Costs count weight additions and comparisons as unit-cost operations (word-RAM); with b-bit weights each costs O(b + log n) bit operations. The input has N = n^2 matrix entries, so the brute force is 2^Theta(sqrt N) in the input size (super-polynomial, not 2^Theta(N)) and Stoer-Wagner is Theta(N^1.5). Loop overhead not involving weights (building the sides, list removals, index scans) is of the same order as the counted operations (Theta(n^2 2^n) and Theta(n^3)) but is not counted. Convention: for n < 2 the answer is None (no partition into two non-empty sides). The diagonal must be zero; both implementations ignore it, but the harness's subset oracle assumes it.",
-  "notes": "Karger-Stein was considered as a third, classical-randomized algorithm (it would allow secondary tag T4 under the validator rule) and skipped: its V1 check would be probabilistic, the 45-minute budget favoured exact closed forms for the two deterministic algorithms, and the pattern report's timing analysis (rho = 1.050) shows timing could not separate n^3 from n^2 log^3 n. With exact counts the Stoer-Wagner implementation's counts do reject an n^2 log^3 n cost (alpha 1.128 at tolerance 0.03). Experiment: experiments/2026-10-07b_global_min_cut_counts.py."
+  "caveats": "Costs count weight additions and comparisons as unit-cost operations (word-RAM); with b-bit weights each costs O(b + log n) bit operations (PROOFS.md, section 7). The input has N = n^2 matrix entries, so the brute force is 2^Theta(sqrt N) in the input size (super-polynomial, not 2^Theta(N)) and Stoer-Wagner is Theta(N^1.5) (each dictionary access counted as one operation). Loop overhead not involving weights (building the sides, list removals, index scans) is of the same order as the counted operations (Theta(n^2 2^n) and Theta(n^3), each dictionary access counted as one operation; PROOFS.md, section 6) but is not counted. Convention: for n < 2 the answer is None (no partition into two non-empty sides). The diagonal must be zero; both implementations ignore it, but the harness's subset oracle assumes it.",
+  "notes": "Karger-Stein was considered as a third, classical-randomized algorithm (it would allow secondary tag T4 under the validator rule) and skipped: its V1 check would be probabilistic, the 45-minute budget favoured exact closed forms for the two deterministic algorithms, and the pattern report's timing analysis (rho = 1.050) shows timing could not separate n^3 from n^2 log^3 n. With exact counts the Stoer-Wagner implementation's counts do reject an n^2 log^3 n cost (alpha 1.128 at tolerance 0.03). Experiment: experiments/2026-10-07b_global_min_cut_counts.py.",
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "../max-flow-edmonds-karp-vs-dinic/PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_mincut.py",
+      "../../experiments/2026-10-07b_global_min_cut_counts.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py"
+    ],
+    "audit": "RL-107"
+  }
 }

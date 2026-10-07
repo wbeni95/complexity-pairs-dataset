@@ -13,19 +13,22 @@ HR(d) = d - 1 - L(d), k_max = last j >= 2 with h(j) > h(j-1) (1 if h is constant
 tau*(d) = d - 1 - min(HR(d), Q - 1).
 
 Checks:
-  H  heap facts: leaf-split formula, Lemma H (a)-(c).
+  H  heap facts: leaf-split formula, Lemma H (a)-(c), and the bound HR(d) <= 2^floor(log2 N) - 1 of Remark (i).
   L  lemmas B, C (closed form), D, F, G against the dynamic program; steps F1, F2 of Lemma C by direct
-     evaluation of the closed forms; A and E on seeded random h.
+     evaluation of the closed forms; A (with its k_max sentence) and E on seeded random h.
   T  theorem (largest rule exact, trajectory = tau*, smallest rule exact, smallest = mirror) on
        - all supports of (c_2..c_{N-1}, a), N = 2..16, unit weights and seeded random weights 1..7;
        - all integer h with h(1) = 0 and nonincreasing differences in [0, B] for several (B, N);
        - seeded random h (integer and Fraction values) up to N = 200;
-     and tau*_N(d) independent of N >= d.
-  X  the 2-D interval run (own implementation, both tie rules) against the full cubic DP, K(i,j) formula.
+     tau*_N(d) independent of N >= d; Remarks (i)-(iii) on the statement.
+  X  the 2-D interval run (own implementation, both tie rules) against the full cubic DP, K(i,j) formula, chosen
+     roots optimal, and the candidate counts (exactly n^2 per run for length weights, n(n+1)(n+2)/6 for the cubic
+     DP; for arbitrary weights w(i,j), non-empty windows and at most n^2 + n(n+1)/2 candidates).
   B  boundary controls: specific functions outside the hypotheses where the run fails, an exhaustive class table
-     (all h on {1..7} with h(1) = 0 and differences in [-2, 2]), the tie-rule example h = min(s,5) - 1 (and that
-     C is not convex there), N = 1, 2, the non-monotone largest optimal roots of h = min(s, 2), and the reverse
-     quadrangle inequality for concave h.
+     (all h on {1..7} with h(1) = 0 and differences in [-2, 2], with its exact counts), the tie-rule example
+     h = min(s,5) - 1 (and that C is not convex there), N = 1, 2, the non-monotone largest optimal roots of
+     h = min(s, 2), the reverse quadrangle inequality for concave h, equality for affine h, and a strict
+     violation of the quadrangle inequality for h = min(s, 2).
 Usage (from the repository root): python theorems/knuth-window-concave-length-weights/verify.py
 """
 import itertools
@@ -144,6 +147,12 @@ def part_heap():
     check("Lemma H(b): step iff n in (3*2^(D-1), 2^(D+1)], left subtree then has 2^D leaves", bad_b == 0,
           f"{bad_b} violations")
     check("Lemma H(c): HR(d) >= 2^J iff n >= 3*2^J + 1, J <= 15, d <= 20000", bad_c == 0, f"{bad_c} violations")
+    # Remark (i): if k_max = N, then Q = 2^floor(log2 N) and HR(d) <= Q - 1 for every d <= N
+    bad, top = 0, 0
+    for N in range(1, 20001):
+        top = max(top, HR(N))
+        bad += N >= 2 and top > (1 << (N.bit_length() - 1)) - 1
+    check("Remark (i): HR(d) <= 2^floor(log2 N) - 1 for all d <= N, 2 <= N <= 20000", bad == 0, f"{bad} violations")
 
 
 # ------------------------------------------------------------------------------------------------ L: lemmas
@@ -219,7 +228,7 @@ def part_lemmas(KMAX=64, NMAX=520):
                     bad += capC[k][n - 1] != capC[k][n - Q - 1] + capC[k][Q - 1] + k
     check("Lemma G: A_k(n) = A_k(n - Q) + A_k(Q) + k", bad == 0 and cases > 0, f"{cases} cases, {bad} violations")
     rng = random.Random(77)
-    badA = badE = 0
+    badA = badE = badK = 0
     for _ in range(200):
         N = rng.randint(2, 100)
         a = rng.choice([0, 0, rng.randint(1, 5)])
@@ -230,6 +239,9 @@ def part_lemmas(KMAX=64, NMAX=520):
         a2, c2 = dh[N], {k: dh[k] - dh[k + 1] for k in range(2, N)}
         kap2 = h[1] - a2 - sum(c2.values())
         badA += any(h[s] != kap2 + a2 * s + sum(ck * min(s, k) for k, ck in c2.items()) for s in range(1, N + 1))
+        positive = [k for k, ck in c2.items() if ck > 0]
+        if a2 > 0 or positive:  # Lemma A's k_max sentence (h not constant)
+            badK += k_max(h, N) != (N if a2 > 0 else max(positive))
         C, T = dp(h, N)
         for d in range(1, N + 1):
             val = kappa * d + a * Clin[d] + sum(ck * capC[k][d] for k, ck in c.items())
@@ -241,6 +253,7 @@ def part_lemmas(KMAX=64, NMAX=520):
                 inter &= Tlin[d]
             badE += (C[d] != val) + (T[d] != inter) + (heap_left(d) not in T[d])
     check("Lemma A: representation recovered, 200 seeded random h", badA == 0, f"{badA}")
+    check("Lemma A: k_max = N if a > 0, else max{k : c_k > 0} (h not constant), same 200 h", badK == 0, f"{badK}")
     check("Lemma E: C = kappa d + a C_lin + sum c_k C_k and T = intersection, 200 seeded random h", badE == 0,
           f"{badE}")
 
@@ -248,7 +261,7 @@ def part_lemmas(KMAX=64, NMAX=520):
 # ------------------------------------------------------------------------------------------------ T: theorem
 def part_theorem(NSUP=16):
     rng = random.Random(2026)
-    tot = ok_u = ok_r = 0
+    tot = ok_u = ok_r = rem1_cases = rem1_bad = 0
     for N in range(2, NSUP + 1):
         ks = list(range(2, N))
         for bits in range(1 << (len(ks) + 1)):
@@ -256,6 +269,9 @@ def part_theorem(NSUP=16):
             ck = {k: (bits >> (i + 1)) & 1 for i, k in enumerate(ks)}
             h = [0] + [a * s + sum(v * min(s, k) for k, v in ck.items()) for s in range(1, N + 1)]
             ok_u += all(theorem_holds(h, N))
+            if a:  # Remark (i): h(N) > h(N-1), so the trajectory is the heap root, tau*(d) = L(d)
+                rem1_cases += 1
+                rem1_bad += any(tau_star(h, N, d) != heap_left(d) for d in range(1, N + 1))
             ar = a * rng.randint(1, 7)
             cr = {k: v * rng.randint(1, 7) for k, v in ck.items()}
             hr = [0] + [ar * s + sum(v * min(s, k) for k, v in cr.items()) for s in range(1, N + 1)]
@@ -263,6 +279,30 @@ def part_theorem(NSUP=16):
             tot += 1
     check(f"Theorem, all supports N = 2..{NSUP}, unit weights", ok_u == tot, f"{ok_u}/{tot}")
     check(f"Theorem, all supports N = 2..{NSUP}, seeded random weights 1..7", ok_r == tot, f"{ok_r}/{tot}")
+    check(f"Remark (i): tau*(d) = L(d) for all d <= N on every support with a > 0, N = 2..{NSUP}",
+          rem1_bad == 0 and rem1_cases > 0, f"{rem1_cases} supports, {rem1_bad} violations")
+    # Remark (ii): constant h gives Q = 1, tau*(d) = d - 1, and every split is optimal
+    bad = cases = 0
+    for kappa in (-3, 0, 2, Fraction(5, 2)):
+        for N in range(1, 51):
+            h = [0] + [kappa] * N
+            _, T = dp(h, N)
+            cases += 1
+            bad += (any(T[d] != set(range(d)) or tau_star(h, N, d) != d - 1 for d in range(1, N + 1))
+                    or not all(theorem_holds(h, N)))
+    check("Remark (ii): constant h, N <= 50, four constants: T(d) = {0..d-1}, tau*(d) = d - 1, theorem holds",
+          bad == 0, f"{cases} cases, {bad} violations")
+    # Remark (iii): for concave h, nondecreasing <=> h(N) >= h(N-1)
+    bad = cases = 0
+    for N in range(2, 8):
+        for diffs in itertools.product(range(-3, 4), repeat=N - 1):
+            h = from_diffs(0, diffs)
+            if is_concave(h, N):
+                cases += 1
+                bad += is_nondecreasing(h, N) != (h[N] >= h[N - 1])
+    check("Remark (iii): concave h on {1..N} with h(1) = 0, N = 2..7, differences in [-3, 3]: nondecreasing iff "
+          "h(N) >= h(N-1)",
+          bad == 0 and cases > 0, f"{cases} concave h, {bad} violations")
     for B, N in ((3, 16), (4, 14), (6, 12), (8, 10)):
         tot = ok = 0
         for diffs in itertools.combinations_with_replacement(range(B, -1, -1), N - 1):
@@ -302,13 +342,16 @@ def part_theorem(NSUP=16):
 # ------------------------------------------------------------------------------------------------ X: 2-D
 def interval_runs(w, n):
     """Full cubic DP c and Knuth's restricted runs (largest and smallest tie rule) on the interval recurrence
-    c(i,i) = 0, c(i,j) = w(i,j) + min_{i<k<=j} c(i,k-1) + c(k,j). Returns c, (cL, KL), (cS, KS)."""
+    c(i,i) = 0, c(i,j) = w(i,j) + min_{i<k<=j} c(i,k-1) + c(k,j). Returns c, (cL, KL), (cS, KS), counts, where
+    counts holds the number of candidate roots examined by the cubic DP and by each restricted run."""
     M = n + 1
+    counts = {"cubic": 0, "largest": 0, "smallest": 0}
     c = [[0] * M for _ in range(M)]
     for d in range(1, M):
         for i in range(M - d):
             j = i + d
             c[i][j] = w[i][j] + min(c[i][k - 1] + c[k][j] for k in range(i + 1, j + 1))
+            counts["cubic"] += d
     runs = []
     for rule in ("largest", "smallest"):
         cr = [[0] * M for _ in range(M)]
@@ -320,33 +363,63 @@ def interval_runs(w, n):
                 if lo > hi:
                     raise AssertionError("empty window")
                 vals = {k: cr[i][k - 1] + cr[k][j] for k in range(lo, hi + 1)}
+                counts[rule] += len(vals)
                 m = min(vals.values())
                 ks = [k for k in vals if vals[k] == m]
                 K[i][j] = max(ks) if rule == "largest" else min(ks)
                 cr[i][j] = w[i][j] + m
         runs.append((cr, K))
-    return c, runs[0], runs[1]
+    return c, runs[0], runs[1], counts
 
 
 def part_2d():
     rng = random.Random(99)
-    tot = ok = 0
+    tot = ok = count_ok = root_ok = 0
     for _ in range(200):
         n = rng.randint(1, 30)
         h = from_diffs(rng.randint(-3, 3), sorted((rng.randint(0, 9) for _ in range(n - 1)), reverse=True))
         w = [[(h[j - i] if j > i else 0) for j in range(n + 1)] for i in range(n + 1)]
-        c, (cL, KL), (cS, KS) = interval_runs(w, n)
-        good = True
+        c, (cL, KL), (cS, KS), counts = interval_runs(w, n)
+        good = roots = True
         for i in range(n + 1):
             for j in range(i + 1, n + 1):
                 d = j - i
                 ts = tau_star(h, n, d)
                 good &= cL[i][j] == c[i][j] and cS[i][j] == c[i][j]
                 good &= KL[i][j] == i + 1 + ts and KS[i][j] == i + 1 + (d - 1 - ts)
+                for K in (KL[i][j], KS[i][j]):  # every chosen root attains the minimum of (R)
+                    roots &= c[i][j] == w[i][j] + c[i][K - 1] + c[K][j]
         tot += 1
         ok += good
+        root_ok += roots
+        count_ok += counts == {"cubic": n * (n + 1) * (n + 2) // 6, "largest": n * n, "smallest": n * n}
     check("2-D interval run: exact for both tie rules, K(i,j) = i+1+tau*(j-i) (largest), "
           "i+1+min(HR, Q-1) (smallest), 200 seeded h, n <= 30", ok == tot, f"{ok}/{tot}")
+    check("2-D interval run: every chosen root K(i,j) attains the minimum of (R), both rules, same 200 h",
+          root_ok == tot, f"{root_ok}/{tot}")
+    check("candidate count: exactly n^2 per restricted run and n(n+1)(n+2)/6 for the cubic DP, same 200 h",
+          count_ok == tot, f"{count_ok}/{tot}")
+    # without the hypotheses: arbitrary length weights give exactly n^2 candidates (Lemma 0 needs nothing else);
+    # arbitrary weights w(i, j) give non-empty windows and at most n^2 + n(n+1)/2 candidates
+    rng = random.Random(100)
+    tot = ok_len = ok_gen = 0
+    for _ in range(200):
+        n = rng.randint(1, 30)
+        h = [0] + [rng.randint(-9, 9) for _ in range(n)]
+        w_len = [[(h[j - i] if j > i else 0) for j in range(n + 1)] for i in range(n + 1)]
+        w_gen = [[(rng.randint(-9, 9) if j > i else 0) for j in range(n + 1)] for i in range(n + 1)]
+        tot += 1
+        try:
+            *_, counts = interval_runs(w_len, n)
+            ok_len += counts["largest"] == counts["smallest"] == n * n
+            *_, counts = interval_runs(w_gen, n)
+            ok_gen += max(counts["largest"], counts["smallest"]) <= n * n + n * (n + 1) // 2
+        except AssertionError:
+            pass
+    check("arbitrary length weights h(j - i) (integers -9..9, 200 seeded, n <= 30): exactly n^2 candidates per run",
+          ok_len == tot, f"{ok_len}/{tot}")
+    check("arbitrary weights w(i, j) (integers -9..9, 200 seeded, n <= 30): windows never empty, at most "
+          "n^2 + n(n+1)/2 candidates per run", ok_gen == tot, f"{ok_gen}/{tot}")
 
 
 # ------------------------------------------------------------------------------------------------ B: boundary
@@ -384,6 +457,9 @@ def part_boundary():
     check("class table: some failure when concavity fails, and some when monotonicity fails",
           cls["not concave, nondecreasing"][1] < cls["not concave, nondecreasing"][0]
           and cls["concave, not nondecreasing"][1] < cls["concave, not nondecreasing"][0])
+    check("class table: exactly the counts of Remark 1 (28/28, 132/182, 647/701, 7268/14714 exact)",
+          cls == {"concave, nondecreasing": [28, 28], "concave, not nondecreasing": [182, 132],
+                  "not concave, nondecreasing": [701, 647], "not concave, not nondecreasing": [14714, 7268]})
     # tie rule: h = min(s, 5) - 1
     N = 10
     h = [0] + [min(s, 5) - 1 for s in range(1, N + 1)]
@@ -416,6 +492,18 @@ def part_boundary():
                 bad += h[c - a] + h[d - b] < h[d - a] + h[c - b]
     check("reverse quadrangle inequality for concave h (all h on {1..8}, differences nonincreasing in [0, 4])",
           bad == 0, f"{bad} violations")
+    bad = 0
+    for alpha, beta in itertools.product(range(-2, 3), repeat=2):
+        h = [0] + [alpha + beta * s for s in range(1, 9)]
+        for a, b, c, d in itertools.combinations_with_replacement(range(9), 4):
+            if b < c:
+                bad += h[c - a] + h[d - b] != h[d - a] + h[c - b]
+    check("affine h (h(s) = alpha + beta s, alpha, beta in -2..2, positions 0..8): quadrangle equality",
+          bad == 0, f"{bad} violations")
+    h = [0] + [min(s, 2) for s in range(1, 4)]
+    lhs, rhs = h[2 - 0] + h[3 - 1], h[3 - 0] + h[2 - 1]
+    check("strict quadrangle violation: h = min(s,2), positions 0,1,2,3: w(0,2) + w(1,3) = 4 > 3 = w(0,3) + w(1,2)",
+          (lhs, rhs) == (4, 3), f"{lhs} > {rhs}")
 
 
 def main():

@@ -17,9 +17,10 @@ exponential pair).
 **Quantum link, stated precisely.** W = 2^(n/2)·H^⊗n, the Hadamard transform of Deutsch–Jozsa, Bernstein–Vazirani
 and Forrelation. One FWHT stage corresponds to one Hadamard gate. A classical machine pays 2ⁿ additions per stage
 (this is how `lib/qsim.py` simulates H^⊗n); a quantum circuit pays one gate. That is **not** a quantum speed-up
-for computing W·v: a quantum computer does not output the 2ⁿ transformed values, it only samples an index with
-probability |amplitude|². The quantum advantages in those entries are in oracle queries. Forrelation's Φ(f, g) is
-computed exactly classically by one FWHT once all 2N values have been read.
+for computing W·v, because a quantum computer does not output the 2ⁿ transformed values: measuring returns one index,
+with probability |amplitude|² (background, cited from Bernstein & Vazirani 1997). The quantum advantages in those
+entries are in oracle queries. Forrelation's Φ(f, g) is computed exactly classically by one FWHT once all 2N values
+have been read.
 
 **Verification.** V1: both implementations agree for n = 0..8 and 11, and pass an independent oracle that checks
 the convolution theorem character by character with popcount parities (all 2ⁿ characters for n ≤ 8, which
@@ -28,5 +29,11 @@ of the unchanged implementations. The counts equal 2·4ⁿ and (3n + 2)·2ⁿ at
 0.05: naive α = 1.000 (rivals n·2ⁿ 1.587, n·4ⁿ 0.885: rejected); FWHT α = 0.987 against n·2ⁿ (rivals 2ⁿ 1.162,
 n²·2ⁿ 0.858, 4ⁿ 0.581: rejected). See `experiments/2026-10-07b_xor_convolution_counts.py`.
 
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry from the code: the correctness of both
+algorithms (characters, convolution theorem, W·W = N·I, the stage factorisation, the exact division), the
+completeness of the V1 check, the time and space bounds, the exact counts for all sizes of their domains, the operand
+sizes, and the remarks above. It names the scripts and tests that check each one
+(`tests/test_proofs_xor_convolution.py` among them).
+
 **Sources.** Fino & Algazi, IEEE Trans. Computers C-25 (1976). Bernstein & Vazirani, SIAM J. Comput. 26 (1997),
-for the quantum Hadamard step.
+for the quantum link.

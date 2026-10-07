@@ -8,7 +8,7 @@ it occurs in the text. Overlapping occurrences all count, and the counts come ba
 | Algorithm | Comparisons | V2 family (text a^(n²), patterns a^(j−1)b, j = 1..n) | Implementation |
 |---|---|---|---|
 | Naive matching per pattern | O(N·L) | exactly n(n+1)(3n²−2n+2)/6 = Θ(n⁴) | [naive.py](implementations/naive.py) |
-| KMP per pattern | Θ(P·N + L) | exactly 3n³−2n²−5n+6 = Θ(n³) (n ≥ 2) | [kmp_each.py](implementations/kmp_each.py) |
+| KMP per pattern | Θ(P·N + L) (N ≥ 1) | exactly 3n³−2n²−5n+6 = Θ(n³) (n ≥ 2) | [kmp_each.py](implementations/kmp_each.py) |
 | Aho–Corasick | Θ(N + L) (fixed alphabet, P ≥ 1) | exactly 4n²−3 = Θ(n²) (n ≥ 1) | [aho_corasick.py](implementations/aho_corasick.py) |
 
 The input of the V2 family has s = Θ(n²) characters, so the chain is Θ(s²) → Θ(s^1.5) → Θ(s).
@@ -44,7 +44,14 @@ comparisons.
 
 **Caveats.** Only character comparisons are counted. Aho–Corasick keeps each node's children in a list, which costs
 up to σ comparisons per lookup, so its bound is Θ(N + L) for a fixed alphabet and P ≥ 1 (with no patterns it compares
-nothing) and O(σ(N + L)) in general. Reporting each occurrence individually would add the number of occurrences; this
-implementation returns counts only.
+nothing) and O(σ(N + L)) in general. Reporting each occurrence individually needs at least one step per occurrence;
+this implementation returns counts only.
+
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry: the exact comparison counts for all sizes of
+their domains, the correctness of the three algorithms (for Aho–Corasick the trie, the failure links, the scan
+invariant and the accumulation; for KMP by reference to the identical code proved in
+[string-matching-naive-vs-kmp](../string-matching-naive-vs-kmp/PROOFS.md)), the naive worst case N·L, Θ(P·N + L) for
+KMP per pattern, the bounds and space of Aho–Corasick and the caveats. It names the checks: the count-check scripts
+and [tests/test_proofs_aho_corasick.py](../../tests/test_proofs_aho_corasick.py).
 
 **Sources.** Aho & Corasick, CACM 1975. Knuth, Morris & Pratt, SIAM J. Comput. 1977.

@@ -1,10 +1,10 @@
 {
   "id": "shortest-path-enumeration-vs-dijkstra",
   "title": "Single-pair shortest path: simple-path enumeration vs Dijkstra",
-  "problem_statement": "Given a directed graph with non-negative edge weights and vertices s, t, compute the minimum total weight of an s-t path. The harness uses complete digraphs given as n x n weight matrices, s = 0, t = n - 1.",
+  "problem_statement": "Given a directed graph on n vertices as an n x n matrix of arc weights in [0, inf] (an absent arc has weight math.inf; the diagonal is not used), s = 0 and t = n - 1, compute the minimum total weight of an s-t path (math.inf if there is none). The harness uses complete digraphs with weights 1..100.",
   "input": {
     "parameter": "n = number of vertices.",
-    "size_measure": "n^2 matrix entries (dense graph)."
+    "size_measure": "n^2 matrix entries (every input is a complete digraph whose absent arcs have weight inf)."
   },
   "algorithms": [
     {
@@ -12,9 +12,9 @@
       "idea": "Depth-first search over every simple path from s, recording the cheapest one that reaches t.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(n (n-2)!) on the complete digraph (~ e (n-2)! simple s-t paths, n neighbour checks per search node)",
-      "space_complexity": "Theta(n)",
-      "correctness": "With non-negative weights some shortest walk is a simple path, and all simple paths are enumerated.",
+      "time_complexity": "Theta(n (n-2)!) on every n x n input: exactly 2P calls of the search with P = floor(e (n-2)!) (n >= 3), the number of simple s-t paths of the complete digraph, and n neighbour checks at each of the P calls not at t (PROOFS.md, section 2)",
+      "space_complexity": "Theta(n) (recursion depth n; PROOFS.md, section 6)",
+      "correctness": "With non-negative weights some shortest walk is a simple path, and all simple paths are enumerated (PROOFS.md, section 1).",
       "implementation": "implementations/enumeration.py:shortest_path_enumerate",
       "harness": {
         "v1_max_n": 8,
@@ -26,9 +26,9 @@
       "idea": "Repeatedly settle the unsettled vertex with the smallest tentative distance and relax its out-edges.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(n^2) with an array (linear in the n x n weight-matrix input; it reads exactly n(n-1)/2 distinct weights, for each pair of vertices the one leaving the vertex settled first), which is optimal up to a constant factor for weight-matrix input: for n >= 4 split the n - 2 vertices other than s, t into U (floor((n-2)/2) of them) and W, and set w(s, u) = 1, w(u, x) = 2 and w(x, t) = 1 for u in U, x in W, all other weights 100; then dist(s, t) = 4, and lowering any one weight w(u, x) to 1 makes it 3, so on this instance every correct deterministic algorithm (and every run of a zero-error randomized one) reads all floor((n-2)^2/4) weights w(u, x). O(m + n log n) with Fibonacci heaps",
-      "space_complexity": "Theta(n)",
-      "correctness": "Dijkstra 1959: with non-negative weights, the minimum tentative distance is final when a vertex is settled.",
+      "time_complexity": "Theta(n^2) with an array (linear in the n x n weight-matrix input; it reads exactly n(n-1)/2 distinct weights, for each pair of vertices the one leaving the vertex settled first), which is optimal up to a constant factor for weight-matrix input: for n >= 4 split the n - 2 vertices other than s, t into U (floor((n-2)/2) of them) and X, and set w(s, u) = 1, w(u, x) = 2 and w(x, t) = 1 for u in U, x in X, all other weights 100; then dist(s, t) = 4, and lowering any one weight w(u, x) to 1 makes it 3, so on this instance every correct deterministic algorithm (and every run of a zero-error randomized one, with its random bits fixed) reads all floor((n-2)^2/4) weights w(u, x), in the model where each step reads at most one entry and the steps depend only on the values read. PROOFS.md, sections 4 and 5. (Heap-based versions are background, not implemented.)",
+      "space_complexity": "Theta(n) (PROOFS.md, section 6)",
+      "correctness": "Dijkstra 1959; proof in PROOFS.md, section 3: with non-negative weights, the minimum tentative distance is final when a vertex is settled.",
       "implementation": "implementations/dijkstra.py:shortest_path_dijkstra",
       "harness": {
         "scaling": { "cost": "n**2", "n_values": [200, 300, 400, 600, 800] }
@@ -36,7 +36,17 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Enumeration is factorial (super-exponential) on dense graphs; Dijkstra's greedy settling order yields Theta(n^2).",
+  "relationship": "Enumeration is factorial: Theta(n (n-2)!) = 2^Theta(n log n), super-exponential in the number n of vertices (2^Theta(sqrt(N) log N) in the N = n^2 matrix entries); Dijkstra's greedy settling order yields Theta(n^2).",
+  "background": [
+    {
+      "statement": "Dijkstra's algorithm with a Fibonacci heap runs in O(m + n log n) time for single-source shortest paths with non-negative weights (n vertices, m edges).",
+      "source": "Fredman & Tarjan 1987, abstract"
+    },
+    {
+      "statement": "A deterministic O(m log^(2/3) n)-time algorithm computes single-source shortest paths in directed graphs with non-negative real weights in the comparison-addition model; its authors present it as the first to break the O(m + n log n) bound of Dijkstra's algorithm on sparse graphs.",
+      "source": "Duan, Mao, Mao, Shu & Yin 2025, abstract"
+    }
+  ],
   "sources": [
     {
       "authors": "Dijkstra, E. W.",
@@ -50,7 +60,8 @@
       "year": 1987,
       "title": "Fibonacci heaps and their uses in improved network optimization algorithms",
       "venue": "Journal of the ACM 34(3), 596-615",
-      "doi": "10.1145/28869.28874"
+      "doi": "10.1145/28869.28874",
+      "note": "Background only: the O(m + n log n) heap-based Dijkstra; not implemented."
     },
     {
       "authors": "Duan, R.; Mao, J.; Mao, X.; Shu, X.; Yin, L.",
@@ -58,19 +69,28 @@
       "title": "Breaking the Sorting Barrier for Directed Single-Source Shortest Paths",
       "venue": "STOC 2025",
       "arxiv": "2504.17033",
-      "note": "O(m log^(2/3) n) deterministic SSSP, beating Dijkstra on sparse graphs."
+      "note": "Background only: deterministic O(m log^(2/3) n) single-source shortest paths (see background); not implemented."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both agree on random complete digraphs with weights in [1, 100] (n <= 8 for enumeration). V2: runtimes fitted against n (n-2)! and n^2.",
-    "artifacts": ["implementations/enumeration.py", "implementations/dijkstra.py", "harness.py"]
+    "method": "V1: both agree on random complete digraphs with weights in [1, 100] (n <= 8 for enumeration); for n >= 2 harness.check only tests 0 < answer <= W[0][n-1] (for n = 1 it requires 0). V2: measured runtimes fitted against n (n-2)! and n^2 (timing data, not a proof). Proofs: PROOFS.md proves both implementations correct (also with absent arcs of weight inf), the enumeration's exact search-tree sizes on the complete digraph, Dijkstra's Theta(n^2) bound and the n(n-1)/2 weights it reads, the lower-bound instance and the space bounds; tests/test_proofs_sp.py checks them (72 digraphs against a Floyd-Warshall written in the test, plus Dijkstra for n = 9..30; search calls and weight reads for n = 2..9; Dijkstra's reads on 40 digraphs; the lower-bound instance for n = 4..12; recursion depth and tracemalloc peaks).",
+    "artifacts": ["PROOFS.md", "implementations/enumeration.py", "implementations/dijkstra.py", "harness.py", "../../tests/test_proofs_sp.py"]
   },
   "test_harness": {
     "module": "harness.py",
     "v1_sizes": [1, 2, 3, 4, 5, 6, 7, 8, 50],
     "trials": 5
   },
-  "caveats": "Enumeration cost is graph-dependent; the factorial bound is for complete graphs. Negative weights are outside the problem: both correctness arguments use non-negative weights.",
-  "notes": "Further T3 entries: array Dijkstra Theta(n^2) -> Fibonacci-heap Dijkstra O(m + n log n) -> Duan et al. 2025 O(m log^(2/3) n) on sparse graphs."
+  "caveats": "The enumeration's work depends only on n: its control flow never looks at the weights, and every input matrix is a complete digraph whose absent arcs have weight inf. A variant that skips absent arcs is not implemented and not claimed. Negative weights are outside the problem: both correctness arguments use non-negative weights.",
+  "notes": "Possible further T3 steps (not entries of this dataset; their bounds are background): array Dijkstra Theta(n^2) -> Fibonacci-heap Dijkstra O(m + n log n) -> Duan et al. 2025 O(m log^(2/3) n) on sparse graphs.",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_sp.py"
+    ],
+    "audit": "RL-107"
+  }
 }

@@ -1,4 +1,7 @@
-"""Meet in the middle (Horowitz-Sahni): Theta(2^(n/2) n) time, Theta(2^(n/2)) space.
+"""Meet in the middle (Horowitz-Sahni): Theta(2^(n/2) n) time in the worst case, Theta(2^(n/2)) space.
+
+The time bound assumes an O(m log m) sort and the documented halving loop of bisect_right (machine-model
+assumptions; see PROOFS.md and the entry's background).
 
 Enumerate the 2^(n/2) subsets of each half. Sort the right half by weight with a running maximum of
 value. Then, for each left subset, binary-search the heaviest right subset that still fits.

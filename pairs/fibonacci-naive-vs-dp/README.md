@@ -20,9 +20,17 @@ Only fast doubling is polynomial in the input size.
 **Verification.** V1: the three implementations agree with each other and with OEIS A000045.
 V2: measured runtimes fit φⁿ, n and log n respectively (`python tools/validate.py --scaling -v pairs/fibonacci-naive-vs-dp`).
 Exact operation counts were examined (round 2026-10-06c) and cannot be obtained by harness
-instrumentation with the implementation unchanged. Fast doubling touches its input only through `bin(n)`:
+instrumentation with the implementation unchanged (observed on CPython 3.14.2; a measurement, not a proof). Fast doubling touches its input only through `bin(n)`:
 one `__index__` call on an instrumented value, and none on an int subclass. It then loops over the
 characters of a C-built string, and its arithmetic runs on values that start from the literals 0 and 1.
 So the timing fit stays.
 
-**Sources.** CLRS (3rd ed.), Problem 31-3 and ch. 15. Knuth, TAOCP Vol. 1, §1.2.8.
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry: the naive recursion makes exactly
+2F(n+1) − 1 calls with depth max(n, 1), the DP runs exactly n iterations, fast doubling exactly n.bit_length()
+iterations (n ≥ 1), all three return F(n) mod 2^64, and the bit-size view. The word-operation bounds of the DP and
+of fast doubling assume that `range` iteration costs O(1) per step and `bin(n)` costs O(log n) (machine-model
+assumption, background). Fast doubling keeps O(1) words of
+arithmetic state but also builds the string `bin(n)` (as long as the input, up to a constant factor).
+[tests/test_proofs_fib.py](../../tests/test_proofs_fib.py) checks the computable facts.
+
+**Sources.** CLRS (3rd ed.). Knuth, TAOCP Vol. 1.

@@ -12,9 +12,9 @@
       "idea": "Grow a sorted prefix one element at a time: shift every larger element of the prefix one place right and drop the new element into the gap.",
       "model": "classical-deterministic",
       "pseudocode": "a = copy(xs); for i in 1..n-1: key = a[i]; j = i - 1; while j >= 0 and a[j] > key: a[j+1] = a[j]; j = j - 1; a[j+1] = key; return a",
-      "time_complexity": "Theta(n + I) where I is the number of inversions: Theta(n^2) in the worst case (reversed input, I = n(n-1)/2) and on average over uniformly random inputs (E[I] ~ n^2/4, the case measured for V2); Theta(n) on sorted input",
+      "time_complexity": "Theta(n + I) where I is the number of inversions: Theta(n^2) in the worst case (reversed input, I = n(n-1)/2) and on average over uniformly random inputs (E[I] = n(n-1)/4 for a random order of distinct elements, and n(n-1)/4 * 2n/(2n+1) for the harness distribution, the case measured for V2; PROOFS.md section 6); Theta(n) on sorted input",
       "space_complexity": "Theta(n) for the output copy, O(1) extra",
-      "correctness": "Invariant: before iteration i, a[0..i-1] holds the first i input elements in sorted order (Knuth TAOCP Vol. 3, 5.2.1; CLRS 2.1).",
+      "correctness": "Invariant: before iteration i, a[0..i-1] holds the first i input elements in sorted order (Knuth TAOCP Vol. 3; CLRS).",
       "implementation": "implementations/insertion_sort.py:insertion_sort",
       "harness": {
         "scaling": {
@@ -37,7 +37,7 @@
       "pseudocode": "sort(xs): if |xs| <= 1 return copy(xs); L = sort(left half); R = sort(right half); return merge(L, R)",
       "time_complexity": "Theta(n log n) on every input: T(n) = 2 T(n/2) + Theta(n)",
       "space_complexity": "Theta(n) auxiliary",
-      "correctness": "Induction on n: merging two sorted lists by repeatedly taking the smaller head yields a sorted list of all their elements (Knuth TAOCP Vol. 3, 5.2.4; CLRS 2.3).",
+      "correctness": "Induction on n: merging two sorted lists by repeatedly taking the smaller head yields a sorted list of all their elements (Knuth TAOCP Vol. 3; CLRS).",
       "implementation": "implementations/merge_sort.py:merge_sort",
       "harness": {
         "scaling": {
@@ -56,23 +56,27 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "Insertion sort removes one inversion per element move, and a random list has Theta(n^2) of them. Merge sort's divide and conquer reaches Theta(n log n), which is optimal for comparison sorting.",
+  "relationship": "Insertion sort removes one inversion per element move, and a random list has Theta(n^2) of them in expectation. Merge sort's divide and conquer reaches Theta(n log n), which is optimal for comparison sorting (PROOFS.md section 8).",
+  "background": [
+    {
+      "statement": "Outside the comparison model, n integers can be sorted in O(n sqrt(log log n)) expected time and linear space (Han and Thorup).",
+      "source": "Han & Thorup 2002 (title)"
+    }
+  ],
   "sources": [
     {
       "authors": "Knuth, D. E.",
       "year": 1998,
       "title": "The Art of Computer Programming, Vol. 3: Sorting and Searching (2nd ed.)",
       "venue": "Addison-Wesley",
-      "isbn": "978-0-201-89685-5",
-      "note": "Section 5.2.1 (sorting by insertion), 5.2.4 (sorting by merging), 5.3.1 (minimum-comparison sorting: the log2(n!) lower bound, worst case and average)."
+      "isbn": "978-0-201-89685-5"
     },
     {
       "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
       "year": 2009,
       "title": "Introduction to Algorithms (3rd ed.)",
       "venue": "MIT Press",
-      "isbn": "978-0-262-03384-8",
-      "note": "Chapter 2 (insertion sort, merge sort) and section 8.1 (lower bounds for sorting)."
+      "isbn": "978-0-262-03384-8"
     },
     {
       "authors": "Han, Y.; Thorup, M.",
@@ -84,12 +88,14 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree with each other and with Python's built-in sorted() (used only as the oracle) on random lists from [-n, n], n = 0..5, 8, 16, 50, 100, 500 and 2000; the validator also checks that neither mutates its input. V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md): the measured quantity is the exact number of KEY COMPARISONS made by the unchanged implementations, counted by an instrumented key type (CountingKey in harness.py) wrapped around the values of generate() (uniform on [-n, n], the same seeded random inputs the earlier timing fit used, i.e. insertion sort's average case). The instrumentation agrees with a closed form computed from the input alone (insertion sort makes sum over i of g_i + [g_i < i] comparisons, g_i = number of earlier elements larger than a_i) at n = 50, 100, 250, 500. Insertion sort, mean of 3 seeded samples at n = 250, 500, 1000, 2000, 4000: 15574.67, 63461.67, 250154.67, 999716.33, 3990076 comparisons (0.997 to 1.015 times n^2/4); alpha = 0.999 against n^2. Merge sort, 1 sample (the 3-sample spread was below 0.1% of the count at every n) at n = 1000, 2000, 4000, 8000, 16000, 32000, 64000: 8701, 19408, 42854, 93621, 203198, 438577, 941409 comparisons = n log2 n - c n with c = 1.25 to 1.27; alpha = 1.011 against n log n, the excess coming from the -c n term. Tolerance 0.03 for both: the counts carry no timing noise, so the band only has to cover lower-order terms (largest |alpha - 1| here 0.011) while staying below half the distance to the nearest rival. Rivals that must NOT fit, all rejected: insertion sort against n log n (alpha = 1.743) and n^2 log n (0.931); merge sort against n (1.126), n log^2 n (0.918) and n^2 (0.563). The log factor is therefore resolved for both algorithms (validator diagnostic, RESEARCH_LOG RL-048), which the earlier timing fit at tolerance 0.25 could not do (it would also have passed merge sort against n). Element moves are not counted; experiments/2026-10-07b_count_v2_sorting.py reproduces every number above.",
+    "method": "V1: both implementations agree with each other and with Python's built-in sorted() (used only as the oracle) on random lists from [-n, n], n = 0..5, 8, 16, 50, 100, 500 and 2000; the validator also checks that neither mutates its input. V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md): the measured quantity is the exact number of KEY COMPARISONS made by the unchanged implementations, counted by an instrumented key type (CountingKey in harness.py) wrapped around the values of generate() (uniform on [-n, n], the same seeded random inputs the earlier timing fit used, i.e. insertion sort's average case). The instrumentation agrees with a closed form computed from the input alone (insertion sort makes sum over i of g_i + [g_i < i] comparisons, g_i = number of earlier elements larger than a_i) at n = 50, 100, 250, 500. Insertion sort, mean of 3 seeded samples at n = 250, 500, 1000, 2000, 4000: 15574.67, 63461.67, 250154.67, 999716.33, 3990076 comparisons (0.997 to 1.015 times n^2/4); alpha = 0.999 against n^2. Merge sort, 1 sample (the 3-sample spread was below 0.1% of the count at every n) at n = 1000, 2000, 4000, 8000, 16000, 32000, 64000: 8701, 19408, 42854, 93621, 203198, 438577, 941409 comparisons = n log2 n - c n with c = 1.25 to 1.27; alpha = 1.011 against n log n, the excess coming from the -c n term. Tolerance 0.03 for both: the counts carry no timing noise, so the band only has to cover lower-order terms (largest |alpha - 1| here 0.011) while staying below half the distance to the nearest rival. Rivals that must NOT fit, all rejected: insertion sort against n log n (alpha = 1.743) and n^2 log n (0.931); merge sort against n (1.126), n log^2 n (0.918) and n^2 (0.563). The log factor is therefore resolved for both algorithms (validator diagnostic, RESEARCH_LOG RL-048), which the earlier timing fit at tolerance 0.25 could not do (it would also have passed merge sort against n). Element moves are not counted; experiments/2026-10-07b_count_v2_sorting.py reproduces every number above. Proofs: PROOFS.md proves every claim of this entry from the code (the correctness of both algorithms and the stability of merge sort; insertion sort's Theta(n + I), worst case and exact average case; merge sort's comparison bounds on every input; the Omega(n log n) lower bound for comparison sorting in the worst case, on average and for randomized algorithms; the space bounds; the exact counts for all sizes of their domains) and names the scripts and tests that check each one, among them tests/test_proofs_sorting.py.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/insertion_sort.py",
       "implementations/merge_sort.py",
       "harness.py",
-      "../../experiments/2026-10-07b_count_v2_sorting.py"
+      "../../experiments/2026-10-07b_count_v2_sorting.py",
+      "../../tests/test_proofs_sorting.py"
     ]
   },
   "test_harness": {
@@ -100,11 +106,23 @@
   "lower_bounds": [
     {
       "model": "classical-randomized",
-      "bound": "Omega(n log n) comparisons: at least log2(n!) = n log2 n - O(n) in the worst case, and also on average over a uniformly random input order, hence in expectation for any randomized comparison sort",
+      "bound": "Omega(n log n) comparisons: at least log2(n!) = n log2 n - O(n) in the worst case, and also on average over a uniformly random input order, hence in expectation for any randomized comparison sort that is always correct",
       "setting": "comparison model (elements are accessed only through pairwise comparisons)",
-      "source": "Knuth TAOCP Vol. 3 (1998), 5.3.1 (decision-tree argument, worst and average case); the randomized case follows from the average case by Yao's minimax principle"
+      "source": "Knuth TAOCP Vol. 3 (1998), credit; the randomized case follows from the average case by the easy direction of Yao's minimax principle. Own proof of all three cases: PROOFS.md section 8"
     }
   ],
-  "caveats": "The Omega(n log n) lower bound holds only in the comparison model. Integers can be sorted faster by exploiting their representation (e.g. radix sort in O(n w / log n) for w-bit keys, or Han-Thorup O(n sqrt(log log n)) expected time on a word RAM), so merge sort is optimal among comparison sorts, not for integer sorting in general. Insertion sort's cost depends on the input: it is linear on (nearly) sorted lists, which is why practical hybrids such as Timsort use it on short runs. V2 measures insertion sort's average case (random input), which is Theta(n^2), the same order as its worst case.",
-  "notes": "The classic textbook T3 pair. Merge sort is usually credited to John von Neumann (1945)."
+  "caveats": "The Omega(n log n) lower bound is proved here for the comparison model only; outside it, integers can be sorted faster by exploiting their representation: on the harness range [-n, n], counting sort sorts n integers with O(n) word operations and no element comparison (PROOFS.md section 10; see also background). So merge sort is optimal among comparison sorts, not for integer sorting in general. Insertion sort's cost depends on the input: it is Theta(n + I), linear on sorted lists and on lists with O(n) inversions. V2 measures insertion sort's average case (random input), which is Theta(n^2), the same order as its worst case.",
+  "notes": "The classic textbook T3 pair.",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-07b_count_v2_sorting.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py",
+      "../../tests/test_proofs_sorting.py"
+    ],
+    "audit": "RL-107"
+  }
 }

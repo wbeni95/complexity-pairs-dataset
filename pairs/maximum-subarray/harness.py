@@ -1,6 +1,6 @@
 """Instances: a list of n >= 1 integers drawn uniformly from [-100, 100] (negatives included).
 
-The oracle is the CLRS (section 4.1) divide-and-conquer algorithm, Theta(n log n), which shares no code
+The oracle is a divide-and-conquer algorithm (as in CLRS), Theta(n log n), which shares no code
 or idea with the three implementations under test (it combines the best left half, right half and
 crossing subarray).
 """

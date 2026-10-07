@@ -18,8 +18,8 @@ left to right, are D in ascending order. XOR with a fixed a swaps the two subtre
 a has. So a walk that takes the right child first at those nodes lists a ⊕ x for all x ∈ D in ascending order, in
 linear time and without sorting. Merging that list with D finds a common value c = a ⊕ b if there is one. This
 follows the idea of the deterministic quadratic algorithm of Dietzfelbinger, Schlag & Walzer (2018); the code here
-is an independent implementation. The correctness proof (the case analysis, the trie order and the merge) is in
-entry.json.
+is an independent implementation. The correctness proof (the case analysis, the build, the trie order, the walk and
+the merge) is in [PROOFS.md](PROOFS.md), section 4.
 
 **Verification.**
 - *V1:* the validator runs n = 0..8, 10, 12, 16, 24, 32, 48, 64, 100, 150, 300 and 600, 8 instances per size
@@ -73,6 +73,12 @@ but the cost expressions are the exact closed forms (RL-062). CPython 3.14.2 and
   the trie at n = 64.
 - Both implementations assume values in [0, 2ʷ).
 - The entry makes no claim about the fastest known algorithm for 3XOR and states no lower bound.
+
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry from the code: the exact operation counts for
+all sizes of their domains, the correctness of both algorithms (all triples returns the lexicographically first
+solution), the O(n² + n·w) bound with its Θ(n²) worst case for log₂n + 1 ≤ w = O(n), and the space bounds (at most
+15n + 3 words for the trie, for every w). It names the scripts and tests (among them `tests/test_proofs_three_xor.py`)
+and the sizes that check each statement.
 
 **Sources.** Dietzfelbinger, Schlag & Walzer, MFCS 2018 (the deterministic quadratic Patricia-trie idea). Jafargholi
 & Viola, Algorithmica 2016 (3XOR studied alongside 3SUM in fine-grained complexity).

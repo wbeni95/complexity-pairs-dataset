@@ -54,9 +54,9 @@ def _is_prime_det(x):
     """Miller-Rabin with the first 12 prime bases (2..37), used as a deterministic test by generate_scaling.
 
     The guard stops at 318665857834031151167461 = 399165290221 * 798330580441 (79 bits), a composite that passes all
-    twelve bases; published tables give it as the smallest such number, so the test is exact below it. That bound
-    is cited, not proved here. (Until 2026-10-07 the guard sat at 3.3e24, the bound for thirteen bases, and so
-    admitted this composite; the V2 sizes, n <= 40 bits, were never affected.)
+    twelve bases; Sorenson & Webster (arXiv:1509.00864, Theorem 1.1) give it as the smallest such number (psi_12), so
+    the test is exact below it. That bound is cited, not proved here. (Until 2026-10-07 the guard sat at 3.3e24, the
+    bound for thirteen bases, and so admitted this composite; the V2 sizes, n <= 40 bits, were never affected.)
     """
     if x >= 318_665_857_834_031_151_167_461:
         raise ValueError("generate_scaling supports n <= 78 bits")

@@ -45,12 +45,22 @@ def schema_validator():
         return Draft202012Validator(json.load(f))
 
 
+def copy_entry(src, dst):
+    """Copy an entry into the temporary repository without its `proof` field: the check-mark rules need the real
+    repository's RESEARCH_LOG and check files, and are tested in tests/test_proof_mark.py, not here."""
+    shutil.copytree(src, dst, ignore=shutil.ignore_patterns("__pycache__"))
+    path = Path(dst) / "entry.json"
+    entry = json.loads(path.read_text(encoding="utf-8"))
+    if entry.pop("proof", None) is not None:
+        path.write_text(json.dumps(entry, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
 class ShapeInsideValidator(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
         (self.tmp / "pairs").mkdir()
         self.entry_dir = self.tmp / "pairs" / ZETA.name
-        shutil.copytree(ZETA, self.entry_dir, ignore=shutil.ignore_patterns("__pycache__"))
+        copy_entry(ZETA, self.entry_dir)
         self._old_repo = validate.REPO
         validate.REPO = self.tmp
         validate._module_cache.clear()

@@ -2,7 +2,8 @@
 
 Equal values end up adjacent after sorting, so the values are pairwise distinct iff no two neighbours
 in sorted order are equal. Merge sort makes ceil(log2 n) passes of Theta(n) work each, regardless of the
-input order; the final scan is Theta(n). Only comparisons between input values are used.
+input order; the final scan is O(n) (n - 1 tests when the values are distinct). Only comparisons between
+input values are used.
 """
 
 

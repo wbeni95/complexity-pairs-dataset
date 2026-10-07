@@ -1,6 +1,7 @@
 """Enumerate all 2^n subsequences of a; keep the longest that is also a subsequence of b.
 
-Theta(2^n (n + m)) time: each of the 2^n masks is checked with one greedy left-to-right scan of b.
+O(2^n (n + m)) time, Theta(2^n n) when m = n: each of the 2^n masks is checked with one greedy left-to-right
+scan of b (proofs: PROOFS.md; the upper bound assumes that str.find scans forward to the first match).
 """
 
 

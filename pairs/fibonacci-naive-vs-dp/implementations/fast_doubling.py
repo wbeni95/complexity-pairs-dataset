@@ -1,5 +1,7 @@
 """Fast doubling: Theta(log n) word operations.
 
+The bound assumes that bin(n) costs O(log n) (a machine-model assumption; see PROOFS.md).
+
 Walks the bits of n from the top, maintaining (a, b) = (F(k), F(k+1)) and using
     F(2k)   = F(k) * (2 F(k+1) - F(k))
     F(2k+1) = F(k)^2 + F(k+1)^2

@@ -1303,3 +1303,83 @@ Ledger: [ledger/runs/20261007T132759Z.json](ledger/runs/20261007T132759Z.json). 
 - **Stability against RL-099:** all 86 exact-count series are identical, including the 3XOR trie after its rewrite. The errata changed no measured number.
 - **Machine load:** quiet. The largest change in a timing α was 0.0634 (linear recurrence c1-1-1, 0.9795 → 1.0429, tolerance 0.25).
 - **Unit tests:** 308 OK (the new errata and check-mark tests included). **Citations:** 221 identifiers, 0 problems. **Index:** rebuilt; 74 entries and 2 theorem notes, both now listed in index.json.
+
+### RL-105 · CORRECTED · Claims corrected while every entry's proofs were written
+Every entry in `pairs/` and `synthetic/` and both theorem notes now have our own written proofs and deterministic checks (RL-107). Writing and refereeing those proofs exposed statements that were false or wider than true. They are corrected; the earlier entries are not edited. The main items:
+
+- **Code:** `pairs/primality-trial-vs-aks/implementations/aks.py` computed its two floors with floating-point `log2`, which can round below the exact value.
+  - Example: at N = 2361428601618687 it chose r with ord_r(N) ≤ log² N, which breaks the hypothesis of the correctness proof.
+  - It now uses an exact integer upper bound λ ≥ log₂ N (proved in PROOFS.md).
+  - On every N < 2^16 the chosen K, r and ℓ are unchanged.
+- **False statements, now corrected or removed:**
+  - Bellman–Ford "detects negative cycles": the code has no detection.
+  - Horn-SAT: "the worst-case family must be unsatisfiable".
+  - Longest increasing subsequence: "patience sorting costs Θ(n log L)". It is O(n(1 + log L)), with a counterexample to Θ.
+  - NAND tree: "reluctant inputs are the worst case of both algorithms".
+  - Collision: "2.56–2.57·N^(1/3) for n = 15..30"; the values at n = 16 and 17 are 2.5365 and 2.5444.
+  - Matrix chain: "the recursion makes fewer calls than there are parenthesisations"; this holds from n = 18 on.
+  - XOR convolution: the division fails when N is a zero divisor, not merely non-invertible.
+  - Maximum-weight independent set: "exponential for k growing with n"; and "the check always gives a verdict".
+  - Maximum flow: "no such family exists with small capacities" (false with parallel edges).
+  - Shortest path: "the enumeration's cost is graph-dependent".
+  - Boolean matrix multiplication: the all-ones maxima remark.
+  - First match: the uncounted-operations caveat.
+  - Assignment: "reduced costs are non-negative" holds only on the rows already inserted.
+  - Grover: the expected-query bound holds for the exact k = ⌊π√N/4⌋; the code's floating-point k is exact for n ≤ 64.
+- **Domains added** where a statement failed at small or zero parameters: n ≥ 1, n ≥ 2, n ≥ 3, k ≥ 1, m ≥ 1, P ≥ 1, σ ≥ 2, W ≥ 0. Bounds in parameters that can be 0 are written explicitly, e.g. O(2ⁿ(m+1)).
+- **Citation details removed** where a theorem number, section or attributed number had not been checked against the source. The citations stay, as credit.
+- **Removed:** the Tarjan–van Leeuwen O(m α(n)) union-find bound, from the MST and spanning-tree entries. It could not be checked against a source; the proved O(log n) per find remains.
+
+### RL-106 · DECISION · Background, machine model, and explicit bounds
+- **Background:** the new optional `background` field (schema, CONTRIBUTING "Background versus claims") holds statements about the literature or the state of research that an entry cites but does not prove, such as NP-hardness, "no polynomial algorithm is known", conditional lower bounds, and the reason for a T6 tag. Background is shown under its own heading and is not covered by the check mark.
+- **Machine model** (CONTRIBUTING):
+  - Elementary operations cost O(1).
+  - Library routines with a non-trivial cost (`sorted`, `list.sort`, `bisect`, `itertools.permutations`, `str.find`, big-integer `bin`/`range`/`pow`) are charged a stated cost as a machine-model assumption, which is listed in `background` with exactly what its source supports.
+  - Every claim that depends on such an assumption is worded as conditional on it.
+- **Bounds:** O and Θ have their usual asymptotic meaning. A bound in a parameter that can be 0 is written so that it holds on every infinite family, or it carries its hypothesis.
+
+### RL-107 · VERIFIED · The check mark: 64 items proved here
+- **Items marked ✅ Proved:** 58 of the 59 entries in `pairs/`, the 4 entries in `synthetic/`, and both theorem notes.
+- **Each marked item has:**
+  - our own written proof of every claim, in its `PROOFS.md` (for a theorem note, its README);
+  - deterministic checks, listed in its `proof` field;
+  - an independent referee's line-by-line review of every proof and every check, plus a second independent check that each correction the referee asked for was applied correctly.
+- **Not marked:**
+  - `pairs/max-flow-edmonds-karp-vs-dinic`. Its T3 tag rests on the two published worst-case upper bounds, and no lower bound for Edmonds–Karp and no separation is shown in this repository. The entry says so.
+  - The 11 staged (V0) entries, which are cited, not checked.
+- **Generated entries:** `generators/linear_recurrence.py` writes the mark itself, for the four audited coefficient lists only. `tests/test_proofs_linrec.py` pins that list to the coefficient lists its checks cover, so the generated entries stay byte-identical to the generator's output.
+- **Replay:** `python tools/replay_proofs.py` re-runs the checks of every marked item (RL-108).
+
+### RL-108 · VERIFIED · Reproducibility: pinned environment, one-command replay, vendored inputs
+- **Environment:**
+  - `requirements.txt` pins exact versions; `jsonschema` is the only third-party import.
+  - CI runs Python 3.12 and 3.14.
+- **REPRODUCING.md** says how to replay every check, and which results are deterministic (V1 runs, exact-count V2 measurements, tests, verifiers) and which are not (wall-clock timing fits).
+- **`tools/replay_proofs.py`:**
+  - For every item with the check mark, it runs its V1 runs and every check in its `proof` field, with PYTHONHASHSEED=0, and prints one PASS/FAIL line per command.
+  - A new CI job runs it on every push.
+  - `tests/test_replay_proofs.py` tests it.
+- **Vendored inputs:**
+  - The three public input files of `theorems/no-integral-form-z-half-schemes` are now kept unmodified in its `data/` folder: two scheme files under MIT, and AlphaEvolve's results notebook under Apache-2.0, with their licences and a NOTICE entry.
+  - `verify.py` reads them offline by default, and `--download` re-fetches the pinned URLs. SHA-256 is checked in both modes.
+- **Provenance:**
+  - The same note is now `literature`, ⏳ pending.
+  - Moran, Schwartz and Yuan state the result for a ⟨2,4,5,32⟩ ℤ[1/2] scheme that they attribute to Hopcroft and Kerr, and for Smirnov's ⟨3,3,6,40⟩ scheme. They print neither scheme and identify no files.
+  - The note proves the statement for the pinned files.
+
+### RL-109 · VERIFIED · Recorded run of the cleanup batch (RL-105–RL-108)
+Ledger: [ledger/runs/20261007T190448Z.json](ledger/runs/20261007T190448Z.json). The run's `git_commit` field names a local, unpublished base commit (`b671309`, dirty). The run used the tree of this commit; after the run, only `RESEARCH_LOG.md` changed (this entry, and one line of RL-107).
+- **Command:** `python tools/check_all.py --record --sources`, on CPython 3.14.2 with jsonschema 4.26.0 and PYTHONHASHSEED=0.
+- **Result:** 74/74 entries pass. V1 covered 63 entries, 4892 instances and 10504 implementation runs.
+- **V2:**
+  - 135 measurements, all passing: 86 exact counts and 49 wall-clock;
+  - 196 of 196 rivals rejected;
+  - the log factor resolved in 74 fits, all of them exact counts.
+- **Shape diagnostic:** 50 MATCH, 6 UNDETERMINED, 0 MISMATCH, 79 SKIPPED.
+- **Stability against RL-104:**
+  - All 86 exact-count series are identical to run 20261007T132759Z, value by value.
+  - So are the V1 instance and run counts, and every level.
+  - The cleanup changed no measured number.
+  - The 49 wall-clock series are recorded. They depend on the machine and are not compared.
+- **Unit tests:** 746 OK. **Citations:** 244 identifiers, 0 problems. **Index:** up to date.
+- **Replay:** `python tools/replay_proofs.py` passed 163 of 163 commands, and fully replayed all 64 marked items.

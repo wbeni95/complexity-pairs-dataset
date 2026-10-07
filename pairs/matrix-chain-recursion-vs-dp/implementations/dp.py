@@ -1,4 +1,4 @@
-"""Bottom-up DP over chain length (CLRS MATRIX-CHAIN-ORDER): Theta(n^3) time, Theta(n^2) space."""
+"""Bottom-up DP over chain length: Theta(n^3) time, Theta(n^2) space."""
 
 
 def matrix_chain_dp(dims) -> int:

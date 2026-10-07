@@ -1,8 +1,10 @@
-"""Kruskal with union-find: sort the m = n(n-1)/2 edges, O(m log m) = O(n^2 log n) on the complete graph.
+"""Kruskal with union-find: sort the m = n(n-1)/2 edges of the complete graph; Omega(m log m) in the worst case if
+sorted() is a deterministic comparison sort, and O(m log m) = O(n^2 log n) if it runs in O(m log m) time (both are
+machine-model assumptions, see entry.json).
 
 Scan edges by increasing weight and keep each edge that joins two different components (cut property).
-Union by size with path halving makes the find operations cost O(m alpha(n)) in total, so the
-comparison sort dominates.
+Union by size keeps every tree of height at most log2 n (path halving only shortens paths), so the find
+operations cost O(m log n) in total, which is O(m log m) on K_n (the sort cost: see entry.json).
 
 Each edge (u, v) of weight w is packed into one integer key w*n^2 + u*n + v, so sorting the keys orders
 the edges by (w, u, v). This is the same order as sorting (w, u, v) tuples, with one object per edge

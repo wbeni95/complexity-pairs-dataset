@@ -71,5 +71,14 @@
       "note": "Base. Theorem 6 with Lemma 22: the complete tree uniquely minimises the sum of a strictly increasing, strictly concave function of the leaf counts; would also give Lemma D by a limit argument (not used in the proof; their theorem is not re-proved here)."
     }
   ],
-  "verify": "python theorems/knuth-window-concave-length-weights/verify.py"
+  "verify": "python theorems/knuth-window-concave-length-weights/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-107"
+  }
 }

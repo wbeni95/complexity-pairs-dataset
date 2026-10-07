@@ -14,7 +14,7 @@ precisely four functions and fewer on every other promise input:
     (the first 2^(n-1) answers agree, and only query number 2^(n-1) + 1 reveals the other value).
 experiments/2026-10-07_deutsch_jozsa_checks.py verifies this by exhaustion over all promise inputs for
 n = 1..4. A different query order has a different set of worst-case inputs, but by the adversary argument
-(see entry.json) every deterministic exact algorithm has some input forcing 2^(n-1) + 1 queries.
+(PROOFS.md, section 6) every deterministic exact algorithm has some input forcing 2^(n-1) + 1 queries.
 """
 
 

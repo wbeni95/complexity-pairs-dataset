@@ -12,3 +12,5 @@ a(n) = 1 a(n-1) + 1 a(n-2) + 1 a(n-3) mod 2^64, a(0..2) = (0, 0, 1).
 | Companion-matrix power | Θ(k³·log n) | [matrix_power.py](implementations/matrix_power.py) |
 
 λ is the largest real root of x^3 = x^2 + x + 1. It depends only on which coefficients are nonzero.
+
+**Proofs.** [PROOFS.md](PROOFS.md) proves the correctness of the three algorithms and every complexity stated here, with exact call and operation counts and explicit constants.

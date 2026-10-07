@@ -24,8 +24,10 @@ n = 0..11.
 
 **Ties.** Tie-heavy inputs (frequencies in {0, 1}, all zero, all equal) do not break the restricted search,
 whatever minimiser in the range is kept (largest, smallest, random, or deliberately inconsistent): 0 wrong values on
-6006 instances. This was tested and refuted after an earlier draft of this entry claimed otherwise. The reason is
-that chosen roots stay inside their ranges, so r[i][j−1] ≤ r[i+1][j−1] ≤ r[i+1][j]. Monotonicity is *not* a
+6006 instances. This was tested and refuted after an earlier draft of this entry claimed otherwise. The reason
+(proved in [PROOFS.md](PROOFS.md), Theorem 7.4): chosen roots stay inside their ranges, so
+r[i][j−1] ≤ r[i+1][j−1] ≤ r[i+1][j] and no range is empty; and with non-negative weights the cost table satisfies
+the quadrangle inequality, so each range contains an optimal root whichever minimiser was kept before. Monotonicity is *not* a
 property of arbitrary optimal roots, though: mixing "largest" and "smallest" over the full optimal sets gives
 non-monotone tables (3417 of the 6006).
 
@@ -45,5 +47,14 @@ non-monotone tables (3417 of the 6006).
 
 Scripts: [counts](../../experiments/2026-10-07b_optimal_bst_counts.py), [ties](../../experiments/2026-10-07b_optimal_bst_ties.py).
 
+**Proofs.** [PROOFS.md](PROOFS.md) proves the exact operation counts of this entry for all sizes of their domains,
+from the code, and names the scripts and sizes that check each count. Its sections 6–9 prove the rest: the cost
+decomposition behind the recurrence, the quadrangle inequality of the cost table and the exactness of Knuth's
+restricted search for non-negative frequencies with any tie rule (credit: Knuth 1971, Yao 1980), and the time and
+space bounds. [tests/test_proofs_obst.py](../../tests/test_proofs_obst.py) checks them on stated ranges.
+
+**A variant cost.** Counting every external node at its depth + 1 adds the constant Σⱼ qⱼ to every tree's cost, so
+the optimal trees are the same (PROOFS.md, section 6).
+
 **Sources.** Knuth 1971, *Optimum binary search trees*, Acta Informatica 1(1), 14–25. Yao 1980, *Efficient dynamic
-programming using quadrangle inequalities*, STOC 1980, 429–435. CLRS (3rd ed.), §15.5 (its cost adds Σqⱼ).
+programming using quadrangle inequalities*, STOC 1980, 429–435. CLRS (3rd ed.).

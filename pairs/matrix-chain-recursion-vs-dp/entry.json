@@ -12,9 +12,9 @@
       "idea": "Try every top-level split point k and recurse on both halves, without memoisation.",
       "model": "classical-deterministic",
       "pseudocode": "cost(i, j) = 0 if i = j else min over k of cost(i, k) + cost(k+1, j) + p_(i-1) p_k p_j",
-      "time_complexity": "Theta(3^n)",
-      "space_complexity": "Theta(n)",
-      "correctness": "Optimal substructure (CLRS 15.2). Running time: T(n) = sum_k (T(k) + T(n-k)) + Theta(n) gives T(n) - T(n-1) = 2 T(n-1) + Theta(1), so T(n) = Theta(3^n). CLRS proves the weaker Omega(2^n).",
+      "time_complexity": "Theta(3^n) on every input: exactly 3^(n-1) calls and (3^(n-1) - 1)/2 split evaluations (n >= 1)",
+      "space_complexity": "Theta(n): nesting depth n",
+      "correctness": "Optimal substructure: the top split separates two independent subchains (PROOFS.md section 1; credit: CLRS). Running time: T(n) = sum_k (T(k) + T(n-k)) + Theta(n) gives T(n) - T(n-1) = 2 T(n-1) + Theta(1), so T(n) = Theta(3^n); PROOFS.md section 2 gives the exact counts.",
       "implementation": "implementations/recursion.py:matrix_chain_recursive",
       "harness": {
         "v1_max_n": 10,
@@ -25,10 +25,10 @@
       "name": "bottom-up dynamic programming",
       "idea": "Fill m[i][j] for increasing chain length; each of the Theta(n^2) cells takes a min over O(n) split points.",
       "model": "classical-deterministic",
-      "pseudocode": "CLRS MATRIX-CHAIN-ORDER",
-      "time_complexity": "Theta(n^3)",
+      "pseudocode": "see implementation (bottom-up over the chain length)",
+      "time_complexity": "Theta(n^3): exactly (n^3 - n)/6 split evaluations",
       "space_complexity": "Theta(n^2)",
-      "correctness": "CLRS Section 15.2.",
+      "correctness": "Bottom-up evaluation of the same recurrence; every split reads two shorter, already final subchains (PROOFS.md section 1; credit: CLRS).",
       "implementation": "implementations/dp.py:matrix_chain_dp",
       "harness": {
         "scaling": { "cost": "n**3", "n_values": [25, 50, 75, 100, 150] }
@@ -36,15 +36,14 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Plain recursion is Theta(3^n) (full enumeration of parenthesisations would be Catalan, ~4^n / n^1.5); memoising the Theta(n^2) subchains gives Theta(n^3). Hu and Shing (1982, 1984) published an O(n log n) algorithm (not implemented or verified here). Schwartz & Weiss (2019) report that its original correctness proof is wrong; their abstract states that they 'present an alternative proof for the correctness of the first two algorithms' they discuss.",
+  "relationship": "Plain recursion is Theta(3^n) (full enumeration has Catalan(n-1) = Theta(4^n / n^1.5) parenthesisations, more than the recursion makes calls, from n = 18 on; PROOFS.md section 6); memoising the Theta(n^2) subchains gives Theta(n^3). Proofs of every claim: PROOFS.md. A published O(n log n) algorithm and a report on its correctness proof are background (cited; not implemented or verified here).",
   "sources": [
     {
       "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
       "year": 2009,
       "title": "Introduction to Algorithms (3rd ed.)",
       "venue": "MIT Press",
-      "isbn": "978-0-262-03384-8",
-      "note": "Section 15.2 (matrix-chain multiplication) and 15.3 (RECURSIVE-MATRIX-CHAIN)."
+      "isbn": "978-0-262-03384-8"
     },
     {
       "authors": "Hu, T. C.; Shing, M. T.",
@@ -71,8 +70,8 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both agree on random chains with dimensions in [1, 50] (n <= 10 for recursion) and respect an independent upper bound. V2: runtimes fitted against 3^n and n^3.",
-    "artifacts": ["implementations/recursion.py", "implementations/dp.py", "harness.py"]
+    "method": "V1: both agree on random chains with dimensions in [1, 50] (n <= 10 for recursion) and respect an independent upper bound. V2: runtimes fitted against 3^n and n^3 (measurements, not proofs). Proofs: PROOFS.md proves every claim of the entry (correctness, the exact call and split counts, time, space, the count of parenthesisations); tests/test_proofs_matchain.py checks the computable facts on stated ranges, including both outputs against an explicit enumeration of all parenthesisations (n <= 9).",
+    "artifacts": ["PROOFS.md", "implementations/recursion.py", "implementations/dp.py", "harness.py", "../../tests/test_proofs_matchain.py"]
   },
   "test_harness": {
     "module": "harness.py",
@@ -80,5 +79,24 @@
     "trials": 5
   },
   "caveats": "Dimensions are small integers, so arithmetic is unit cost.",
-  "notes": "Hu and Shing published an O(n log n) algorithm (on its correctness proof see Schwartz & Weiss 2019 in the relationship); it is not implemented or verified in this entry."
+  "notes": "Hu and Shing's O(n log n) algorithm (see background) is not implemented or verified in this entry.",
+  "background": [
+    {
+      "statement": "Hu and Shing published an O(n log n) algorithm for matrix-chain ordering.",
+      "source": "Hu & Shing 1982, 1984 (SIAM Journal on Computing 11(2) and 13(2)); abstracts of Parts I and II, checked against the Crossref records"
+    },
+    {
+      "statement": "Schwartz and Weiss report that the original correctness proof of Hu and Shing's O(N log N) algorithm is wrong; their abstract states that they 'present an alternative proof for the correctness of the first two algorithms' they discuss.",
+      "source": "Schwartz & Weiss 2019 (SIAM Journal on Computing 48(5)), abstract (only the abstract was consulted; checked against the Crossref record)"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_matchain.py"
+    ],
+    "audit": "RL-107"
+  }
 }

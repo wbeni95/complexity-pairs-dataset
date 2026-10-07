@@ -1,1 +1,8 @@
-jsonschema>=4.18
+# Exact versions of the environment used for the recorded runs (ledger/runs/); CI installs the same versions on
+# Python 3.12 and 3.14. Only jsonschema is imported by the repository; the other lines pin its dependencies so that a
+# fresh environment matches the recorded one. Everything else uses the Python standard library.
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+referencing==0.37.0
+rpds-py==2026.9.1
+attrs==26.1.0

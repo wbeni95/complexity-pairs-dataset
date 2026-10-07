@@ -248,7 +248,7 @@ class CountingInt:
 
 
 def generate_scaling(n, rng):
-    """K_n with counting entries (the worst case for the enumeration: m = n(n-1)/2); resets the counter.
+    """K_n with counting entries (the graph with the most edge subsets: m = n(n-1)/2); resets the counter.
     For the Kirchhoff implementation any connected graph gives the same count (no zero pivot occurs)."""
     global _ops
     _ops = 0

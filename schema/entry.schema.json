@@ -219,6 +219,29 @@
         }
       }
     },
+    "background": {
+      "description": "Background: statements about the literature or the state of research that the entry cites but does not claim or prove (for example NP-hardness, 'no polynomial-time algorithm is known', conditional lower bounds, the T6 status). Each item names its source. Background is not covered by the green check mark; every claim the entry itself makes belongs in the other fields, with a proof. See CONTRIBUTING.md.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "statement",
+          "source"
+        ],
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 10
+          },
+          "source": {
+            "description": "Short citation of the source that states it, matching an item in `sources` (authors and year, with theorem or section where possible).",
+            "type": "string",
+            "minLength": 3
+          }
+        }
+      }
+    },
     "lower_bounds": {
       "description": "Known lower bounds for the problem. Required (with a classical model) for T9.",
       "type": "array",

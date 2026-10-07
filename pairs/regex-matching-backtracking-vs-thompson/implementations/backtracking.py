@@ -1,4 +1,4 @@
-"""Backtracking matcher (the strategy of Perl-style engines): depth-first over the choices, consume first.
+"""Backtracking matcher: depth-first over the choices, consume first.
 
 match(i, j) asks whether atoms[i:] fully match text[j:]. For 'c?' it first tries to consume one character, then
 to skip the atom; for 'c*' it first tries to consume one character and stay on the atom, then to leave it.

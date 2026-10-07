@@ -12,9 +12,9 @@
       "idea": "Expand along the first row: det(A) = sum_j (-1)^j A[0][j] det(minor(0, j)), recursively, without reusing any minor.",
       "model": "classical-deterministic",
       "pseudocode": "expand(r, cols): if r == n return 1; return sum over k-th c in cols of (-1)^k A[r][c] * expand(r+1, cols - {c})",
-      "time_complexity": "Theta(n!) field operations (n!/k! recursion nodes with k columns left, Theta(k^2) work each; n! * sum_k k^2/k! = Theta(n!))",
+      "time_complexity": "Theta(n!) field operations (n!/k! recursion nodes with k columns left, Theta(k^2) work each; n! * sum_k k^2/k! = Theta(n!)); exactly floor(e n!) - 1 multiplications for n >= 1 (PROOFS.md section 1)",
       "space_complexity": "Theta(n^2) (recursion depth n, a column list of length <= n per level)",
-      "correctness": "Laplace's expansion theorem, valid over any commutative ring. Expanding fully is equivalent to the Leibniz formula det(A) = sum over permutations s of sgn(s) prod_i A[i][s(i)].",
+      "correctness": "Laplace's expansion along the first row, proved from the Leibniz formula det(A) = sum over permutations s of sgn(s) prod_i A[i][s(i)] in PROOFS.md section 1 (valid over any commutative ring). Expanding fully gives the Leibniz formula term by term.",
       "implementation": "implementations/cofactor.py:det_cofactor",
       "harness": {
         "v1_max_n": 8,
@@ -26,9 +26,9 @@
       "idea": "Reduce A to upper-triangular form with row swaps (each negates the determinant) and row operations row_r -= f * row_c (which preserve it); the determinant is the signed product of the pivots. A column with no non-zero pivot candidate means det = 0.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(n^3) field operations on non-singular input (~n^3/3 multiply-subtracts); O(n^3) always (it can stop early on a singular matrix)",
+      "time_complexity": "Theta(n^3) field operations on non-singular input: exactly (n^3 - n)/3 multiply-subtracts (~n^3/3), n(n+1)(2n+1)/6 multiplications in all and n inversions (PROOFS.md section 2); O(n^3) always (it can stop early on a singular matrix)",
       "space_complexity": "Theta(n^2) (a working copy of A)",
-      "correctness": "det is multiplicative and alternating in the rows: adding a multiple of one row to another leaves it unchanged, swapping two rows negates it, and the determinant of a triangular matrix is the product of its diagonal. GF(p) is a field, so every non-zero pivot is invertible (Fermat: x^(p-2) = x^(-1)).",
+      "correctness": "Proof: PROOFS.md section 2. Adding a multiple of one row to another leaves det unchanged, swapping two rows negates it, the determinant of a triangular matrix is the product of its diagonal, and a column without a pivot makes the matrix singular. GF(p) is a field (p = 2^31 - 1 is prime), so every non-zero pivot is invertible (Fermat: x^(p-2) = x^(-1)).",
       "implementation": "implementations/gaussian.py:det_gaussian",
       "harness": {
         "scaling": { "cost": "n**3", "n_values": [32, 48, 64, 96, 128, 192] }
@@ -36,7 +36,7 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Factorial -> cubic: Theta(n!) vs Theta(n^3) field operations. The expansion ignores that det is invariant under row operations; elimination exploits it. With fast matrix multiplication, det can be computed in O(n^omega) (Bunch & Hopcroft 1974, via LUP decomposition), omega < 2.372, a further T3 step.",
+  "relationship": "Factorial -> cubic: Theta(n!) vs Theta(n^3) field operations. The expansion ignores that det is invariant under row operations; elimination exploits it. Faster algorithms through fast matrix multiplication, a further T3 step, are listed under background (cited, not proved here).",
   "sources": [
     {
       "authors": "Bareiss, E. H.",
@@ -69,18 +69,42 @@
       "venue": "Theoretical Computer Science 8(2), 189-201",
       "doi": "10.1016/0304-3975(79)90044-6",
       "note": "Cited for the contrast with the permanent (see notes)."
+    },
+    {
+      "authors": "Alman, J.; Duan, R.; Vassilevska Williams, V.; Xu, Y.; Xu, Z.; Zhou, R.",
+      "year": 2024,
+      "title": "More Asymmetry Yields Faster Matrix Multiplication",
+      "venue": "SODA 2025",
+      "arxiv": "2404.16349",
+      "note": "omega < 2.371339."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree for n = 0..8 (cofactor expansion capped at n = 8), and both match the determinant known by construction: the harness builds A as a row-permuted L*U with unit lower triangular L, so det(A) = sign(permutation) * prod(diag U) mod p, independent of both implementations. Instances include zero entries (zero pivots, row swaps) and singular matrices (a zero on U's diagonal); n = 12 and 30 are checked for Gaussian elimination only. V2: runtimes fitted against n! and n^3, on uniformly random matrices (non-singular with probability ~1 - 1/p) for the timing.",
-    "artifacts": ["implementations/cofactor.py", "implementations/gaussian.py", "harness.py"]
+    "method": "V1: both implementations agree for n = 0..8 (cofactor expansion capped at n = 8), and both match the determinant known by construction: the harness builds A as a row-permuted L*U with unit lower triangular L, so det(A) = sign(permutation) * prod(diag U) mod p, independent of both implementations. Instances include zero entries (zero pivots, row swaps) and singular matrices (a zero on U's diagonal); n = 12 and 30 are checked for Gaussian elimination only. V2: runtimes fitted against n! and n^3, on uniformly random matrices (non-singular with probability at least 1 - 1/(p - 1), PROOFS.md section 4.2) for the timing. tests/test_proofs_determinant.py checks the exact operation counts of PROOFS.md (cofactor expansion n = 0..8, elimination n = 0..40) and both algorithms against the Leibniz formula.",
+    "artifacts": ["PROOFS.md", "implementations/cofactor.py", "implementations/gaussian.py", "harness.py", "../../tests/test_proofs_determinant.py"]
   },
   "test_harness": {
     "module": "harness.py",
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 30],
     "trials": 6
   },
-  "caveats": "Working over GF(p) with p fixed makes every arithmetic step unit cost. Over the integers, elimination with exact rationals or Bareiss's fraction-free variant remains polynomial in bit complexity, but the operation counts above then involve integers of O(n log(n M)) bits for entries bounded by M. Gaussian elimination over floating point is a different (numerical) problem and is not what is measured here.",
-  "notes": "Contrast with permanent-naive-vs-ryser: the permanent is the same sum over permutations with the signs removed, yet computing it is #P-complete (Valiant 1979) and the best known exact algorithms are exponential (Ryser, Theta(n 2^n)). The signs are what make det invariant under row operations, which is what elimination exploits."
+  "caveats": "Working over GF(p) with p fixed makes every arithmetic step unit cost. Integer matrices are a different setting (see background for Bareiss's fraction-free elimination). Gaussian elimination over floating point is a different (numerical) problem and is not what is measured here.",
+  "notes": "Contrast with permanent-naive-vs-ryser: the permanent is the same sum over permutations with the signs removed; the exact algorithms of that entry take Theta(n * n!) and Theta(n 2^n) operations, and computing it is #P-complete (background). The signs are what make det invariant under row operations (PROOFS.md section 2.1), which is what elimination exploits; the permanent has no such invariance (permanent-naive-vs-ryser/PROOFS.md, section 5.5).",
+  "background": [
+    {"statement": "With fast matrix multiplication the determinant can be computed in O(n^omega) field operations, via LUP decomposition; this is a further T3 step.", "source": "Bunch & Hopcroft 1974"},
+    {"statement": "Strassen's algorithm gives omega <= log2(7), so the determinant takes O(n^log2(7)) operations.", "source": "Strassen 1969"},
+    {"statement": "The matrix multiplication exponent satisfies omega < 2.371339.", "source": "Alman, Duan, Vassilevska Williams, Xu, Xu & Zhou 2024 (SODA 2025)"},
+    {"statement": "Over the integers, Bareiss's multistep integer-preserving Gaussian elimination, based on Sylvester's identity, avoids fractions.", "source": "Bareiss 1968"},
+    {"statement": "Computing the permanent is #P-complete.", "source": "Valiant 1979"}
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_determinant.py"
+    ],
+    "audit": "RL-107"
+  }
 }

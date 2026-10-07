@@ -12,9 +12,9 @@
       "idea": "Evaluate the left subtree first; if it is 0 the node is 1 and the right subtree is skipped, otherwise the node is NOT(right).",
       "model": "classical-deterministic",
       "pseudocode": "eval(node): if leaf: read it; if eval(left) == 0: return 1; return 1 - eval(right)",
-      "time_complexity": "2^h = N leaf reads in the worst case (exactly 2^h on inputs where every node of value 1 has exactly one child of value 0, the right one, i.e. the two right-zero reluctant inputs), which is optimal for deterministic algorithms (lower_bounds)",
+      "time_complexity": "2^h = N leaf reads in the worst case (exactly 2^h on inputs where every node of value 1 has exactly one child of value 0, the right one, i.e. the two right-zero reluctant inputs), which is optimal for deterministic algorithms (lower_bounds; PROOFS.md §1, §3)",
       "space_complexity": "O(h)",
-      "correctness": "NAND(0, y) = 1 and NAND(1, y) = NOT y, so short-circuiting on a 0 left child is exact. Worst case: a value-0 node needs both children (both are 1), and a value-1 node whose left child is 1 needs its right child too, so on the right-zero reluctant input every leaf is read (D(h) = 2 D(h-1)). Optimality (adversary argument, proved here by induction on the height; not checked against a published proof): answer every leaf query with 1 while its sibling subtree is unfinished, which leaves the parent undetermined since NAND(1, y) = NOT y; when the last leaf of a node's two subtrees is queried, choose the answer that gives that node whichever value the adversary wants for it as a 'virtual leaf' one level up. By induction on the height, every node stays undetermined until the last leaf below it is read, and its value can then still be chosen: while both subtrees of a node are unfinished, each can still take either value, so the node can be 0 (both children 1) or 1 (a child 0); once one subtree has finished, with value 1, the node equals the negation of the other subtree, which is still open, and the answer to that subtree's last leaf fixes the node to the value wanted. So any deterministic algorithm reads all 2^h leaves.",
+      "correctness": "NAND(0, y) = 1 and NAND(1, y) = NOT y, so short-circuiting on a 0 left child is exact. Worst case: a value-0 node needs both children (both are 1), and a value-1 node whose left child is 1 needs its right child too, so on the right-zero reluctant input every leaf is read (D(h) = 2 D(h-1)). Optimality (adversary argument, proved in PROOFS.md §3 by induction on the height): answer every leaf query with 1 while its sibling subtree is unfinished, which leaves the parent undetermined since NAND(1, y) = NOT y; when the last leaf of a node's two subtrees is queried, choose the answer that gives that node whichever value the adversary wants for it as a 'virtual leaf' one level up. By induction on the height, every node stays undetermined until the last leaf below it is read, and its value can then still be chosen: while both subtrees of a node are unfinished, each can still take either value, so the node can be 0 (both children 1) or 1 (a child 0); once one subtree has finished, with value 1, the node equals the negation of the other subtree, which is still open, and the answer to that subtree's last leaf fixes the node to the value wanted. So any deterministic algorithm reads all 2^h leaves.",
       "implementation": "implementations/left_first.py:nand_tree_left_first",
       "harness": {
         "v1_max_n": 12,
@@ -30,12 +30,12 @@
     },
     {
       "name": "randomized random-order evaluation",
-      "idea": "At every node, evaluate the two subtrees in a uniformly random order and short-circuit as above (Snir's directional algorithm, shown optimal by Saks and Wigderson 1986). Always correct; only the number of reads is random.",
+      "idea": "At every node, evaluate the two subtrees in a uniformly random order and short-circuit as above (optimality among zero-error algorithms: see background). Always correct; only the number of reads is random.",
       "model": "classical-randomized",
       "pseudocode": "eval(node): if leaf: read it; (a, b) = children in random order; if eval(a) == 0: return 1; return 1 - eval(b)",
       "time_complexity": "Theta(((1 + sqrt(33))/4)^h) = Theta(N^0.7537) expected leaf reads in the worst case (((1 + sqrt 33)/4 ~ 1.6861; log2 of it ~ 0.7537)",
       "space_complexity": "O(h)",
-      "correctness": "Same short-circuit rule as the deterministic algorithm, so the answer is always correct (zero error). Expected cost (derived here): on 'reluctant' inputs (value-0 nodes have two 1-children, value-1 nodes exactly one 0-child) R0(h) = 2 R1(h-1) and R1(h) = R0(h-1) + R1(h-1)/2, R0(0) = R1(0) = 1, since a value-1 node reads its 0-child first with probability 1/2. The matrix [[0, 2], [1, 1/2]] has eigenvalues (1 +- sqrt 33)/4, so R(h) = Theta(((1 + sqrt 33)/4)^h). Reluctant inputs are the worst case for this algorithm: by induction over h, a value-1 node with two 0-children costs only R0(h-1), less than R0(h-1) + R1(h-1)/2, and subtrees are independent. Saks & Wigderson 1986 prove that this is optimal for zero-error randomized algorithms (lower_bounds).",
+      "correctness": "Same short-circuit rule as the deterministic algorithm, so the answer is always correct (zero error). Expected cost (derived here): on 'reluctant' inputs (value-0 nodes have two 1-children, value-1 nodes exactly one 0-child) R0(h) = 2 R1(h-1) and R1(h) = R0(h-1) + R1(h-1)/2, R0(0) = R1(0) = 1, since a value-1 node reads its 0-child first with probability 1/2. The matrix [[0, 2], [1, 1/2]] has eigenvalues (1 +- sqrt 33)/4, so R(h) = Theta(((1 + sqrt 33)/4)^h). Reluctant inputs are the worst case for this algorithm: by induction over h, every input with root value v costs at most R_v(h), with equality exactly on the reluctant inputs, since a value-1 node with two 0-children costs only (E(A) + E(B))/2 <= R0(h-1), less than R0(h-1) + R1(h-1)/2, and subtrees are independent. As R0(h) > R1(h) for h >= 1, the worst case over all inputs is R0(h), attained on the reluctant inputs with root value 0 (PROOFS.md §4). That this is optimal for zero-error randomized algorithms is the theorem of Saks & Wigderson 1986 (background).",
       "implementation": "implementations/random_order.py:nand_tree_random_order",
       "harness": {
         "scaling": {
@@ -56,16 +56,20 @@
       "model": "classical-deterministic",
       "bound": "2^h = N leaf reads in the worst case",
       "setting": "query (decision-tree) model, unconditional",
-      "source": "Adversary argument proved in this entry by induction on the height (deterministic algorithm, correctness field); not checked against a published proof"
-    },
-    {
-      "model": "classical-randomized",
-      "bound": "Omega(((1 + sqrt(33))/4)^h) = Omega(N^0.7537) expected leaf reads in the worst case, for ZERO-ERROR (Las Vegas) randomized algorithms; matched by the randomized algorithm here",
-      "setting": "query (decision-tree) model, unconditional. Bounded-error (Monte Carlo) algorithms are not covered by this statement here.",
-      "source": "Saks & Wigderson 1986 (statement as summarised by secondary sources found by web search, e.g. the Boolean Zoo page 'Iterated nand' and arXiv:1506.06399; the paper's text was not read)"
+      "source": "Proved in this entry (PROOFS.md §3), by an adversary argument and induction on the height"
     }
   ],
-  "relationship": "Randomisation lowers the exponent: N leaf reads for every deterministic algorithm vs Theta(N^0.7537) expected reads for the zero-error randomized algorithm here. The deterministic bound is proved optimal in this entry; the randomized one is optimal for zero-error algorithms by the cited lower bound of Saks & Wigderson 1986, which is not proved here (lower_bounds). Primary T4 (randomized vs deterministic, same problem, same query model); secondary T3 because, in the input size N, the improvement is polynomial to a smaller polynomial (RESEARCH_LOG RL-042 proposal, adopted here).",
+  "background": [
+    {
+      "statement": "The randomized algorithm here is optimal up to a constant factor among zero-error (Las Vegas) randomized algorithms: no such algorithm has a smaller order of worst-case expected leaf reads. Bounded-error (Monte Carlo) algorithms are not covered by this statement.",
+      "source": "Saks & Wigderson 1986"
+    },
+    {
+      "statement": "In the Hamiltonian oracle model, a continuous-time quantum walk evaluates a NAND tree with N leaves in time proportional to sqrt(N).",
+      "source": "Farhi, Goldstone & Gutmann 2008 (abstract)"
+    }
+  ],
+  "relationship": "Randomisation lowers the exponent: N leaf reads for every deterministic algorithm vs Theta(N^0.7537) expected reads for the zero-error randomized algorithm here. Both sides are proved in PROOFS.md (the deterministic lower bound in §3, the randomized algorithm's worst-case expectation in §4). That the randomized algorithm is optimal for zero-error algorithms is the theorem of Saks & Wigderson 1986, which is background, not proved here. Primary T4 (randomized vs deterministic, same problem, same query model); secondary T3 because, in the input size N, the improvement is polynomial to a smaller polynomial (RESEARCH_LOG RL-042 proposal, adopted here).",
   "sources": [
     {
       "authors": "Saks, M.; Wigderson, A.",
@@ -73,16 +77,27 @@
       "title": "Probabilistic Boolean decision trees and the complexity of evaluating game trees",
       "venue": "27th Annual Symposium on Foundations of Computer Science (FOCS 1986), 29-38",
       "doi": "10.1109/SFCS.1986.44"
+    },
+    {
+      "authors": "Farhi, E.; Goldstone, J.; Gutmann, S.",
+      "year": 2008,
+      "title": "A Quantum Algorithm for the Hamiltonian NAND Tree",
+      "venue": "Theory of Computing 4, 169-190",
+      "doi": "10.4086/toc.2008.v004a008",
+      "note": "Crossref holds no title for this DOI; title, volume, article number 8 and pages confirmed on theoryofcomputing.org (2026-10-07)."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both algorithms agree with an independent oracle (harness.check: full bottom-up evaluation of every node, level by level) on random leaf vectors and on reluctant inputs with random sides and random root values, h = 0, ..., 8, 10, 12, 14, 16 (left-first up to 12), 4 trials each. The randomized algorithm is zero-error, so its answers are deterministic facts, not probabilistic; the validator seeds its coins. V2 (measure 'reported'): the cost is the exact number of leaf reads, counted by an instrumented leaf sequence in the harness while the implementations run unchanged, on the right-zero reluctant input with root value 1 (worst case for both). Left-first: exactly 2^h reads (h = 0..16 checked), alpha = 1.000 against 2^h at tolerance 0.02 (rivals lambda^h and h 2^h rejected). Randomized: mean of 200 seeded runs per h; alpha = 0.995 against lambda^h, lambda = (1 + sqrt 33)/4 (rivals 2^h 0.750, 1.5^h, h lambda^h rejected). Tolerance 0.05 for the randomized fit is justified in experiments/2026-10-07b_nand_tree_counts.py: the EXACT expectations (recurrence) give alpha = 0.998 on these h (the lower-order eigenvalue (1 - sqrt 33)/4 ~ -1.186 contributes 0.002), and over 40 alternative seed sets the 200-sample fit has alpha mean 0.997, sd 0.005, range 0.989-1.008. The validator-seeded sample means lie within 2.0 standard errors of the exact expectations at every h. The rival 2^h is 0.25 away.",
+    "method": "V1: both algorithms agree with an independent oracle (harness.check: full bottom-up evaluation of every node, level by level) on random leaf vectors and on reluctant inputs with random sides and random root values, h = 0, ..., 8, 10, 12, 14, 16 (left-first up to 12), 4 trials each. The randomized algorithm is zero-error, so its answers are deterministic facts, not probabilistic; the validator seeds its coins. V2 (measure 'reported'): the cost is the exact number of leaf reads, counted by an instrumented leaf sequence in the harness while the implementations run unchanged, on the right-zero reluctant input with root value 1 (a worst case for the left-first algorithm; for the randomized algorithm the worst case among inputs with root value 1, whose exact expectation R1(h) is below the overall worst case R0(h) = 2 R1(h-1) by a factor between 1.03 and 1.37, with the same exponent; PROOFS.md §4). Left-first: exactly 2^h reads (h = 0..16 checked), alpha = 1.000 against 2^h at tolerance 0.02 (rivals lambda^h and h 2^h rejected). Randomized: mean of 200 seeded runs per h; alpha = 0.995 against lambda^h, lambda = (1 + sqrt 33)/4 (rivals 2^h 0.750, 1.5^h, h lambda^h rejected). Tolerance 0.05 for the randomized fit is justified in experiments/2026-10-07b_nand_tree_counts.py: the EXACT expectations (recurrence) give alpha = 0.998 on these h (the lower-order eigenvalue (1 - sqrt 33)/4 ~ -1.186 contributes 0.002), and over 40 alternative seed sets the 200-sample fit has alpha mean 0.997, sd 0.005, range 0.989-1.008. The validator-seeded sample means lie within 2.0 standard errors of the exact expectations at every h. The rival 2^h is 0.25 away. Proofs: PROOFS.md proves every claim of this entry except the background randomized lower bound (the exact count of the left-first algorithm, the correctness of both algorithms, the deterministic lower bound, and the worst-case expected cost of the randomized algorithm) and names the deterministic checks of each (tests/test_proofs_query.py, the experiment and count-check scripts).",
     "artifacts": [
+      "PROOFS.md",
       "implementations/left_first.py",
       "implementations/random_order.py",
       "harness.py",
-      "../../experiments/2026-10-07b_nand_tree_counts.py"
+      "../../experiments/2026-10-07b_nand_tree_counts.py",
+      "../../tests/test_proofs_query.py",
+      "../../experiments/2026-10-07_query_proof_checks.py"
     ]
   },
   "test_harness": {
@@ -90,6 +105,19 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 16],
     "trials": 4
   },
-  "caveats": "The randomized V2 fit uses sample means (200 per h), so its alpha is a statistical estimate; it is reproducible because the validator seeds every run. Uniformly random leaves are much easier than reluctant inputs for both algorithms, so V2 uses the worst-case family. The randomized lower bound quoted is for zero-error algorithms (as summarised from Saks & Wigderson 1986 by secondary sources); this entry makes no claim about bounded-error algorithms. The deterministic lower bound rests on the adversary argument proved here (not checked against a published proof).",
-  "notes": "Quantum algorithms evaluate NAND trees with about sqrt(N) queries (Farhi, Goldstone & Gutmann 2008 and follow-up work); that line is not recorded here because the source could not be checked by title (Crossref stores no title for doi:10.4086/toc.2008.v004a008). A T9 extension would need a verified quantum algorithm and the classical randomized lower bound above."
+  "caveats": "The randomized V2 fit uses sample means (200 per h), so its alpha is a statistical estimate; it is reproducible because the validator seeds every run. The worst case of each algorithm is attained on reluctant inputs: for the left-first algorithm on the two right-zero reluctant inputs (PROOFS.md §1), for the randomized algorithm on the reluctant inputs with root value 0 (PROOFS.md §4); V2 uses the right-zero reluctant input with root value 1 (see verification). The randomized lower bound in the background is for zero-error algorithms (as summarised from Saks & Wigderson 1986 by secondary sources); this entry makes no claim about bounded-error algorithms. The deterministic lower bound is proved in PROOFS.md §3.",
+  "notes": "A quantum algorithm for NAND trees is recorded as background (Farhi, Goldstone & Gutmann 2008). A T9 extension would need a verified quantum algorithm in a discrete query model and a proved classical randomized lower bound.",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_query.py",
+      "../../experiments/2026-10-07_query_proof_checks.py",
+      "../../experiments/2026-10-07b_nand_tree_counts.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py"
+    ],
+    "audit": "RL-107"
+  }
 }

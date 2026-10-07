@@ -12,9 +12,9 @@
       "idea": "Test every triple of indices.",
       "model": "classical-deterministic",
       "pseudocode": "for i < j < k: if a_i + a_j + a_k = 0: yes",
-      "time_complexity": "Theta(n^3) worst case",
-      "space_complexity": "O(1)",
-      "correctness": "Exhaustive.",
+      "time_complexity": "Theta(n^3) worst case: exactly C(n, 3) equality tests and C(n, 2) target computations on every no-instance, at most that on every input (PROOFS.md section 1)",
+      "space_complexity": "O(1) (PROOFS.md section 1)",
+      "correctness": "Exhaustive: every triple i < j < k is tested (PROOFS.md section 1).",
       "implementation": "implementations/brute_force.py:three_sum_brute",
       "harness": {
         "v1_max_n": 60,
@@ -26,9 +26,9 @@
       "idea": "Sort. For each i, move pointers j (from the left) and k (from the right) over a[i+1..n-1] toward each other, depending on the sign of the sum.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(n^2)",
-      "space_complexity": "Theta(n)",
-      "correctness": "For fixed i the pair sums a[j] + a[k] are monotone in j and k on the sorted array, so the two-pointer scan never skips a solution.",
+      "time_complexity": "Theta(n^2) in the worst case, assuming the built-in sort runs in O(n log n) (machine-model assumption, listed under background; any O(n^2) bound would do): exactly (n - 1)(n - 2)/2 pointer steps on every no-instance with n >= 1 (none for n = 0) and at most that on every input, plus the sort of the n values (PROOFS.md section 2)",
+      "space_complexity": "Theta(n) under the same assumption: the sorted copy (n slots) and the built-in sort's working space, which the assumption takes to be O(n) (PROOFS.md section 2)",
+      "correctness": "For fixed i the pair sums a[j] + a[k] are monotone in j and k on the sorted array, so the two-pointer scan never skips a solution: no solution pair lies outside the current window [j, k] (complete proof: PROOFS.md section 2).",
       "implementation": "implementations/sort_two_pointers.py:three_sum_quadratic",
       "harness": {
         "scaling": { "cost": "n**2", "n_values": [250, 500, 1000, 1500, 2000, 3000] }
@@ -36,15 +36,7 @@
     }
   ],
   "pair_type": "T3",
-  "lower_bounds": [
-    {
-      "model": "classical-deterministic",
-      "bound": "no O(n^(2-eps)) algorithm for any eps > 0",
-      "setting": "conjectured (the 3SUM conjecture, basis of 3SUM-hardness; Gajentaan & Overmars 1995)",
-      "source": "Gajentaan & Overmars 1995"
-    }
-  ],
-  "relationship": "Theta(n^3) -> Theta(n^2). The 3SUM conjecture states that no O(n^(2-eps)) algorithm exists for any eps > 0. Grønlund & Pettie 2014 gave o(n^2) by log factors, and linear decision trees need only O(n log^2 n) comparisons (Kane, Lovett & Moran 2019), so the conjecture is about algorithms, not decision-tree depth.",
+  "relationship": "Theta(n^3) -> Theta(n^2) in the worst case, the quadratic bound assuming the built-in sort runs in O(n log n) (background), so the T3 tag rests on that assumption (PROOFS.md sections 1-3). The 3SUM conjectures and the known subquadratic and decision-tree results are listed under background; this entry proves no lower bound for 3SUM.",
   "sources": [
     {
       "authors": "Gajentaan, A.; Overmars, M. H.",
@@ -66,18 +58,62 @@
       "title": "Near-optimal Linear Decision Trees for k-SUM and Related Problems",
       "venue": "Journal of the ACM 66(3)",
       "doi": "10.1145/3285953"
+    },
+    {
+      "authors": "Munro, J. I.; Wild, S.",
+      "year": 2018,
+      "title": "Nearly-Optimal Mergesorts: Fast, Practical Sorting Methods That Optimally Adapt to Existing Runs",
+      "venue": "26th Annual European Symposium on Algorithms (ESA 2018), LIPIcs 112, 63:1-63:16",
+      "doi": "10.4230/LIPIcs.ESA.2018.63",
+      "arxiv": "1805.04154",
+      "note": "Background only: Theorem 6 of the arXiv version bounds the merge cost and the comparisons of powersort with a plain merge (read in the arXiv PDF)."
+    },
+    {
+      "authors": "Python Software Foundation (CPython source; original text by T. Peters)",
+      "year": 2002,
+      "title": "Objects/listsort.txt: the description of CPython's list sort",
+      "venue": "CPython source tree, main branch",
+      "url": "https://github.com/python/cpython/blob/main/Objects/listsort.txt",
+      "note": "Background only. The file dates from 2002 (T. Peters); the cited passage, which states that the code uses the powersort merge strategy of Munro and Wild, is a later addition. Read in the current version of the main branch on 2026-10-07."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both agree with each other and with an independent hash-based oracle on random instances with values in [-n^2, n^2] (yes and no answers both occur), n = 0..60 for the cubic algorithm. V2: worst-case instances (no solution, so no early exit) fitted against n^3 and n^2.",
-    "artifacts": ["implementations/brute_force.py", "implementations/sort_two_pointers.py", "harness.py"]
+    "method": "V1: both agree with each other and with an independent hash-based oracle on random instances with values in [-n^2, n^2] (yes and no answers both occur), n = 0..60 for the cubic algorithm. V2: worst-case instances (all values positive, so no solution and no early exit; PROOFS.md section 4) fitted against n^3 and n^2 (timing, measured). Proofs: PROOFS.md proves the correctness, the exact step counts on no-instances, the worst-case bounds and the space of both algorithms (the quadratic algorithm's upper bounds under the machine-model assumption on the built-in sort), and names their deterministic checks (tests/test_proofs_three_sum.py).",
+    "artifacts": ["PROOFS.md", "implementations/brute_force.py", "implementations/sort_two_pointers.py", "harness.py", "../../tests/test_proofs_three_sum.py"]
   },
   "test_harness": {
     "module": "harness.py",
     "v1_sizes": [0, 1, 2, 3, 4, 5, 8, 12, 20, 40, 60, 300],
     "trials": 6
   },
-  "caveats": "The 3SUM conjecture is a hypothesis, not a theorem; many geometric problems are '3SUM-hard' relative to it.",
-  "notes": "A hub of fine-grained complexity, alongside SETH (edit distance, LCS) and APSP."
+  "caveats": "The 3SUM conjecture for integer inputs (3SUM needs n^(2-o(1)) time; background) is a hypothesis, not a theorem; its Omega(n^2) form is false (background); and this entry proves no lower bound for 3SUM. Both bounds are worst cases: on a yes-instance either algorithm can stop at its first solution.",
+  "notes": "Compare pairs/three-xor-all-triples-vs-patricia-trie, the XOR analogue.",
+  "background": [
+    {
+      "statement": "A large class of problems in computational geometry is at least as difficult as 3SUM (3SUM-hard); this proves no lower bound for them, but there is no hope of o(n^2) algorithms for them unless the solution for 3SUM can be improved; the best known algorithm for 3SUM then took Theta(n^2) time.",
+      "source": "Gajentaan & Overmars 1995, abstract"
+    },
+    {
+      "statement": "The conjecture that 3SUM needs Omega(n^2) time is false: 3SUM has a deterministic O(n^2 / (log n / log log n)^(2/3)) algorithm and decision-tree complexity O(n^(3/2) sqrt(log n)). For integer inputs it is conjectured that 3SUM needs n^(2-o(1)) time, i.e. that no O(n^(2-eps)) algorithm exists for any eps > 0.",
+      "source": "Grønlund & Pettie 2018, abstract and Section 1.1"
+    },
+    {
+      "statement": "For every constant k, k-SUM on n elements can be solved by linear decision trees with O(n log^2 n) linear queries, which are comparison queries (they compare the sums of two k-subsets); so no quadratic lower bound can be proved in that model.",
+      "source": "Kane, Lovett & Moran 2019, abstract"
+    },
+    {
+      "statement": "Machine-model assumption of this entry: the built-in sort (sorted() and list.sort()) runs in O(n log n) comparisons and time, with O(n) extra space, in the worst case on n items. Basis, as far as the sources go: the current CPython list sort orders its merges by the powersort rule of Munro and Wild (listsort.txt), and with a plain merge powersort makes at most n H + 3n - r <= n log2 n + 3n comparisons on n items forming r runs, where H is the entropy of the run lengths (Munro & Wild 2018, Theorem 6 of the arXiv version). CPython's merges also gallop, which that theorem does not cover, so the assumption is not proved in this repository.",
+      "source": "Munro & Wild 2018, Theorem 6 (arXiv version), for the plain-merge bound; Python Software Foundation, Objects/listsort.txt, for the merge order of the current CPython list sort"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_three_sum.py"
+    ],
+    "audit": "RL-107"
+  }
 }

@@ -6,8 +6,8 @@ clause) its answer is the formula's least model, see below. An empty clause is u
 
 Assignments are enumerated as integers mask = 0, 1, ..., 2^n - 1 (bit v-1 of mask is the value of x_v). Each one is
 checked clause by clause, literal by literal, and abandoned at the first falsified clause. The search STOPS at the
-first satisfying assignment. One check costs O(L) literal evaluations (L = total clause length), so the total is
-O(2^n * L); on an unsatisfiable formula all 2^n assignments are examined.
+first satisfying assignment. One check costs at most L literal evaluations (L = total clause length) and O(L + 1)
+steps, so the total is O(2^n * (L + 1)); on an unsatisfiable formula all 2^n assignments are examined.
 
 Why the first satisfying mask is the least model: the models of a Horn formula are closed under intersection, so
 a satisfiable Horn formula has a least model M (its set of true variables is contained in that of every model).

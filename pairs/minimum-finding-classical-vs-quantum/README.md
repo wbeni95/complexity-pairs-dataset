@@ -7,13 +7,14 @@
 | Algorithm | Model | Queries | Error | Implementation |
 |---|---|---|---|---|
 | Scan | classical, deterministic | exactly N | none | [classical.py](implementations/classical.py) |
-| Dürr–Høyer | quantum | O(√N); here ≈ 2·(22.5√N + 1.4 lg²N) | ≤ 1/2 guaranteed (0 failures in 14 000 simulated runs) | [durr_hoyer.py](implementations/durr_hoyer.py) |
+| Dürr–Høyer | quantum | O(√N) expected; measured ≈ 2·(22.5√N + 1.4 lg²N) | < 1/2, proved (0 failures in 14 000 simulated runs) | [durr_hoyer.py](implementations/durr_hoyer.py) |
 
-**Gap (quadratic), from cited bounds.** Minimum finding contains unstructured search. Set T[x] = 0 for the marked x
+**Gap (quadratic), proved here.** Minimum finding contains unstructured search. Set T[x] = 0 for the marked x
 and T[x] = x + 1 otherwise; the values are distinct and one probe of T costs one search query. Classical algorithms therefore need
-Ω(N) probes even with bounded error, and quantum algorithms need Ω(√N) (Bennett–Bernstein–Brassard–Vazirani 1997).
-Dürr–Høyer attains O(√N), so the separation is Θ(N) vs Θ(√N): a square root, not an exponential. The classical
-search bound, the BBBV bound and Dürr–Høyer's Theorem 1 are cited, not proved here.
+Ω(N) probes even with bounded error, and quantum algorithms need Ω(√N) (the hybrid argument; credit:
+Bennett–Bernstein–Brassard–Vazirani 1997). Dürr–Høyer attains O(√N) expected queries with success probability above
+1/2, proved with the implementation's own constants, so the separation is Θ(N) vs Θ(√N): a square root, not an
+exponential. All four bounds are proved in [PROOFS.md](PROOFS.md).
 
 **How Dürr–Høyer works.** It keeps a threshold y and repeatedly uses Grover search for an *unknown* number of marked
 items, the BBHT exponential search, to find some j with T[j] < T[y], which then becomes the new threshold. It stops
@@ -34,6 +35,13 @@ paper's bound m0 is 3.7–9.3× larger than the exact expectation for n = 2..10.
 - *Fit depends on range.* Over n = 2..10 the fitted α is 0.800, close to the tolerance edge, because lower-order
   terms dominate at tiny N.
 - *Oracle model.* This is a separation relative to an oracle, and it does not imply BQP ≠ BPP.
+
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry: the exact counts, the classical and quantum
+lower bounds, the analysis of the exponential search (fewer than 9·m₀(t) expected iterations), and Dürr–Høyer's
+Lemma 1, Lemma 2 and Theorem 1 with the implementation's constants (for n ≥ 1). It names the deterministic checks of
+each ([tests/test_proofs_query.py](../../tests/test_proofs_query.py), the experiment and the count-check scripts).
+
+**Background (cited, not proved here).** Dürr & Høyer remark that the algorithm also works for non-distinct values.
 
 **Sources.** Dürr & Høyer, *A quantum algorithm for finding the minimum*, arXiv:quant-ph/9607014 (1996).
 Boyer, Brassard, Høyer & Tapp, *Tight bounds on quantum searching*, Fortschr. Phys. 46 (1998).

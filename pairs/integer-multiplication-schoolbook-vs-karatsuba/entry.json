@@ -4,7 +4,7 @@
   "problem_statement": "Given two non-negative integers a and b, each written with exactly n digits in base B = 2^15 as little-endian digit lists (index 0 = least significant digit), compute the product a*b as a little-endian list of exactly 2n base-B digits (high-order digits may be zero).",
   "input": {
     "parameter": "n = number of base-2^15 digits of each factor.",
-    "size_measure": "2n digits (30n bits). Costs count single-word digit operations: every intermediate value stays below 2^31, so each digit operation is O(1). Since n digits = 15n bits, the exponents are the same in bit complexity."
+    "size_measure": "2n digits (30n bits). Costs count single-word digit operations: every value computed from digits (digit products and sums, carries, borrows, signs) stays below 2^31 in absolute value, so each digit operation is O(1); indices and lengths have O(log n) bits (PROOFS.md section 6). Since n digits = 15n bits, the exponents are the same in bit complexity."
   },
   "algorithms": [
     {
@@ -36,7 +36,7 @@
       "pseudocode": "see implementation",
       "time_complexity": "Theta(n^log2(3)) ~ Theta(n^1.585) digit operations",
       "space_complexity": "Theta(n)",
-      "correctness": "Karatsuba & Ofman 1962. The identity above holds over the integers, so the recombined result equals x*y. The subtractive form (Knuth, TAOCP Vol. 2, 4.3.3) keeps all three sub-products the same size, giving T(n) = 3 T(ceil(n/2)) + Theta(n) = Theta(n^log2(3)) by the master theorem. The 32-digit base-case cutoff changes constant factors only.",
+      "correctness": "Karatsuba & Ofman 1962. The identity above holds over the integers, so the recombined result equals x*y (PROOFS.md section 5, including the carry and borrow helpers). The subtractive form (Knuth, TAOCP Vol. 2) keeps all three sub-products the same size, giving T(n) = 3 T(ceil(n/2)) + Theta(n) = Theta(n^log2(3)); PROOFS.md section 7 solves this recurrence explicitly for every n. The 32-digit base-case cutoff changes constant factors only.",
       "implementation": "implementations/karatsuba.py:multiply_karatsuba",
       "harness": {
         "scaling": {
@@ -53,22 +53,39 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "Both polynomial. Karatsuba lowers the exponent from 2 to log2(3) ~ 1.585. It was the first sub-quadratic multiplication algorithm. The line continues with Toom-Cook (n^(1+eps) for any fixed eps > 0; Knuth TAOCP Vol. 2, 4.3.3), Schoenhage-Strassen 1971 (O(n log n log log n)) and Fuerer 2007, and ends at Harvey-van der Hoeven 2021 (O(n log n) bit operations on a multitape Turing machine).",
+  "relationship": "Both polynomial. Karatsuba lowers the exponent from 2 to log2(3) ~ 1.585. The later, faster algorithms (Toom-Cook, Schoenhage-Strassen, Fuerer, Harvey-van der Hoeven) are background (see background).",
+  "background": [
+    {
+      "statement": "Toom-Cook multiplication is one of the later algorithms; its bound is not stated or checked here.",
+      "source": "Knuth, TAOCP Vol. 2 (1997)"
+    },
+    {
+      "statement": "Schoenhage and Strassen give a fast algorithm for multiplying large integers (title: Schnelle Multiplikation grosser Zahlen).",
+      "source": "Schoenhage & Strassen 1971"
+    },
+    {
+      "statement": "Fuerer gives a faster integer multiplication algorithm (title: Faster integer multiplication).",
+      "source": "Fuerer 2009"
+    },
+    {
+      "statement": "Harvey and van der Hoeven multiply n-bit integers in O(n log n) bit operations, confirming a conjecture of Schoenhage and Strassen from 1971; their complexity analysis takes place in the multitape Turing machine model, with integers in binary.",
+      "source": "Harvey & van der Hoeven 2021, abstract"
+    }
+  ],
   "sources": [
     {
       "authors": "Karatsuba, A.; Ofman, Yu.",
       "year": 1962,
       "title": "Multiplication of many-digital numbers by automatic computers",
       "venue": "Doklady Akademii Nauk SSSR 145, 293-294",
-      "note": "No DOI. English translation in Soviet Physics Doklady 7 (1963), 595-596."
+      "note": "No DOI."
     },
     {
       "authors": "Knuth, D. E.",
       "year": 1997,
       "title": "The Art of Computer Programming, Vol. 2: Seminumerical Algorithms (3rd ed.)",
       "venue": "Addison-Wesley",
-      "isbn": "978-0-201-89684-8",
-      "note": "Section 4.3.3 (how fast can we multiply?), including the subtractive form of Karatsuba's identity used here."
+      "isbn": "978-0-201-89684-8"
     },
     {
       "authors": "Schoenhage, A.; Strassen, V.",
@@ -82,8 +99,7 @@
       "year": 2009,
       "title": "Faster integer multiplication",
       "venue": "SIAM Journal on Computing 39(3), 979-1005",
-      "doi": "10.1137/070711761",
-      "note": "Conference version STOC 2007."
+      "doi": "10.1137/070711761"
     },
     {
       "authors": "Harvey, D.; van der Hoeven, J.",
@@ -95,11 +111,13 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree on random, carry-stress and maximal-digit inputs and match an independent big-integer oracle (Python's built-in product, used only in harness.check). V2 (since 2026-10-06, RESEARCH_LOG RL-056): the measured quantity is the exact number of DIGIT MULTIPLICATIONS performed by the unchanged implementations, counted by an int-like digit type (CountingDigit in harness.py) that propagates through the carry and borrow arithmetic. On n = 64..2048 (powers of two, so no padding occurs): schoolbook = n^2 exactly; Karatsuba (cutoff 32) = 3^(log2(n/32)) * 32^2 exactly (e.g. 248832 at n = 1024). This closed form holds for n = 32 * 2^k on inputs in which no recursion node has x1 = x0 and y1 = y0 (equal high and low halves in both factors): at such a node _abs_diff returns lists of plain zeros, and the products of that sub-multiplication are not counted (constant digits at n = 64 give 2048 instead of 3072). The uniform random digits of the V2 instances meet this condition; their counts equal the closed form. Both fits give alpha = 1.000 at tolerance 0.02, and each algorithm's rival is rejected: Karatsuba's counts against n^2 give alpha = log2(3)/2 = 0.792, schoolbook's against n^log2(3) give 2/log2(3) = 1.262. The earlier timing fit could not reject n^2 for Karatsuba (deviation analysis F2, research/2026-10-07b_deviations.md). Additions are not counted.",
+    "method": "V1: both implementations agree on random, carry-stress and maximal-digit inputs and match an independent big-integer oracle (Python's built-in product, used only in harness.check). V2 (since 2026-10-06, RESEARCH_LOG RL-056): the measured quantity is the exact number of DIGIT MULTIPLICATIONS performed by the unchanged implementations, counted by an int-like digit type (CountingDigit in harness.py) that propagates through the carry and borrow arithmetic. On n = 64..2048 (powers of two, so no padding occurs): schoolbook = n^2 exactly; Karatsuba (cutoff 32) = 3^(log2(n/32)) * 32^2 exactly (e.g. 248832 at n = 1024). This closed form holds for n = 32 * 2^k on inputs in which no recursion node has x1 = x0 and y1 = y0 (equal high and low halves in both factors): at such a node _abs_diff returns lists of plain zeros, and the products of that sub-multiplication are not counted (constant digits at n = 64 give 2048 instead of 3072). The uniform random digits of the V2 instances meet this condition; their counts equal the closed form. Both fits give alpha = 1.000 at tolerance 0.02, and each algorithm's rival is rejected: Karatsuba's counts against n^2 give alpha = log2(3)/2 = 0.792, schoolbook's against n^log2(3) give 2/log2(3) = 1.262. The earlier timing fit could not reject n^2 for Karatsuba (deviation analysis F2, research/2026-10-07b_deviations.md). Additions are not counted. Proofs: PROOFS.md proves every claim of this entry from the code (the correctness of both algorithms, the word-size bound, the time bounds for every n with the exact recursion shape and the number of digit multiplications performed, the space bounds, and the exact counts for all sizes of their domains) and names the scripts and tests that check each one, among them tests/test_proofs_karatsuba.py.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/schoolbook.py",
       "implementations/karatsuba.py",
-      "harness.py"
+      "harness.py",
+      "../../tests/test_proofs_karatsuba.py"
     ]
   },
   "test_harness": {
@@ -107,6 +125,17 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 31, 32, 33, 47, 64, 65, 100, 129, 300],
     "trials": 5
   },
-  "caveats": "Exact counts of digit multiplications, not of all digit operations. The cutoff (32 digits) changes constants only. Fast algorithms after Karatsuba (Schoenhage-Strassen, Harvey-van der Hoeven) are stated in bit complexity on a multitape Turing machine, not in word operations.",
-  "notes": "Python's own int multiplication itself switches from schoolbook to Karatsuba above a size threshold, which is why the implementations here work on explicit digit lists instead. O(n log n) is conjectured to be optimal for integer multiplication, but no matching unconditional lower bound is known."
+  "caveats": "Exact counts of digit multiplications, not of all digit operations. The cutoff (32 digits) changes constants only (PROOFS.md section 7). The Harvey-van der Hoeven bound (background) counts bit operations on a multitape Turing machine, not word operations.",
+  "notes": "The implementations work on explicit digit lists, so that every digit multiplication is visible to the counting harness; Python's built-in integer product is used only by the oracle in harness.check.",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py",
+      "../../tests/test_proofs_karatsuba.py"
+    ],
+    "audit": "RL-107"
+  }
 }

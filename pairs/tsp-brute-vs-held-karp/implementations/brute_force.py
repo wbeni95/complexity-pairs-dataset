@@ -1,4 +1,7 @@
-"""Try every tour that starts at city 0: (n-1)! permutations, Theta(n!) time in total."""
+"""Try every tour that starts at city 0: (n-1)! permutations, Theta(n!) time in total.
+
+The time bound assumes that itertools.permutations behaves as its documented equivalent code (PROOFS.md).
+"""
 from itertools import permutations
 
 

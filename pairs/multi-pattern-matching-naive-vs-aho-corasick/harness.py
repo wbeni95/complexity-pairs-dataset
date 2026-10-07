@@ -17,8 +17,10 @@ between characters; it resets the counter. The implementations touch text and pa
 indexing, iteration and ==/!= between characters, so they run unchanged on these tuples. Exact comparison counts
 (derived in entry.json, checked in experiments/2026-10-06i_aho_corasick.py):
   naive          n(n+1)(3n^2 - 2n + 2)/6             (n >= 1)
-  KMP each       see entry.json                       (n >= 3)
-  Aho-Corasick   4n^2 - 3 = (n-1)^2 trie + (3n-5) failure links + (3n^2 - n + 1) scan   (n >= 2)
+  KMP each       3n^3 - 2n^2 - 5n + 6                (n >= 2)
+  Aho-Corasick   4n^2 - 3                            (n >= 1)
+                 = (n-1)^2 trie + (3n-5) failure links + (3n^2 - n + 1) scan   (this split for n >= 2)
+Proofs of these counts and of all other claims: PROOFS.md.
 No counted operation happens inside a CPython built-in.
 """
 

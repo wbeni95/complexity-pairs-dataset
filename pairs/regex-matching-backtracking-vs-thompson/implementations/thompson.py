@@ -3,7 +3,7 @@
 States are atom indices 0..m (m = accepting). The epsilon-closure of state i adds i + 1 when atom i is
 optional ('?' or '*'), repeatedly. For each text character, every active state i < m whose symbol matches
 moves to i + 1 ('c' or 'c?') or stays at i ('c*'); then the closure is taken. Each step touches at most m + 1
-states with O(1) work each, so the cost is O(m n) for m atoms and text length n, with no backtracking.
+states with O(1) work each, so the cost is O((m + 1)(n + 1)) for m atoms and text length n, with no backtracking.
 """
 # --- the dialect (identical in every matcher of this entry; see entry.json) ---
 SYMBOLS = set("abcdefghijklmnopqrstuvwxyz.")
@@ -30,7 +30,8 @@ def match_thompson(instance):
     m = len(atoms)
 
     def closure(states):
-        """Epsilon-closure in O(m): mark reachable states, then list them in index order (no duplicates)."""
+        """Epsilon-closure in O(m + 1 + len(states)): mark reachable states, then list them in index order
+        (no duplicates)."""
         seen = [False] * (m + 1)
         for s in states:
             while not seen[s]:

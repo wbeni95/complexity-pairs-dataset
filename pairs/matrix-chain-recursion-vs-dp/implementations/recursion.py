@@ -1,4 +1,4 @@
-"""Plain recursion over the split point, no memoisation (CLRS RECURSIVE-MATRIX-CHAIN).
+"""Plain recursion over the split point, no memoisation.
 
 T(n) = sum_{k=1}^{n-1} (T(k) + T(n-k)) + Theta(n) gives T(n) = 3 T(n-1) + Theta(1) = Theta(3^n).
 """

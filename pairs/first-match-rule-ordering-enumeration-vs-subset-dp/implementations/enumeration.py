@@ -6,8 +6,10 @@ default[i] is paid if no rule matches item i. Output (minimum total cost, an ord
 
 Every order is evaluated from scratch: each item scans the order until its first matching rule. On an order
 the scan of item i stops at the first position holding a rule of M_i = {r : match[i][r] = 1}, so one order costs
-between m and k*m match tests: O(k! * k * m) in total, and Theta(k! * k * m) when every item matches at most a
-bounded number of rules (each item then scans a constant fraction of the order on average).
+between m and k*m match tests: O(k! * k * m) in total for k, m >= 1 (with the generator's documented O(k * k!)
+total work, a machine-model assumption; PROOFS.md section 5.1), and Theta(k! * k * m) when every item matches at most a
+bounded number of rules (an item with t >= 1 matching rules scans (k+1)/(t+1) positions on average over the
+k! orders; PROOFS.md section 5.1).
 """
 from itertools import permutations
 

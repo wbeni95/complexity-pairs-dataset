@@ -17,7 +17,10 @@ superposition, State.reflect_about_uniform).
   exponential_search   t is UNKNOWN (BBHT 1998, section 4): m = 1, lambda = 6/5; draw j uniformly from the
                        integers 0 <= j < m; j iterations from the uniform superposition; measure; check;
                        otherwise m = min(lambda m, sqrt N) and repeat. Expected O(sqrt(N / t)) iterations
-                       (BBHT Theorem 3: at most (9/2) m0 with m0 = N / (2 sqrt((N - t) t)), for 1 <= t <= 3N/4).
+                       (BBHT 1998, Theorem 3: at most (9/2) m0 with m0 = N / (2 sqrt((N - t) t)), for
+                       1 <= t <= 3N/4; read in arXiv quant-ph/9605034v1, see research/2026-10-07_quantum_entries.md,
+                       section 3.3. The repository's own proof, pairs/minimum-finding-classical-vs-quantum/PROOFS.md
+                       section 4, gives the weaker bound 9 m0 and does not use this constant).
                        Optional iteration budget (time-out), as needed by Durr-Hoyer minimum finding.
 
 expected_cost_known and expected_cost_exponential return the EXACT expected number of queries of these two
@@ -152,6 +155,7 @@ def bbht_lemma2(N: int, t: int, M: int) -> float:
 
 
 def bbht_theorem3_bound(N: int, t: int) -> float:
-    """BBHT Theorem 3 upper bound on the expected number of Grover iterations: (9/2) m0, m0 = N / (2 sqrt((N-t) t)).
-    Proven for 1 <= t <= 3N/4."""
+    """The bound (9/2) m0, m0 = N / (2 sqrt((N-t) t)), on the expected number of Grover iterations that BBHT 1998
+    state in Theorem 3 (proof of Theorem 3, arXiv v1) for 1 <= t <= 3N/4. Used by tests as a numerical reference; the
+    repository proves only the weaker 9 m0 (see the module docstring)."""
     return 4.5 * N / (2 * math.sqrt((N - t) * t))

@@ -1,6 +1,6 @@
 """Brassard-Hoyer-Tapp (BHT) collision finding: Theta(N^(1/3)) queries for 2-to-1 functions.
 
-Collision(F, k) (BHT 1998, section 2):
+Collision(F, k) (BHT arXiv note 1997, section 2):
   1. Query a set K of k ~ N^(1/3) points classically (k queries); build the table L: value -> point.
   2. If two points of K collide, output them.
   3. Otherwise exactly t = k points outside K are partners of points in K (F is 2-to-1). Grover-search the

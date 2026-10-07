@@ -19,7 +19,8 @@ For n = 0, 1, 2 it returns small random formulas including the empty formula and
 
 check(instance, output) is independent of both implementations. It computes the derived set D by NAIVE forward
 chaining (repeated full passes over the clause list until nothing changes: no counters, no occurrence lists, a
-different algorithm from the propagation under test, Theta(n L) in the worst case) and returns
+different algorithm from the propagation under test: at most n + 1 passes of O(m + L + 1) steps each, and exactly
+n passes on the V2 family H_n) and returns
   - for an assignment: True iff no clause is violated by D, the assignment equals the indicator of D, and it
     satisfies every clause. Every variable of D is true in every model (induction over the passes), so a
     satisfying assignment equal to D is the least model;

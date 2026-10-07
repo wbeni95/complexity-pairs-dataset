@@ -1,8 +1,9 @@
-"""Shamos-Hoey divide and conquer: Theta(n log n) time.
+"""Shamos-Hoey divide and conquer: Theta(n log n) time, assuming the built-in sort runs in O(n log n).
 
 Sort the points by x once. Recursively solve the left and right halves; each call also returns its
-points sorted by y, obtained by merging the two halves' y-sorted lists in linear time (no re-sorting,
-so the recurrence is T(n) = 2 T(n/2) + Theta(n), not n log^2 n). With delta^2 = the better of the two
+points sorted by y, obtained by merging the two halves' y-sorted lists in linear time (only a leaf of
+2 or 3 points calls the built-in sort; no list is re-sorted, so the recurrence is T(n) = 2 T(n/2) +
+Theta(n), not n log^2 n). With delta^2 = the better of the two
 halves, only points within horizontal distance delta of the dividing line can form a closer cross pair,
 and in y order each of them needs to be compared only with the next few (at most 7) strip points.
 

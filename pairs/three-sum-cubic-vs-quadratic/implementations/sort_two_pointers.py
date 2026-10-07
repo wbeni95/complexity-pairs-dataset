@@ -1,4 +1,9 @@
-"""Sort, then for each i scan the rest with two pointers: Theta(n^2) time (sorting adds n log n)."""
+"""Sort, then for each i scan the rest with two pointers.
+
+Theta(n^2) time in the worst case, assuming the built-in sort runs in O(n log n): the scan makes at most
+(n - 1)(n - 2)/2 pointer steps (n >= 1), exactly that many when there is no solution, and the sort adds O(n log n)
+under that assumption (see PROOFS.md, section 2).
+"""
 
 
 def three_sum_quadratic(values) -> bool:

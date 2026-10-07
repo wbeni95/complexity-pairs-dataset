@@ -11,8 +11,8 @@ h[S] = Σ over A ∪ B = S of f[A]·g[B], for two integer set functions on an n-
 
 **Why it is here.** The zeta transform (sums over subsets) diagonalises the OR convolution: ζ(h) = ζ(f)·ζ(g)
 pointwise, because A ∪ B ⊆ S exactly when A ⊆ S and B ⊆ S. Two fast zeta transforms (Yates' passes), a pointwise
-product and one Möbius transform (the inverse) give h. This is the covering product of Björklund, Husfeldt, Kaski &
-Koivisto (2007). It is the subset-lattice analogue of
+product and one Möbius transform (the inverse) give h (see Björklund, Husfeldt, Kaski & Koivisto 2007). It is the
+subset-lattice analogue of
 [xor-convolution-naive-vs-walsh-hadamard](../xor-convolution-naive-vs-walsh-hadamard/), with ζ in the role of the
 Walsh–Hadamard transform. The zeta transform alone is
 [subset-sum-zeta-transform-naive-vs-yates](../subset-sum-zeta-transform-naive-vs-yates/). The AND convolution is the
@@ -37,5 +37,14 @@ reindexing, not a separate pair.
 
 **Caveats.** Only additions, subtractions and multiplications on O(n)-bit integers are counted; index arithmetic is
 not. The input has N = 2ⁿ entries, so both costs are polynomial in the input size (T3, not an exponential pair).
+
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry from the code: the correctness of both
+algorithms, the completeness of the V1 check, the time and space bounds, the exact counts for all sizes of their
+domains, the value sizes and the AND mirror. It names the scripts and tests that check each one
+(`tests/test_proofs_or_convolution.py` among them).
+
+**Background (cited, not proved here).** Björklund, Husfeldt, Kaski & Koivisto (2007; abstract, arXiv:cs/0611101)
+evaluate the subset convolution (Σ over T ⊆ S of f(T)·g(S ∖ T)) in O(n²·2ⁿ) additions and multiplications, via Möbius
+transform and inversion.
 
 **Sources.** Björklund, Husfeldt, Kaski & Koivisto, STOC 2007, 67–74. Kennes, IEEE Trans. SMC 22(2), 1992.

@@ -2,15 +2,18 @@
 
 generate(n, rng): half the time uniformly random bits; half the time a "reluctant" input (every node of value 0
 has two children of value 1; every node of value 1 has exactly one child of value 0, on a random side) with a
-random root value. Reluctant inputs are the worst case of the randomized algorithm.
+random root value. Reluctant inputs with root value 0 are the worst case of the randomized algorithm (PROOFS.md,
+section 4).
 
 V1 oracle (check): full bottom-up evaluation of every node, level by level (no short-circuiting, no recursion).
 
 V2 (measure: "reported"): the cost is the number of LEAF READS (queries). generate_scaling(n, rng) returns the
 right-zero reluctant input of height n with root value 1 (every value-1 node has its 0-child on the right) as a
 CountingLeaves sequence, which counts every leaf read made by the UNCHANGED implementations; reported_cost returns
-the count. This input is worst case for both algorithms: the left-first algorithm reads all 2^n leaves, and every
-reluctant input gives the randomized algorithm the same (maximal) expected cost.
+the count. This input is a worst case for the left-first algorithm, which reads all 2^n leaves. For the randomized
+algorithm it is the worst case among inputs with root value 1 (expected R1(n) reads); the overall worst case is a
+reluctant input with root value 0, with expected R0(n) = 2 R1(n-1) reads, larger by a factor between 1.03 and 1.37 and
+of the same order ((1 + sqrt(33))/4)^n (PROOFS.md, section 4).
 """
 
 

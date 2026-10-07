@@ -5,8 +5,9 @@ the complete graph (chi = n); the cycle C_n (chi = 3 for odd n >= 3, 2 for even 
 graph (chi <= 2); and a disjoint union of triangles plus leftover vertices.
 
 generate_scaling() returns G(n, 0.8) random graphs. Their complements are sparse, so independent sets are
-small and chi grows roughly like n/2 (experiments/2026-10-07_chromatic_probe.py prints the values), which
-makes the inclusion-exclusion algorithm run close to its maximum number of rounds. The subset DP does
+small; on the seeded instances chi/n lies between 0.50 and 5/7 for n = 6..18 (computed;
+experiments/2026-10-07_chromatic_probe.py prints the values), so the inclusion-exclusion algorithm runs a number of
+rounds proportional to n on them. The subset DP does
 exactly 3^n - 2^n inner iterations on every graph.
 
 The oracle is an exact backtracking k-colouring search, independent of both implementations: it checks

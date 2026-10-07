@@ -12,7 +12,7 @@
       "idea": "Try d = min(a, b), min(a, b) - 1, ... and return the first d that divides both a and b.",
       "model": "classical-deterministic",
       "pseudocode": "if a = 0 or b = 0: return a + b; d = min(a, b); while d does not divide both a and b: d = d - 1; return d",
-      "time_complexity": "Theta(2^n) iterations in the worst case: exactly min(a, b) - gcd(a, b) + 1 iterations of one or two divisions, i.e. up to 2^n - 2 on coprime n-bit inputs (>= 2^(n-2) on the coprime Fibonacci pairs used for V2: the pair is F_(k+1), F_k with F_(k+1) < 2^n <= F_(k+2), and F_(k+2) = F_(k+1) + F_k <= 3 F_k, so min(a, b) = F_k >= 2^n / 3 > 2^(n-2)). In bit operations, Theta(2^n) times the cost of an n-bit division.",
+      "time_complexity": "Theta(2^n) iterations in the worst case: for a, b >= 1 exactly min(a, b) - gcd(a, b) + 1 iterations of one or two divisions (none if a = 0 or b = 0); for n >= 2 the maximum over inputs with max(a, b) of bit length n is 2^n - 2, attained by the coprime pair (2^n - 1, 2^n - 2); the coprime Fibonacci pairs used for V2 need F_k >= 2^n / 3 > 2^(n-2) iterations (the pair is F_(k+1), F_k with F_(k+1) < 2^n <= F_(k+2), and F_(k+2) = F_(k+1) + F_k <= 3 F_k). In bit operations: at most 2^n iterations with at most two divisions of numbers below 2^n each, i.e. O(2^n n^2) with schoolbook division.",
       "space_complexity": "O(n) bits",
       "correctness": "Every common divisor is at most min(a, b) (for a, b > 0), and d = 1 always divides both, so the first d found scanning downwards is the greatest common divisor.",
       "implementation": "implementations/trial.py:gcd_trial",
@@ -26,7 +26,7 @@
       "idea": "Replace (a, b) by (b, a mod b) until b = 0; the common divisors never change.",
       "model": "classical-deterministic",
       "pseudocode": "while b != 0: (a, b) = (b, a mod b); return a",
-      "time_complexity": "O(n) division steps: at most log_phi(min(a, b)) + O(1) <= 1.44 n + O(1) (Lame 1844), attained by consecutive Fibonacci numbers. O(n^2) bit operations with schoolbook division: a step with quotient q on numbers of at most n bits costs O(n (1 + log q)), and the log q sum to at most n; Theta(n^2) on consecutive Fibonacci numbers, where each of the Theta(n) steps divides Theta(n)-bit numbers.",
+      "time_complexity": "O(n) division steps: at most log_phi(min(a, b)) + 2 < 1.4405 n + 2 if min(a, b) >= 1, and at most one step otherwise (after Lamé 1844; PROOFS.md section 5). Consecutive Fibonacci numbers are the worst case: the smallest pair a > b >= 1 that needs k steps is (F_(k+2), F_(k+1)), and the V2 pair (F_(k+1), F_k) needs k - 1 = 1.44 n + O(1) steps for n >= 2. O(n^2) bit operations with schoolbook division: a step with quotient q on numbers below 2^n costs O(n (1 + log2 max(q, 1))), and the quotients q >= 1 multiply to at most max(a, b) < 2^n; Theta(n^2) on the Fibonacci pairs, where the step dividing F_(j+1) by F_j reads at least (j - 1) log2(phi) bits.",
       "space_complexity": "O(n) bits",
       "correctness": "gcd(a, b) = gcd(b, a mod b) because a mod b = a - qb, so both pairs have the same common divisors; the second argument strictly decreases, and gcd(a, 0) = a.",
       "implementation": "implementations/euclid.py:gcd_euclid",
@@ -36,34 +36,55 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Trial divisors are linear in the VALUE min(a, b), hence exponential, Theta(2^n), in the bit length n. Euclid needs only O(n) division steps (Lame) and O(n^2) bit operations: polynomial in the input size.",
+  "relationship": "Trial divisors are linear in the VALUE min(a, b), hence exponential, Theta(2^n), in the bit length n. Euclid needs only O(n) division steps (after Lamé 1844) and O(n^2) bit operations: polynomial in the input size.",
   "sources": [
     {
       "authors": "Knuth, D. E.",
       "year": 1997,
       "title": "The Art of Computer Programming, Vol. 2: Seminumerical Algorithms (3rd ed.)",
       "venue": "Addison-Wesley",
-      "isbn": "978-0-201-89684-8",
-      "note": "Section 4.5.2 (the greatest common divisor) and 4.5.3 (analysis of Euclid's algorithm, including Lame's theorem)."
+      "isbn": "978-0-201-89684-8"
     },
     {
       "authors": "Lamé, G.",
       "year": 1844,
       "title": "Note sur la limite du nombre des divisions dans la recherche du plus grand commun diviseur entre deux nombres entiers",
-      "venue": "Comptes Rendus de l'Académie des Sciences (Paris) 19, 867-870",
-      "note": "The number of division steps is at most five times the number of decimal digits of the smaller input; consecutive Fibonacci numbers are the worst case."
+      "venue": "Comptes Rendus de l'Académie des Sciences (Paris)"
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree with each other and with math.gcd (used only as the oracle) on random pairs with max(a, b) of bit length n = 0..16, 32, 64, 256, 1024 and 4096 (trial divisors up to n = 16), including pairs with a large common factor and pairs with a zero. V2 uses consecutive Fibonacci numbers, the largest pair below 2^n: they are coprime (worst case for trial divisors) and Lame's worst case for Euclid. Trial divisors fit 2^n at n = 14..22. Euclid is timed at n = 4000..64000 bits against n^2; the fit is a measurement on these Fibonacci pairs, not a check of the O(n^2) bit-operation bound (the cost of a division step on CPython's multi-digit integers is not analysed here). The O(n) step count itself is not timed: at word size (n <= 64) wall-clock time is dominated by interpreter overhead and CPython's 30-bit digit boundaries (a trial fit against n gave alpha ~1.34), so it does not isolate the step count.",
-    "artifacts": ["implementations/trial.py", "implementations/euclid.py", "harness.py"]
+    "method": "V1: both implementations agree with each other and with math.gcd (used only as the oracle) on random pairs with max(a, b) of bit length n = 0..16, 32, 64, 256, 1024 and 4096 (trial divisors up to n = 16), including pairs with a large common factor and pairs with a zero. V2 uses consecutive Fibonacci numbers, the largest pair below 2^n: they are coprime (worst case for trial divisors) and the worst case for Euclid (PROOFS.md, section 5). Trial divisors fit 2^n at n = 14..22. Euclid is timed at n = 4000..64000 bits against n^2; the fit is a measurement on these Fibonacci pairs, not a check of the O(n^2) bit-operation bound (the cost of a division step on CPython's multi-digit integers is not analysed here). The O(n) step count itself is not timed: at word size (n <= 64) wall-clock time is dominated by interpreter overhead and CPython's 30-bit digit boundaries (a trial fit against n gave alpha ~1.34), so it does not isolate the step count. Instead it is proved in PROOFS.md and counted exactly by tests/test_proofs_gcd.py. Proofs: PROOFS.md proves every claim of this entry (correctness, iteration and step counts, bit-operation and space bounds) and names the deterministic tests that check each one.",
+    "artifacts": ["PROOFS.md", "implementations/trial.py", "implementations/euclid.py", "harness.py"]
   },
   "test_harness": {
     "module": "harness.py",
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 32, 64, 256, 1024, 4096],
     "trials": 6
   },
-  "caveats": "Bit-size view: trial divisors are polynomial (linear) in the VALUE of the inputs and exponential only in their length. Euclid's O(n^2) bit cost assumes schoolbook division; subquadratic half-gcd algorithms (Knuth-Schonhage) reach O(M(n) log n). V2 times Euclid on numbers with thousands of bits; that fit is a measurement on Fibonacci pairs, not a check of the O(n^2) bit-operation bound, and the O(n) division-step bound is not measured at all.",
-  "notes": "Euclid's algorithm (Elements, Book VII, c. 300 B.C.) is among the oldest nontrivial algorithms still in use; Lame's 1844 bound is often cited as one of the earliest worst-case analyses of an algorithm."
+  "caveats": "Bit-size view: trial divisors are polynomial (linear) in the VALUE of the inputs and exponential only in their length. Euclid's O(n^2) bit cost assumes schoolbook division; faster gcd algorithms are background (cited, not claimed). V2 times Euclid on numbers with thousands of bits; that fit is a measurement on Fibonacci pairs, not a check of the O(n^2) bit-operation bound. The O(n) division-step bound is not timed; it is proved in PROOFS.md and the steps are counted exactly by tests/test_proofs_gcd.py.",
+  "notes": "History and faster gcd algorithms: see background. PROOFS.md section 5 also proves a decimal form of the step bound (at most 5 steps per decimal digit of b, for a >= b >= 1).",
+  "background": [
+    {
+      "statement": "Faster (subquadratic) gcd algorithms, based on the half-gcd method, exist.",
+      "source": "Knuth 1997"
+    },
+    {
+      "statement": "Euclid's algorithm goes back to Euclid's Elements.",
+      "source": "Knuth 1997"
+    },
+    {
+      "statement": "Lamé (1844) bounded the number of division steps of Euclid's algorithm.",
+      "source": "Lamé 1844"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_gcd.py"
+    ],
+    "audit": "RL-107"
+  }
 }

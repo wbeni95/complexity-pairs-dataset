@@ -1,7 +1,7 @@
 {
   "id": "xor-sat-brute-force-vs-gaussian-elimination",
   "title": "XOR-SAT and #XOR-SAT: brute force over all assignments vs Gaussian elimination over GF(2)",
-  "problem_statement": "Given a system of m XOR clauses (linear equations over GF(2)) a_i1 x_1 XOR ... XOR a_in x_n = b_i, i = 1..m, as the dense augmented 0/1 matrix [A | b], output the number of satisfying assignments x in {0,1}^n and, if there is at least one, one satisfying assignment. This covers the decision problem XOR-SAT (is the count positive?) and the counting problem #XOR-SAT. The count is always 0 or 2^(n - rank(A)). Any satisfying assignment is a correct witness.",
+  "problem_statement": "Given a system of m XOR clauses (linear equations over GF(2)) a_i1 x_1 XOR ... XOR a_in x_n = b_i, i = 1..m, as the dense augmented 0/1 matrix [A | b], output the number of satisfying assignments x in {0,1}^n and, if there is at least one, one satisfying assignment. This covers the decision problem XOR-SAT (is the count positive?) and the counting problem #XOR-SAT. The count is always 0 or 2^(n - rank(A)) (PROOFS.md, section 4). Any satisfying assignment is a correct witness.",
   "input": {
     "parameter": "n = number of variables; m = number of equations (rows). In the V2 family X_n, m = n.",
     "size_measure": "m (n + 1) bits (the dense augmented matrix). Bit operations are counted at unit cost; brute force also uses n-bit masks, one machine word for the n it can reach. The count 2^(n - rank) is returned as an integer of at most n + 1 bits."
@@ -12,9 +12,9 @@
       "idea": "Examine every one of the 2^n assignments (counting cannot stop at the first solution); for each, check the rows in order, abandoning the assignment at its first violated row, and count the assignments that satisfy every row. A row costs n AND and n XOR operations and one test, whatever its number of non-zero coefficients.",
       "model": "classical-deterministic",
       "pseudocode": "count = 0\nfor mask in 0 .. 2^n - 1:\n  for each row (a, b): s = b XOR (a . mask); if s == 1: next mask\n  count += 1; remember the first such mask\nreturn count, first mask (or None)",
-      "time_complexity": "O(2^n * m * n) bit operations always; Theta(2^n * n) on systems whose rows are linearly independent (row i is reached by 2^(n-i) assignments), in particular exactly (2n + 1)(2^(n+1) - 2) counted operations on the V2 family X_n (n >= 1) (and on every n x n system of full rank). The worst case Theta(2^n * m * n) needs many dependent rows (e.g. repeated equations).",
-      "space_complexity": "Theta(m n) (the input; O(1) extra words besides the output)",
-      "correctness": "Exhaustive: every assignment is examined and counted iff it satisfies every row. Count on an n x n system of full rank: the rows 0..i-1 are independent and consistent, so exactly 2^(n-i) assignments satisfy them and reach row i (0-based); each row evaluation costs 2n + 1 counted operations (n AND, n XOR, one truth test), so the total is (2n + 1) * sum_{i=0}^{n-1} 2^(n-i) = (2n + 1)(2^(n+1) - 2). Checked against the counts for every n = 1..16.",
+      "time_complexity": "O(2^n * (m + 1) * (n + 1)) bit operations and steps always; Theta(2^n * n) on systems of m >= 1 linearly independent rows (row i is reached by 2^(n-i) assignments), in particular exactly (2n + 1)(2^(n+1) - 2) counted operations on the V2 family X_n (n >= 1) (and on every n x n system of full rank). The worst case Theta(2^n * m * n) (n, m >= 1) is attained with dependent rows, e.g. m copies of one consistent equation (PROOFS.md, section 5).",
+      "space_complexity": "Theta(m (n + 1) + n) (the input of m (n + 1) bits; O(1) extra words besides the output of n bits)",
+      "correctness": "Exhaustive: every assignment is examined and counted iff it satisfies every row. Count on an n x n system of full rank: the rows 0..i-1 are independent and consistent, so exactly 2^(n-i) assignments satisfy them and reach row i (0-based); each row evaluation costs 2n + 1 counted operations (n AND, n XOR, one truth test), so the total is (2n + 1) * sum_{i=0}^{n-1} 2^(n-i) = (2n + 1)(2^(n+1) - 2). Checked against the counts for every n = 1..16. Full proofs: PROOFS.md, sections 3 (correctness), 5 (bounds) and 1 (count).",
       "implementation": "implementations/brute_force.py:xor_sat_brute_force",
       "harness": {
         "v1_max_n": 14,
@@ -41,9 +41,9 @@
       "idea": "Bring [A | b] to row echelon form by forward elimination (column by column, the first row with a 1 below the current row is the pivot; it is XORed into every lower row with a 1 in that column). With r pivots, the system is inconsistent iff a row with zero A part has b = 1 (count 0); otherwise the solutions form a coset of the null space, of dimension n - r, so the count is 2^(n - r), and back substitution with the free variables set to 0 gives a witness.",
       "model": "classical-deterministic",
       "pseudocode": "M = copy of [A | b]; r = 0\nfor c in 0..n-1:\n  p = first row i >= r with M[i][c] = 1; if none: continue\n  swap rows r, p; for i > r with M[i][c] = 1: M[i][c..n] ^= M[r][c..n]\n  pivots += [c]; r += 1\nif some row i >= r has M[i][n] = 1: return 0, None\nback-substitute (free variables 0); return 2^(n-r), x",
-      "time_complexity": "O(m n min(m, n)) bit operations; Theta(n^3) for n x n systems in the worst case: exactly n (n^2 + 6n - 4) / 3 counted operations on the V2 family X_n (n >= 1).",
-      "space_complexity": "Theta(m n)",
-      "correctness": "Elementary row operations over GF(2) (swapping rows, adding one row to another) do not change the solution set. In echelon form, a zero row with b = 1 is the equation 0 = 1 (no solution); otherwise every assignment of the n - r free variables extends uniquely, by back substitution, to a solution, so there are exactly 2^(n - r) of them. Count on X_n: the first row (all ones) is the pivot of column 1 and turns every other row into a prefix x_2 + ... + x_k; then at column c (0-based) the pivot is found with one test and the n - 1 - c rows below are each tested and XORed over n + 1 - c entries. Tests: sum_c (n - c) = n(n + 1)/2; XORs: sum_{t=1}^{n-1} t(t + 2) = (n - 1) n (2n + 5)/6; back substitution: 2 operations per off-diagonal entry, n(n - 1). Total n (n^2 + 6n - 4)/3, checked against the counts for every n = 1..200 and n = 256.",
+      "time_complexity": "O(m n min(m, n) + m + n) bit operations and steps; Theta(n^3) for n x n systems in the worst case: exactly n (n^2 + 6n - 4) / 3 counted operations on the V2 family X_n (n >= 1).",
+      "space_complexity": "Theta(m (n + 1) + n) (the working copy of the m (n + 1) bits and the n-bit solution)",
+      "correctness": "Elementary row operations over GF(2) (swapping rows, adding one row to another) do not change the solution set. In echelon form, a zero row with b = 1 is the equation 0 = 1 (no solution); otherwise every assignment of the n - r free variables extends uniquely, by back substitution, to a solution, so there are exactly 2^(n - r) of them. Count on X_n: the first row (all ones) is the pivot of column 1 and turns every other row into a prefix x_2 + ... + x_k; then at column c (0-based) the pivot is found with one test and the n - 1 - c rows below are each tested and XORed over n + 1 - c entries. Tests: sum_c (n - c) = n(n + 1)/2; XORs: sum_{t=1}^{n-1} t(t + 2) = (n - 1) n (2n + 5)/6; back substitution: 2 operations per off-diagonal entry, n(n - 1). Total n (n^2 + 6n - 4)/3, checked against the counts for every n = 1..200 and n = 256. Full proofs: PROOFS.md, sections 4 (correctness, rank), 6 (bounds) and 2 (count).",
       "implementation": "implementations/gaussian_elimination.py:xor_sat_gauss",
       "harness": {
         "scaling": {
@@ -68,41 +68,40 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Same problem. Brute force is exponential, Theta(2^n * n) on full-rank systems; Gaussian elimination is polynomial, O(n^3) bit operations for n x n systems, and solves both the decision and the counting version (2^(n - rank) or 0). The structure used: XOR clauses are linear equations over the field GF(2), so the solution set is an affine subspace. Boundary: affine (XOR) constraints are one of Schaefer's (1978) tractable classes for satisfiability, and for counting they are the tractable side of the dichotomy of Creignou & Hermann (1996), whereas counting the satisfying assignments of general CNF formulas is #P-complete (Valiant 1979, which also covers restricted formula classes). So #XOR-SAT is easy while #SAT is #P-hard.",
+  "relationship": "Same problem. Brute force is exponential, Theta(2^n * n) on n x n full-rank systems (n >= 1); Gaussian elimination is polynomial, O(n^3) bit operations for n x n systems, and solves both the decision and the counting version (2^(n - rank) or 0). The structure used: XOR clauses are linear equations over the field GF(2), so the solution set is an affine subspace. Boundary (cited background, see `background`; not proved here): affine (XOR) constraints are one of Schaefer's (1978) tractable classes for satisfiability, and for counting they are the tractable side of the dichotomy of Creignou & Hermann (1996), whereas counting the satisfying assignments of general CNF formulas is #P-complete (Valiant 1979). So #XOR-SAT is easy while #SAT is #P-hard.",
   "sources": [
     {
       "authors": "Schaefer, T. J.",
       "year": 1978,
       "title": "The complexity of satisfiability problems",
       "venue": "Proceedings of the 10th Annual ACM Symposium on Theory of Computing (STOC 1978), 216-226",
-      "doi": "10.1145/800133.804350",
-      "note": "Dichotomy for Boolean constraint satisfaction; systems of linear equations over GF(2) (affine relations) form one of the tractable classes."
+      "doi": "10.1145/800133.804350"
     },
     {
       "authors": "Creignou, N.; Hermann, M.",
       "year": 1996,
       "title": "Complexity of generalized satisfiability counting problems",
       "venue": "Information and Computation 125(1), 1-12",
-      "doi": "10.1006/inco.1996.0016",
-      "note": "Counting dichotomy for Boolean constraint languages: affine languages are counted in polynomial time, all others are #P-complete."
+      "doi": "10.1006/inco.1996.0016"
     },
     {
       "authors": "Valiant, L. G.",
       "year": 1979,
       "title": "The complexity of enumeration and reliability problems",
       "venue": "SIAM Journal on Computing 8(3), 410-421",
-      "doi": "10.1137/0208032",
-      "note": "#P-completeness of counting problems, including counting satisfying assignments of restricted formula classes."
+      "doi": "10.1137/0208032"
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree on the count (and on whether a witness exists) on n = 0..8, 10, 12, 14 (brute force up to n = 14; elimination also on n = 20, 50, 120), 4 systems per size: random dense systems with m in {n/2, n, 3n/2}, random sparse 3-XOR systems, planted consistent systems, planted systems plus a row that is the XOR of a subset of rows with b flipped (inconsistent), rank-deficient systems with repeated rows, row sums and zero rows, and the V2 family with permuted columns and shuffled rows. The independent check() packs the rows into integers and builds an XOR basis keyed by the highest coefficient while tracking which input rows each basis vector combines; it accepts (0, None) only with a re-verified combination of input rows equal to 0 = 1, and a positive count only if it equals 2^(n - r) where r basis vectors were re-verified as combinations of input rows with distinct leading columns (rank >= r), n - r null-space vectors were verified against every input row, and the witness satisfies every input row; for n <= 10 it also compares the count with an exhaustive count. Oracle control (experiments/2026-10-06f_entries_xor_sat.py): it accepts all 1020 correct outputs and rejects all 4348 wrong ones (count + 1, count * 2, count / 2, (0, None) for consistent systems, a claimed solution for inconsistent ones, a witness that violates a row, a missing witness), both for n <= 10 (2868 rejected) and for n = 11..40 where only the certificates decide (1480 rejected). V2 (exact counts, RESEARCH_LOG RL-047 method): the deterministic full-rank family X_n (rows: all ones; x_1 + x_{k+1} + ... + x_n for k = 2..n; b from a planted solution) built from a harness bit type CountingBit that counts every AND, XOR and truth test on input-derived bits; the implementations are unchanged. Brute force: exactly (2n + 1)(2^(n+1) - 2) operations (derived; checked for n = 1..16); fit on n = 8..16: alpha = 1.000 (tol 0.02); rivals 2^n (1.120) and n^2 2^n (0.897) rejected. Gaussian elimination: exactly n (n^2 + 6n - 4)/3 operations (derived; checked for n = 1..200 and 256); fit on n = 16..128: alpha = 1.000; rivals n^2 (1.439) and n^4 (0.720) rejected.",
+    "method": "V1: both implementations agree on the count (and on whether a witness exists) on n = 0..8, 10, 12, 14 (brute force up to n = 14; elimination also on n = 20, 50, 120), 4 systems per size: random dense systems with m in {n/2, n, 3n/2}, random sparse 3-XOR systems, planted consistent systems, planted systems plus a row that is the XOR of a subset of rows with b flipped (inconsistent), rank-deficient systems with repeated rows, row sums and zero rows, and the V2 family with permuted columns and shuffled rows. The independent check() packs the rows into integers and builds an XOR basis keyed by the highest coefficient while tracking which input rows each basis vector combines; it accepts (0, None) only with a re-verified combination of input rows equal to 0 = 1, and a positive count only if it equals 2^(n - r) where r basis vectors were re-verified as combinations of input rows with distinct leading columns (rank >= r), n - r null-space vectors were verified against every input row, and the witness satisfies every input row; for n <= 10 it also compares the count with an exhaustive count. Oracle control (experiments/2026-10-06f_entries_xor_sat.py): it accepts all 1020 correct outputs and rejects all 4348 wrong ones (count + 1, count * 2, count / 2, (0, None) for consistent systems, a claimed solution for inconsistent ones, a witness that violates a row, a missing witness), both for n <= 10 (2868 rejected) and for n = 11..40 where only the certificates decide (1480 rejected). V2 (exact counts, RESEARCH_LOG RL-047 method): the deterministic full-rank family X_n (rows: all ones; x_1 + x_{k+1} + ... + x_n for k = 2..n; b from a planted solution) built from a harness bit type CountingBit that counts every AND, XOR and truth test on input-derived bits; the implementations are unchanged. Brute force: exactly (2n + 1)(2^(n+1) - 2) operations (derived; checked for n = 1..16); fit on n = 8..16: alpha = 1.000 (tol 0.02); rivals 2^n (1.120) and n^2 2^n (0.897) rejected. Gaussian elimination: exactly n (n^2 + 6n - 4)/3 operations (derived; checked for n = 1..200 and 256); fit on n = 16..128: alpha = 1.000; rivals n^2 (1.439) and n^4 (0.720) rejected. Proofs: PROOFS.md proves every claim of this entry (the exact operation counts for all sizes of their domains, the correctness of both algorithms, the count 0 or 2^(n - rank A), the brute-force cost on independent rows and its worst case, the elimination bounds and the caveats) and names the scripts and tests that check each one (tests/test_proofs_xor_sat.py and the count-check scripts).",
     "artifacts": [
+      "PROOFS.md",
       "implementations/brute_force.py",
       "implementations/gaussian_elimination.py",
       "harness.py",
-      "../../experiments/2026-10-06f_entries_xor_sat.py"
+      "../../experiments/2026-10-06f_entries_xor_sat.py",
+      "../../tests/test_proofs_xor_sat.py"
     ]
   },
   "test_harness": {
@@ -126,6 +125,33 @@
     ],
     "trials": 4
   },
-  "caveats": "One entry covers both the decision and the counting version, because elimination answers both at once and a counting brute force has to examine all 2^n assignments anyway (a decision brute force could stop at the first solution; on unsatisfiable systems it also examines all 2^n). Brute force abandons an assignment at its first violated row; on systems with independent rows an assignment checks fewer than 2 rows on average, so its cost is Theta(2^n * n), not Theta(2^n * m * n); the latter needs dependent rows. The fitted costs are the exact closed forms (RESEARCH_LOG RL-062): the bare n^3 gives alpha = 0.959 for elimination on n = 16..128, outside the 0.02 band, and the bare n 2^n gives 0.996 for brute force. The V2 family X_n is built so that forward elimination does the maximal number of row operations; on random dense systems about half the rows need elimination at each column. Packing rows into machine words (as the oracle does) divides the bit operations by the word size, a constant factor for a fixed word size and not counted here.",
-  "notes": "XOR-SAT is the satisfiability problem of Schaefer's affine class; Horn-SAT (pairs/horn-sat-brute-force-vs-unit-propagation) and 2-SAT (pairs/two-sat-brute-force-vs-scc) are two other tractable classes. For counting, the contrast is sharper: #2-SAT and #Horn-SAT are #P-complete by the Creignou-Hermann dichotomy, so of these three only the XOR case stays easy when the solutions must be counted."
+  "caveats": "One entry covers both the decision and the counting version, because elimination answers both at once and a counting brute force has to examine all 2^n assignments anyway (a decision brute force could stop at the first solution; on unsatisfiable systems it also examines all 2^n). Brute force abandons an assignment at its first violated row; on systems with m >= 1 independent rows an assignment checks fewer than 2 rows on average, so its cost is Theta(2^n * n), not Theta(2^n * m * n); the latter is attained with dependent rows (PROOFS.md, section 5). The fitted costs are the exact closed forms (RESEARCH_LOG RL-062): the bare n^3 gives alpha = 0.959 for elimination on n = 16..128, outside the 0.02 band, and the bare n 2^n gives 0.996 for brute force. The V2 family X_n is built so that forward elimination does the maximal number of row operations among n x n systems (PROOFS.md, section 6). Packing rows into machine words of w bits (as the oracle does) replaces the XOR of k entries by ceil(k / w) word XORs, a constant factor for a fixed word size, not counted here.",
+  "notes": "By Schaefer's dichotomy (cited background), XOR-SAT is the satisfiability problem of the affine class; Horn-SAT (pairs/horn-sat-brute-force-vs-unit-propagation) and 2-SAT (pairs/two-sat-brute-force-vs-scc) are two other tractable classes. For counting, the contrast is sharper (cited background): #2-SAT and #Horn-SAT are #P-complete (by the Creignou-Hermann dichotomy), so unless every #P function is computable in polynomial time, the XOR case is the only one of these three that stays polynomial when the solutions must be counted.",
+  "background": [
+    {
+      "statement": "Systems of linear equations over GF(2) (affine relations) form one of the tractable classes of Schaefer's dichotomy for Boolean constraint satisfaction; Horn and 2-CNF constraints form two others.",
+      "source": "Schaefer 1978, the dichotomy theorem"
+    },
+    {
+      "statement": "Counting the solutions of a Boolean constraint language is in FP if every relation is affine and #P-complete otherwise; 2-CNF and Horn constraints are on the #P-complete side.",
+      "source": "Creignou & Hermann 1996"
+    },
+    {
+      "statement": "Counting the satisfying assignments of CNF formulas (#SAT) is #P-complete.",
+      "source": "Valiant 1979"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_xor_sat.py",
+      "../../tests/test_entries_2026_10_06f.py",
+      "../../experiments/2026-10-06f_entries_xor_sat.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py"
+    ],
+    "audit": "RL-107"
+  }
 }

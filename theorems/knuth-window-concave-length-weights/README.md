@@ -15,15 +15,17 @@ Let n ≥ 1 and let w(i, j) be real weights for 0 ≤ i < j ≤ n. The interval 
 
 is the recurrence of optimal binary search trees: k is the root of the subtree on the keys i+1, …, j (see also the
 pair [optimal-bst-recursion-vs-dp-vs-knuth](../../pairs/optimal-bst-recursion-vs-dp-vs-knuth/)). Knuth (1971)
-restricted the search for the root. With K(i, i) = i, the *restricted run* computes, for j − i = 1, 2, …, n,
+restricted the search for the root. With K(i, i) = i and c′(i, i) = 0, the *restricted run* computes, for
+j − i = 1, 2, …, n,
 
     c′(i, j) = w(i, j) + min_{k ∈ W(i,j)} [ c′(i, k−1) + c′(k, j) ],
     W(i, j)  = { k : max(K(i, j−1), i+1) ≤ k ≤ min(K(i+1, j), j) },
 
 and stores the chosen minimiser as K(i, j). For j = i + 1 the window is {i + 1}. Under the **largest tie rule**
 K(i, j) is the largest minimiser in W(i, j), under the **smallest tie rule** the smallest one. The run is *exact* if
-c′(i, j) = c(i, j) for all 0 ≤ i < j ≤ n. When the windows are non-empty, their sizes telescope along each diagonal,
-so the run examines O(n²) candidate roots in total instead of the Θ(n³) of (R). Yao (1980) gives the classical
+c′(i, j) = c(i, j) for all 0 ≤ i < j ≤ n. The windows are never empty, and their sizes telescope along each
+diagonal, so the run examines at most n² + n(n + 1)/2 candidate roots in total (exactly n² for the length weights
+below), against n(n + 1)(n + 2)/6 = Θ(n³) for (R) (proof in §1, *Candidate count*). Yao (1980) gives the classical
 sufficient condition for exactness, based on the quadrangle inequality (cited; not used or re-proved here). This
 note concerns **length weights** w(i, j) = h(j − i). For concave h they satisfy the reverse inequality (Remark 3).
 
@@ -60,9 +62,10 @@ restriction of h to {1, …, N} for any N ≥ d: the value does not depend on N 
 
 - (i) If h(N) > h(N−1), then k_max = N and HR(d) ≤ Q − 1 for every d ≤ N (proof after Lemma H), so τ*(d) = L(d):
   the run follows the heap root throughout.
-- (ii) If h is constant, then Q = 1 and τ*(d) = d − 1, and every split is optimal.
+- (ii) If h is constant, then Q = 1 and τ*(d) = d − 1, and every split is optimal (proof after Lemma H).
 - (iii) For concave h with N ≥ 2, "nondecreasing" is equivalent to h(N) ≥ h(N−1), because the differences
-  h(j) − h(j−1) are nonincreasing in j.
+  h(j) − h(j−1) are nonincreasing in j: if h(N) − h(N−1) ≥ 0, then h(j) − h(j−1) ≥ h(N) − h(N−1) ≥ 0 for every
+  2 ≤ j ≤ N, and the converse is immediate.
 
 ## Proof
 
@@ -85,15 +88,34 @@ for the smallest one, and C′_s for the values of the latter.
 K(i, j) = i + 1 + τ′(j − i).
 
 *Proof.* Induction on d = j − i, with k = i + 1 + t: the left part (i, k−1) has t keys and the right part (k, j)
-has d − 1 − t keys. The first claim follows at once. For the run with d = 1, W(i, i+1) = {i+1} corresponds to
-W(1) = {0}. For d ≥ 2, the induction hypothesis gives K(i, j−1) = i + 1 + τ′(d−1) and K(i+1, j) = i + 2 + τ′(d−1).
-Both lie in [i+1, j] because 0 ≤ τ′(d−1) ≤ d − 2, so W(i, j) corresponds to {τ′(d−1), τ′(d−1) + 1} = W(d), where
-the clipping in W(d) is inactive. The compared values are c′(i, k−1) + c′(k, j) = C′(t) + C′(d−1−t), and k increases
-with t, so the tie rules correspond. ∎
+has d − 1 − t keys. The first claim follows at once. Along the induction we also get that W(d) is non-empty and
+W(d) ⊆ [0, d − 1], so that τ′(d) is defined and 0 ≤ τ′(d) ≤ d − 1. For the run with d = 1, W(i, i+1) = {i+1}
+corresponds to W(1) = {0}. For d ≥ 2, the induction hypothesis gives K(i, j−1) = i + 1 + τ′(d−1) and
+K(i+1, j) = i + 2 + τ′(d−1), and 0 ≤ τ′(d−1) ≤ d − 2. So both lie in [i+1, j], and W(i, j) corresponds to
+{τ′(d−1), τ′(d−1) + 1} = W(d), where the clipping in W(d) is inactive; this set has two elements and lies in
+[0, d − 1]. The compared values are c′(i, k−1) + c′(k, j) = C′(t) + C′(d−1−t), and k increases with t, so the tie
+rules correspond. ∎
 
 So the Theorem follows from Theorem 1 below. By Lemma 0, applied to intervals of length d ≤ n ≤ N, exactness means
 C′(d) = C(d) for d ≤ n, and the formulas for K are those for τ′ and τ′_s. (The first n steps of the one-dimensional
 run use only h(1), …, h(n).)
+
+*Optimal roots.* If the run is exact, then for K = K(i, j),
+c(i, j) = c′(i, j) = w(i, j) + c′(i, K − 1) + c′(K, j) = w(i, j) + c(i, K − 1) + c(K, j), so K(i, j) attains the
+minimum in (R). By induction on j − i, the tree on the keys i + 1, …, j with root K(i, j) and with subtrees read off
+from K on (i, K − 1) and (K, j) has cost c(i, j), so it is optimal. This is the last sentence of the Theorem.
+
+*Candidate count.* For any real weights, the windows are never empty and K(i, j) ∈ [i + 1, j]. By induction on
+d = j − i: for d = 1, W(i, i+1) = {i + 1}. For d ≥ 2, K(i, j−1) ≤ K(i+1, j−1), by the upper end of the window
+W(i, j−1) when d ≥ 3 and because K(i, i+1) = i + 1 = K(i+1, i+1) when d = 2; likewise K(i+1, j−1) ≤ K(i+1, j), by
+the lower end of W(i+1, j) when d ≥ 3 and because K(i+1, i+1) = i + 1 < i + 2 = K(i+1, i+2) when d = 2. Also
+K(i, j−1) ≤ j − 1 and K(i+1, j) ≥ i + 2. Hence max(K(i, j−1), i + 1) ≤ min(K(i+1, j), j), so W(i, j) is non-empty and
+K(i, j) ∈ W(i, j) ⊆ [i + 1, j]. Now |W(i, j)| ≤ K(i+1, j) − K(i, j−1) + 1. For fixed d the sum over i = 0, …, n − d
+telescopes to K(n−d+1, n) − K(0, d−1) + (n − d + 1) ≤ n + (n − d + 1), and summing over d = 1, …, n gives at most
+n² + n(n + 1)/2 candidates. For length weights w(i, j) = h(j − i) with any real h (Lemma 0 uses no other
+hypothesis), the window has exactly one element for d = 1 and exactly two for d ≥ 2, so the run examines exactly
+n + 2·n(n − 1)/2 = n² candidates. The unrestricted recurrence (R) examines d candidates for each of the n − d + 1
+intervals of length d, Σ_d d(n − d + 1) = n(n + 1)(n + 2)/6 in total.
 
 **Theorem 1.** Under the hypotheses of the Theorem, for every d ∈ {1, …, N}:
 1. the largest rule gives C′(d) = C(d) and τ′(d) = τ*(d);
@@ -147,9 +169,13 @@ Suppose leaves of depths y ≤ x′ − 2 exist, where x′ is the largest depth
 Remove such a pair, which makes its parent a leaf of depth x′ − 1, and give the leaf of depth y two children. This
 changes the EPL by −2x′ + (x′ − 1) − y + 2(y + 1) = y − x′ + 1 < 0. So every minimiser is complete. A complete tree
 with u leaves at depth D + 1 and x − u at depth D, with 0 ≤ u < x, satisfies (x − u) + u/2 = 2^D (Kraft's equality),
-so D = ⌊log₂ x⌋, u = 2(x − 2^D) and EPL = xD + 2(x − 2^D). Subtracting x − 1 gives the formula. The increment is a
-direct computation, inside a dyadic block and across a power of two. The formula is classical; it is formula (3.1)
-of Fredman and Knuth (1974), with n = x − 1. ∎
+so D = ⌊log₂ x⌋, u = 2(x − 2^D) and EPL = xD + 2(x − 2^D). Subtracting x − 1 gives the formula. Since all complete
+trees with x leaves have this EPL and every minimiser is complete, every complete tree is a minimiser. The heap-shaped
+tree with x leaves is complete: its x − 1 keys fill the levels 0, …, D − 1 and e = x − 2^D keys of level D, so its
+leaves have depths D and D + 1. The increment: if 2^D ≤ x < x + 1 < 2^(D+1), both values use the same D and differ
+by D + 1. If x + 1 = 2^(D+1), then E(x) = (2^(D+1) − 1)(D + 1) − 2^(D+1) + 1 = 2^(D+1)·D − D and
+E(x + 1) = 2^(D+1)(D + 2) − 2^(D+2) + 1 = 2^(D+1)·D + 1, which differ by D + 1 as well. In both cases
+D = ⌊log₂ x⌋. The formula is classical; it is formula (3.1) of Fredman and Knuth (1974), with n = x − 1. ∎
 
 **Lemma C (closed form for a cap).** Let k ≥ 1, J = ⌊log₂(k + 1)⌋, P = 2^J (so 2 ≤ P ≤ k + 1 < 2P),
 δ = k + 1 − P ∈ {0, …, P − 1}, and
@@ -184,7 +210,8 @@ tree costs exactly E(λ_i), because its nodes have λ ≤ λ_i ≤ k + 1.
 - If e < δ: take m = q pieces of sizes P + ⌊e/q⌋ or P + ⌈e/q⌉. All lie in [P, P + e] ⊆ [P, k], where E has slope
   J + 1. The cost is at most k(q − 1) + qE(P) + (J + 1)e = Jx + qδ + e − k = Jx + g(x) − k.
 - If e ≥ δ: take m = q + 1 pieces of sizes ⌊x/(q+1)⌋ or ⌈x/(q+1)⌉. All lie in [P/2, P], because
-  qP/(q+1) ≥ P/2 and x < (q + 1)P, and E has slope J there. The cost is at most
+  x/(q+1) ≥ qP/(q+1) ≥ P/2 with P/2 an integer (P ≥ 2), and x < (q + 1)P; so they also lie in [1, k + 1], and E has
+  slope J there. The cost is at most
   kq + (q + 1)E(P) − J((q + 1)P − x) = Jx + (q + 1)δ − k = Jx + g(x) − k.
 
 Agreement on [P, k + 1] is the equality case of (F1). ∎
@@ -262,6 +289,10 @@ x ≥ 3Q + 1. If H ≤ J, both sides fail (right count ≤ Q − 1, and x < 2Q).
 *Proof of Remark (i).* If h(N) > h(N−1), then k_max = N ≥ 2 and Q > N/2, so 3Q + 1 > 3N/2 + 1 ≥ N + 2 > d + 1 for
 every d ≤ N, and Lemma H(c) gives HR(d) ≤ Q − 1.
 
+*Proof of Remark (ii).* If h ≡ κ, then k_max = 1 and Q = 1, so τ*(d) = d − 1 − min(HR(d), 0) = d − 1. By induction
+C(t) = κt, since C(d) = κ + min_t [κt + κ(d − 1 − t)] = κd. So F_d(t) = κ(d − 1) for every t, and
+T(d) = {0, …, d − 1}.
+
 ### 4. Proof of Theorem 1
 
 *N = 1.* Only d = 1 occurs. W(1) = {0} = T(1), so C′(1) = C′_s(1) = h(1) = C(1) and τ′(1) = τ′_s(1) = 0 = τ*(1),
@@ -281,15 +312,17 @@ to show
 
 Then τ*(d) is a global minimiser of F_d and the largest minimiser on W(d), so C′(d) = C(d) and τ′(d) = τ*(d).
 
-(i) If h is constant, F_d is constant and T(d) = {0, …, d − 1}. Otherwise, if HR(d) ≤ Q − 1, then
+(i) If h is constant, F_d is constant and T(d) = {0, …, d − 1} (Remark (ii)). Otherwise, if HR(d) ≤ Q − 1, then
 τ*(d) = L(d) ∈ T(d) by Lemma E. Otherwise HR(d) ≥ Q, so x = d + 1 ≥ 3Q + 1 by Lemma H(c). Then a = 0: if a > 0,
 then k_max = N and Q > N/2, so 3Q + 1 > N + 1 ≥ x, a contradiction. Now τ*(d) = d − Q, which is the leaf split
 (x − Q, Q). Every k with c_k > 0 satisfies k ≤ k_max < 2^(⌊log₂ k_max⌋ + 1) = 2Q. So Lemma G, with
 J′ = ⌊log₂ k_max⌋ and x ≥ 3Q, gives A_k(x − Q) + A_k(Q) = A_k(x) − k = C_k(d) − h_k(d) = min F^k_d, where
 h_k(d) = k since d ≥ 3Q > k. Hence d − Q ∈ T_k(d) for every such k, and d − Q ∈ T(d) by Lemma E.
 
-(ii) If τ*(d) = τ*(d−1), then ρ(d) = ρ(d−1) + 1. This forces HR(d−1) ≤ Q − 2 and HR(d) = HR(d−1) + 1 ≤ Q − 1; in
-particular h is not constant (for constant h, Q = 1 and ρ ≡ 0). So τ*(d) = L(d), and by Lemma H(b),
+(ii) If τ*(d) = τ*(d−1), then ρ(d) = ρ(d−1) + 1. This forces HR(d−1) ≤ Q − 2 and HR(d) = HR(d−1) + 1 ≤ Q − 1: if
+HR(d−1) ≥ Q − 1, then ρ(d−1) = Q − 1 ≥ ρ(d); so HR(d−1) ≤ Q − 2, ρ(d−1) = HR(d−1), and min(HR(d), Q − 1) =
+HR(d−1) + 1 ≤ Q − 1 with HR(d) − HR(d−1) ∈ {0, 1} (Lemma H(a)) gives HR(d) = HR(d−1) + 1. In particular h is not
+constant (for constant h, Q = 1 and ρ ≡ 0). So τ*(d) = L(d), and by Lemma H(b),
 x ∈ (3·2^(D−1), 2^(D+1)] for some D ≥ 1, with heap leaf split (2^D, b), where b = x − 2^D ∈ (2^(D−1), 2^D]. The
 split τ*(d−1) + 1 = L(d) + 1 is the leaf split (2^D + 1, b − 1). From b = HR(d) + 1 ≤ Q = 2^⌊log₂ k_max⌋ and
 b > 2^(D−1) we get 2^D ≤ Q ≤ k_max. Lemma F with the cap k* (or the linear cost if a > 0) gives
@@ -309,8 +342,9 @@ computed from the restriction of h to {1, …, M}. Then τ*_M(d) = τ*_N(d).
 
 *Proof.* It suffices to compare M = d with N. Let k_d and k_N be the values of k_max on {1, …, d} and {1, …, N}, and
 Q_d, Q_N the corresponding powers of two. If k_d < d, then Δh(j) = 0 for k_d < j ≤ d. Concavity gives Δh(j) ≤ 0
-for all j > k_d, monotonicity gives Δh(j) ≥ 0, so h is constant on [k_d, N] and k_N = k_d. If k_d = d (this includes d = 1, where HR(1) = 0), then HR(d) ≤ Q_d − 1 by the argument of Remark (i), and
-Q_N ≥ Q_d because k_N ≥ k_d. Both formulas then give d − 1 − HR(d). ∎
+for all j > k_d, monotonicity gives Δh(j) ≥ 0, so h is constant on [k_d, N] and k_N = k_d. If k_d = d (this
+includes d = 1, where HR(1) = 0), then HR(d) ≤ Q_d − 1 by the argument of Remark (i), and Q_N ≥ Q_d because
+k_N ≥ k_d. Both formulas then give d − 1 − HR(d). ∎
 
 The run itself depends only on h(1), …, h(d) up to step d, so Proposition 5 also follows from Theorem 1. The direct
 proof shows that the formula is consistent on its own. *Proof of the Corollary:* apply the Theorem to the
@@ -328,15 +362,21 @@ restriction of h to {1, …, n} for each n, and use Proposition 5.
    h that are not concave, and 7 268 of the remaining 14 714. So failing a hypothesis does not always break the run.
 2. **The tie rule matters.** For h(s) = min(s, 5) − 1: T(9) = {1, …, 7} and T(10) = {2, 3, 6, 7}. The largest rule
    has τ′(8) = 4 and picks τ′(9) = 5 from W(9) = {4, 5}. A rule that picks 4 at d = 9 gets W(10) = {4, 5}, which
-   misses T(10), so that rule is not exact. The theorem says that the two extreme rules never fall into such a trap.
+   misses T(10), so that rule is not exact: if it was exact up to d = 9, its compared values at d = 10 are F_10 on
+   {4, 5}, whose minimum exceeds min F_10; otherwise it already failed earlier. The theorem says that the two extreme
+   rules never fall into such a trap.
 3. **Not a quadrangle-inequality case.** For concave h and positions p ≤ q < r ≤ s, put m = r − q ≥ 1, u = q − p
    and v = s − r. Then w(p, r) + w(q, s) − w(p, s) − w(q, r) = [h(m + u) − h(m)] − [h(m + u + v) − h(m + v)] ≥ 0,
    since both brackets are sums of u consecutive differences of h and the second one is shifted to the right. So
-   length weights satisfy the *reverse* quadrangle inequality. The largest optimal roots need not be monotone either: for
-   h(s) = min(s, 2) on {1, …, 4}, T(3) = {1} and T(4) = {0, 1, 2, 3}. The largest optimal root of an interval of
-   length 4 is then i + 4, while that of its right sub-interval of length 3 is i + 3, so K(i, j) ≤ K(i+1, j) fails
-   for the largest optimal roots. The convexity method of Fredman and Knuth (1974) does not apply either: for
-   h(s) = min(s, 5) − 1 the increments of C for d = 1, …, 10 are (0, 1, 1, 2, 2, 1, 1, 2, 2, 1), so C is not convex.
+   length weights satisfy the *reverse* quadrangle inequality. For affine h the differences are constant, both
+   brackets are equal, and the quadrangle inequality holds with equality. In general the quadrangle inequality
+   w(p, r) + w(q, s) ≤ w(p, s) + w(q, r) fails: for h(s) = min(s, 2) and positions 0, 1, 2, 3,
+   w(0, 2) + w(1, 3) = 2 + 2 = 4 > 3 = 2 + 1 = w(0, 3) + w(1, 2). The largest optimal roots need not be
+   monotone either: for h(s) = min(s, 2) on {1, …, 4}, T(3) = {1} and T(4) = {0, 1, 2, 3}. The largest optimal root
+   of an interval of length 4 is then i + 4, while that of its right sub-interval of length 3 is i + 3, so
+   K(i, j) ≤ K(i+1, j) fails for the largest optimal roots. The convexity method of Fredman and Knuth (1974) does not
+   apply in general either: for h(s) = min(s, 5) − 1 the increments of C for d = 1, …, 10 are
+   (0, 1, 1, 2, 2, 1, 1, 2, 2, 1), so C is not convex.
 4. **Explicit optimum.** The proof gives C_k(d) = J(d + 1) + g(d + 1) − k whenever d + 1 ≥ P (Lemma C), and for
    general concave nondecreasing h, C(d) = κd + a·E(d + 1) + Σ_k c_k C_k(d) (Lemma E).
 
@@ -344,16 +384,17 @@ restriction of h to {1, …, n} for each n, and use Proposition 5.
 
 - **Knuth (1971)** introduced the restricted root window for optimal binary search trees. **Yao (1980)** is the
   standard reference for a sufficient condition for exactness based on the quadrangle inequality (cited; not
-  re-proved here). By Remark 3, length weights with concave h satisfy the reverse inequality, so that condition
-  does not apply here in general (for affine h both inequalities hold with equality).
+  re-proved here). By Remark 3, length weights with concave h satisfy the reverse inequality, and the quadrangle
+  inequality itself can fail strictly (h(s) = min(s, 2) gives an example), so that condition does not apply here in
+  general (for affine h both inequalities hold with equality).
 - **Fredman and Knuth (1974)** study M(0) = g(0), M(n+1) = g(n+1) + min_{0≤k≤n} (αM(k) + βM(n−k)). With
   α = β = 1, g(0) = 0 and g = h this is the one-dimensional recurrence of §1. For convex g (with a condition at the
   start; their Theorem 1) they prove that M is convex. Their Lemma, formula (1.2), after de Bruijn, implies that if
   k is a minimiser at n, then k or k + 1 is a minimiser at n + 1: this is the convex counterpart of the window
   property. For affine nondecreasing h the hypotheses of their Theorem 1 and of this note overlap; a derivation of
   the exactness part of the Theorem from their results in that case is not written out here (the case is covered
-  by the proof of §4). The formula of Lemma B is their
-  formula (3.1). Their method rests on the convexity of M, which fails for concave h (Remark 3).
+  by the proof of §4). The formula of Lemma B is their formula (3.1). Their method rests on the convexity of M,
+  which can fail for concave h (Remark 3 gives an example).
 - **Glassey and Karp (1976)** and **Batty, Pelling and Rogers (1982).** The abstract of Batty, Pelling and Rogers
   (Crossref record) treats f(n) = min Σ_{i≤r} f(a_i) + g(n) over r-tuples of integers 0 ≤ a_i < n with Σ a_i = n. For
   r = 2 this has the form of the leaf recurrence A of §2, with g(x) = h(x − 1). It gives conditions under which the
@@ -387,7 +428,7 @@ restriction of h to {1, …, n} for each n, and use Proposition 5.
 - The hypotheses are concavity and monotonicity on {1, …, N}. Remark 1 shows that neither can be dropped in general;
   it does not claim that every h violating them fails.
 - The statement is about the values c(i, j) and the roots K(i, j) chosen by the run. Running time is not claimed
-  beyond the O(n²) bound for non-empty windows.
+  beyond the candidate counts of §1 (at most n² + n(n + 1)/2 in general, exactly n² for length weights).
 
 ## Verification
 
@@ -398,10 +439,12 @@ python theorems/knuth-window-concave-length-weights/verify.py
 The script is deterministic (fixed seeds), uses the Python standard library only, needs no network, and runs in
 about 15 seconds on a laptop. It exits with code 0 only if every check passes. It checks:
 
-- the heap facts: formula (S) against the array layout, and Lemma H (a)–(c), for d ≤ 20 000;
+- the heap facts: formula (S) against the array layout, and Lemma H (a)–(c), for d ≤ 20 000; and the bound used in
+  Remark (i), HR(d) ≤ 2^⌊log₂ N⌋ − 1 for all d ≤ N, 2 ≤ N ≤ 20 000;
 - Lemmas B, C (closed form), D, F and G against the dynamic program (caps k ≤ 64, up to 521 leaves; Lemma B for
   h(s) = s up to 1201 leaves, and its increment formula for λ < 5000); the steps F1 (k < 300) and F2 (k ≤ 24,
-  a, b < 120) of Lemma C by direct evaluation of the closed forms; and Lemmas A and E on 200 seeded random h;
+  a, b < 120) of Lemma C by direct evaluation of the closed forms; and Lemmas A (with its statement on k_max) and E
+  on 200 seeded random h;
 - the Theorem (largest rule exact, trajectory τ*, smallest rule exact, mirrored trajectory):
   - on all 2^(N−1) supports of (c_2, …, c_{N−1}, a) for N = 2, …, 16 (65 534 supports), with unit weights and with
     seeded random weights 1…7;
@@ -409,15 +452,25 @@ about 15 seconds on a laptop. It exits with code 0 only if every check passes. I
     (8, 10);
   - on 150 seeded random h (integer and fraction values) with N ≤ 200;
   - and that τ*_N(d) does not depend on N;
+- the remarks on the statement: (i) τ*(d) = L(d) on every support with a > 0, N ≤ 16; (ii) for constant h (four
+  constants, N ≤ 50), T(d) = {0, …, d − 1} and τ*(d) = d − 1; (iii) for every concave integer h on {1, …, N}
+  with h(1) = 0, N ≤ 7, with differences in [−3, 3], nondecreasing iff h(N) ≥ h(N − 1);
 - the interval form: an independent implementation of the restricted run (both tie rules) against the full Θ(n³)
-  dynamic program, with the formulas for K(i, j), on 200 seeded h with n ≤ 30;
-- the boundary controls and examples of Remarks 1–3, the reverse quadrangle inequality (all integer h on {1, …, 8}
-  with h(1) = 0 and nonincreasing differences in [0, 4]), and N = 1, 2 for all h with values in −3…3.
+  dynamic program, with the formulas for K(i, j) and the optimality of every chosen root, on 200 seeded h with
+  n ≤ 30; the candidate counts of §1: exactly n² per run and n(n + 1)(n + 2)/6 for (R) on these h, exactly n² on 200
+  seeded arbitrary integer length weights, and non-empty windows with at most n² + n(n + 1)/2 candidates on 200 seeded
+  arbitrary integer weights w(i, j), n ≤ 30;
+- the boundary controls and examples of Remarks 1–3, with the four counts of the class table of Remark 1; the reverse
+  quadrangle inequality (all integer h on {1, …, 8} with h(1) = 0 and nonincreasing differences in [0, 4]),
+  equality for affine h (h(s) = α + βs, α, β ∈ {−2, …, 2}, positions 0, …, 8), and the strict violation of the
+  quadrangle inequality for h(s) = min(s, 2) at positions 0, 1, 2, 3; and N = 1, 2 for all h with values in −3…3.
 
-By Lemma E, T(d) depends only on which of a, c_2, …, c_{N−1} are positive, and the run's values and choices are
-determined by T(1), …, T(N). Given Lemma E, the unit-weight support enumeration therefore covers every concave
-nondecreasing real h with N ≤ 16. The random-weight and bounded-integer checks test the Theorem without relying on
-Lemma E.
+By Lemmas A and E, T(1), …, T(N) and k_max depend only on which of a, c_2, …, c_{N−1} are positive. The checked
+property (exactness and trajectory under both tie rules) depends only on T(1), …, T(N) and k_max: by induction on d,
+if the run was exact before d, its compared values on W(d) are F_d, so it is exact at d iff W(d) ∩ T(d) is
+non-empty, and then it picks the largest (smallest) element of W(d) ∩ T(d). Given Lemmas A and E, the unit-weight
+support enumeration therefore covers every concave nondecreasing real h with N ≤ 16. The random-weight and
+bounded-integer checks test the Theorem without relying on Lemma E.
 
 ## Sources
 

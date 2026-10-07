@@ -1,6 +1,7 @@
 # Maximum-weight independent set on k × n grids with diagonals: exhaustive search vs path-decomposition DP
 
-**Type:** T2 (naive-exp → poly, for every fixed number of rows k) · **Verification:** V2 (exact addition counts,
+**Type:** T2 (naive-exp → poly, for every fixed number of rows k; the final sort of the output is bounded under the
+background sort assumption) · **Verification:** V2 (exact addition counts,
 with rivals)
 
 **Problem.** The input is a grid of k rows and n columns with non-negative integer vertex weights. Horizontal and
@@ -11,28 +12,32 @@ in general not bipartite.
 
 | Algorithm | Cost (N = k·n vertices) | Implementation |
 |---|---|---|
-| Exhaustive search over all 2ᴺ subsets (weight and independence of every subset, no early exit) | Θ(N·2ᴺ) on every input; exactly N·2ᴺ⁻¹ weight additions | [brute_force.py](implementations/brute_force.py) |
-| DP over the columns (bags = two adjacent columns, width 2k − 1; states = column subsets independent inside the column) | Θ(F_{k+2}²·n) = Θ(φ^(2k)·n); exactly n·P_k + (n − 1)·F_{k+2} additions with positive weights (10n − 5 for k = 3) | [column_dp.py](implementations/column_dp.py) |
+| Exhaustive search over all 2ᴺ subsets (weight and independence of every subset, no early exit) | Θ(N·2ᴺ) on every input with N ≥ 1 (the final sort of the output under the sort assumption in entry.json); exactly N·2ᴺ⁻¹ weight additions | [brute_force.py](implementations/brute_force.py) |
+| DP over the columns (bags = two adjacent columns, width 2k − 1; states = column subsets independent inside the column) | Θ(F_{k+2}²·n) = Θ(φ^(2k)·n) for n ≥ 2, apart from sorting the output set (O(nk log(nk)) under the sort assumption in entry.json); exactly n·P_k + (n − 1)·F_{k+2} additions for n ≥ 1 with positive weights (10n − 5 for k = 3) | [column_dp.py](implementations/column_dp.py) |
 
 F_{k+2} (2, 3, 5, 8, 13, 21 for k = 1..6) is the number of k-bit column masks without two adjacent ones. P_k is
 the total number of rows chosen over those masks (1, 2, 5, 10, 20, 38).
 
 **Why it is here.** Every edge stays inside one column or joins two adjacent columns. So column c separates the
 grid left of it from the grid right of it, and an optimal solution only needs to know which vertices of column c it
-uses. That turns 2^(kn) subsets into n·F_{k+2}² state pairs: exponential → linear in n for every fixed k. The
+uses. That turns 2^(kn) subsets into (n − 1)·F_{k+2}² state pairs: exponential → linear in n for every fixed k
+(apart from sorting the output set, O(n log n) under the sort assumption). The
 dependence on k remains exponential (φ^(2k) ≈ 2.618^k). For square grids (k = n) the DP is exponential in n,
 but not in N = n². This is the simplest case of dynamic programming over a path or tree decomposition of bounded
-width (Arnborg & Proskurowski 1989; path-width: Robertson & Seymour 1983). On general graphs the problem is
-NP-hard: independent sets of G are the cliques of its complement, and CLIQUE is NP-complete (Karp 1972).
+width (Arnborg & Proskurowski 1989; Robertson & Seymour 1983). On general graphs the problem is
+NP-hard: independent sets of G are the cliques of its complement, and CLIQUE is NP-complete (Karp 1972; background
+in entry.json).
 
 **Why the diagonals.** Without diagonals a grid is bipartite (colour (r, c) by the parity of r + c). On bipartite
 graphs this problem reduces to a minimum s–t cut: an arc source → u of capacity w(u) for every u on one side, an
 arc v → sink of capacity w(v) for every v on the other side, and infinite capacity on every edge from the first
 side to the second. The finite cuts are exactly the vertex covers, each with capacity equal to its weight, and a
 maximum independent set is the complement of a minimum vertex cover. So a polynomial max-flow algorithm (see
-[max-flow-edmonds-karp-vs-dinic](../max-flow-edmonds-karp-vs-dinic/)) already solves plain grids. With diagonals
+[max-flow-edmonds-karp-vs-dinic](../max-flow-edmonds-karp-vs-dinic/)) already computes the optimum value of plain
+grids (an optimal set can be read off a minimum cut). With diagonals
 that reduction no longer applies, and the column DP is what makes the problem easy. The DP handles both cases. The
-flow method is not implemented here.
+flow method is not implemented here; PROOFS.md, section 8 proves the reduction (with capacity w(V) + 1 in place of
+infinity).
 
 **Verification.**
 - *V1:* the validator runs n = 0..6, 8, 12, 20, 50, 8 instances per size (88 instances, 136 implementation runs).
@@ -40,11 +45,12 @@ flow method is not implemented here.
   The row count is k = 1..5 for n ≤ 3, 1..3 for n = 4, 5 and 1..6 for n ≥ 6. The diagonal patterns are random,
   king's graph, none, all ╲, all ╱ and sparse. The weights are uniform 0..9 or 0..1000, all equal (ties), half
   zeros, or one heavy vertex.
-- *Oracle:* `check` is independent and always gives a verdict. The returned set must consist of distinct grid
+- *Oracle:* `check` is independent and returns a verdict for every output whose vertex pairs have integer
+  coordinates (a non-integer coordinate, e.g. a float, makes it raise, which the validator reports as a failure). The returned set must consist of distinct grid
   vertices, be independent (edges rebuilt from the instance), and weigh exactly the returned value. The value
   must equal the optimum of a vertex-by-vertex DP written in the harness. That DP works in column-major order
   over the last k + 1 vertices, which contain every earlier neighbour of the next vertex: a different
-  decomposition (width k + 1) and different code.
+  decomposition (width at most k + 1) and different code. PROOFS.md, section 7 proves it exact.
 - *Experiment* ([script](../../experiments/2026-10-06f_entries_mis_pathwidth.py)):
   - 600 more instances: n = 0..5 with both algorithms, n = 6..60 with the DP; 0 failures.
   - **oracle control:** 3393 deliberately wrong outputs on 330 instances; **all rejected**, 0 undecided,
@@ -82,11 +88,18 @@ Exhaustive search would need N·2ᴺ⁻¹ ≈ 3.5·10¹⁹ additions at k = 3.
 - Only additions are counted. The DP's (n − 1)·F_{k+2}² compatibility tests (25 per column for k = 3) and the
   exhaustive search's independence tests use plain integers and are not counted; for fixed k they are linear in n
   and Θ(N·2ᴺ) respectively, the same order as the counted additions.
-- The DP count needs positive weights. With weights in {0, 1}, up to 6 additions (in 59 of 420 instances) involve
-  two plain zeros and go uncounted.
+- The DP count needs positive weights. With zero weights an addition of two plain zeros goes uncounted, exactly at
+  the columns preceded only by all-zero columns (PROOFS.md, section 2); measured: with weights in {0, 1}, up to 6
+  additions in 59 of 420 instances.
 - In all batteries both algorithms returned the same optimal set (0 differences in 348 compared instances), so
   the value-only `equal` was never needed to absorb a tie.
 
-**Sources.** Arnborg & Proskurowski, Discrete Appl. Math. 1989. Bodlaender, SIAM J. Comput. 1996 (tree
+**Proofs.** [PROOFS.md](PROOFS.md) proves the exact operation counts of this entry for all sizes of their domains,
+from the code, and names the scripts and sizes that check each count. It also proves the correctness, time and
+space of both algorithms, the statements about the oracle and the min-cut reduction;
+[tests/test_proofs_mwis.py](../../tests/test_proofs_mwis.py) checks their computable parts.
+
+**Sources.** Arnborg & Proskurowski, Discrete Appl. Math. 1989. Bodlaender, SIAM J. Comput. 1996 (background: tree
 decompositions of small width can be found in linear time; here the columns give one directly). Robertson &
-Seymour, J. Combin. Theory B 1983 (path-width). Karp 1972 (CLIQUE).
+Seymour, J. Combin. Theory B 1983. Karp 1972. Background only (the sort assumption): Auger, Jugé, Nicaud & Pivoteau
+2018; Munro & Wild 2018; CPython's Objects/listsort.txt.

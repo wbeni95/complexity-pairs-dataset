@@ -16,7 +16,9 @@ interval spanned by v's subtree. The *equivalent form* is the min-recurrence wit
 gaps between them have frequencies q₀..qₙ, all non-negative. Maximise Σ pₘ (level(kₘ) + 1) + Σ qⱼ level(gap j) over
 all BSTs, with the root at level 0. This is the cost of the optimal-BST problem (Knuth 1971; entry
 [optimal-bst-recursion-vs-dp-vs-knuth](../optimal-bst-recursion-vs-dp-vs-knuth)), maximised instead of minimised:
-the largest weighted number of comparisons that any BST can force. It is the instance with direction max and
+the largest weighted number of comparisons that any BST can force (a search compares with every key on its path:
+level + 1 comparisons for a key, level comparisons for a gap; see the optimal-BST entry's PROOFS.md, section 6). It
+is the instance with direction max and
 w(i, j) = qᵢ + Σ_{l=i+1..j} (p_l + q_l); the implementations also accept it in the form (p, q).
 
 | Algorithm | Time (n nodes) | Exact cost comparisons (every input) | Implementation |
@@ -33,7 +35,7 @@ literature-based (see Sources).
 
 ## Theorem E′ and its proof
 
-**Source.** Theorem E′ follows by the exchange argument of Qian & Wang (2004, Lemma 1), whose setting is the maximum
+**Source (credit).** Theorem E′ follows the exchange argument of Qian & Wang (2004, Lemma 1), whose setting is the maximum
 weight triangulation of convex polygons. Under the standard correspondence between binary trees with in-order nodes
 1..n and triangulations of a convex polygon with vertices v₀, …, v_{n+1}, the interval (i, j) is the chord
 v_i v_{j+1}, the root k is the apex v_k of the triangle on that chord, and a tree rotation is a diagonal flip. The
@@ -128,7 +130,9 @@ weight. The value of τ under w_M is f(τ) − M·t(τ). If t(τ) < t(σ), then 
 one of them is a path tree π. If the minimum of t is 0, π attains the extended optimum, which is the largest f over
 the trees with t = 0. Otherwise every tree, π included, is worth −∞. ∎
 
-The mirror image holds for anti-monotone weights with +∞ entries under min. +∞ under max is not covered, since it
+The mirror image holds for anti-monotone weights with +∞ entries under min (negate, as in Corollary 1: −w is
+monotone with −∞ entries, and the min-recurrence with w is the negated max-recurrence with −w). +∞ under max is not
+covered, since it
 would create +∞ + (−∞).
 
 **Checked step by step** ([checks script](../../experiments/2026-10-07_max_cost_bst_checks.py); its DP code is
@@ -201,7 +205,8 @@ the adjacent-sum condition, as E′ predicts. It cannot fail for n ≤ 2, where 
   the endpoint DP exact on every interval of every table; the same holds for the mirrored +∞ tables under min. +∞
   under max is not covered.
 - **Controls: the precondition matters** (section C). Without it, the endpoint DP fails on many inputs.
-  - *Monotone weights under MIN.* This is the setting of Knuth's speed-up, and the endpoint DP fails there. The
+  - *Monotone weights under MIN.* This includes the optimal-BST recurrence, where Knuth's speed-up is exact
+    (proved in that entry's PROOFS.md, section 7), and the endpoint DP fails there. The
     classical optimal BST with p = (1, 1, 1), q = 0 has w(i, j) = j − i, minimum 5 (root k₂, the balanced tree) and
     endpoint DP 6. The smallest failure among n = 3 tables with values 0..2 (smallest sum of the entries) is w(0, 2) = w(0, 3) = w(1, 3) = 1,
     other weights 0 (minimum 1, endpoint DP 2). Random instances of the 11 general families: exact on 523 of 3300.
@@ -303,10 +308,21 @@ checks in a few seconds.
 - **Shape diagnostic:** MATCH for all three: base 3 with n⁰ (n = 1..12), n³ (n = 1..20) and n² (n = 1..24).
 - **Cross-version:** section N prints a SHA-256 digest of all count series; it is identical under CPython 3.12.10 and
   3.14.2. No CPython built-in takes part in a counted comparison.
-- **Level.** V2. Theorem E′ rests on the cited lemma; the proof written out above has not been machine-checked.
+- **Level.** V2. Theorem E′ is proved above (credit: it follows the exchange argument of Qian & Wang 2004, Lemma 1);
+  the proof has not been machine-checked.
 
 **Additions.** Counts cover comparisons of cost values. Additions are also Θ(3ⁿ), Θ(n³) and Θ(n²); their exact forms
 are in `caveats` and are checked in section N.
+
+**Proofs.** The theorems are proved above. [PROOFS.md](PROOFS.md) proves the exact operation counts of this entry
+for all sizes of their domains, from the code, and names the scripts and sizes that check each count; its section 5
+indexes where every claim is proved and proves the rest (the correspondence with triangulations used in "Source",
+BST weights = separable tables, the size of the numbers, time and space).
+[tests/test_proofs_maxbst.py](../../tests/test_proofs_maxbst.py) checks section 5.
+
+**Background (cited, not a claim of this entry).** Qian & Wang 2004, Lemma 1: in a semi-circled convex polygon one of
+the two extreme edges belongs to a maximum weight triangulation; its exchange argument uses only that nested chords
+are shorter.
 
 **Sources.**
 - Qian & Wang 2004, *Maximum weight triangulation of a special convex polygon*, 20th European Workshop on
@@ -314,10 +330,9 @@ are in `caveats` and are checked in section N.
   (semi-circled convex polygons), the exchange argument from which Theorem E′ follows.
 - Wang, Chin & Yang 1999, *Maximum weight triangulation and graph drawing*, Information Processing Letters 70(1),
   17–22, doi:10.1016/S0020-0190(99)00037-X: related work on maximum weight triangulations.
-- Knuth 1971, *Optimum binary search trees*, Acta Informatica 1(1), 14–25: the cost function and the min
-  recurrence.
-- Yao 1980, *Efficient dynamic programming using quadrangle inequalities*, STOC 1980, 429–435: the
-  quadrangle-inequality speed-up for the min version (context; the endpoint DP does not use it).
-- CLRS (3rd ed.), §15.5: the cubic DP for the min version.
+- Knuth 1971, *Optimum binary search trees*, Acta Informatica 1(1), 14–25 (credit for the optimal-BST problem).
+- Yao 1980, *Efficient dynamic programming using quadrangle inequalities*, STOC 1980, 429–435 (context; the endpoint
+  DP does not use it).
+- CLRS (3rd ed.) (textbook treatment of the min version).
 
 Scripts: [checks](../../experiments/2026-10-07_max_cost_bst_checks.py), [tests](../../tests/test_entry_max_cost_bst.py).

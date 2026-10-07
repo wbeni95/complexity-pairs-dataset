@@ -3,10 +3,11 @@
 Instance (p, q) as in recursion.py: p = (p_1..p_n), q = (q_0..q_n), non-negative.
 Same recurrence as the cubic DP, but the root of (i, j) is searched only in r[i][j-1] .. r[i+1][j], the roots
 chosen for the two intervals one shorter. With non-negative weights, w(i, j) satisfies the quadrangle inequality
-(with equality) and is monotone under interval inclusion, so c does too and the range always contains an
-optimal root of (i, j) (Knuth 1971; in the quadrangle-inequality form, Yao 1980).
+(with equality) and is monotone under interval inclusion, so c satisfies the quadrangle inequality and the range
+always contains an optimal root of (i, j) (proof: PROOFS.md section 7; credit: Knuth 1971 and, in the
+quadrangle-inequality form, Yao 1980).
 Ties: '<=' moves to the later root, so r[i][j] is the largest optimal root in the range. (Any choice among the
-minimisers in the range would also be correct: see experiments/2026-10-07b_optimal_bst_ties.py.)
+minimisers in the range would also be correct: PROOFS.md Theorem 7.4 and experiments/2026-10-07b_optimal_bst_ties.py.)
 
 Work: for a fixed length L >= 2 the range widths telescope,
     sum_i (r[i+1][i+L] - r[i][i+L-1] + 1) = (n - L + 1) + r[n-L+1][n] - r[0][L-1] <= 2n,

@@ -1,4 +1,6 @@
-"""DP over remaining capacity (Bellman): Theta(n W) time, Theta(W) space. Pseudo-polynomial."""
+"""DP over remaining capacity (Bellman): O(n (W + 1)) time, Theta(n W) in the worst case; Theta(W) space.
+
+Pseudo-polynomial. Proofs: PROOFS.md."""
 
 
 def knapsack_dp(instance) -> int:

@@ -11,7 +11,8 @@ Questions and results (all from running this script; deterministic, no timing in
    3(n + 7) 2^n + 12. RESULT: equal to the measured count for every n = 3..16.
 2. Aspvall-Plass-Tarjan on W_n. Graph construction costs 14 counted operations per 2-literal clause
    (5 per _node call, 2 per adj[x ^ 1]), i.e. 28n + 28. RESULT: the measured total is exactly 49(n + 2) for every
-   n = 3..300 and for n = 500, 1000, ..., 32000 (read off the data; the traversal part 21n + 70 is not derived).
+   n = 3..300 and for n = 500, 1000, ..., 32000 (the traversal part 21n + 70 is derived in
+   pairs/two-sat-brute-force-vs-scc/PROOFS.md, section 2).
 3. Fits with the validator's own eval_cost / fit_slope on the declared n_values. RESULT:
    brute force vs (n + 7) * 2**n alpha = 0.9998; rivals 2**n 1.0767, n**2 * 2**n 0.8621; the bare n * 2**n gives
    0.9577 (outside the 0.02 band because of the lower-order term at n <= 16). SCC vs n alpha = 0.9995; rivals

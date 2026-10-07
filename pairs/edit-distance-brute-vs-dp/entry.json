@@ -3,7 +3,7 @@
   "title": "Edit (Levenshtein) distance: plain recursion vs Wagner-Fischer DP",
   "problem_statement": "Given strings a and b, compute the minimum number of single-character insertions, deletions and substitutions that transform a into b.",
   "input": {
-    "parameter": "n = length of each string (|a| = |b| = n in the harness; the DP bound is Theta(|a| |b|) in general).",
+    "parameter": "n = length of each string (|a| = |b| = n in the harness; in general the DP takes Theta((|a| + 1)(|b| + 1)) time, i.e. Theta(|a| |b|) when both strings are non-empty).",
     "size_measure": "2n characters over a fixed alphabet."
   },
   "algorithms": [
@@ -12,9 +12,9 @@
       "idea": "Branch on the three possible edits at the first position of each suffix, without remembering results. Identical suffix pairs are recomputed exponentially often.",
       "model": "classical-deterministic",
       "pseudocode": "d(i, j) = min(d(i+1, j) + 1, d(i, j+1) + 1, d(i+1, j+1) + [a_i != b_j]), with base cases at the string ends",
-      "time_complexity": "Theta(D(n, n)) = Theta((3 + 2 sqrt 2)^n / sqrt(n)) (3 + 2 sqrt 2 = 5.83 to two decimals), D = Delannoy numbers: the calls d(i, j) with i = n or j = n are the leaves, and the root-to-leaf paths are the lattice paths from (0, 0) with steps (1, 0), (0, 1), (1, 1) stopped at their first point with i = n or j = n; each extends in exactly one way to (n, n), so there are D(n, n) leaves, and since every other call has 3 children the recursion makes exactly (3 D(n, n) - 1)/2 calls. D(n, n) = sum_k C(n, k)^2 2^k = Theta((3 + 2 sqrt 2)^n / sqrt(n)): by Stirling its largest term, near k = (2 - sqrt 2) n, is Theta((3 + 2 sqrt 2)^n / n), and summing the Theta(sqrt n) terms around it gives the 1/sqrt(n) factor (standard Laplace estimate; sketched, not written out here)",
-      "space_complexity": "Theta(n) recursion depth",
-      "correctness": "Exhaustive over all alignments: every edit script corresponds to a path in the recursion tree.",
+      "time_complexity": "Theta(D(n, n)) = Theta((3 + 2 sqrt 2)^n / sqrt(n)) (3 + 2 sqrt 2 = 5.83 to two decimals), D = Delannoy numbers: the calls d(i, j) with i = n or j = n are the leaves, and the root-to-leaf paths are the lattice paths from (0, 0) with steps (1, 0), (0, 1), (1, 1) stopped at their first point with i = n or j = n; each extends in exactly one way to (n, n), so there are D(n, n) leaves, and since every other call has 3 children the recursion makes exactly (3 D(n, n) - 1)/2 calls. D(n, n) = sum_k C(n, k)^2 2^k = Theta((3 + 2 sqrt 2)^n / sqrt(n)): by Stirling its largest term, near k = (2 - sqrt 2) n, is Theta((3 + 2 sqrt 2)^n / n), and summing the Theta(sqrt n) terms around it gives the 1/sqrt(n) factor; PROOFS.md section 3 proves all of this with explicit constants (3 * 10^-4 <= D(n, n) sqrt(n) / (3 + 2 sqrt 2)^n <= 6 for n >= 1)",
+      "space_complexity": "Theta(n): recursion depth exactly 2n (n >= 1), O(1) per frame",
+      "correctness": "d(i, j) is the edit distance of the suffixes a[i:] and b[j:]: edit scripts and alignments have the same minimum cost, and the minimum alignment cost satisfies this recurrence over the first column, so the recursion minimises over all alignments (PROOFS.md sections 1-2).",
       "implementation": "implementations/brute_force.py:edit_distance_brute",
       "harness": {
         "v1_max_n": 7,
@@ -29,9 +29,9 @@
       "idea": "Tabulate d(i, j) for all prefix pairs; each cell depends on three neighbours. Keep two rows.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(n^2) (Theta(|a| |b|) in general)",
-      "space_complexity": "Theta(n)",
-      "correctness": "Wagner & Fischer 1974: the recurrence is the Bellman equation of the alignment problem.",
+      "time_complexity": "Theta(n^2): exactly |a| |b| inner iterations and |a| + 1 rows of length |b| + 1 (Theta(|a| |b|) for non-empty strings)",
+      "space_complexity": "Theta(n): two rows of length |b| + 1 beyond the input, plus one temporary list while a row is built",
+      "correctness": "Row i holds the edit distances of a[:i] and every prefix of b, by the same recurrence over the last column (PROOFS.md section 2; credit: Wagner & Fischer 1974).",
       "implementation": "implementations/wagner_fischer.py:edit_distance_dp",
       "harness": {
         "scaling": {
@@ -42,7 +42,7 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "The recursion is exponential only because it recomputes overlapping subproblems; there are just (n+1)^2 distinct ones. Tabulating them gives Theta(n^2).",
+  "relationship": "The recursion is exponential only because it recomputes overlapping subproblems; there are just (n+1)^2 distinct ones. Tabulating them gives Theta(n^2). Proofs of every claim: PROOFS.md.",
   "sources": [
     {
       "authors": "Wagner, R. A.; Fischer, M. J.",
@@ -62,8 +62,7 @@
       "year": 1980,
       "title": "A faster algorithm computing string edit distances",
       "venue": "Journal of Computer and System Sciences 20(1), 18-31",
-      "doi": "10.1016/0022-0000(80)90002-1",
-      "note": "O(n^2 / log n) via the Four Russians technique."
+      "doi": "10.1016/0022-0000(80)90002-1"
     },
     {
       "authors": "Backurs, A.; Indyk, P.",
@@ -75,11 +74,13 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both agree on random DNA-alphabet string pairs, n = 0..7 for the recursion, and satisfy simple independent bounds. V2: runtimes fitted against (3+2 sqrt 2)^n / sqrt(n) and n^2.",
+    "method": "V1: both agree on random DNA-alphabet string pairs, n = 0..7 for the recursion, and satisfy simple independent bounds. V2: runtimes fitted against (3+2 sqrt 2)^n / sqrt(n) and n^2 (measurements, not proofs). Proofs: PROOFS.md proves every claim of the entry (correctness of both algorithms, the exact call count, the asymptotics with explicit constants, time and space); tests/test_proofs_editdist.py checks the computable facts on stated ranges, including both outputs against an edit-script search that is independent of both implementations.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/brute_force.py",
       "implementations/wagner_fischer.py",
-      "harness.py"
+      "harness.py",
+      "../../tests/test_proofs_editdist.py"
     ]
   },
   "test_harness": {
@@ -87,14 +88,33 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 20, 100],
     "trials": 5
   },
-  "caveats": "The recursion analysed here always branches three ways; skipping to d(i+1, j+1) on a character match is a valid optimisation that makes the cost input-dependent. Conditional lower bound: no O(n^(2-eps)) algorithm unless SETH fails (Backurs-Indyk), so under SETH the DP is optimal up to sub-polynomial factors.",
+  "caveats": "The recursion analysed here always branches three ways; skipping to d(i+1, j+1) on a character match is a valid optimisation that makes the cost input-dependent (PROOFS.md section 2: n + 1 calls on a = b, the full (3 D(n, n) - 1)/2 on strings with no common letter). The conditional lower bound and the faster algorithm from the literature are background (cited, not proved here); see background. Consequently (our reading of the cited statement), under SETH no algorithm computes edit distance in O(n^(2-delta)) time for any delta > 0.",
   "notes": "Pair with lcs-brute-vs-dp: same DP template, different scoring.",
   "lower_bounds": [
     {
       "model": "classical-deterministic",
       "bound": "no O(n^(2-eps)) algorithm for any eps > 0",
       "setting": "conditional on the Strong Exponential Time Hypothesis (SETH)",
-      "source": "Backurs & Indyk 2015"
+      "source": "Backurs & Indyk 2015, main result (background: cited, conditional, not proved in this entry)"
     }
-  ]
+  ],
+  "background": [
+    {
+      "statement": "If edit distance can be computed in time O(n^(2-delta)) for some constant delta > 0, then the satisfiability of CNF formulas with N variables and M clauses can be decided in time M^O(1) 2^((1-epsilon)N) for a constant epsilon > 0, which would violate the Strong Exponential Time Hypothesis (SETH).",
+      "source": "Backurs & Indyk 2015 (STOC 2015; arXiv:1412.0348), main result as stated in the abstract"
+    },
+    {
+      "statement": "Masek and Paterson published an edit-distance algorithm titled 'A faster algorithm computing string edit distances'; its bound is not restated here.",
+      "source": "Masek & Paterson 1980 (Journal of Computer and System Sciences 20(1), 18-31; title, checked against the Crossref record)"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_editdist.py"
+    ],
+    "audit": "RL-107"
+  }
 }

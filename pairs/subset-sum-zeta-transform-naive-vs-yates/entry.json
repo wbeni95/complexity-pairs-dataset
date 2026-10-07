@@ -14,7 +14,7 @@
       "pseudocode": "for S in 0..N-1: acc = 0; t = S; loop: acc += f[t]; if t == 0: break; t = (t - 1) & S; zeta[S] = acc",
       "time_complexity": "Theta(3^n) = Theta(N^(log2 3)): exactly sum over S of 2^|S| = 3^n additions (counted)",
       "space_complexity": "Theta(2^n)",
-      "correctness": "Direct evaluation of the definition. The step t -> (t - 1) & S visits every submask of S exactly once, in decreasing order. The count is sum over k of C(n, k) 2^k = 3^n by the binomial theorem.",
+      "correctness": "Direct evaluation of the definition. The step t -> (t - 1) & S visits every submask of S exactly once, in decreasing order (from t > 0 it goes to the largest submask of S below t; PROOFS.md sections 1 and 3). The count is sum over k of C(n, k) 2^k = 3^n by the binomial theorem.",
       "implementation": "implementations/naive.py:zeta_naive",
       "harness": {
         "v1_max_n": 12,
@@ -50,7 +50,13 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "Theta(3^n) -> Theta(n 2^n) in the ground-set size n, i.e. Theta(N^1.585) -> Theta(N log N) in the input length N = 2^n. Both are polynomial in the input size, so this is T3, not an exponential pair. The fast transform is the building block of fast subset convolution (Bjorklund, Husfeldt, Kaski & Koivisto 2007), which uses ranked zeta and Moebius transforms to compute subset convolutions in O(n^2 2^n) ring operations instead of Theta(3^n).",
+  "relationship": "Theta(3^n) -> Theta(n 2^n) in the ground-set size n, i.e. Theta(N^1.585) -> Theta(N log N) in the input length N = 2^n. Both are polynomial in the input size, so this is T3, not an exponential pair. Its use in fast subset convolution is background (see background).",
+  "background": [
+    {
+      "statement": "Bjorklund, Husfeldt, Kaski and Koivisto evaluate the subset convolution of two functions on the subsets of an n-element set in O(n^2 2^n) additions and multiplications, via Moebius transform and inversion, against O(3^n) for the straightforward algorithm.",
+      "source": "Björklund, Husfeldt, Kaski & Koivisto 2007, abstract (arXiv:cs/0611101)"
+    }
+  ],
   "sources": [
     {
       "authors": "Björklund, A.; Husfeldt, T.; Kaski, P.; Koivisto, M.",
@@ -62,12 +68,14 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree on random set functions with values in [-9, 9] for n = 0..8, 10 and 12, 3 trials each, and pass an independent oracle in harness.check that evaluates the definition by scanning all 2^n masks T with T & ~S == 0 (no submask enumeration, no transform): every S for n <= 8 (complete), 64 seeded random S plus the full set for n = 10, 12 (spot check). V2 (measure 'reported', RESEARCH_LOG RL-047 method): the measured quantity is the exact number of additions performed by the unchanged implementations, counted by an instrumented integer type in the harness. Counts equal the closed forms at every n = 0..12 (experiments/2026-10-07b_zeta_transform_counts.py): naive 3^n, Yates n * 2^(n-1). Fits at tolerance 0.02 (the counts are exact and have no lower-order terms, so alpha = 1.000 for both): naive rivals n*2^n 1.315, n*3^n 0.886, 4^n 0.792, all rejected; Yates rivals 2^n 1.161, n^2*2^n 0.877, 3^n 0.733, all rejected. The log-factor diagnostic is resolved for Yates (0.936 against n log n 2^n).",
+    "method": "V1: both implementations agree on random set functions with values in [-9, 9] for n = 0..8, 10 and 12, 3 trials each, and pass an independent oracle in harness.check that evaluates the definition by scanning all 2^n masks T with T & ~S == 0 (no submask enumeration, no transform): every S for n <= 8 (complete), 64 seeded random S plus the full set for n = 10, 12 (spot check). V2 (measure 'reported', RESEARCH_LOG RL-047 method): the measured quantity is the exact number of additions performed by the unchanged implementations, counted by an instrumented integer type in the harness. Counts equal the closed forms at every n = 0..12 (experiments/2026-10-07b_zeta_transform_counts.py): naive 3^n, Yates n * 2^(n-1). Fits at tolerance 0.02 (the counts are exact and have no lower-order terms, so alpha = 1.000 for both): naive rivals n*2^n 1.315, n*3^n 0.886, 4^n 0.792, all rejected; Yates rivals 2^n 1.161, n^2*2^n 0.877, 3^n 0.733, all rejected. The log-factor diagnostic is resolved for Yates (0.936 against n log n 2^n). Proofs: PROOFS.md proves every claim of this entry from the code (the correctness of both algorithms, the time and space bounds, the exact counts for all sizes of their domains, the value sizes) and names the scripts and tests that check each one, among them tests/test_proofs_zeta.py.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/naive.py",
       "implementations/yates.py",
       "harness.py",
-      "../../experiments/2026-10-07b_zeta_transform_counts.py"
+      "../../experiments/2026-10-07b_zeta_transform_counts.py",
+      "../../tests/test_proofs_zeta.py"
     ]
   },
   "test_harness": {
@@ -76,5 +84,18 @@
     "trials": 3
   },
   "caveats": "Costs count additions on integers with O(n) bits (bounded entries); index arithmetic and loop control are not counted. Counts measure arithmetic, not wall-clock time; timing would not resolve the log factor (RESEARCH_LOG RL-048). The name 'Yates' method' refers to Yates (1937), a book on factorial experiments that was not checked here; the algorithm's correctness is proved in this entry, not taken from that source.",
-  "notes": "Same Kronecker-power structure as the fast Walsh-Hadamard transform (xor-convolution-naive-vs-walsh-hadamard), with the 2x2 matrix [[1,0],[1,1]] in place of [[1,1],[1,-1]]. Its inverse, the Moebius transform, uses [[1,0],[-1,1]] and also costs n 2^(n-1) operations. Subset convolution (naive 3^n vs ranked transforms n^2 2^n) is not part of this entry; the pattern report found that timing could not separate those two claims at n <= 12 (rho = 1.205)."
+  "notes": "Same Kronecker-power structure as the fast Walsh-Hadamard transform (xor-convolution-naive-vs-walsh-hadamard), with the 2x2 matrix [[1,0],[1,1]] in place of [[1,1],[1,-1]]. Its inverse, the Moebius transform, uses [[1,0],[-1,1]] and also costs n 2^(n-1) operations. Subset convolution (straightforward 3^n vs n^2 2^n) is not part of this entry; research/2026-10-07_patterns.md records that the V2 slope test could not separate those two cost claims at n <= 13 (rho = 1.205, analytic; alpha = 0.836 measured against 3^n).",
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "../or-convolution-naive-vs-zeta-mobius/PROOFS.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-07b_zeta_transform_counts.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py",
+      "../../tests/test_proofs_zeta.py"
+    ],
+    "audit": "RL-107"
+  }
 }

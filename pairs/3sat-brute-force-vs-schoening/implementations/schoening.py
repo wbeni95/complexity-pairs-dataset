@@ -7,8 +7,8 @@ uniformly at random. A final check follows the last flip.
 Success probability of one try. Fix a satisfying assignment a*. A falsified clause has all its literals
 false under the current assignment and at least one literal true under a*, so each flip decreases the
 Hamming distance to a* with probability >= 1/3 (and otherwise increases it by 1). From distance j, a run of
-3j flips with exactly j increases reaches a* (or another satisfying assignment earlier), which by comparison
-with a walk of success probability exactly 1/3 per step gives probability >= C(3j, j) (1/3)^(2j) (2/3)^j.
+3j flips with exactly j increases reaches a* (or another satisfying assignment earlier), which by a coupling
+with independent Bernoulli(1/3) steps (PROOFS.md section 2.4) gives probability >= C(3j, j) (1/3)^(2j) (2/3)^j.
 Averaging over the random start (distance j with probability C(n, j) / 2^n):
     p(n) = sum_{j=0..n} C(n, j) 2^-n C(3j, j) (1/3)^(2j) (2/3)^j,
 which lies between 0.87 and 0.89 times (3/4)^n / sqrt(n) for n = 14..20 (computed), the (3/4)^n / poly(n)
@@ -16,10 +16,12 @@ order of Schöning 1999.
 
 Error control: T(n) = ceil(ln(1/DELTA) / p(n)) independent tries. A satisfiable formula is then reported
 unsatisfiable with probability <= (1 - p(n))^T(n) <= exp(-p(n) T(n)) <= DELTA = 10^-6. An unsatisfiable
-formula is always reported unsatisfiable (no try can succeed).
+formula is always reported unsatisfiable (no try can succeed). T(n) is computed in floating point; p(n) T(n)
+>= ln(10^6) holds for n = 0..373 (checked exactly, PROOFS.md section 2.6), and for every n >= 374 tries_needed
+raises OverflowError, so sat_schoening answers only formulas with an empty clause there (False).
 
 Cost: at most T(n) (3n + 1) clause scans of O(m) each: O((4/3)^n sqrt(n) n m) time on every input. On
-unsatisfiable formulas every try runs to the end (all T(n) (3n + 1) scans); a scan stops at the first falsified
+unsatisfiable formulas without an empty clause every try runs to the end (all T(n) (3n + 1) scans); a scan stops at the first falsified
 clause, so how many of the m clauses it checks depends on the formula.
 
 Uses the global `random` module (the validator re-seeds it before every call, so runs are reproducible).

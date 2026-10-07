@@ -12,7 +12,7 @@
       "idea": "C[i + j] += A[i] * B[j] for all pairs (i, j).",
       "model": "classical-deterministic",
       "pseudocode": "for i, j: C[i+j] = (C[i+j] + A[i] B[j]) mod p",
-      "time_complexity": "Theta(n^2) (exactly n^2 coefficient multiplications when no coefficient of A is 0)",
+      "time_complexity": "Theta(n^2) in the worst case: exactly z n coefficient multiplications and Theta(n (1 + z)) time for z non-zero coefficients of A, so exactly n^2 multiplications when no coefficient of A is 0 (and Theta(n) when A = 0)",
       "space_complexity": "Theta(n)",
       "correctness": "Definition of the polynomial product.",
       "implementation": "implementations/naive.py:polymul_naive",
@@ -34,7 +34,7 @@
       "pseudocode": "see implementation",
       "time_complexity": "Theta(n log n). Exact count used for V2: 3 n log2(n) + 5 n multiplications on input-derived values for n a power of two with n >= 2 (n = 1 gives 2; see verification.method)",
       "space_complexity": "Theta(n)",
-      "correctness": "The DFT over Z_p diagonalises cyclic convolution. p - 1 = 119 * 2^23, so primitive 2^k-th roots of unity exist for k <= 23 (sizes up to 2^23), and padding to size >= 2n - 1 makes cyclic convolution equal to the ordinary product (Cooley & Tukey 1965 for the FFT recursion).",
+      "correctness": "The DFT over Z_p diagonalises cyclic convolution (the DFT of a cyclic convolution is the pointwise product of the DFTs, since w^N = 1). p is prime, p - 1 = 119 * 2^23 and 3 is a primitive root, so primitive 2^k-th roots of unity exist for k <= 23 (sizes up to 2^23), and padding to size >= 2n - 1 makes cyclic convolution equal to the ordinary product; correct for n <= 2^22, where the transform size is at most 2^23 (PROOFS.md sections 5-7, which also prove that the bit-reversed iterative transform computes the DFT and that the inverse transform inverts it; Cooley & Tukey 1965 for the FFT recursion).",
       "implementation": "implementations/ntt.py:polymul_ntt",
       "harness": {
         "scaling": {
@@ -49,7 +49,13 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "Theta(n^2) -> Theta(n log n). The same transform underlies the Schönhage-Strassen and Harvey-van der Hoeven integer multiplication algorithms.",
+  "relationship": "Theta(n^2) -> Theta(n log n). The use of fast transforms over rings in integer multiplication is background (see background).",
+  "background": [
+    {
+      "statement": "Schoenhage and Strassen base integer multiplication on a fast Fourier transform.",
+      "source": "Schönhage & Strassen 1971"
+    }
+  ],
   "sources": [
     {
       "authors": "Cooley, J. W.; Tukey, J. W.",
@@ -71,13 +77,13 @@
       "title": "Gauss and the history of the fast Fourier transform",
       "venue": "IEEE ASSP Magazine 1(4), 14-21",
       "doi": "10.1109/MASSP.1984.1162257",
-      "note": "The FFT idea goes back to Gauss (c. 1805)."
+      "note": "History of the fast Fourier transform (per its title)."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both agree on random polynomials, n = 0..257 (including sizes just above powers of two, which force padding), and pass an independent check A(x) B(x) = C(x) mod p at three fixed points. V2 by exact multiplication counts (measure 'reported', round 2026-10-06c). generate_scaling draws the same coefficients as generate() and wraps each in an int-like type that propagates through +, -, * and % and counts every multiplication with at least one input-derived operand; the implementations are unchanged and return the same coefficients on the counting type (experiments/2026-10-06c_ntt_counts.py). Schoolbook: exactly n^2 on every measured n (no zero coefficient was drawn); alpha = 1.000 against n^2 at tolerance 0.03, rivals n log n (1.697) and n^2 log n (0.918) rejected. NTT (n a power of two, so padding is exactly 2n): exactly 3 n log2(n) + 5 n for n = 2^3..2^15, namely (log2(2n) - 1) n per forward transform (in the first stage every butterfly has a padding zero, a plain int), 2n pointwise products, and log2(2n) n butterfly products plus 2n scalings in the inverse transform. The cost expression is this exact form (RL-062); alpha = 1.000 at tolerance 0.03, rivals n (1.111), n log^2 n (0.885) and n^2 (0.555) rejected, so the log factor is resolved. The leading term n log n alone gives alpha = 0.985 on the same counts. The earlier timing fit could not separate n log n from n (RL-018).",
-    "artifacts": ["implementations/naive.py", "implementations/ntt.py", "harness.py", "../../experiments/2026-10-06c_ntt_counts.py"]
+    "method": "V1: both agree on random polynomials, n = 0..257 (including sizes just above powers of two, which force padding), and pass an independent check A(x) B(x) = C(x) mod p at three fixed points. V2 by exact multiplication counts (measure 'reported', round 2026-10-06c). generate_scaling draws the same coefficients as generate() and wraps each in an int-like type that propagates through +, -, * and % and counts every multiplication with at least one input-derived operand; the implementations are unchanged and return the same coefficients on the counting type (experiments/2026-10-06c_ntt_counts.py). Schoolbook: exactly n^2 on every measured n (no zero coefficient was drawn); alpha = 1.000 against n^2 at tolerance 0.03, rivals n log n (1.697) and n^2 log n (0.918) rejected. NTT (n a power of two, so padding is exactly 2n): exactly 3 n log2(n) + 5 n for n = 2^3..2^15, namely (log2(2n) - 1) n per forward transform (in the first stage every butterfly has a padding zero, a plain int), 2n pointwise products, and log2(2n) n butterfly products plus 2n scalings in the inverse transform. The cost expression is this exact form (RL-062); alpha = 1.000 at tolerance 0.03, rivals n (1.111), n log^2 n (0.885) and n^2 (0.555) rejected, so the log factor is resolved. The leading term n log n alone gives alpha = 0.985 on the same counts. The earlier timing fit could not separate n log n from n (RL-018). Proofs: PROOFS.md proves every claim of this entry from the code (the correctness of both algorithms, with the primality of p, the roots of unity, the bit-reversed iterative transform and its inverse; the domain n <= 2^22; the time and space bounds; the exact counts for all sizes of their domains) and names the scripts and tests that check each one, among them tests/test_proofs_ntt.py.",
+    "artifacts": ["PROOFS.md", "implementations/naive.py", "implementations/ntt.py", "harness.py", "../../experiments/2026-10-06c_ntt_counts.py", "../../tests/test_proofs_ntt.py"]
   },
   "test_harness": {
     "module": "harness.py",
@@ -85,5 +91,17 @@
     "trials": 3
   },
   "caveats": "The V2 count sees only multiplications with an input-derived operand. Not counted: the NTT's twiddle-factor updates w * w_len (one per butterfly) and pow() calls, which work on plain ints the implementation creates from literals; the first-stage butterfly products whose operand is a padding zero; and all additions, subtractions and reductions mod p in both algorithms. In the NTT every counted butterfly product has a plain-int twiddle factor; only the pointwise products (2n of them for n a power of two, n >= 2) have two input-derived operands.",
-  "notes": "Compare integer-multiplication-schoolbook-vs-karatsuba (n^2 -> n^1.585) and matrix-multiplication-naive-vs-strassen (n^3 -> n^2.807)."
+  "notes": "Compare integer-multiplication-schoolbook-vs-karatsuba (n^2 -> n^1.585) and matrix-multiplication-naive-vs-strassen (n^3 -> n^2.807).",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-06c_ntt_counts.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py",
+      "../../tests/test_proofs_ntt.py"
+    ],
+    "audit": "RL-107"
+  }
 }

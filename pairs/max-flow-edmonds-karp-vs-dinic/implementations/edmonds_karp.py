@@ -1,9 +1,9 @@
 """Maximum flow by Edmonds-Karp: Ford-Fulkerson with shortest (fewest-edge) augmenting paths found by BFS.
 
-Each augmentation is one BFS over the residual graph, O(V + E). Edmonds & Karp (1972) show that the
-residual distance from s to every vertex never decreases, and that each edge can be the bottleneck of an
-augmenting path at most O(V) times, so there are O(V E) augmentations: O(V E^2) time in total
-(independent of the capacity values).
+Each augmentation is one BFS over the residual graph, O(V + E). The residual distance from s to every
+vertex never decreases, and each arc can be the bottleneck of an augmenting path at most O(V) times, so there
+are O(V E) augmentations: O(V E^2) time in total (independent of the capacity values; proofs in PROOFS.md,
+section 3; the algorithm is due to Edmonds & Karp 1972).
 
 Network: (n, s, t, edges) with vertices 0..n-1, s != t, and edges a tuple of (u, v, c), c >= 0 an integer
 capacity (parallel and antiparallel edges allowed). Returns the value of a maximum s-t flow.

@@ -41,7 +41,7 @@
       "pseudocode": "P = Strassen(A, B) over Z (zero-padded to a power of two, schoolbook below 16 x 16)\nC[i][j] = 1 if P[i][j] > 0 else 0",
       "time_complexity": "Theta(n^(log2 7)) ~ Theta(n^2.807) arithmetic operations on O(log n)-bit integers: exactly 7^(log2(n/16)) * 16^3 multiplications for n a power of two >= 16.",
       "space_complexity": "Theta(n^2)",
-      "correctness": "P[i][j] = sum over k of A[i][k] B[k][j] counts the k with A[i][k] = B[k][j] = 1, so P[i][j] > 0 iff the Boolean product is 1 (the reduction of Boolean matrix multiplication to integer matrix multiplication: Fischer & Meyer 1971; Munro 1971). Strassen 1969: the seven block products combine to the product over any ring, and T(n) = 7T(n/2) + Theta(n^2) gives Theta(n^log2(7)) operations. All entries of P are in [0, n], and every intermediate value is bounded in absolute value by a polynomial in n, so the integers have O(log n) bits.",
+      "correctness": "P[i][j] = sum over k of A[i][k] B[k][j] counts the k with A[i][k] = B[k][j] = 1, so P[i][j] > 0 iff the Boolean product is 1. Strassen 1969: the seven block products combine to the product over any ring, and T(n) = 7T(n/2) + Theta(n^2) gives Theta(n^log2(7)) operations. All entries of P are in [0, n], and every intermediate value has absolute value below 2n^2, so the integers have O(log n) bits (PROOFS.md sections 4 and 5).",
       "implementation": "implementations/strassen_over_integers.py:bmm_strassen",
       "harness": {
         "scaling": {
@@ -63,7 +63,17 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "Both polynomial; the integer embedding lets Strassen lower the exponent of the Boolean product from 3 to log2(7) ~ 2.807, and any faster integer matrix multiplication algorithm transfers in the same way. Fischer & Meyer (1971) and Munro (1971) also relate Boolean matrix multiplication to the transitive closure of a directed graph (computed directly by Warshall's algorithm in Theta(n^3) Boolean operations); transitive closure is not implemented in this entry.",
+  "relationship": "Both polynomial; the integer embedding lets Strassen lower the exponent of the Boolean product from 3 to log2(7) ~ 2.807, and any faster integer matrix multiplication algorithm transfers in the same way. The relation of Boolean matrix multiplication to transitive closure is background (see background); transitive closure is not implemented in this entry.",
+  "background": [
+    {
+      "statement": "Fischer and Meyer, and Munro, relate Boolean matrix multiplication to the transitive closure of a directed graph.",
+      "source": "Fischer & Meyer 1971; Munro 1971"
+    },
+    {
+      "statement": "Warshall's algorithm computes the transitive closure of a directed graph directly.",
+      "source": "Warshall 1962"
+    }
+  ],
   "sources": [
     {
       "authors": "Fischer, M. J.; Meyer, A. R.",
@@ -92,17 +102,19 @@
       "title": "A theorem on Boolean matrices",
       "venue": "Journal of the ACM 9(1), 11-12",
       "doi": "10.1145/321105.321107",
-      "note": "Transitive closure in Theta(n^3) Boolean operations (context only; not implemented here)."
+      "note": "Context only; not implemented here."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations return identical 0/1 matrices for n = 0..10 and n = 17, 31, 40, 64 (above the recursion cutoff of 16), 3 pairs per size, with densities 0.05-0.9 and special factors (zero, all-ones, identity, permutation matrices). The independent check() computes each row of the product as the bitwise OR of the rows of B (packed into integers) selected by row i of A, a row-union formulation with no inner products and no integer arithmetic on entries. Oracle control (experiments/2026-10-06f_entries_boolean_matmul.py): on 240 seeded instances (n = 1..40) it accepts all 240 correct products and rejects all 906 wrong outputs (240 single flipped entries, 132 integer products AB that differ from the Boolean product, 157 transposed products, 137 products BA, 240 wrong shapes). Negative controls: the same Strassen code run directly on Boolean values gives wrong products on 25 of 40 random instances when + and - are both read as OR, and on 33 of 40 when they are read as XOR (arithmetic mod 2). V2 (exact counts, RESEARCH_LOG RL-047 method): random 0/1 matrices of a harness number type CountingInt that counts every scalar product (multiplication, or AND for the schoolbook method); the implementations are unchanged. On n = 16, 32, 64, 128 the counts are exactly n^3 (schoolbook) and 7^(log2(n/16)) * 16^3 (Strassen: 4096, 28672, 200704, 1404928). Fits at tolerance 0.02: alpha = 1.000 for both; rivals: schoolbook against n^log2(7) 1.069 and n^2 1.500, Strassen against n^3 0.936 and n^2 1.404, all rejected. Additions, subtractions, ORs and comparisons are not counted.",
+    "method": "V1: both implementations return identical 0/1 matrices for n = 0..10 and n = 17, 31, 40, 64 (above the recursion cutoff of 16), 3 pairs per size, with densities 0.05-0.9 and special factors (zero, all-ones, identity, permutation matrices). The independent check() computes each row of the product as the bitwise OR of the rows of B (packed into integers) selected by row i of A, a row-union formulation with no inner products and no integer arithmetic on entries. Oracle control (experiments/2026-10-06f_entries_boolean_matmul.py): on 240 seeded instances (n = 1..40) it accepts all 240 correct products and rejects all 906 wrong outputs (240 single flipped entries, 132 integer products AB that differ from the Boolean product, 157 transposed products, 137 products BA, 240 wrong shapes). Negative controls: the same Strassen code run directly on Boolean values gives wrong products on 25 of 40 random instances when + and - are both read as OR, and on 33 of 40 when they are read as XOR (arithmetic mod 2). V2 (exact counts, RESEARCH_LOG RL-047 method): random 0/1 matrices of a harness number type CountingInt that counts every scalar product (multiplication, or AND for the schoolbook method); the implementations are unchanged. On n = 16, 32, 64, 128 the counts are exactly n^3 (schoolbook) and 7^(log2(n/16)) * 16^3 (Strassen: 4096, 28672, 200704, 1404928). Fits at tolerance 0.02: alpha = 1.000 for both; rivals: schoolbook against n^log2(7) 1.069 and n^2 1.500, Strassen against n^3 0.936 and n^2 1.404, all rejected. Additions, subtractions, ORs and comparisons are not counted. Proofs: PROOFS.md proves every claim of this entry from the code (the correctness of both algorithms, including the reduction and Strassen's identities; the time and space bounds; the exact counts for all sizes of their domains, the exact addition counts and the early-exit variant; the size of the integers) and names the scripts and tests that check each one, among them tests/test_proofs_strassen.py.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/naive.py",
       "implementations/strassen_over_integers.py",
       "harness.py",
-      "../../experiments/2026-10-06f_entries_boolean_matmul.py"
+      "../../experiments/2026-10-06f_entries_boolean_matmul.py",
+      "../../tests/test_proofs_strassen.py"
     ]
   },
   "test_harness": {
@@ -126,6 +138,19 @@
     ],
     "trials": 3
   },
-  "caveats": "Costs count scalar products only (multiplications for Strassen, ANDs for the schoolbook method), as in pairs/matrix-multiplication-naive-vs-strassen; additions are not counted, and Strassen's additions are also Theta(n^log2(7)). Strassen's integers have O(log n) bits, so in bit complexity it carries an extra factor polynomial in log n; for fixed-size machine words this is a constant up to astronomically large n. For n not a power of two the matrices are padded; products of two padding zeros are plain integer products and are not counted (n = 17, padded to 32, gives 24832 counted multiplications instead of 28672), so V2 uses powers of two only. The schoolbook method here never exits early; a version that stops at the first true term is faster on dense inputs but still Theta(n^3) in the worst case (e.g. all-zero factors).",
-  "notes": "This entry isolates the step behind the mutation-pilot finding that Strassen does not survive in the Boolean semiring as written but does after embedding into the integers (research/2026-10-06d_mutation_pilot.md, section 5). The experiment's negative controls show the same: Strassen code on Boolean values with OR in place of subtraction, or over GF(2), gives wrong Boolean products."
+  "caveats": "Costs count scalar products only (multiplications for Strassen, ANDs for the schoolbook method), as in pairs/matrix-multiplication-naive-vs-strassen; additions are not counted, and Strassen's additions are also Theta(n^log2(7)). Strassen's integers have O(log n) bits (absolute value below 2n^2), so in bit complexity it carries an extra factor polynomial in log n; a signed 64-bit word holds every value for n < 2^31. For n not a power of two the matrices are padded; products of two padding zeros are plain integer products and are not counted (n = 17, padded to 32, gives 24832 counted multiplications instead of 28672), so V2 uses powers of two only. The schoolbook method here never exits early; a version that stops at the first true term makes only n^2 ANDs on all-one factors but is still Theta(n^3) in the worst case (e.g. all-zero factors; PROOFS.md section 7).",
+  "notes": "This entry isolates the step behind the mutation-pilot finding that Strassen does not survive in the Boolean semiring as written but does after embedding into the integers (research/2026-10-06d_mutation_pilot.md, section 5). The experiment's negative controls show the same: Strassen code on Boolean values with OR in place of subtraction, or over GF(2), gives wrong Boolean products.",
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "../matrix-multiplication-naive-vs-strassen/PROOFS.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py",
+      "../../experiments/2026-10-06f_entries_boolean_matmul.py",
+      "../../tests/test_proofs_strassen.py"
+    ],
+    "audit": "RL-107"
+  }
 }

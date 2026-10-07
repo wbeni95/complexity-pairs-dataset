@@ -4,8 +4,8 @@ Instance: (k, n, weights, diagonals), as in brute_force.py: vertices (r, c), r i
 weights[r][c] >= 0; edges between horizontal and vertical neighbours, plus per unit square (diagonals[r][c]):
 1 = (r, c)-(r+1, c+1), 2 = (r, c+1)-(r+1, c), 3 = both, 0 = neither.
 
-Path decomposition: the bags B_c = column c + column c+1 (c = 0..n-2) cover every edge, because every edge joins
-two vertices in the same column or in adjacent columns, so the decomposition has width 2k - 1. Consecutive bags
+Path decomposition (n >= 2): the bags B_c = column c + column c+1 (c = 0..n-2) cover every edge, because every edge
+joins two vertices in the same column or in adjacent columns, so the decomposition has width 2k - 1. Consecutive bags
 share one column, and column c separates the columns left of it from those right of it. The programme therefore
 keeps, for every column c and every subset s of column c that is independent inside the column (no two
 vertically adjacent rows: s & (s >> 1) == 0), the best weight of an independent set of columns 0..c whose
@@ -17,10 +17,11 @@ answer is the maximum of best_{n-1}; an optimal set is recovered from the stored
 
 The number of column states is F_{k+2} (Fibonacci: 2, 3, 5, 8, 13, 21 for k = 1..6). Per column the programme
 tests all F_{k+2}^2 state pairs for compatibility (O(1) word operations each) and sums the column weights
-(at most k additions per state). Time Theta(F_{k+2}^2 n) = Theta(phi^(2k) n) word operations: linear in n for
-every fixed k, exponential in k. Weight additions: exactly n P_k + (n - 1) F_{k+2} when all weights are positive,
+(at most k additions per state). Time Theta(F_{k+2}^2 n) = Theta(phi^(2k) n) word operations for n >= 2, apart
+from the final sorted() of the output set: linear in n for every fixed k, exponential in k. Weight additions:
+exactly n P_k + (n - 1) F_{k+2} for n >= 1 when all weights are positive,
 where P_k is the total number of rows over all column states (P_3 = 5, F_5 = 5: 10n - 5 for k = 3). Space
-Theta(F_{k+2} n) for the arg-max table.
+Theta(F_{k+2} n) for the arg-max table (n >= 2).
 
 Returns (maximum weight, sorted tuple of the chosen vertices (r, c)).
 """

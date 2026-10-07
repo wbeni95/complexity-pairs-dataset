@@ -12,9 +12,9 @@
       "idea": "Query x = 0, 1, 2, ... in a fixed order; answer 'balanced' at the first value different from f(0), and 'constant' after 2^(n-1) + 1 equal values (more than half the table, which no balanced function can show).",
       "model": "classical-deterministic",
       "pseudocode": "v = f(0); for x in 1..2^(n-1): if f(x) != v: return balanced; return constant",
-      "time_complexity": "2^(n-1) + 1 queries in the worst case (optimal for exact classical algorithms); at most 3 queries on average over uniformly random balanced functions, tending to 3 as n grows: the first j values agree with probability 2 prod_{i<j} (N/2 - i)/(N - i) <= 2^(1-j) (N = 2^n), and the expected number of queries is 1 plus the sum of these probabilities over j >= 1",
+      "time_complexity": "2^(n-1) + 1 queries in the worst case (optimal for exact classical algorithms; PROOFS.md §1, §6); exactly 3 - 4/(N + 2) queries on average over uniformly random balanced functions (N = 2^n), so at most 3 and tending to 3 as n grows: the first j values agree with probability 2 prod_{i<j} (N/2 - i)/(N - i) <= 2^(1-j), and the expected number of queries is 1 plus the sum of these probabilities over j >= 1 (PROOFS.md §5)",
       "space_complexity": "O(n)",
-      "correctness": "If two values differ, f is not constant, so by the promise it is balanced. If 2^(n-1) + 1 values agree, f has more than 2^(n-1) equal values, so it is not balanced, hence constant. Never wrong.",
+      "correctness": "If two values differ, f is not constant, so by the promise it is balanced. If 2^(n-1) + 1 values agree, f has more than 2^(n-1) equal values, so it is not balanced, hence constant. Never wrong (PROOFS.md §4).",
       "implementation": "implementations/classical.py:dj_classical",
       "harness": {
         "scaling": { "cost": "2**(n-1) + 1", "n_values": [2, 4, 6, 8, 10, 12, 14, 16], "measure": "reported", "shape": {"sequence": "consecutive", "n_range": [1, 16]} }
@@ -25,9 +25,9 @@
       "idea": "Query K = 20 uniformly random points; answer 'balanced' if two answers differ (certainly right), else 'constant'. Wrong only on balanced functions, with probability exactly 2^(1-K).",
       "model": "classical-randomized",
       "pseudocode": "S = {f(r_1), ..., f(r_K)} for independent uniform r_i; return balanced if |S| = 2 else constant",
-      "time_complexity": "K = 20 queries for every n: O(1); O(log(1/eps)) queries for error probability eps",
+      "time_complexity": "K = 20 queries for every n: O(1); O(log(1/eps)) queries for error probability eps (PROOFS.md §2, §4)",
       "space_complexity": "O(n)",
-      "correctness": "Constant f always gives |S| = 1. For balanced f each answer is an independent fair bit, so all K agree with probability 2 * 2^(-K) = 2^(1-K) (here 2^-19). Elementary.",
+      "correctness": "Constant f always gives |S| = 1. For balanced f each answer is an independent fair bit, so all K agree with probability 2 * 2^(-K) = 2^(1-K) (here 2^-19) (PROOFS.md §4).",
       "implementation": "implementations/randomized.py:dj_randomized",
       "harness": {
         "scaling": { "cost": "1", "n_values": [1, 2, 4, 8, 12, 16], "measure": "reported", "tolerance": 0.01, "shape": {"sequence": "consecutive", "n_range": [1, 12]} }
@@ -38,9 +38,9 @@
       "idea": "Hadamard transform, one phase-oracle query, Hadamard transform, measure. The amplitude of |0...0> is (1/N) sum_x (-1)^f(x): +-1 if f is constant and exactly 0 if f is balanced.",
       "model": "quantum",
       "pseudocode": "H^n |0>; apply |x> -> (-1)^f(x) |x>; H^n; measure; return constant iff outcome = 0",
-      "time_complexity": "1 query, exact (zero error); O(n) gates besides the oracle",
+      "time_complexity": "1 query, exact (zero error in exact arithmetic; the floating-point simulation misses with probability O(1e-15), PROOFS.md preamble); O(n) gates besides the oracle",
       "space_complexity": "n qubits",
-      "correctness": "Deutsch & Jozsa 1992 (original, two-query version); one-query version in Cleve, Ekert, Macchiavello & Mosca 1998. The final amplitude on |0...0> is (1/N) sum_x (-1)^f(x), which is +-1 or 0 under the promise, so the outcome decides with certainty.",
+      "correctness": "The final amplitude on |0...0> is (1/N) sum_x (-1)^f(x), which is +-1 or 0 under the promise, so the outcome decides with certainty in exact arithmetic (PROOFS.md §4). Credit: Deutsch & Jozsa 1992 (original, two-query version); one-query version in Cleve, Ekert, Macchiavello & Mosca 1998.",
       "implementation": "implementations/quantum.py:dj_quantum",
       "harness": {
         "v1_max_n": 10,
@@ -54,10 +54,16 @@
       "model": "classical-deterministic",
       "bound": "2^(n-1) + 1 queries in the worst case, for any algorithm that is always correct",
       "setting": "query (oracle) model, EXACT (zero-error) computation, unconditional. The same argument forces 2^(n-1) + 1 queries on every constant input for zero-error randomized (Las Vegas) algorithms. It does NOT hold for bounded-error randomized algorithms, which need only O(1) queries (see the randomized algorithm in this entry).",
-      "source": "Elementary adversary argument: answer f(x) = 0 to the first 2^(n-1) distinct queries; both the constant-0 function and a balanced function (ones on unqueried points only) remain consistent, so no exact algorithm can stop. Spelled out in this entry's correctness fields and README; the comparison with exact deterministic computation goes back to Deutsch & Jozsa 1992."
+      "source": "Proved in this entry (PROOFS.md §6), by an adversary argument: answer f(x) = 0 to the first 2^(n-1) distinct queries; both the constant-0 function and a balanced function (ones on unqueried points only) remain consistent, so no exact algorithm can stop."
     }
   ],
-  "relationship": "EXACT setting: 1 quantum query vs 2^(n-1) + 1 classical queries (deterministic, and also any zero-error randomized algorithm on constant inputs), an exponential separation in the query model. BOUNDED-ERROR setting: a classical randomized algorithm needs only O(log(1/eps)) = O(1) queries, so there is no asymptotic separation. Deutsch-Jozsa is therefore evidence for quantum advantage only against exact (zero-error) classical computation; Bernstein-Vazirani and Simon's problem were the next steps toward separations that survive classical randomness (see simon-classical-vs-quantum).",
+  "relationship": "EXACT setting: 1 quantum query vs 2^(n-1) + 1 classical queries (deterministic, and also any zero-error randomized algorithm on constant inputs), an exponential separation in the query model, both sides proved in PROOFS.md. BOUNDED-ERROR setting: a classical randomized algorithm needs only O(log(1/eps)) = O(1) queries, so there is no asymptotic separation. Deutsch-Jozsa is therefore evidence for quantum advantage only against exact (zero-error) classical computation; Bernstein-Vazirani (n vs 1 queries) and Simon's problem (exponential) give separations that survive bounded error, proved in their entries (bernstein-vazirani-classical-vs-quantum, simon-classical-vs-quantum).",
+  "background": [
+    {
+      "statement": "The original algorithm of Deutsch & Jozsa (1992) used two queries; the one-query, zero-error form implemented here is due to Cleve, Ekert, Macchiavello & Mosca (1998).",
+      "source": "Cleve, Ekert, Macchiavello & Mosca 1998, Section 3 (one evaluation of f, 'a slight improvement of Deutsch and Jozsa's original algorithm, which involves two f-controlled-NOT operations'; read in arXiv quant-ph/9708016v1; the 1992 paper's text was not read for this entry)"
+    }
+  ],
   "sources": [
     {
       "authors": "Deutsch, D.; Jozsa, R.",
@@ -77,14 +83,27 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: all three algorithms agree on the answer, which an independent check confirms by counting the ones in the full truth table, on random constant and random balanced functions for n = 1, ..., 6, 8, 10, 12, 16 (quantum simulated exactly with lib/qsim.py up to n = 10). The randomized algorithm can err (probability 2^-19 per balanced instance), so its V1 agreement is itself a probabilistic statement. V2 measures QUERY COUNTS reported through lib.qsim.Oracle. The deterministic algorithm is measured on harness.generate_scaling, the worst-case inputs for its fixed query order (both constants and f(x) = c XOR top bit); there its count is exactly 2^(n-1) + 1, so the fit against that expression is exact (alpha = 1.000). The quantum algorithm uses exactly 1 query and the randomized one exactly 20 for every n (constant-cost checks, max/min = 1.000). experiments/2026-10-07_deutsch_jozsa_checks.py verifies by exhaustion over all promise inputs for n = 1..4 that the maximum of the deterministic count is 2^(n-1) + 1 and is attained on exactly those four inputs, that the simulated quantum algorithm's P(outcome 0) is 1 or 0 to within 3.1e-15, and that the randomized error rate matches 2^(1-k) (|z| <= 0.98 for k = 2, 3, 4, 6, 8).",
-    "artifacts": ["implementations/classical.py", "implementations/randomized.py", "implementations/quantum.py", "harness.py", "../../lib/qsim.py", "../../experiments/2026-10-07_deutsch_jozsa_checks.py"]
+    "method": "V1: all three algorithms agree on the answer, which an independent check confirms by counting the ones in the full truth table, on random constant and random balanced functions for n = 1, ..., 6, 8, 10, 12, 16 (quantum simulated exactly with lib/qsim.py up to n = 10). The randomized algorithm can err (probability 2^-19 per balanced instance), so its V1 agreement is itself a probabilistic statement. V2 measures QUERY COUNTS reported through lib.qsim.Oracle. The deterministic algorithm is measured on harness.generate_scaling, the worst-case inputs for its fixed query order (both constants and f(x) = c XOR top bit); there its count is exactly 2^(n-1) + 1, so the fit against that expression is exact (alpha = 1.000). The quantum algorithm uses exactly 1 query and the randomized one exactly 20 for every n (constant-cost checks, max/min = 1.000). experiments/2026-10-07_deutsch_jozsa_checks.py verifies by exhaustion over all promise inputs for n = 1..4 that the maximum of the deterministic count is 2^(n-1) + 1 and is attained on exactly those four inputs, that the simulated quantum algorithm's P(outcome 0) is 1 or 0 to within 3.1e-15, and that the randomized error rate matches 2^(1-k) (|z| <= 0.98 for k = 2, 3, 4, 6, 8). Proofs: PROOFS.md proves every claim of this entry (the exact counts, the correctness and error of the three algorithms, the average on random balanced functions, and the exact classical lower bound) and names the deterministic checks of each (tests/test_proofs_query.py, the experiment and count-check scripts).",
+    "artifacts": ["PROOFS.md", "implementations/classical.py", "implementations/randomized.py", "implementations/quantum.py", "harness.py", "../../lib/qsim.py", "../../experiments/2026-10-07_deutsch_jozsa_checks.py", "../../tests/test_proofs_query.py"]
   },
   "test_harness": {
     "module": "harness.py",
     "v1_sizes": [1, 2, 3, 4, 5, 6, 8, 10, 12, 16],
     "trials": 6
   },
-  "caveats": "The exponential gap holds ONLY against exact classical algorithms: with any constant error probability a classical randomized algorithm uses O(1) queries, so Deutsch-Jozsa gives no separation between bounded-error classical and quantum query complexity. It is a promise (partial-function) problem, and a separation relative to an oracle; it does not imply BQP != BPP (it does not even separate the bounded-error query complexities). The V2 fit of the deterministic algorithm uses its worst-case inputs; on random balanced inputs it stops after at most 3 queries on average.",
-  "notes": "Historically the first problem for which a quantum algorithm was shown to beat every exact classical algorithm exponentially. The original 1992 algorithm used two queries; the one-query, zero-error form implemented here is from Cleve, Ekert, Macchiavello & Mosca 1998 (attribution per secondary sources; the 1992 paper's text could not be accessed for this entry, so no detail of its wording is relied on). The lower bound recorded here is proven in the entry itself and does not depend on that attribution."
+  "caveats": "The exponential gap holds ONLY against exact classical algorithms: with any constant error probability a classical randomized algorithm uses O(1) queries, so Deutsch-Jozsa gives no separation between bounded-error classical and quantum query complexity. It is a promise (partial-function) problem, and a separation relative to an oracle; it does not imply BQP != BPP (it does not even separate the bounded-error query complexities). The V2 fit of the deterministic algorithm uses its worst-case inputs; on random balanced inputs it stops after 3 - 4/(N + 2) < 3 queries on average (PROOFS.md §5).",
+  "notes": "The attribution of the two-query original and of the one-query algorithm is background (see background; the 1992 paper's text could not be accessed for this entry, so no detail of its wording is relied on). The lower bound and the exactness of the quantum algorithm are proved in PROOFS.md and do not depend on that attribution.",
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "../bernstein-vazirani-classical-vs-quantum/PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_query.py",
+      "../../experiments/2026-10-07_deutsch_jozsa_checks.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py"
+    ],
+    "audit": "RL-107"
+  }
 }

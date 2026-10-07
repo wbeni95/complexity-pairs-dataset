@@ -4,8 +4,9 @@ Formula: (n, clauses), variables 1..n, each clause a tuple of 0, 1 or 2 non-zero
 v means x_v, -v means NOT x_v). An empty clause is unsatisfiable.
 
 Assignments are enumerated as integers mask = 0, 1, ..., 2^n - 1 (bit v-1 of mask is the value of x_v). Each one is
-checked clause by clause, literal by literal, and abandoned at the first falsified clause. One check costs O(m)
-literal evaluations, so the total is O(2^n * m). On an unsatisfiable formula all 2^n assignments are examined.
+checked clause by clause, literal by literal, and abandoned at the first falsified clause. One check costs at most 2m
+literal evaluations and O(m + 1) steps, so the total is O(2^n * (m + 1)). On an unsatisfiable formula all 2^n
+assignments are examined.
 
 Returns a tuple of n booleans (x_1, ..., x_n) satisfying every clause, or None if there is none.
 """

@@ -12,9 +12,9 @@
       "idea": "f(e_i) is the i-th bit of s.",
       "model": "classical-deterministic",
       "pseudocode": "for i in 0..n-1: s_i = f(e_i)",
-      "time_complexity": "n queries (optimal classically, also for randomized algorithms that succeed with probability > 1/2)",
+      "time_complexity": "n queries (optimal classically, also for randomized algorithms that succeed with probability > 1/2; PROOFS.md §1, §4)",
       "space_complexity": "O(n)",
-      "correctness": "f(e_i) = s_i by definition.",
+      "correctness": "f(e_i) = s_i by definition (PROOFS.md §3).",
       "implementation": "implementations/classical.py:bv_classical",
       "harness": {
         "scaling": { "cost": "n", "n_values": [2, 4, 8, 12, 16], "measure": "reported", "shape": {"sequence": "consecutive", "n_range": [1, 16]} }
@@ -27,7 +27,7 @@
       "pseudocode": "H^n |0>; apply |x> -> (-1)^f(x) |x>; H^n; measure",
       "time_complexity": "1 query (O(n) gates besides the oracle)",
       "space_complexity": "n qubits",
-      "correctness": "H^n sum_x (-1)^(s.x) |x> / sqrt(2^n) = |s> (Bernstein & Vazirani 1997). Deterministic: succeeds with probability 1.",
+      "correctness": "H^n sum_x (-1)^(s.x) |x> / sqrt(2^n) = |s>, since sum_x (-1)^(z.x) is 2^n for z = 0 and 0 otherwise (PROOFS.md §3; credit: Bernstein & Vazirani 1997). Deterministic: succeeds with probability 1 in exact arithmetic; in the floating-point simulation the intended outcome has probability 1 - O(1e-15) (PROOFS.md, preamble).",
       "implementation": "implementations/quantum.py:bv_quantum",
       "harness": {
         "v1_max_n": 10,
@@ -41,10 +41,16 @@
       "model": "classical-randomized",
       "bound": "n queries for every success probability > 1/2, randomized algorithms included",
       "setting": "query (oracle) model, unconditional",
-      "source": "Proved in this entry: for a uniformly random s, the answers s.x_1, ..., s.x_q to q queries (chosen adaptively) leave s uniform on the solutions of q linear equations over GF(2), an affine subspace of dimension >= n - q, so a deterministic q-query algorithm outputs s with probability at most 2^(q-n). Averaging over its coins, every randomized q-query algorithm also succeeds with probability at most 2^(q-n) on average over s, hence on some s; success > 1/2 on every s therefore needs q >= n. The problem is from Bernstein & Vazirani 1997"
+      "source": "Proved in this entry (PROOFS.md §4): for a uniformly random s, the answers s.x_1, ..., s.x_q to q queries (chosen adaptively) leave s uniform on the solutions of q linear equations over GF(2), an affine subspace of dimension >= n - q, so a deterministic q-query algorithm outputs s with probability at most 2^(q-n). Averaging over its coins, every randomized q-query algorithm also succeeds with probability at most 2^(q-n) on average over s, hence on some s; success > 1/2 on every s therefore needs q >= n. The problem is from Bernstein & Vazirani 1997"
     }
   ],
-  "relationship": "Proven separation in the query model: n classical queries vs 1 quantum query. It is only a linear (polynomial) gap. The recursive version of the problem (Bernstein & Vazirani 1997) gives a superpolynomial separation, and Simon's problem an exponential one (see simon-classical-vs-quantum).",
+  "relationship": "Proven separation in the query model, both sides proved in PROOFS.md: n classical queries (optimal also for randomized algorithms with success probability > 1/2) vs 1 quantum query. It is only a linear (polynomial) gap. Simon's problem gives an exponential one (see simon-classical-vs-quantum); the superpolynomial separation of its recursive version is background, not proved here.",
+  "background": [
+    {
+      "statement": "A recursive version of this problem gives a superpolynomial separation between quantum and classical query complexity.",
+      "source": "Bernstein & Vazirani 1997"
+    }
+  ],
   "sources": [
     {
       "authors": "Bernstein, E.; Vazirani, U.",
@@ -56,8 +62,8 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both algorithms return s, which an independent check confirms against the full truth table, for n = 0, ..., 6, 8, 10 (quantum, simulated exactly with lib/qsim.py) and also 16 (classical). V2 measures QUERY COUNTS reported through lib.qsim.Oracle: classical fits n exactly, and quantum is constant (1 query) for every n. Simulation time is exponential in n and is not the claim.",
-    "artifacts": ["implementations/classical.py", "implementations/quantum.py", "harness.py", "../../lib/qsim.py"]
+    "method": "V1: both algorithms return s, which an independent check confirms against the full truth table, for n = 0, ..., 6, 8, 10 (quantum, simulated exactly with lib/qsim.py) and also 16 (classical). V2 measures QUERY COUNTS reported through lib.qsim.Oracle: classical fits n exactly, and quantum is constant (1 query) for every n. Simulation time is exponential in n and is not the claim. Proofs: PROOFS.md proves every claim of this entry (the exact counts, the correctness of both algorithms and the classical lower bound) and names the deterministic checks of each (tests/test_proofs_query.py, the count-check scripts).",
+    "artifacts": ["PROOFS.md", "implementations/classical.py", "implementations/quantum.py", "harness.py", "../../lib/qsim.py", "../../tests/test_proofs_query.py"]
   },
   "test_harness": {
     "module": "harness.py",
@@ -65,5 +71,17 @@
     "trials": 4
   },
   "caveats": "A separation relative to an oracle. It does not prove that quantum computers are more powerful for any explicit, efficiently computable function, and it does not imply BQP != BPP.",
-  "notes": "Smallest example of a proven quantum query advantage; a building block of the recursive Fourier sampling separation."
+  "notes": "A simple proven quantum query advantage (n classical queries vs 1 quantum query, both proved in PROOFS.md); a recursive version of the problem gives a superpolynomial separation (see background).",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_query.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py",
+      "../../tests/test_qsim.py"
+    ],
+    "audit": "RL-107"
+  }
 }

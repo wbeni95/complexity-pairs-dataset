@@ -1,10 +1,16 @@
 """AKS primality test, following the six steps of Agrawal, Kayal, Saxena,
-"PRIMES is in P", Annals of Mathematics 160 (2004), Section 4.
+"PRIMES is in P", Annals of Mathematics 160 (2004).
 
-Deterministic and unconditional; polynomial in the bit length of N.
+Deterministic and unconditional; polynomial in the bit length of N (proofs in ../PROOFS.md).
 Written for clarity, not speed. Polynomials mod (X^r - 1, N) are lists of r
 coefficients; squaring uses Kronecker substitution (pack into one big integer,
 multiply once, unpack), which keeps pure Python tolerable.
+
+In the bounds log2(N)^2 (step 2) and sqrt(phi(r)) log2(N) (step 5) the code uses an exact rational
+lam = A / 2^64 with log2(N) <= lam <= bit length of N (_log2_upper, integer arithmetic only) in place of
+log2(N), and computes floor(lam^2) and floor(sqrt(phi(r)) lam) exactly. These can exceed the values with
+log2(N) (for example at N = 229533671885360152), which the correctness proof, written for any such lam,
+allows; a floating-point log2 could make them smaller than the values with log2(N), which it does not.
 """
 import math
 
@@ -15,9 +21,9 @@ def is_prime_aks(N: int) -> bool:
     # Step 1: if N = a^b with a > 1, b > 1, N is composite.
     if _is_perfect_power(N):
         return False
-    # Step 2: smallest r with ord_r(N) > log2(N)^2.
-    log2n = math.log2(N)
-    max_k = math.floor(log2n ** 2)
+    # Step 2: smallest r with ord_r(N) > lam^2, where lam = A / 2^J >= log2(N).
+    A, J = _log2_upper(N)
+    max_k = (A * A) >> (2 * J)  # floor(lam^2)
     r = 2
     while not (math.gcd(r, N) == 1 and _order_exceeds(N, r, max_k)):
         r += 1
@@ -29,7 +35,7 @@ def is_prime_aks(N: int) -> bool:
     if N <= r:
         return True
     # Step 5: check (X + a)^N == X^N + a  mod (X^r - 1, N).
-    limit = math.floor(math.sqrt(_totient(r)) * log2n)
+    limit = math.isqrt(_totient(r) * A * A) >> J  # floor(sqrt(phi(r)) * lam)
     for a in range(1, limit + 1):
         lhs = _pow_x_plus_a(a, N, r)
         rhs = [0] * r
@@ -39,6 +45,26 @@ def is_prime_aks(N: int) -> bool:
             return False
     # Step 6.
     return True
+
+
+def _log2_upper(N: int, J: int = 64) -> tuple[int, int]:
+    """(A, J) with log2(N) <= A / 2^J <= bit length of N, for N >= 1, in exact integer arithmetic.
+
+    N = 2^e * y with 1 <= y < 2. Each of the J steps squares y and halves it when the square is >= 2,
+    which yields the next binary digit of log2(y); every value is rounded UP to P fraction bits, so the
+    digits never undershoot and A / 2^J stays an upper bound.
+    """
+    e = N.bit_length() - 1
+    P = J + 64                    # fraction bits of the fixed-point value Y / 2^P
+    Y = -((-N << P) >> e)         # ceil(y * 2^P)
+    bits = 0
+    for _ in range(J):
+        Y = -((-Y * Y) >> P)      # ceil(Y^2 / 2^P)
+        bits <<= 1
+        if Y >= 2 << P:           # square >= 2: digit 1, then halve (rounding up)
+            bits |= 1
+            Y = -((-Y) >> 1)
+    return (e << J) + bits + 1, J
 
 
 def _iroot(N: int, b: int) -> int:

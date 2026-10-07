@@ -11,11 +11,10 @@
 
 **Why it is here.** Strassen's algorithm needs subtraction, which the Boolean semiring ({0,1}, OR, AND) does not have.
 The fix is to change the problem, not the algorithm: read the bits as integers and compute the integer product P = AB.
-P[i][j] counts the k with A[i][k] = B[k][j] = 1, so C[i][j] = 1 exactly when P[i][j] > 0 (Fischer & Meyer 1971; Munro
-1971). Every faster integer matrix multiplication algorithm transfers the same way. The integers stay in a range
-polynomial in n, so they have O(log n) bits. Fischer & Meyer and Munro also tie Boolean matrix multiplication to
-transitive closure (Warshall's algorithm computes it in Θ(n³)); transitive closure is not implemented here. The
-integer version of the pair is [matrix-multiplication-naive-vs-strassen](../matrix-multiplication-naive-vs-strassen/).
+P[i][j] counts the k with A[i][k] = B[k][j] = 1, so C[i][j] = 1 exactly when P[i][j] > 0. Every faster integer matrix
+multiplication algorithm transfers the same way. The integers stay in a range
+polynomial in n (below 2n² in absolute value), so they have O(log n) bits. The integer version of the pair is
+[matrix-multiplication-naive-vs-strassen](../matrix-multiplication-naive-vs-strassen/).
 
 **Verification.**
 - *V1:* both implementations return identical matrices for n = 0..10, 17, 31, 40, 64 (above the cutoff of 16), at
@@ -35,8 +34,18 @@ integer version of the pair is [matrix-multiplication-naive-vs-strassen](../matr
 | Strassen vs n^log₂7 | 1.000 | n³: 0.936, n²: 1.404 |
 
 **Caveats.** Only products are counted, as in the integer entry; Strassen's additions are also Θ(n^log₂7). In bit
-complexity Strassen carries an extra factor polylogarithmic in n for its O(log n)-bit integers. For n that is not a
-power of two the matrices are padded, and products of two padding zeros are not counted: n = 17 gives 24832 instead of
-28672. V2 therefore uses powers of two.
+complexity Strassen carries an extra factor polylogarithmic in n for its O(log n)-bit integers (a signed 64-bit word
+holds every value for n < 2³¹). For n that is not a power of two the matrices are padded, and products of two padding
+zeros are not counted: n = 17 gives 24832 instead of 28672. V2 therefore uses powers of two.
+
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry from the code: the correctness of both
+algorithms (the reduction P[i][j] > 0, Strassen's identities, the recursion and the padding), the time and space
+bounds, the exact counts for all sizes of their domains, the exact addition count 5632·7^k − 1536·4^k for n = 16·2^k,
+the early-exit variant and the size of the integers. It names the scripts and tests that check each one
+(`tests/test_proofs_strassen.py` among them).
+
+**Background (cited, not proved here).** Fischer & Meyer (1971) and Munro (1971) relate Boolean matrix
+multiplication to the transitive closure of a directed graph; Warshall's algorithm (1962) computes the closure
+directly. Transitive closure is not implemented here.
 
 **Sources.** Fischer & Meyer, SWAT 1971. Munro, IPL 1971. Strassen, Numer. Math. 1969. Warshall, J. ACM 1962.

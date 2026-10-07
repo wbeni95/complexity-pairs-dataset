@@ -10,7 +10,7 @@ the inclusion-exclusion timings against 2^n alone (to see whether the factor n i
 Run from the repository root:  python experiments/2026-10-07_chromatic_probe.py
 
 Outcome (2026-10-07). Part 1 (deterministic): chi of the V2 instances for n = 6..18 is
-4, 5, 4, 6, 6, 7, 7, 8, 8, 8, 8, 9, 10 (chi/n between 0.50 and 0.71); the DP's inner-iteration count equals
+4, 5, 4, 6, 6, 7, 7, 8, 8, 8, 8, 9, 10 (chi/n between 0.50 and 5/7 = 0.714); the DP's inner-iteration count equals
 3^n - 2^n for every n = 6..12 (665 ... 527345). Part 2 (console): subset DP alpha = 0.963 vs 3^n over
 n = 6..12 (local slopes 0.84, 0.90 at the two smallest steps, then 0.94..1.03), so entry.json uses 7..13;
 inclusion-exclusion over n = 9..16: alpha = 0.954 vs n 2^n, 1.069 vs 2^n (both inside the tolerance:

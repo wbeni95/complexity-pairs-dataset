@@ -19,6 +19,16 @@ FIB = Path(validate.REPO) / "pairs" / "fibonacci-naive-vs-dp"
 BV = Path(validate.REPO) / "pairs" / "bernstein-vazirani-classical-vs-quantum"
 
 
+def copy_entry(src, dst):
+    """Copy an entry into the temporary repository without its `proof` field: the check-mark rules need the real
+    repository's RESEARCH_LOG and check files, and are tested in tests/test_proof_mark.py, not here."""
+    shutil.copytree(src, dst, ignore=shutil.ignore_patterns("__pycache__"))
+    path = Path(dst) / "entry.json"
+    entry = json.loads(path.read_text(encoding="utf-8"))
+    if entry.pop("proof", None) is not None:
+        path.write_text(json.dumps(entry, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
 class CostExpressionTests(unittest.TestCase):
     def test_arithmetic(self):
         self.assertAlmostEqual(validate.eval_cost("n**2 * log(n)", 8), 64 * 2.0794415, places=5)
@@ -39,7 +49,7 @@ class ValidatorRejectsBadEntries(unittest.TestCase):
         (self.tmp / "pairs").mkdir()
         (self.tmp / "staging").mkdir()
         self.entry_dir = self.tmp / "pairs" / "fibonacci-naive-vs-dp"
-        shutil.copytree(FIB, self.entry_dir, ignore=shutil.ignore_patterns("__pycache__"))
+        copy_entry(FIB, self.entry_dir)
         self._old_repo = validate.REPO
         validate.REPO = self.tmp
         validate._module_cache.clear()
@@ -122,7 +132,7 @@ class ValidatorRejectsBadEntries(unittest.TestCase):
     def test_false_query_count_claim_fails(self):
         # Claim the 1-query quantum algorithm needs n queries: the reported-count fit must catch it.
         d = self.tmp / "pairs" / BV.name
-        shutil.copytree(BV, d, ignore=shutil.ignore_patterns("__pycache__"))
+        copy_entry(BV, d)
         path = d / "entry.json"
         entry = json.loads(path.read_text(encoding="utf-8"))
         entry["algorithms"][1]["harness"]["scaling"] = {"cost": "n", "n_values": [1, 2, 4, 8], "measure": "reported"}

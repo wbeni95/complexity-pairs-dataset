@@ -65,17 +65,19 @@
       "title": "Quantum complexity theory",
       "venue": "SIAM Journal on Computing 26(5), 1411-1473",
       "doi": "10.1137/S0097539796300921",
-      "note": "Cited for the quantum link in notes (the Hadamard transform H^(x)n in the Bernstein-Vazirani algorithm), not for the classical costs."
+      "note": "Cited for the quantum link in notes, not for the classical costs."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree on random vectors with entries in [-9, 9] for n = 0..8 and n = 11 (naive up to n = 11), 3 trials each, and pass an independent oracle in harness.check: the XOR convolution theorem tested character by character with popcount parities and no transform code. For n <= 8 all 2^n characters are checked, which determines h uniquely (complete check); for n = 11, 48 seeded random characters (probabilistic spot check). V2 (measure 'reported', RESEARCH_LOG RL-047 method): the measured quantity is the exact number of ring operations (+, -, *, //) performed by the unchanged implementations, counted by an instrumented integer type in the harness. Counts equal the closed forms at every measured n (experiments/2026-10-07b_xor_convolution_counts.py: naive n = 0..9, FWHT n = 0..14): naive 2 * 4^n, FWHT (3n + 2) * 2^n. Fits at tolerance 0.05: naive alpha = 1.000 against 4^n (rivals n*2^n: 1.587, n*4^n: 0.885, rejected); FWHT alpha = 0.987 against n*2^n (the 0.012 deviation is the exact lower-order term 2 * 2^n; rivals 2^n: 1.162, n^2*2^n: 0.858, 4^n: 0.581, rejected). The tolerance 0.05 is four times the FWHT's exact deviation and below every rival gap; the validator's log-factor diagnostic is resolved for the FWHT (0.917 against n log n 2^n, 1.068 against n/log n 2^n).",
+    "method": "V1: both implementations agree on random vectors with entries in [-9, 9] for n = 0..8 and n = 11 (naive up to n = 11), 3 trials each, and pass an independent oracle in harness.check: the XOR convolution theorem tested character by character with popcount parities and no transform code. For n <= 8 all 2^n characters are checked, which determines h uniquely (complete check); for n = 11, 48 seeded random characters (probabilistic spot check). V2 (measure 'reported', RESEARCH_LOG RL-047 method): the measured quantity is the exact number of ring operations (+, -, *, //) performed by the unchanged implementations, counted by an instrumented integer type in the harness. Counts equal the closed forms at every measured n (experiments/2026-10-07b_xor_convolution_counts.py: naive n = 0..9, FWHT n = 0..14): naive 2 * 4^n, FWHT (3n + 2) * 2^n. Fits at tolerance 0.05: naive alpha = 1.000 against 4^n (rivals n*2^n: 1.587, n*4^n: 0.885, rejected); FWHT alpha = 0.987 against n*2^n (the 0.012 deviation is the exact lower-order term 2 * 2^n; rivals 2^n: 1.162, n^2*2^n: 0.858, 4^n: 0.581, rejected). The tolerance 0.05 is four times the FWHT's exact deviation and below every rival gap; the validator's log-factor diagnostic is resolved for the FWHT (0.917 against n log n 2^n, 1.068 against n/log n 2^n). Proofs: PROOFS.md proves every claim of this entry from the code (the correctness of both algorithms, the completeness of the V1 check for n <= 8, the time and space bounds, the exact counts for all sizes of their domains, the operand sizes, and the remarks in the caveats and notes) and names the scripts and tests that check each one, among them tests/test_proofs_xor_convolution.py.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/naive.py",
       "implementations/fwht.py",
       "harness.py",
-      "../../experiments/2026-10-07b_xor_convolution_counts.py"
+      "../../experiments/2026-10-07b_xor_convolution_counts.py",
+      "../../tests/test_proofs_xor_convolution.py"
     ]
   },
   "test_harness": {
@@ -83,6 +85,26 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 11],
     "trials": 3
   },
-  "caveats": "Costs count ring operations on integers with O(n) bits (entries bounded in the harness); with entries of absolute value below 2^B the operands stay below 2^(B + n) in the two forward transforms, the pointwise products below 2^(2B + 2n), and the operands of the inverse transform below 2^(2B + 3n) (each butterfly stage at most doubles the largest absolute value). Index arithmetic (XOR, loop counters) is not counted. The counts measure arithmetic, not wall-clock time; timing would not resolve the log factor (RESEARCH_LOG RL-048). Over a ring where N is not invertible (e.g. mod 2) the final division fails and h must be computed differently; this entry works over the integers.",
-  "notes": "Link to the quantum entries, stated precisely. W = 2^(n/2) H^(x)n, where H^(x)n is the n-qubit Hadamard transform used by Deutsch-Jozsa, Bernstein-Vazirani and Forrelation (staging/forrelation). The FWHT's stage factorisation is the classical counterpart of applying one Hadamard gate per qubit: a classical machine pays 2^n additions/subtractions per stage on the full vector (this is how lib/qsim.py simulates H^(x)n), while a quantum circuit applies each stage as one gate on one qubit. This is NOT a quantum speed-up for computing the transform: a quantum computer does not output the 2^n transformed amplitudes, it only lets one sample an index s with probability |amplitude_s|^2. The advantages recorded in those entries are in ORACLE QUERIES, not in computing W v. The Forrelation quantity Phi(f, g) = N^(-3/2) sum_y (Wf)[y] g[y] is computed exactly classically by one FWHT after reading all 2N values, as the first classical algorithm in staging/forrelation says. The same divide-by-bits structure gives Yates' zeta transform (see subset-sum-zeta-transform-naive-vs-yates), with the 2x2 matrix [[1,0],[1,1]] in place of [[1,1],[1,-1]]."
+  "caveats": "Costs count ring operations on integers with O(n) bits (entries bounded in the harness); with entries of absolute value below 2^B the operands stay below 2^(B + n) in the two forward transforms, the pointwise products below 2^(2B + 2n), and the operands of the inverse transform below 2^(2B + 3n) (each butterfly stage at most doubles the largest absolute value). Index arithmetic (XOR, loop counters) is not counted. The counts measure arithmetic, not wall-clock time; timing would not resolve the log factor (RESEARCH_LOG RL-048). Over a ring in which N is a zero divisor, e.g. Z_2 (where N = 0 for n >= 1), the transforms do not determine h, so h must be computed differently; over the integers N is not a unit, but N h determines h and the division is exact (PROOFS.md section 8). This entry works over the integers.",
+  "background": [
+    {
+      "statement": "Observing (measuring) a quantum state does not output its 2^n amplitudes: it returns one basis index s, with probability |amplitude_s|^2.",
+      "source": "Bernstein & Vazirani 1997"
+    }
+  ],
+  "notes": "Link to the quantum entries, stated precisely. W = 2^(n/2) H^(x)n, where H^(x)n is the n-qubit Hadamard transform used by the Deutsch-Jozsa, Bernstein-Vazirani and Forrelation entries of this repository (staging/forrelation). The FWHT's stage factorisation is the classical counterpart of applying one Hadamard gate per qubit: a classical machine pays 2^n additions/subtractions per stage on the full vector (this is how lib/qsim.py simulates H^(x)n), while a quantum circuit applies each stage as one gate on one qubit (PROOFS.md section 9). This is NOT a quantum speed-up for computing the transform, because a quantum computation does not output the 2^n transformed amplitudes (see background). The advantages recorded in those entries are in ORACLE QUERIES, not in computing W v. The Forrelation quantity Phi(f, g) = N^(-3/2) sum_y (Wf)[y] g[y] is computed exactly classically by one FWHT after reading all 2N values, as the first classical algorithm in staging/forrelation says. The same divide-by-bits structure gives Yates' zeta transform (see subset-sum-zeta-transform-naive-vs-yates), with the 2x2 matrix [[1,0],[1,1]] in place of [[1,1],[1,-1]].",
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "../subset-sum-zeta-transform-naive-vs-yates/PROOFS.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-07b_xor_convolution_counts.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py",
+      "../../tests/test_proofs_xor_convolution.py",
+      "../../tests/test_proofs_zeta.py"
+    ],
+    "audit": "RL-107"
+  }
 }

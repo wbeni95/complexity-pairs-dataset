@@ -1,7 +1,7 @@
 {
   "id": "knapsack-01-brute-vs-dp",
   "title": "0/1 knapsack: subset enumeration vs meet in the middle vs pseudo-polynomial DP",
-  "problem_statement": "Given n items with positive integer weights w_i and values v_i and an integer capacity W, compute the maximum total value of a subset whose total weight is at most W.",
+  "problem_statement": "Given n items with positive integer weights w_i and values v_i and an integer capacity W >= 0, compute the maximum total value of a subset whose total weight is at most W.",
   "input": {
     "parameter": "n = number of items.",
     "size_measure": "Theta(n log(max value) + n log(max weight) + log W) bits. W is a number, so the input contains only log W bits for it."
@@ -12,9 +12,9 @@
       "idea": "Evaluate all 2^n subsets.",
       "model": "classical-deterministic",
       "pseudocode": "for each subset S: if w(S) <= W: best = max(best, v(S))",
-      "time_complexity": "Theta(2^n n)",
-      "space_complexity": "Theta(n)",
-      "correctness": "Exhaustive.",
+      "time_complexity": "Theta(2^n n) on every input (n >= 1): exactly n 2^n inner iterations",
+      "space_complexity": "Theta(n) with the input; beyond it O(1) values (the n-bit subset mask and three running sums)",
+      "correctness": "Exhaustive over all 2^n subsets (PROOFS.md section 1).",
       "implementation": "implementations/brute_force.py:knapsack_brute",
       "harness": {
         "v1_max_n": 14,
@@ -29,9 +29,9 @@
       "idea": "Split the items into halves, enumerate the 2^(n/2) subsets of each, sort one half by weight with a running maximum of value, and binary-search the best partner for every subset of the other half.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(2^(n/2) n)",
+      "time_complexity": "Theta(2^(n/2) n) in the worst case, attained whenever W >= the total weight; O(2^(n/2) n) on every input; both bounds under the machine-model assumptions in background: the built-in sort is O(m log m), bisect_right runs the documented halving loop (PROOFS.md section 2)",
       "space_complexity": "Theta(2^(n/2))",
-      "correctness": "Every subset is a union of a left subset and a right subset; for a fixed left subset the best right partner is the most valuable one of weight <= W - w(left), which the prefix maximum over the weight-sorted list returns (Horowitz & Sahni 1974).",
+      "correctness": "Every subset is a union of a left subset and a right subset; for a fixed left subset the best right partner is the most valuable one of weight <= W - w(left), which the prefix maximum over the weight-sorted list returns (PROOFS.md section 2; credit: Horowitz & Sahni 1974).",
       "implementation": "implementations/meet_in_the_middle.py:knapsack_mitm",
       "harness": {
         "scaling": {
@@ -45,9 +45,9 @@
       "idea": "best[c] = max value achievable with capacity c, updated item by item in decreasing c so each item is used at most once.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(n W): pseudo-polynomial (polynomial in the VALUE W, exponential in its bit length)",
-      "space_complexity": "Theta(W)",
-      "correctness": "Standard DP; optimal substructure over (item prefix, capacity).",
+      "time_complexity": "Theta(n W) in the worst case: exactly sum_i max(0, W - w_i + 1) inner iterations, so O(n (W + 1)) on every input and Theta(n W) whenever every w_i <= W/2; pseudo-polynomial (polynomial in the VALUE W, exponential in its bit length)",
+      "space_complexity": "Theta(W) beyond the input (W >= 1)",
+      "correctness": "Invariant: after t items, best[c] is the largest value of a subset of the first t items of weight <= c; the descending loop reads best[c - w] before this pass changes it, so each item is used at most once (PROOFS.md section 3).",
       "implementation": "implementations/dp.py:knapsack_dp",
       "harness": {
         "scaling": {
@@ -61,7 +61,7 @@
   "secondary_tags": [
     "T8"
   ],
-  "relationship": "Enumeration Theta(2^n n) -> meet in the middle Theta(2^(n/2) n): an exponential-to-better-exponential improvement (T8), measured by V2 runtime fits (the meet-in-the-middle bound is not derived here). The DP Theta(nW) beats both whenever W << 2^(n/2), but it is NOT polynomial in the input size: adding one bit to W adds one bit to the input yet roughly doubles the DP's running time when W is much larger than the item weights. No algorithm polynomial in the input size is known; 0/1 knapsack is NP-hard (Karp 1972), so one would imply P = NP.",
+  "relationship": "Enumeration Theta(2^n n) -> meet in the middle Theta(2^(n/2) n) in the worst case (under the machine-model assumptions in background: the built-in sort is O(m log m), bisect_right runs the documented halving loop): an exponential-to-better-exponential improvement (T8), proved in PROOFS.md and also measured by V2 runtime fits. The DP Theta(nW) beats both whenever W << 2^(n/2), but it is NOT polynomial in the input size: adding one bit to W adds one bit to the input yet roughly doubles the DP's running time when W is much larger than the item weights (PROOFS.md section 3). That 0/1 knapsack is NP-hard, so that an algorithm polynomial in the input size would imply P = NP, is background (cited, not proved here).",
   "sources": [
     {
       "authors": "Karp, R. M.",
@@ -76,25 +76,58 @@
       "title": "Computing partitions with applications to the knapsack problem",
       "venue": "Journal of the ACM 21(2), 277-292",
       "doi": "10.1145/321812.321823",
-      "note": "Meet-in-the-middle O(2^(n/2) n): an exponential-to-better-exponential improvement."
+      "note": "Abstract (checked against the Crossref record): a technique that improves the dynamic programming methods by a square root factor, also for the general 0-1 knapsack problem."
     },
     {
       "authors": "Ibarra, O. H.; Kim, C. E.",
       "year": 1975,
       "title": "Fast approximation algorithms for the knapsack and sum of subset problems",
       "venue": "Journal of the ACM 22(4), 463-468",
-      "doi": "10.1145/321906.321909",
-      "note": "FPTAS: (1 - eps)-approximation in time polynomial in n and 1/eps."
+      "doi": "10.1145/321906.321909"
+    },
+    {
+      "authors": "Auger, N.; Jugé, V.; Nicaud, C.; Pivoteau, C.",
+      "year": 2018,
+      "title": "On the Worst-Case Complexity of TimSort",
+      "venue": "arXiv preprint",
+      "arxiv": "1805.08612",
+      "note": "Abstract: a proof that the Python version of TimSort runs in O(n log n). Background only; it concerns the earlier TimSort merge policy, not the powersort merge order that the current CPython list sort uses (see listsort.txt)."
+    },
+    {
+      "authors": "Python Software Foundation",
+      "year": 2026,
+      "title": "CPython source code: Lib/bisect.py and Modules/_bisectmodule.c",
+      "url": "https://github.com/python/cpython",
+      "note": "Read on 2026-10-07 (main branch): both the pure-Python bisect_right and its C accelerator run the halving loop with one < comparison per iteration. Cited for a machine-model assumption (background)."
+    },
+    {
+      "authors": "Munro, J. I.; Wild, S.",
+      "year": 2018,
+      "title": "Nearly-Optimal Mergesorts: Fast, Practical Sorting Methods That Optimally Adapt to Existing Runs",
+      "venue": "26th Annual European Symposium on Algorithms (ESA 2018), LIPIcs 112, 63:1-63:16",
+      "doi": "10.4230/LIPIcs.ESA.2018.63",
+      "arxiv": "1805.04154",
+      "note": "Background only: Theorem 6 of the arXiv version bounds the merge cost and the comparisons of powersort with a plain merge."
+    },
+    {
+      "authors": "Python Software Foundation (CPython source; original text by T. Peters)",
+      "year": 2002,
+      "title": "Objects/listsort.txt: the description of CPython's list sort",
+      "venue": "CPython source tree, main branch",
+      "url": "https://github.com/python/cpython/blob/main/Objects/listsort.txt",
+      "note": "Background only. Read on 2026-10-07; the current text states that the code uses the powersort merge strategy of Munro and Wild, and that merges switch to a galloping mode."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: all three agree on random instances (weights 1..20, values 1..30, capacity = half the total weight; enumeration up to n = 14, the others up to n = 24) and respect an independent greedy lower bound. V2: runtimes fitted against 2^n n, 2^(n/2) n and n^2. The DP's n^2 is specific to this harness: weights are bounded, so W = Theta(n) and Theta(nW) = Theta(n^2). The fit says nothing about large W, which is the pseudo-polynomial case.",
+    "method": "V1: all three agree on random instances (weights 1..20, values 1..30, capacity = half the total weight; enumeration up to n = 14, the others up to n = 24) and respect an independent greedy lower bound. V2: runtimes fitted against 2^n n, 2^(n/2) n and n^2 (measurements, not proofs). The DP's n^2 is specific to this harness: weights are bounded, so W = Theta(n) and Theta(nW) = Theta(n^2) (for n >= 40 the inner iterations lie between (n-2) floor(n/2) and n(10n+1); PROOFS.md section 3). The fit says nothing about large W, which is the pseudo-polynomial case. Proofs: PROOFS.md proves every claim of the entry (correctness of all three algorithms, the exact iteration counts, the time and space bounds); tests/test_proofs_knapsack.py checks the computable facts on stated ranges.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/brute_force.py",
       "implementations/meet_in_the_middle.py",
       "implementations/dp.py",
-      "harness.py"
+      "harness.py",
+      "../../tests/test_proofs_knapsack.py"
     ]
   },
   "test_harness": {
@@ -102,6 +135,33 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 14, 18, 24],
     "trials": 5
   },
-  "caveats": "Cautionary entry (START_HERE section 4): pseudo-polynomial is not polynomial. Primary T6 because a polynomial algorithm in the input size is open (and implies P = NP); secondary T8 for enumeration -> meet in the middle. The DP is recorded for its teaching value, not as a pair.",
-  "notes": "Good teaching case for the input-size definition in START_HERE section 1."
+  "caveats": "Cautionary entry (START_HERE section 4): pseudo-polynomial is not polynomial. Primary T6 rests on background: 0/1 knapsack is NP-hard, so an algorithm polynomial in the input size would imply P = NP (see background); secondary T8 for enumeration -> meet in the middle (PROOFS.md section 4; the meet-in-the-middle bound is under the machine-model assumptions in background: the built-in sort is O(m log m), bisect_right runs the documented halving loop). The DP is recorded for its teaching value, not as a pair.",
+  "notes": "Good teaching case for the input-size definition in START_HERE section 1.",
+  "background": [
+    {
+      "statement": "0/1 knapsack is NP-hard (its decision version is NP-complete), so an algorithm polynomial in the input size would imply P = NP; none is known.",
+      "source": "Karp 1972"
+    },
+    {
+      "statement": "Ibarra and Kim give fast approximation algorithms for the knapsack problem ('Fast approximation algorithms for the knapsack and sum of subset problems'); their guarantees are not restated here.",
+      "source": "Ibarra & Kim 1975 (Journal of the ACM 22(4); title, checked against the Crossref record)"
+    },
+    {
+      "statement": "Machine-model assumption of this entry: the built-in sort (sorted() and list.sort()) runs in O(m log m) comparisons and time in the worst case on m items. Basis, as far as the sources go: the current CPython list sort orders its merges by the powersort rule of Munro and Wild (listsort.txt), and with a plain merge powersort makes at most m H + 3m - r <= m log2 m + 3m comparisons on m items forming r runs, where H is the entropy of the run lengths (Munro & Wild 2018, Theorem 6 of the arXiv version). CPython's merges also gallop, which that theorem does not cover, so the assumption is not proved in this repository. Auger, Jugé, Nicaud and Pivoteau (2018) prove O(m log m) for the earlier TimSort merge policy of Python.",
+      "source": "Munro & Wild 2018, Theorem 6 (arXiv version), for the plain-merge bound; Python Software Foundation, Objects/listsort.txt, for the merge order of the current CPython list sort; Auger, Jugé, Nicaud & Pivoteau 2018 (arXiv:1805.08612, abstract), for the earlier merge policy"
+    },
+    {
+      "statement": "Machine-model assumption: on CPython, bisect_right(a, x) runs the halving loop while lo < hi: mid = (lo + hi) // 2; if x < a[mid]: hi = mid; else: lo = mid + 1, with one < comparison per iteration (the pure-Python version and the C accelerator agree), and returns the number of entries <= x of the sorted list a.",
+      "source": "Python Software Foundation 2026, CPython source code (Lib/bisect.py, Modules/_bisectmodule.c), read 2026-10-07"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_knapsack.py"
+    ],
+    "audit": "RL-107"
+  }
 }

@@ -1,4 +1,4 @@
-# Collision problem: Θ(N^½) classical vs Θ(N^⅓) quantum queries (Brassard–Høyer–Tapp)
+# Collision problem: Θ(N^½) classical vs O(N^⅓) quantum queries (Brassard–Høyer–Tapp)
 
 **Type:** T9 (quantum separation, query model) · **Verification:** V2 (query counts)
 
@@ -7,16 +7,18 @@
 | Algorithm | Model | Expected queries | Implementation |
 |---|---|---|---|
 | Birthday search (random order) | classical, randomized | Θ(√N), ≈ 1.2533·√N | [classical.py](implementations/classical.py) |
-| BHT, known number of marked points | quantum (Las Vegas) | Θ(N^⅓); 2.56–2.57·N^⅓ for n = 15..30 (exact evaluation) | [bht.py](implementations/bht.py) `collision_bht` |
+| BHT, known number of marked points | quantum (Las Vegas) | Θ(N^⅓); 2.536–2.572·N^⅓ for n = 15..30 (exact evaluation) | [bht.py](implementations/bht.py) `collision_bht` |
 | BHT with BBHT exponential search | quantum (Las Vegas) | Θ(N^⅓); 3.84–3.90·N^⅓ for n = 18..30 (exact evaluation) | [bht.py](implementations/bht.py) `collision_bht_exponential` |
 
 **Bounds on both sides.**
 - *Classical, Ω(√N).* On a random 2-to-1 function, every next query completes a pair with probability exactly i/(N−i)
-  after i collision-free queries, whatever the algorithm does. This is the birthday bound.
+  after i collision-free queries, whatever the algorithm does. This is the birthday bound (proved in
+  [PROOFS.md](PROOFS.md) §6, with the exact N/2 + 1 for deterministic exact algorithms).
 - *Quantum, Ω(N^⅓).* Cited, not proved here: Aaronson & Shi (2004). Their proof needs a codomain of size ≥ 3N/2;
   the harness's codomain has size 2N. Kutin (2005) and Ambainis (2005) removed that condition.
-- *Upper bound.* BHT attains O(N^⅓) (Brassard, Høyer & Tapp, Theorem 1; cited, not proved here). The separation
-  is polynomial, not exponential, and its tightness rests on the cited quantum lower bound.
+- *Upper bound.* BHT attains O(N^⅓) expected queries on every input (proved in [PROOFS.md](PROOFS.md) §5; credit:
+  Brassard, Høyer & Tapp, Theorem 1). The separation is polynomial, not exponential, and its tightness rests on the
+  cited quantum lower bound (background).
 
 **How BHT works.** It queries k = round(N^⅓) points classically. If none of them collide, exactly k other points are
 their partners, and Grover search over the whole domain finds one in about (π/4)·√(N/k) iterations.
@@ -40,6 +42,11 @@ take Θ(√N).
 
 **Caveats.** This is a separation relative to an oracle. It does not imply BQP ≠ BPP. BHT's algorithm also needs
 N^⅓ classical values to be readable in superposition.
+
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry except the cited quantum lower bound: the
+exact counts, the law and exact expectation 2^N/C(N, N/2) of the classical search, the correctness and expected counts
+of both BHT versions, and the classical lower bounds. It names the deterministic checks of each
+([tests/test_proofs_query.py](../../tests/test_proofs_query.py), the experiment and the count-check scripts).
 
 **Sources.** Brassard, Høyer & Tapp, LATIN '98 (arXiv:quant-ph/9705002). Boyer, Brassard, Høyer & Tapp, Fortschr. Phys. 1998.
 Aaronson & Shi, J. ACM 2004. Kutin, Theory of Computing 2005. Ambainis, Theory of Computing 2005. Simon, SIAM J. Comput. 1997.

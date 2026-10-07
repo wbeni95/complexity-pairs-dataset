@@ -11,8 +11,8 @@ GF(2), given densely.
    are exactly 2^(n - r) solutions.
 3. One solution by back substitution, with every free (non-pivot) variable set to 0.
 
-Cost: at most min(m, n) pivot steps, each XORing at most m rows of at most n + 1 entries: O(m n min(m, n)) bit
-operations, Theta(n^3) for square systems in the worst case. On the V2 family (see harness.py) exactly
+Cost: at most min(m, n) pivot steps, each XORing at most m rows of at most n + 1 entries: O(m n min(m, n) + m + n)
+bit operations and steps, Theta(n^3) for square systems in the worst case. On the V2 family (see harness.py) exactly
 n (n^2 + 6n - 4) / 3 operations.
 
 Returns (number of solutions, one solution as a tuple of n bits, or None if there is none).

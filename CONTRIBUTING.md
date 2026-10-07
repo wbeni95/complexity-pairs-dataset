@@ -130,6 +130,38 @@ mathematics; the audit and the readers do. Staged entries (V0) cannot carry the 
 is removed in a new RESEARCH_LOG entry, and the old entry is not deleted. The verification level (V0–V2) is a
 separate statement about the measurements; the check mark is about proofs.
 
+## Background versus claims
+
+An entry separates what it **claims** from what it only **cites**:
+
+- **Claims** are statements the entry itself makes about its problem and algorithms: correctness, complexities,
+  exact counts on stated domains, lower bounds, separations, factual caveats. Every claim needs a written proof in
+  the repository (for example in `PROOFS.md`) and a deterministic check, as the check mark requires.
+- **Background** goes in the optional `background` field. It holds statements about the literature or the state of
+  research that the entry relies on for context but does not prove: NP-hardness, "no polynomial-time algorithm is
+  known", conditional lower bounds, the reason for a T6 tag. Each item names its source, as precisely as possible
+  (theorem or section). Background is shown under its own heading in generated READMEs, and the check mark does not
+  cover it.
+
+A tag is a classification. When a tag rests on background (for example T6, or a lower bound known from the
+literature), the entry says so.
+
+**Machine model.** Proofs about code count operations in a stated model:
+
+- **Elementary operations** cost O(1) each, unless the entry states otherwise. They are allocating, appending
+  to and indexing lists, dictionary and set operations (each counted as one operation), and arithmetic and
+  comparisons on machine-size integers. One cost-model paragraph in PROOFS.md states this for each entry.
+- **Library routines with a non-trivial cost**, such as `sorted`, `list.sort`, `bisect`, `itertools.permutations`,
+  `str.find` and arithmetic on big integers, are charged a stated cost as a **machine-model assumption**:
+  - the assumption is listed in the entry's `background`, citing exactly what its source supports;
+  - every claim that depends on it is worded as conditional on it;
+  - an assumption that rests on no published source names, as its `source`, the PROOFS.md section that states it.
+
+  A claim worded that way counts as proved.
+
+O and Θ have their usual asymptotic meaning. A bound in a parameter that can be 0 is written so that it is true
+on every infinite family of inputs, for example O(2ⁿ(m+1)), or it carries the hypothesis it needs (m ≥ 1).
+
 ## Tagging decisions (2026-10)
 
 1. **Exp → better exp gets its own tag, T8** (super-poly → faster super-poly). If polynomial time is open for the

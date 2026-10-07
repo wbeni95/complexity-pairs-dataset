@@ -13,8 +13,8 @@
       "model": "classical-deterministic",
       "pseudocode": "best = 0; for mask in 0..2^n-1: scan i = 0..n-1, for the i in mask check a[i] > previous chosen value; if increasing: best = max(best, popcount(mask)); return best",
       "time_complexity": "Theta(2^n n) on every input (each of the 2^n masks is scanned over all n positions, with no early exit)",
-      "space_complexity": "O(1) words",
-      "correctness": "Exhaustive: every subsequence corresponds to exactly one index subset.",
+      "space_complexity": "O(1) words (the n-bit mask counted as one word, n <= word length; O(n) bits in general)",
+      "correctness": "Exhaustive: every subsequence corresponds to exactly one index subset (PROOFS.md section 4).",
       "implementation": "implementations/subset_enumeration.py:lis_subsets",
       "harness": {
         "v1_max_n": 14,
@@ -38,7 +38,7 @@
       "pseudocode": "for i in 0..n-1: L[i] = 1 + max({L[j] : j < i, a[j] < a[i]} or {0}); return max(L or {0})",
       "time_complexity": "Theta(n^2) on every input: n(n-1)/2 comparisons",
       "space_complexity": "Theta(n)",
-      "correctness": "An increasing subsequence ending at i is either a[i] alone or an increasing subsequence ending at some j < i with a[j] < a[i], extended by a[i]; optimal substructure gives the recurrence (CLRS Exercise 15.4-5).",
+      "correctness": "An increasing subsequence ending at i is either a[i] alone or an increasing subsequence ending at some j < i with a[j] < a[i], extended by a[i]; optimal substructure gives the recurrence (CLRS, 3rd ed.; PROOFS.md section 5).",
       "implementation": "implementations/quadratic_dp.py:lis_quadratic",
       "harness": {
         "v1_max_n": 1500,
@@ -60,9 +60,9 @@
       "idea": "Maintain tails[k] = the smallest possible last element of a strictly increasing subsequence of length k + 1 seen so far. tails is strictly increasing, so each new element replaces the first entry >= it (found by binary search) or is appended; the answer is len(tails).",
       "model": "classical-deterministic",
       "pseudocode": "tails = []; for x in a: k = first index with tails[k] >= x (binary search); if k = len(tails): append x else tails[k] = x; return len(tails)",
-      "time_complexity": "O(n log L) <= O(n log n), L = the answer; Theta(n log n) in the worst case, e.g. on increasing input (L = n), which is the V2 scaling input",
+      "time_complexity": "O(n (1 + log L)) <= O(n log n) for n >= 2, L = the answer (at most n (1 + log2 L) comparisons); Theta(n log n) in the worst case, e.g. on increasing input (L = n), which is the V2 scaling input; not Theta(n log L) on every input (PROOFS.md section 7)",
       "space_complexity": "Theta(L) <= Theta(n)",
-      "correctness": "Invariant: after reading a prefix, tails[k] is the minimum last element over all strictly increasing subsequences of length k + 1 in that prefix, and tails is strictly increasing; placing x at the first entry >= x preserves this. This is the first row of Schensted's insertion (Schensted 1961); its length is the LIS length.",
+      "correctness": "Invariant: after reading a prefix, tails[k] is the minimum last element over all strictly increasing subsequences of length k + 1 in that prefix, and tails is strictly increasing; placing x at the first entry >= x preserves this, and len(tails) is the LIS length (PROOFS.md section 6). For distinct elements tails is the first row of Schensted's insertion tableau (Schensted 1961).",
       "implementation": "implementations/patience.py:lis_patience",
       "harness": {
         "scaling": {
@@ -91,24 +91,21 @@
       "year": 1961,
       "title": "Longest increasing and decreasing subsequences",
       "venue": "Canadian Journal of Mathematics 13, 179-191",
-      "doi": "10.4153/CJM-1961-015-3",
-      "note": "Insertion into a Young tableau; the length of the first row equals the length of the longest increasing subsequence."
+      "doi": "10.4153/CJM-1961-015-3"
     },
     {
       "authors": "Fredman, M. L.",
       "year": 1975,
       "title": "On computing the length of longest increasing subsequences",
       "venue": "Discrete Mathematics 11(1), 29-35",
-      "doi": "10.1016/0012-365X(75)90103-X",
-      "note": "The O(n log n) algorithm and its comparison complexity."
+      "doi": "10.1016/0012-365X(75)90103-X"
     },
     {
       "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
       "year": 2009,
       "title": "Introduction to Algorithms (3rd ed.)",
       "venue": "MIT Press",
-      "isbn": "978-0-262-03384-8",
-      "note": "Exercises 15.4-5 (O(n^2) algorithm) and 15.4-6 (O(n log n) algorithm)."
+      "isbn": "978-0-262-03384-8"
     },
     {
       "authors": "Logan, B. F.; Shepp, L. A.",
@@ -127,13 +124,15 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: all three implementations agree with each other and with an independent oracle (in harness.py): the LIS length equals the LCS length of a and sorted(set(a)), computed by the textbook LCS table, for n <= 400. Inputs are random lists with many ties (so strictness matters) plus sorted, reversed and constant lists, n = 0..14 (subset enumeration up to n = 14), 30, 100, 400 and 1500 (quadratic DP up to n = 1500; at n = 1500 only the DP and patience sorting are compared). V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md) uses strictly increasing lists with random gaps, the worst case for patience sorting, and measures the exact number of ELEMENT COMPARISONS made by the unchanged implementations, counted by an instrumented element type (CountingKey in harness.py). Every count equals a closed form in n: subset enumeration n 2^(n-1) - 2^n + 1 (20481 ... 2097153 at n = 12..18; this counts comparisons, not the 2^n n loop steps, which are integer operations the harness cannot see), alpha = 1.014 against 2^n n; quadratic DP n(n-1)/2 (4950 ... 1279200 at n = 100, 200, 400, 800, 1600), alpha = 1.002 against n^2; patience sorting sum_{j=2..n} floor(log2 j) = n log2 n - c n with c = 1.92 to 1.96 (113631, 387248, 1468946, 4875732 at n = 10000, 30000, 100000, 300000), alpha = 1.012 against n log n. The n ranges were moved up (from n = 10..16 and 1000..100000 used for timing) so that the leading term dominates: on the old ranges the same closed forms give alpha = 1.019 (subset enumeration) and 1.018 (patience sorting). Tolerance 0.03: exact counts carry no timing noise, so the band only covers lower-order terms (largest |alpha - 1| here 0.014) and stays below half the distance to the nearest rival. Rivals that must NOT fit, all rejected: subset enumeration against 2^n (alpha = 1.113) and 2^n n^2 (0.931); quadratic DP against n log n (1.713) and n^2 log n (0.923); patience sorting against n (1.105), n log^2 n (0.933) and n^2 (0.553). The validator's log-factor diagnostic is resolved for the DP and for patience sorting; for the subset enumeration it is not (alpha = 0.982 against 2^n n log n), which does not affect its claim against 2^n and 2^n n^2. experiments/2026-10-07b_count_v2_inversions_lis.py reproduces every count above, except that it runs the subset enumeration only at n = 10..16 and evaluates the closed form at n = 17 and 18 (the validator's own V2 run counts n = 12..18).",
+    "method": "V1: all three implementations agree with each other and with an independent oracle (in harness.py): the LIS length equals the LCS length of a and sorted(set(a)), computed by the textbook LCS table, for n <= 400. Inputs are random lists with many ties (so strictness matters) plus sorted, reversed and constant lists, n = 0..14 (subset enumeration up to n = 14), 30, 100, 400 and 1500 (quadratic DP up to n = 1500; at n = 1500 only the DP and patience sorting are compared). V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md) uses strictly increasing lists with random gaps, the worst case for patience sorting, and measures the exact number of ELEMENT COMPARISONS made by the unchanged implementations, counted by an instrumented element type (CountingKey in harness.py). Every count equals a closed form in n: subset enumeration n 2^(n-1) - 2^n + 1 (20481 ... 2097153 at n = 12..18; this counts comparisons, not the 2^n n loop steps, which are integer operations the harness cannot see), alpha = 1.014 against 2^n n; quadratic DP n(n-1)/2 (4950 ... 1279200 at n = 100, 200, 400, 800, 1600), alpha = 1.002 against n^2; patience sorting sum_{j=2..n} floor(log2 j) = n log2 n - c n with c = 1.92 to 1.96 (113631, 387248, 1468946, 4875732 at n = 10000, 30000, 100000, 300000), alpha = 1.012 against n log n. The n ranges were moved up (from n = 10..16 and 1000..100000 used for timing) so that the leading term dominates: on the old ranges the same closed forms give alpha = 1.019 (subset enumeration) and 1.018 (patience sorting). Tolerance 0.03: exact counts carry no timing noise, so the band only covers lower-order terms (largest |alpha - 1| here 0.014) and stays below half the distance to the nearest rival. Rivals that must NOT fit, all rejected: subset enumeration against 2^n (alpha = 1.113) and 2^n n^2 (0.931); quadratic DP against n log n (1.713) and n^2 log n (0.923); patience sorting against n (1.105), n log^2 n (0.933) and n^2 (0.553). The validator's log-factor diagnostic is resolved for the DP and for patience sorting; for the subset enumeration it is not (alpha = 0.982 against 2^n n log n), which does not affect its claim against 2^n and 2^n n^2. experiments/2026-10-07b_count_v2_inversions_lis.py reproduces every count above, except that it runs the subset enumeration only at n = 10..16 and evaluates the closed form at n = 17 and 18 (the validator's own V2 run counts n = 12..18). Proofs: PROOFS.md proves every claim of this entry from the code (the correctness of the three algorithms, including the patience-sorting invariant; the time bounds, with the bound n (1 + log2 L) for patience sorting and a family on which it is not Theta(n log L); the space bounds; the exact counts for all sizes of their domains; the LCS reduction of the oracle) and names the scripts and tests that check each one, among them tests/test_proofs_lis.py.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/subset_enumeration.py",
       "implementations/quadratic_dp.py",
       "implementations/patience.py",
       "harness.py",
-      "../../experiments/2026-10-07b_count_v2_inversions_lis.py"
+      "../../experiments/2026-10-07b_count_v2_inversions_lis.py",
+      "../../tests/test_proofs_lis.py"
     ]
   },
   "test_harness": {
@@ -141,6 +140,28 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 30, 100, 400, 1500],
     "trials": 5
   },
-  "caveats": "Patience sorting costs Theta(n log L) for answer L. On increasing input (used for V2) that is Theta(n log n). On uniformly random permutations L / sqrt(n) -> 2 (Logan & Shepp 1977; Vershik & Kerov 1977), and log L ~ (1/2) log n is still Theta(log n). Fredman (1975) analyses the comparison complexity of computing the LIS length; we record no lower bound from it because the paper's exact statement has not been checked here. The subset enumeration deliberately has no early exit, so its Theta(2^n n) holds on every input.",
-  "notes": "The quadratic DP is the standard textbook dynamic program; the O(n log n) method is often called patience sorting, after the card game. LIS is also LCS(a, sorted(set(a))), the reduction used by the V1 oracle; see lcs-brute-vs-dp."
+  "caveats": "Patience sorting costs O(n (1 + log L)) for answer L, and Theta(n log n) on increasing input (used for V2). It is not Theta(n log L) on every input: n - L decreasing elements followed by L larger increasing ones (answer L + 1) cost Theta(n) comparisons for L = floor(sqrt(n)) (PROOFS.md section 7). The behaviour of L on random permutations and Fredman's analysis are background (see background). The subset enumeration deliberately has no early exit, so its Theta(2^n n) holds on every input.",
+  "background": [
+    {
+      "statement": "Logan and Shepp, and Vershik and Kerov, study the limiting form of random Young tableaux (titles); what this implies for the answer L on uniformly random permutations is not stated or checked here.",
+      "source": "Logan & Shepp 1977; Vershik & Kerov 1977"
+    },
+    {
+      "statement": "Fredman analyses the comparison complexity of computing the length of a longest increasing subsequence; no lower bound from it is recorded here, because the paper's exact statement has not been checked.",
+      "source": "Fredman 1975"
+    }
+  ],
+  "notes": "The quadratic DP is the textbook dynamic program (CLRS, 3rd ed.); this entry calls the O(n log n) method patience sorting. LIS is also LCS(a, sorted(set(a))), the reduction used by the V1 oracle (PROOFS.md section 8); see lcs-brute-vs-dp.",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-07b_count_v2_inversions_lis.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py",
+      "../../tests/test_proofs_lis.py"
+    ],
+    "audit": "RL-107"
+  }
 }

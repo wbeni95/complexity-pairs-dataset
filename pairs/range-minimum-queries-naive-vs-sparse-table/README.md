@@ -14,8 +14,8 @@ length. The minimum is idempotent, so precomputing the minima of all power-of-tw
 each from the previous one) makes every query two lookups.
 
 **Worst case.** Scanning is quadratic only when the queries are long. The scaling family uses n ranges, each
-longer than n/2, for a total scanned length of 0.75·n². For short queries scanning is linear, so the pair
-is stated for long queries.
+longer than n/2; the expected total scanned length is exactly n(3n/4 + 1) when 4 divides n, and the seeded instances
+measure 0.75·n² within 0.5%. For short queries scanning is linear, so the pair is stated for long queries.
 
 **Verification.** V1: both agree with each other and with an independent segment-tree oracle on random
 values (with many ties) and mixed query kinds. V2 uses exact comparison counts. The scaling values are
@@ -31,7 +31,13 @@ under CPython 3.12.10 and 3.14.2 (RL-069).
 Tolerance is 0.03. The log factor is now resolved; the earlier timing fit could not tell n log n from n
 (α = 0.989 vs 1.100 in the probe).
 
-**Beyond.** Linear preprocessing with O(1) queries is possible: Bender & Farach-Colton reduce RMQ to LCA
-and back to ±1 RMQ, and Fischer & Heun give a space-efficient scheme.
+**Beyond (background, cited; not proved here).** See Bender & Farach-Colton (2000), *The LCA problem revisited*, and
+Fischer & Heun (2011), who give space-efficient preprocessing schemes for range minimum queries on static arrays
+(title).
+
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry from the code: the correctness of both
+algorithms, the time and space bounds, the properties of the scaling family, the exact counts for all sizes of their
+domains, and the remark on other idempotent operations. It names the scripts and tests that check each one
+(`tests/test_proofs_rmq.py` among them).
 
 **Sources.** Bender & Farach-Colton, LATIN 2000. Fischer & Heun, SIAM J. Comput. 40(2), 2011.

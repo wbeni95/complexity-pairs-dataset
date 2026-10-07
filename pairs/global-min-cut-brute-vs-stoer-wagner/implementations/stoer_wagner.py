@@ -8,7 +8,8 @@ always adding the remaining vertex most tightly connected to A (maximum-adjacenc
 two vertices added, the "cut of the phase" (t against everything else, of weight w(A - t, t)) is a minimum s-t
 cut. The global minimum cut either separates s and t (then it is at most the cut of the phase) or it does not
 (then s and t can be merged). So the answer is the lightest cut of the phase over n - 1 phases, merging s and t
-after each phase. A phase on k remaining vertices costs Theta(k^2) with plain arrays, Theta(n^3) in total.
+after each phase. A phase on k remaining vertices costs Theta(k^2) with plain arrays, Theta(n^3) in total
+(each dictionary access counted as one operation).
 """
 
 

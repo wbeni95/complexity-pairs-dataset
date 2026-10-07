@@ -10,11 +10,16 @@
 | Merge sort | Θ(n log n) on every input | [merge_sort.py](implementations/merge_sort.py) |
 
 **Why it's a pair.** Each element move in insertion sort removes exactly one inversion, and a random list has
-about n²/4 of them. Merge sort's divide and conquer needs only log₂ n levels of linear merging.
+about n²/4 of them in expectation. Merge sort's divide and conquer needs only ⌈log₂ n⌉ levels of linear merging.
 
 **Lower bound.** Any comparison sort needs log₂(n!) = n log₂ n − O(n) comparisons, in the worst case and on
-average, and therefore in expectation for randomized comparison sorts too (Knuth §5.3.1, plus Yao's principle).
-Merge sort is optimal in this model. Integer sorting outside it (radix sort, Han–Thorup) can be faster.
+average, and therefore in expectation for randomized comparison sorts that are always correct (Knuth, TAOCP Vol. 3,
+credit, plus Yao's principle; our own
+proof of all three cases is in [PROOFS.md](PROOFS.md), section 8). Merge sort is optimal in this model.
+
+**Background (cited, not proved here).** Outside the comparison model integers can be sorted faster: Han & Thorup
+(2002) sort n integers in O(n·√(log log n)) expected time and linear space. (On the harness range [−n, n] counting
+sort already needs only O(n) operations; [PROOFS.md](PROOFS.md), section 10.)
 
 **Verification.** V1: agreement with each other and with `sorted()` (oracle only), with no input mutation.
 V2 counts **key comparisons exactly**: the harness wraps the random values in an instrumented key type
@@ -26,4 +31,10 @@ sort; n (1.126), n log² n (0.918) and n² (0.563) for merge sort. So the log fa
 earlier timing fit could not do. Details: `experiments/2026-10-07b_count_v2_sorting.py` and
 `research/2026-10-07b_count_based_v2.md`.
 
-**Sources.** Knuth, TAOCP Vol. 3 (2nd ed.), §5.2.1, §5.2.4, §5.3.1. CLRS (3rd ed.), ch. 2 and §8.1.
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry from the code: the correctness of both
+algorithms (and the stability of merge sort), insertion sort's Θ(n + I) with its worst case and exact average case,
+merge sort's comparison bounds on every input, the Ω(n log n) lower bound for comparison sorts, the space bounds, and
+the exact counts for all sizes of their domains. It names the scripts and tests that check each one
+(`tests/test_proofs_sorting.py` among them).
+
+**Sources.** Knuth, TAOCP Vol. 3 (2nd ed.). CLRS (3rd ed.).

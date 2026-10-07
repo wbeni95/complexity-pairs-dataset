@@ -12,9 +12,9 @@
       "idea": "For each of the n sources, start with distance 0 at the source and infinity elsewhere, and relax every edge in n - 1 full passes. A shortest path has at most n - 1 edges, so after pass k every vertex whose shortest path has <= k edges has its final distance.",
       "model": "classical-deterministic",
       "pseudocode": "for s in V: dist = [inf]*n; dist[s] = 0; repeat n-1 times: for (u, v, w) in E: dist[v] = min(dist[v], dist[u] + w); row s of D = dist",
-      "time_complexity": "Theta(n^2 m) for m >= 1 edges (n sources x (n - 1) passes x m relaxations, no early exit), plus Theta(n^2) to list the edges: Theta(n^4) when m = Theta(n^2); exactly n^2 (n-1)^2 relaxations on the complete digraphs used for timing",
-      "space_complexity": "Theta(m) for the edge list plus Theta(n^2) for the output",
-      "correctness": "Bellman 1958: by induction on k, after k passes dist[v] <= the weight of a shortest s-v path with at most k edges, and dist[v] is always the weight of some s-v walk. Without negative cycles some shortest path is simple (<= n - 1 edges), so n - 1 passes suffice.",
+      "time_complexity": "Theta(n^2 m) for m >= 1 edges (n sources x (n - 1) passes x m relaxations, no early exit), plus Theta(n^2) to list the edges: Theta(n^4) when m = Theta(n^2); exactly n^2 (n-1)^2 relaxations on the complete digraphs used for timing (PROOFS.md sections 1 and 5)",
+      "space_complexity": "Theta(m) for the edge list plus Theta(n^2) for the output (PROOFS.md section 6)",
+      "correctness": "Bellman 1958: by induction on k, after k passes dist[v] <= the weight of a shortest s-v path with at most k edges, and dist[v] is always the weight of some s-v walk. Without negative cycles some shortest path is simple (<= n - 1 edges), so n - 1 passes suffice. Complete proof (also for negative weights without a negative cycle reachable from the source): PROOFS.md section 3.",
       "implementation": "implementations/bellman_ford.py:apsp_bellman_ford",
       "harness": {
         "v1_max_n": 30,
@@ -26,9 +26,9 @@
       "idea": "Dynamic programming over the set of allowed intermediate vertices: after considering vertex k, D[i][j] is the length of a shortest i-j path whose intermediate vertices all lie in {0..k}, and D[i][j] = min(D[i][j], D[i][k] + D[k][j]) adds vertex k.",
       "model": "classical-deterministic",
       "pseudocode": "D = W (inf for missing edges, 0 on the diagonal); for k in V: for i in V: for j in V: D[i][j] = min(D[i][j], D[i][k] + D[k][j])",
-      "time_complexity": "Theta(n^3) on every input (exactly n^3 relaxation steps; independent of m)",
-      "space_complexity": "Theta(n^2)",
-      "correctness": "Floyd 1962 (shortest paths); the same triple loop computes the transitive closure of a Boolean matrix (Warshall 1962). Invariant: after iteration k, D[i][j] is the minimum over i-j paths with intermediate vertices in {0..k}; a shortest such path either avoids k or passes through it once (no negative cycles), splitting into two paths with intermediates in {0..k-1}. Updating row k in place during iteration k is safe because D[k][k] = 0 leaves row and column k unchanged.",
+      "time_complexity": "Theta(n^3) on every input (exactly n^3 relaxation steps; independent of m; PROOFS.md sections 2 and 5)",
+      "space_complexity": "Theta(n^2) (PROOFS.md section 6)",
+      "correctness": "Credit: Floyd 1962; Warshall 1962. Invariant: after iteration k, D[i][j] is the minimum over i-j paths with intermediate vertices in {0..k}; a shortest such path either avoids k or passes through it once (no negative cycles), splitting into two paths with intermediates in {0..k-1}. Updating row k in place during iteration k is safe because D[k][k] = 0 leaves row and column k unchanged. Complete proof (also for negative weights without a negative cycle): PROOFS.md section 4.",
       "implementation": "implementations/floyd_warshall.py:apsp_floyd_warshall",
       "harness": {
         "v1_max_n": 60,
@@ -37,7 +37,7 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "Theta(n^2 m) -> Theta(n^3): on dense digraphs (m = Theta(n^2)) this is Theta(n^4) -> Theta(n^3). Running a single-source algorithm n times repeats work that Floyd-Warshall shares across sources through its intermediate-vertex recursion. The gap depends on density: the two bounds coincide for m = Theta(n); Floyd-Warshall's is smaller by the factor m/n whenever m = omega(n) (by the factor n on dense graphs), and for m = o(n) Bellman-Ford from every source is the faster one. For non-negative weights, n runs of array-based Dijkstra are also Theta(n^3) on dense graphs. Williams (2014; SIAM J. Comput. 2018) gave a randomized algorithm running in n^3 / 2^Omega((log n)^(1/2)) time on the real RAM.",
+  "relationship": "Theta(n^2 m) -> Theta(n^3): on dense digraphs (m = Theta(n^2)) this is Theta(n^4) -> Theta(n^3). Running a single-source algorithm n times repeats work that Floyd-Warshall shares across sources through its intermediate-vertex recursion. The gap depends on density: the two bounds coincide for m = Theta(n); Floyd-Warshall's is smaller by the factor m/n whenever m = omega(n) (by the factor n on dense graphs), and for m = o(n) Bellman-Ford from every source is the faster one. Both bounds hold on every input and are proved in PROOFS.md (sections 1, 2 and 5). A faster randomized algorithm and the fine-grained status of APSP are listed under background.",
   "sources": [
     {
       "authors": "Floyd, R. W.",
@@ -51,8 +51,7 @@
       "year": 1962,
       "title": "A theorem on Boolean matrices",
       "venue": "Journal of the ACM 9(1), 11-12",
-      "doi": "10.1145/321105.321107",
-      "note": "The same triple loop for transitive closure."
+      "doi": "10.1145/321105.321107"
     },
     {
       "authors": "Bellman, R.",
@@ -66,8 +65,7 @@
       "year": 1977,
       "title": "Efficient algorithms for shortest paths in sparse networks",
       "venue": "Journal of the ACM 24(1), 1-13",
-      "doi": "10.1145/321992.321993",
-      "note": "Reweighting plus one Dijkstra run per source, the standard choice for sparse graphs."
+      "doi": "10.1145/321992.321993"
     },
     {
       "authors": "Williams, R. R.",
@@ -86,14 +84,36 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree with each other and with an independent oracle (Dijkstra with a binary heap from every source, in harness.py) on random digraphs with edge density 0.1, 0.3, 0.6 or 1.0 and weights in [0, 20] (zero-weight edges, ties and unreachable pairs occur), n = 0..6, 8, 10, 15, 20, 30 (Bellman-Ford up to n = 30) and n = 45, 60 (Floyd-Warshall). V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md): on complete digraphs with weights in [1, 1000] (both algorithms do the same work on every input of a given n and m, so these are worst-case inputs), the measured quantity is the exact number of RELAXATION STEPS of the unchanged implementations, counted as additions by an instrumented weight type (CountingWeight in harness.py; one addition per relaxation step). Bellman-Ford x n: exactly n^2 (n-1)^2 at n = 8, 10, 13, 16, 20, 25, 32, 40 (3136 ... 2433600); alpha = 1.000 against n^2 (n-1)^2. Floyd-Warshall: exactly n^3 - n at n = 32, 48, 64, 96, 128, 160, 200 (32736 ... 7999800); the n steps with i = j = k add the implementation's own diagonal zeros and are not visible to the weight type; alpha = 1.000 against n^3. With the counting weights both implementations return the same distances as with plain integers (checked at n = 5, 12, 20). Tolerance 0.03: the counts are exact closed forms, so the band only covers lower-order terms (largest |alpha - 1| here 0.0002) and stays far below the distance to the rivals. Rivals that must NOT fit, both rejected: Bellman-Ford x n against n^3 (alpha = 1.377) and Floyd-Warshall against n^2 (n-1)^2 (0.745). The log-factor diagnostic is also resolved (Bellman-Ford 0.921 / 1.094, Floyd-Warshall 0.929 / 1.083). For comparison, the earlier timing fits gave alpha = 0.972 (Bellman-Ford) and 0.918 (Floyd-Warshall, local slopes rising from 0.90 to 0.97 because of lower-order loop overhead) in experiments/2026-10-07_apsp_timing_probe.py, round 2. experiments/2026-10-07b_count_v2_apsp_strings.py reproduces every count above.",
-    "artifacts": ["implementations/bellman_ford.py", "implementations/floyd_warshall.py", "harness.py", "../../experiments/2026-10-07_apsp_timing_probe.py", "../../experiments/2026-10-07_apsp_bellman_ford_early_exit.py", "../../experiments/2026-10-07b_count_v2_apsp_strings.py"]
+    "method": "V1: both implementations agree with each other and with an independent oracle (Dijkstra with a binary heap from every source, in harness.py) on random digraphs with edge density 0.1, 0.3, 0.6 or 1.0 and weights in [0, 20] (zero-weight edges, ties and unreachable pairs occur), n = 0..6, 8, 10, 15, 20, 30 (Bellman-Ford up to n = 30) and n = 45, 60 (Floyd-Warshall). V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md): on complete digraphs with weights in [1, 1000] (both algorithms do the same work on every input of a given n and m, so these are worst-case inputs), the measured quantity is the exact number of RELAXATION STEPS of the unchanged implementations, counted as additions by an instrumented weight type (CountingWeight in harness.py; one addition per relaxation step). Bellman-Ford x n: exactly n^2 (n-1)^2 at n = 8, 10, 13, 16, 20, 25, 32, 40 (3136 ... 2433600); alpha = 1.000 against n^2 (n-1)^2. Floyd-Warshall: exactly n^3 - n at n = 32, 48, 64, 96, 128, 160, 200 (32736 ... 7999800); the n steps with i = j = k add the implementation's own diagonal zeros and are not visible to the weight type; alpha = 1.000 against n^3. With the counting weights both implementations return the same distances as with plain integers (checked at n = 5, 12, 20). Tolerance 0.03: the counts are exact closed forms, so the band only covers lower-order terms (largest |alpha - 1| here 0.0002) and stays far below the distance to the rivals. Rivals that must NOT fit, both rejected: Bellman-Ford x n against n^3 (alpha = 1.377) and Floyd-Warshall against n^2 (n-1)^2 (0.745). The log-factor diagnostic is also resolved (Bellman-Ford 0.921 / 1.094, Floyd-Warshall 0.929 / 1.083). For comparison, the earlier timing fits gave alpha = 0.972 (Bellman-Ford) and 0.918 (Floyd-Warshall, local slopes rising from 0.90 to 0.97 because of lower-order loop overhead) in experiments/2026-10-07_apsp_timing_probe.py, round 2. experiments/2026-10-07b_count_v2_apsp_strings.py reproduces every count above. Proofs: PROOFS.md proves every claim of this entry from the code (the exact counts on their domains, correctness of both algorithms, the time and space bounds, the density comparison, and the early-exit and negative-weight caveats) and names the deterministic checks of each, among them tests/test_proofs_apsp.py.",
+    "artifacts": ["PROOFS.md", "implementations/bellman_ford.py", "implementations/floyd_warshall.py", "harness.py", "../../experiments/2026-10-07_apsp_timing_probe.py", "../../experiments/2026-10-07_apsp_bellman_ford_early_exit.py", "../../experiments/2026-10-07b_count_v2_apsp_strings.py", "../../tests/test_proofs_apsp.py"]
   },
   "test_harness": {
     "module": "harness.py",
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 45, 60],
     "trials": 5
   },
-  "caveats": "The Theta(n^4) bound is for the plain Bellman-Ford with exactly n - 1 passes per source. The common early-exit variant (stop after a pass that changes nothing) is much faster on random complete digraphs: experiments/2026-10-07_apsp_bellman_ford_early_exit.py measured a mean of 3.25 to 5.22 passes per source for n = 8 to 64, instead of n - 1. Its worst case is still Theta(n^2 m), attained for example by a path of light edges i -> i-1 when edges are relaxed in increasing order of i. Bellman-Ford also handles negative weights and detects negative cycles; this entry restricts to non-negative weights so that Dijkstra can serve as the oracle. Floyd-Warshall handles negative weights without negative cycles. With m = Theta(n) edges, n runs of Bellman-Ford cost Theta(n^3), the same as Floyd-Warshall; the improvement needs m = omega(n) and is the factor n on dense graphs, and for m = o(n) Bellman-Ford from every source is faster.",
-  "notes": "All-pairs shortest paths is a hub of fine-grained complexity: Vassilevska Williams & Williams (J. ACM 2018) show that APSP, min-plus matrix product and negative-triangle detection on graphs with integer weights of absolute value at most M either all have truly subcubic algorithms (n^(3-eps) poly(log M) time) or none does. Compare pairs/shortest-path-enumeration-vs-dijkstra for the single-pair problem."
+  "caveats": "The Theta(n^4) bound is for the plain Bellman-Ford with exactly n - 1 passes per source. The common early-exit variant (stop after a pass that changes nothing) is much faster on random complete digraphs: experiments/2026-10-07_apsp_bellman_ford_early_exit.py measured a mean of 3.25 to 5.22 passes per source for n = 8 to 64, instead of n - 1. Its worst case is still Theta(n^2 m) whenever m >= n - 1: with the edges i -> i-1 of weight 1, any further edges of weight >= n, and the edges relaxed in increasing order of their tail (as in the implementation), the run from source s needs at least min(s + 1, n - 1) passes, at least m (n(n - 1)/2 + n - 1) relaxations in all; for m <= n - 2 it makes at most n m (m + 1), so for m = o(n) its worst case is below Theta(n^2 m) (PROOFS.md section 7). Both implementations also return the correct distances for weights of any sign as long as there is no negative cycle (for Bellman-Ford, none reachable from the source); the standard negative-cycle test of Bellman-Ford (one more pass, reporting a cycle if it lowers a distance) is correct but not implemented here (PROOFS.md section 8). This entry restricts to non-negative weights so that Dijkstra can serve as the oracle. With m = Theta(n) edges, n runs of Bellman-Ford cost Theta(n^3), the same as Floyd-Warshall; the improvement needs m = omega(n) and is the factor n on dense graphs, and for m = o(n) Bellman-Ford from every source is faster.",
+  "notes": "Compare pairs/shortest-path-enumeration-vs-dijkstra for the single-pair problem. The fine-grained status of APSP is listed under background.",
+  "background": [
+    {
+      "statement": "With arbitrary real edge weights, APSP on dense n-vertex digraphs can be solved by a randomized algorithm, correct with high probability, in n^3 / 2^Omega((log n)^(1/2)) time on the real RAM (additions and comparisons of reals at unit cost).",
+      "source": "Williams 2018 (STOC 2014), abstract"
+    },
+    {
+      "statement": "On graphs and matrices with integer weights in [-M, M], APSP on weighted digraphs, detecting a triangle of negative total weight, verifying a matrix product over the (min, +) semiring and several other problems either all have truly subcubic algorithms (O(n^(3-delta) poly(log M)) time for some delta > 0) or none of them does.",
+      "source": "Vassilevska Williams & Williams 2018 (J. ACM 65(5)), abstract"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_apsp.py",
+      "../../experiments/2026-10-07b_count_v2_apsp_strings.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py"
+    ],
+    "audit": "RL-107"
+  }
 }

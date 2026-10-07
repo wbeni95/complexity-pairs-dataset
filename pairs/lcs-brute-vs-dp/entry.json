@@ -12,9 +12,9 @@
       "idea": "Enumerate all 2^n subsequences of a and test each against b with one greedy scan.",
       "model": "classical-deterministic",
       "pseudocode": "for each subset S of positions of a: if a[S] is a subsequence of b: best = max(best, |S|)",
-      "time_complexity": "Theta(2^n n)",
-      "space_complexity": "Theta(n)",
-      "correctness": "Exhaustive; the greedy leftmost-match scan decides the subsequence relation exactly.",
+      "time_complexity": "Theta(2^n n) on every input with |a| = |b| = n (n >= 1): each mask costs between n and 2n steps, counting the characters that b.find examines (the upper bound under the machine-model assumption in background that str.find scans forward and stops at the first match)",
+      "space_complexity": "Theta(n) with the input; beyond it O(1) values (mask, scan position, flag, best)",
+      "correctness": "Exhaustive; the greedy leftmost-match scan decides the subsequence relation exactly (PROOFS.md sections 1-2).",
       "implementation": "implementations/brute_force.py:lcs_brute",
       "harness": {
         "v1_max_n": 12,
@@ -29,9 +29,9 @@
       "idea": "L(i, j) = L(i-1, j-1) + 1 if a_i = b_j, else max(L(i-1, j), L(i, j-1)); fill the table row by row.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(n^2) (Theta(|a| |b|) in general)",
-      "space_complexity": "Theta(n)",
-      "correctness": "Optimal substructure of LCS (CLRS Theorem 15.1).",
+      "time_complexity": "Theta(n^2): exactly |a| |b| inner iterations and |a| + 1 rows of length |b| + 1 (Theta(|a| |b|) for non-empty strings)",
+      "space_complexity": "Theta(n): at most two rows of length |b| + 1 beyond the input",
+      "correctness": "Optimal substructure of LCS on prefixes (PROOFS.md section 2; credit: CLRS).",
       "implementation": "implementations/dp.py:lcs_dp",
       "harness": {
         "scaling": {
@@ -42,15 +42,14 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Exponential enumeration of candidate subsequences is replaced by a quadratic table of prefix-pair subproblems.",
+  "relationship": "Exponential enumeration of candidate subsequences is replaced by a quadratic table of prefix-pair subproblems. Proofs of every claim: PROOFS.md.",
   "sources": [
     {
       "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
       "year": 2009,
       "title": "Introduction to Algorithms (3rd ed.)",
       "venue": "MIT Press",
-      "isbn": "978-0-262-03384-8",
-      "note": "Section 15.4, Longest common subsequence."
+      "isbn": "978-0-262-03384-8"
     },
     {
       "authors": "Wagner, R. A.; Fischer, M. J.",
@@ -65,15 +64,24 @@
       "title": "Quadratic-Time Hardness of LCS and other Sequence Similarity Measures",
       "venue": "FOCS 2015",
       "arxiv": "1501.07053"
+    },
+    {
+      "authors": "Python Software Foundation",
+      "year": 2026,
+      "title": "CPython source code: Objects/stringlib/fastsearch.h",
+      "url": "https://github.com/python/cpython/blob/main/Objects/stringlib/fastsearch.h",
+      "note": "Background only (machine-model assumption). Read on 2026-10-07 (main branch): a search for a one-character needle calls find_char, which scans forward from the start (memchr for long strings) and returns the first index of the character, or -1."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both agree on random DNA-alphabet string pairs (n <= 12 for enumeration). V2: runtimes fitted against 2^n n and n^2.",
+    "method": "V1: both agree on random DNA-alphabet string pairs (n <= 12 for enumeration). V2: runtimes fitted against 2^n n and n^2 (measurements, not proofs). Proofs: PROOFS.md proves every claim of the entry (correctness of both algorithms, time and space); tests/test_proofs_lcs.py checks the computable facts on stated ranges, including both outputs against an oracle that intersects the sets of all subsequences.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/brute_force.py",
       "implementations/dp.py",
-      "harness.py"
+      "harness.py",
+      "../../tests/test_proofs_lcs.py"
     ]
   },
   "test_harness": {
@@ -81,14 +89,33 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 50],
     "trials": 5
   },
-  "caveats": "Conditional lower bound: no O(n^(2-eps)) algorithm unless SETH fails (Abboud-Backurs-Vassilevska Williams).",
+  "caveats": "The conditional lower bound from the literature is background (cited, not proved here); see background.",
   "notes": "",
   "lower_bounds": [
     {
       "model": "classical-deterministic",
       "bound": "no O(n^(2-eps)) algorithm for any eps > 0",
       "setting": "conditional on the Strong Exponential Time Hypothesis (SETH)",
-      "source": "Abboud, Backurs & Vassilevska Williams 2015"
+      "source": "Abboud, Backurs & Vassilevska Williams 2015, main result (background: cited, conditional, not proved in this entry)"
     }
-  ]
+  ],
+  "background": [
+    {
+      "statement": "An O(n^(2-epsilon)) algorithm, for some epsilon > 0, for the LCS of two sequences of length n would refute the Strong Exponential Time Hypothesis (SETH).",
+      "source": "Abboud, Backurs & Vassilevska Williams 2015 (FOCS 2015; arXiv:1501.07053), main result as stated in the abstract"
+    },
+    {
+      "statement": "Machine-model assumption of this entry: str.find(c, j) with a one-character c scans the string forward from position j and stops at the first occurrence of c (CPython's find_char: a forward loop, or memchr on long strings), so it costs O(1) plus the number of positions it examines. Read off the CPython source; not proved in this repository.",
+      "source": "Python Software Foundation, CPython source Objects/stringlib/fastsearch.h (find_char), read 2026-10-07"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_lcs.py"
+    ],
+    "audit": "RL-107"
+  }
 }

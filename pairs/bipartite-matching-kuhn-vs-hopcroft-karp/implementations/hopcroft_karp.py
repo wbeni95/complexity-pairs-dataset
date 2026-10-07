@@ -6,9 +6,9 @@ length of a shortest augmenting path); (2) runs a DFS from every free left verte
 into the next layer and only accepts a free right vertex at the shortest-path layer. Per-vertex scan
 pointers persist through the phase and dead-end vertices are removed (dist = infinity), so each adjacency
 list is scanned at most once per DFS pass: O(V + E) per phase. After each augmentation the path's left
-vertices are removed as well, so the paths found in one phase are vertex-disjoint, i.e. a maximal set of
-vertex-disjoint shortest augmenting paths, as in Hopcroft & Karp 1973. Their analysis bounds the number of
-phases by O(sqrt(V)), for O((V + E) sqrt(V)) time in total.
+vertices are removed as well, so the paths found in one phase are vertex-disjoint; they form a maximal set
+of vertex-disjoint shortest augmenting paths (PROOFS.md, Lemma HK3), as in Hopcroft & Karp 1973. Their
+analysis bounds the number of phases by O(sqrt(V)), for O((V + E) sqrt(V)) time in total.
 
 Graph: (n_left, n_right, adj) as in the Kuhn implementation. Returns the size of a maximum matching.
 """

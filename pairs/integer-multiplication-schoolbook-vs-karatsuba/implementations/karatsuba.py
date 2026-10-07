@@ -5,7 +5,7 @@ Then
     x*y = z0 + (x0*y1 + x1*y0)*B^m + z2*B^(2m),  z0 = x0*y0,  z2 = x1*y1,
     x0*y1 + x1*y0 = z0 + z2 - (x1 - x0)*(y1 - y0),
 so three half-size products replace four. This is the "subtractive" form of Karatsuba's identity
-(Knuth, TAOCP Vol. 2, 4.3.3): |x1 - x0| has no carry digit, so all three sub-products have the same
+(Knuth, TAOCP Vol. 2): |x1 - x0| has no carry digit, so all three sub-products have the same
 size and T(n) = 3 T(n/2) + Theta(n).
 
 Below CUTOFF digits the recursion switches to schoolbook multiplication; the cutoff changes constant

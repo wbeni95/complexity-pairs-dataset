@@ -33,10 +33,10 @@
       "name": "Strassen",
       "idea": "Split each matrix into 2 x 2 blocks; seven block products (instead of eight) plus additions suffice. Recurse.",
       "model": "classical-deterministic",
-      "pseudocode": "see implementation (M1..M7 as in Strassen 1969)",
+      "pseudocode": "see implementation (the seven products M1..M7 and their combinations are written out in PROOFS.md section 4)",
       "time_complexity": "Theta(n^(log2 7)) ~ Theta(n^2.807)",
       "space_complexity": "Theta(n^2)",
-      "correctness": "Strassen 1969: the seven products combine to the four blocks of C by direct algebraic identity, valid over any ring. T(n) = 7T(n/2) + Theta(n^2) gives Theta(n^log2(7)).",
+      "correctness": "Strassen 1969: the seven products combine to the four blocks of C by a direct algebraic identity that never commutes two factors, so it is valid over any ring, in particular over the ring of half-size integer matrices; induction over the recursion and the zero padding give AB (PROOFS.md section 4, with a symbolic check of the code). T(n) = 7T(n/2) + Theta(n^2) gives Theta(n^log2(7)) (PROOFS.md section 5).",
       "implementation": "implementations/strassen.py:matmul_strassen",
       "harness": {
         "scaling": {
@@ -53,7 +53,21 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "Both polynomial; Strassen lowers the exponent from 3 to log2(7) ~ 2.807. The line continues: Coppersmith-Winograd (omega < 2.376) ... Alman et al. 2024 (omega < 2.371339). AlphaTensor (2022) found low-rank schemes for small fixed sizes, e.g. rank 47 for 4 x 4 over GF(2), which gives omega <= log4(47) ~ 2.7773 in characteristic 2.",
+  "relationship": "Both polynomial; Strassen lowers the exponent from 3 to log2(7) ~ 2.807. The later exponent bounds (Coppersmith-Winograd, ..., Alman et al.) and AlphaTensor's rank-47 scheme for 4 x 4 matrices over GF(2) are background (see background). Applied recursively, a scheme with r > k^2 products for k x k matrices gives omega <= log_k(r) over every field in which it is valid (PROOFS.md section 8). If a rank-47 bilinear scheme for <4,4,4> over GF(2) exists (background: Fawzi et al. 2022, Fig. 3), then omega <= log4(47) ~ 2.7773 in characteristic 2. Two levels of Strassen's algorithm use 7^2 = 49 multiplications for 4 x 4 matrices (PROOFS.md section 8).",
+  "background": [
+    {
+      "statement": "Coppersmith and Winograd give a matrix multiplication algorithm via arithmetic progressions (title); its exponent bound is not stated or checked here.",
+      "source": "Coppersmith & Winograd 1990"
+    },
+    {
+      "statement": "Alman, Duan, Vassilevska Williams, Xu, Xu and Zhou show omega < 2.371339 in versions 1 and 2 (SODA 2025) of arXiv:2404.16349; version 3 of the same record (2026-08-19) states omega < 2.371177. The line of improvements between Coppersmith-Winograd and these bounds is not listed here.",
+      "source": "Alman et al. 2024, arXiv:2404.16349, abstracts of versions 1 and 2 (SODA 2025) and of version 3 (2026-08-19)"
+    },
+    {
+      "statement": "AlphaTensor found a scheme that multiplies 4 x 4 matrices with 47 multiplications in modular arithmetic (Z_2).",
+      "source": "Fawzi et al. 2022, main text and Fig. 3"
+    }
+  ],
   "sources": [
     {
       "authors": "Strassen, V.",
@@ -86,11 +100,13 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree on random integer matrices for n = 0..10 and n = 17, 31, 40, 64 (above the recursion cutoff of 16) and pass an independent exact check that recomputes every entry of A·B. V2 (since 2026-10-06, RESEARCH_LOG RL-047): the measured quantity is the exact number of SCALAR MULTIPLICATIONS performed by the unchanged implementations, counted by an instrumented number type in the harness, which counts a product when at least one operand is instrumented. For n not a power of two the matrices are padded with plain zeros, and products whose two operands both come from padding zeros alone are not counted (n = 17, padded to 32: 24832 counted of the 28672 performed); the V2 sizes are powers of two, where no padding occurs. On n = 32, 64, 128, 256: schoolbook = n^3 exactly; Strassen = 7^(log2(n/16)) * 16^3 exactly (this closed form holds for every n = 16 * 2^k). Each claim is fitted with tolerance 0.02 (the counts are exact, so no timing noise) and the other algorithm's cost is a declared rival that must NOT fit: alpha of Strassen's counts against n^3 is log2(7)/3 = 0.936, of the schoolbook counts against n^log2(7) is 3/log2(7) = 1.069, both outside the band. Wall-clock timing remains unable to separate the two (RL-006); additions are not counted.",
+    "method": "V1: both implementations agree on random integer matrices for n = 0..10 and n = 17, 31, 40, 64 (above the recursion cutoff of 16) and pass an independent exact check that recomputes every entry of A·B. V2 (since 2026-10-06, RESEARCH_LOG RL-047): the measured quantity is the exact number of SCALAR MULTIPLICATIONS performed by the unchanged implementations, counted by an instrumented number type in the harness, which counts a product when at least one operand is instrumented. For n not a power of two the matrices are padded with plain zeros, and products whose two operands both come from padding zeros alone are not counted (n = 17, padded to 32: 24832 counted of the 28672 performed); the V2 sizes are powers of two, where no padding occurs. On n = 32, 64, 128, 256: schoolbook = n^3 exactly; Strassen = 7^(log2(n/16)) * 16^3 exactly (this closed form holds for every n = 16 * 2^k). Each claim is fitted with tolerance 0.02 (the counts are exact, so no timing noise) and the other algorithm's cost is a declared rival that must NOT fit: alpha of Strassen's counts against n^3 is log2(7)/3 = 0.936, of the schoolbook counts against n^log2(7) is 3/log2(7) = 1.069, both outside the band. Wall-clock timing remains unable to separate the two (RL-006); additions are not counted. Proofs: PROOFS.md proves every claim of this entry from the code (the correctness of both algorithms, including Strassen's identities, the recursion and the padding; the time and space bounds; the exact multiplication counts for all sizes of their domains and the exact addition counts; the value sizes; the step from a fixed-size scheme to an exponent bound) and names the scripts and tests that check each one, among them tests/test_proofs_strassen.py.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/naive.py",
       "implementations/strassen.py",
-      "harness.py"
+      "harness.py",
+      "../../tests/test_proofs_strassen.py"
     ]
   },
   "test_harness": {
@@ -98,6 +114,17 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 31, 40, 64],
     "trials": 2
   },
-  "caveats": "The 'galactic' algorithms with omega < 2.38 have constants too large to be practical. Strassen is numerically less stable than schoolbook over floating point (not an issue over the integers).",
-  "notes": "AlphaTensor improvements are for fixed small block sizes; only when such a scheme is applied recursively does it become an asymptotic (T3) statement."
+  "caveats": "The algorithms behind the exponent bounds in the background are not implemented or verified in this entry. Over the integers all arithmetic of both methods is exact (PROOFS.md section 9).",
+  "notes": "AlphaTensor improvements are for fixed small block sizes; only when such a scheme is applied recursively does it become an asymptotic (T3) statement.",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py",
+      "../../tests/test_proofs_strassen.py"
+    ],
+    "audit": "RL-107"
+  }
 }

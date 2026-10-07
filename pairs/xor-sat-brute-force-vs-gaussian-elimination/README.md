@@ -8,17 +8,20 @@ assignments and, if there is one, a satisfying assignment. The decision problem 
 
 | Algorithm | Time | Implementation |
 |---|---|---|
-| Brute force over all 2ⁿ assignments (no early stop: it counts) | O(2ⁿ·m·n); Θ(2ⁿ·n) on systems with independent rows | [brute_force.py](implementations/brute_force.py) |
-| Gaussian elimination over GF(2) | O(m·n·min(m, n)); Θ(n³) worst case for n × n | [gaussian_elimination.py](implementations/gaussian_elimination.py) |
+| Brute force over all 2ⁿ assignments (no early stop: it counts) | O(2ⁿ·(m + 1)(n + 1)); Θ(2ⁿ·n) on systems with m ≥ 1 independent rows | [brute_force.py](implementations/brute_force.py) |
+| Gaussian elimination over GF(2) | O(m·n·min(m, n) + m + n); Θ(n³) worst case for n × n | [gaussian_elimination.py](implementations/gaussian_elimination.py) |
 
 **Why it is here.** XOR clauses are linear equations over the two-element field, so the solutions form an affine
-subspace. One elimination yields consistency, the rank r, the count 2^(n−r) and a solution. This is the
-affine class of Schaefer's (1978) dichotomy for Boolean constraints.
+subspace. One elimination yields consistency, the rank r, the count 2^(n−r) and a solution. As cited background,
+this is the affine class of Schaefer's (1978) dichotomy for Boolean constraints.
 
-**Boundary.** For counting, XOR is the only easy case. By the Creignou–Hermann (1996) dichotomy, counting the solutions
-of Boolean constraints is polynomial for affine constraints and #P-complete for every other constraint language, which
-includes 2-CNF and Horn formulas. Valiant (1979) is the source of #P-completeness for counting satisfying assignments.
-So #XOR-SAT is easy while #SAT, #2-SAT and #Horn-SAT are #P-hard. The decision versions of 2-SAT and Horn-SAT are easy:
+**Boundary** (cited background; not claims of this entry). By the Creignou–Hermann (1996) dichotomy, counting the
+solutions of Boolean constraints is polynomial for affine constraints and #P-complete for every other constraint
+language, which includes 2-CNF and Horn formulas; counting the satisfying assignments of CNF formulas is #P-complete
+(Valiant 1979).
+So #XOR-SAT is easy while #SAT, #2-SAT and #Horn-SAT are #P-hard: unless every #P function is computable in polynomial
+time, XOR is the only one of these counting problems with a polynomial algorithm. The decision versions of 2-SAT and
+Horn-SAT are easy:
 see [two-sat-brute-force-vs-scc](../two-sat-brute-force-vs-scc/) and
 [horn-sat-brute-force-vs-unit-propagation](../horn-sat-brute-force-vs-unit-propagation/).
 
@@ -45,9 +48,14 @@ see [two-sat-brute-force-vs-scc](../two-sat-brute-force-vs-scc/) and
 | brute force vs (2n + 1)(2ⁿ⁺¹ − 2), n = 8..16 | 1.000 | 2ⁿ: 1.120, n²·2ⁿ: 0.897 |
 | elimination vs n(n² + 6n − 4), n = 16..128 | 1.000 | n²: 1.439, n⁴: 0.720 |
 
-**Caveats.** Brute force abandons an assignment at its first violated row. With independent rows that happens after
-fewer than 2 rows on average, so its cost is Θ(2ⁿ·n). The Θ(2ⁿ·m·n) worst case needs dependent rows. The fitted costs
-are exact closed forms; the bare n³ gives α = 0.959. Packed rows (machine words) divide the bit operations by the word
-size, a constant factor that is not counted.
+**Caveats.** Brute force abandons an assignment at its first violated row. With m ≥ 1 independent rows that happens
+after fewer than 2 rows on average, so its cost is Θ(2ⁿ·n). The Θ(2ⁿ·m·n) worst case is attained with dependent rows (m
+copies of one equation). The fitted costs are exact closed forms; the bare n³ gives α = 0.959. Packed rows (machine
+words of w bits) turn the XOR of k entries into ⌈k/w⌉ word operations, a constant factor that is not counted.
+
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry: the exact operation counts for all sizes of
+their domains, the correctness of both algorithms, the count 0 or 2^(n − rank A), the brute-force cost on systems with
+independent rows and its worst case, the elimination bounds and the caveats. It names the checks: the count-check
+scripts and [tests/test_proofs_xor_sat.py](../../tests/test_proofs_xor_sat.py).
 
 **Sources.** Schaefer, STOC 1978. Creignou & Hermann, Information and Computation 1996. Valiant, SIAM J. Comput. 1979.

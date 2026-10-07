@@ -1,4 +1,5 @@
-"""Classic LCS dynamic programming, two rows: Theta(n m) time, O(m) space."""
+"""Classic LCS dynamic programming, two rows: O(m) space and Theta((n + 1)(m + 1)) time,
+i.e. Theta(n m) for non-empty strings (proofs: PROOFS.md)."""
 
 
 def lcs_dp(instance) -> int:

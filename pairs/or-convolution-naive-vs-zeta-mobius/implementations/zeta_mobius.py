@@ -4,7 +4,7 @@ zeta[S] = sum of f[T] over T subset of S. For h = f (OR-conv) g:
     zeta_h[S] = sum over T subset of S of sum over A | B = T of f[A] g[B]
               = sum over A subset of S and B subset of S of f[A] g[B]  = zeta_f[S] * zeta_g[S],
 because A | B is a subset of S iff both A and B are. The Moebius transform (sums with signs (-1)^(|S| - |T|) over T subset of S) inverts
-zeta, so h = moebius(zeta_f . zeta_g) (Bjorklund, Husfeldt, Kaski & Koivisto 2007, 'covering product').
+zeta, so h = moebius(zeta_f . zeta_g) (see Bjorklund, Husfeldt, Kaski & Koivisto 2007).
 
 Both transforms use Yates' method: one pass per element i, updating every set S that contains i from S without i
 (n * 2^(n-1) additions for zeta, the same number of subtractions for Moebius). In total: two zeta transforms, 2^n

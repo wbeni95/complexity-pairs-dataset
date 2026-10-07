@@ -1,9 +1,9 @@
 """Simon's quantum algorithm: O(n) queries.
 
 Each round is H^n, one query U_f with the output register measured, then H^n and a measurement.
-The outcome y is uniform over {y : y.s = 0 mod 2}. Collect y's until they span an (n-1)-dimensional
-subspace of GF(2)^n; s is then the unique nonzero vector orthogonal to all of them. Expected
-rounds: n - 1 + O(1). Simulated exactly with lib.qsim.
+In exact arithmetic the outcome y is uniform over {y : y.s = 0 mod 2}. Collect y's until they span an
+(n-1)-dimensional subspace of GF(2)^n; s is then the unique nonzero vector orthogonal to all of them. Expected
+rounds: n - 1 + O(1). Simulated with lib.qsim, exact up to floating-point rounding (PROOFS.md, "Exact arithmetic").
 """
 import random
 

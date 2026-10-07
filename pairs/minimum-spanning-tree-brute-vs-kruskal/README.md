@@ -7,8 +7,8 @@ minimum spanning tree.
 
 | Algorithm | Time (Kₙ, m = n(n−1)/2 edges) | Implementation |
 |---|---|---|
-| All (n−1)-edge subsets | Θ(n · C(n(n−1)/2, n−1)) = 2^Θ(n log n) | [brute_force.py](implementations/brute_force.py) |
-| Kruskal + union-find (1956) | O(m log m) = O(n² log n) | [kruskal.py](implementations/kruskal.py) |
+| All (n−1)-edge subsets | Θ(n · C(n(n−1)/2, n−1)) = 2^Θ(n log n) (under the `itertools.combinations` assumption in entry.json) | [brute_force.py](implementations/brute_force.py) |
+| Kruskal + union-find (1956) | Ω(n² log n) worst case if `sorted()` is a deterministic comparison sort; O(m log m) = O(n² log n) if it runs in O(m log m) (both background assumptions) | [kruskal.py](implementations/kruskal.py) |
 | Prim, array version (1957) | Θ(n²), linear in the input | [prim.py](implementations/prim.py) |
 
 **Why it's a pair.** By the cut property the lightest edge across any cut is safe, so greedy choices
@@ -19,8 +19,15 @@ because Kₙ has n^(n−2) of them (Cayley).
 weight 1, which changes the answer from 2(n − 1) to 2n − 3. So every correct deterministic algorithm reads all
 n(n−1)/2 weights, and Prim's Θ(n²) is optimal up to a constant factor.
 
-**The longer line (sparse graphs).** Chazelle 2000: O(m α(m, n)) deterministic. Karger–Klein–Tarjan 1995:
-expected O(m), randomized.
+**Kruskal → Prim (secondary tag T3).** Under the background assumption that `sorted()` is deterministic and learns
+about the keys only from `<` comparisons, for every n some weight assignment of Kₙ makes `sorted()` perform at least
+log₂(m!) = Θ(n² log n) comparisons (decision-tree argument), so Kruskal's worst case is Ω(n² log n), against Prim's
+exact (n−1)². The upper bound O(n² log n) for Kruskal holds under the assumption that CPython's sort runs in
+O(m log m) worst-case time (background in
+entry.json).
+
+**The longer line (sparse graphs), background.** Chazelle 2000: O(m α(m, n)) deterministic. Karger–Klein–Tarjan
+1995: randomized linear time.
 
 **Verification.** V1: all three agree with each other and with an independent Borůvka oracle, including
 inputs with many tied weights. V2 uses exact counts of comparisons and arithmetic operations on input
@@ -35,9 +42,16 @@ each edge into the key w·n² + u·n + v, and that key stays a counting value, s
   are rejected.
 
 Tolerance is 0.03. On these draws the counts resolve the log factor between Kruskal and Prim; this is a
-measurement, since no worst-case lower bound for Kruskal is proved here. Kruskal's sort comparisons
+measurement on the draws, separate from the worst-case lower bound above. Kruskal's sort comparisons
 depend on the Python version: under 3.12.10 they are 0.17–0.30% fewer than under 3.14.2, with the same α
 and the same verdicts.
 
+**Proofs.** [PROOFS.md](PROOFS.md) proves the exact operation counts of this entry for all sizes of their domains,
+from the code, and names the scripts and sizes that check each count. It also proves Cayley's formula, the cut
+property and the correctness of the three algorithms, the time bounds (with Kruskal's worst-case lower bound),
+Prim's optimality, space and the oracle; [tests/test_proofs_mst.py](../../tests/test_proofs_mst.py) checks their
+computable parts.
+
 **Sources.** Borůvka 1926. Cayley 1889. Kruskal 1956 (Proc. AMS). Prim 1957 (BSTJ). Karger, Klein & Tarjan 1995.
-Chazelle 2000.
+Chazelle 2000. Background only (the machine-model assumptions): Auger, Jugé, Nicaud & Pivoteau 2018; Munro & Wild
+2018; CPython's Objects/listsort.txt; the Python documentation (Sorting Techniques; itertools.combinations).

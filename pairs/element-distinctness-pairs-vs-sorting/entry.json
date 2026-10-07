@@ -12,9 +12,9 @@
       "idea": "Compare every pair of positions and answer no at the first equal pair.",
       "model": "classical-deterministic",
       "pseudocode": "for i < j: if a_i == a_j: return no; return yes",
-      "time_complexity": "Theta(n^2) worst case: exactly n(n-1)/2 comparisons whenever the answer is yes",
-      "space_complexity": "O(1)",
-      "correctness": "Exhaustive over all pairs.",
+      "time_complexity": "Theta(n^2) worst case: exactly n(n-1)/2 comparisons whenever the answer is yes, at most that on every input (PROOFS.md sections 1 and 3)",
+      "space_complexity": "O(1) (PROOFS.md section 3)",
+      "correctness": "Exhaustive over all pairs (PROOFS.md section 3).",
       "implementation": "implementations/all_pairs.py:distinct_all_pairs",
       "harness": {
         "v1_max_n": 300,
@@ -26,9 +26,9 @@
       "idea": "Sort a copy (bottom-up merge sort); equal values become adjacent, so the values are distinct iff no two neighbours are equal.",
       "model": "classical-deterministic",
       "pseudocode": "b = merge_sort(a); return all(b[k-1] != b[k] for k in 1..n-1)",
-      "time_complexity": "Theta(n log n) on every input (merge sort: ceil(log2 n) passes of Theta(n) each; final scan Theta(n))",
-      "space_complexity": "Theta(n)",
-      "correctness": "If a_i = a_j then, after sorting, every element between the two copies equals them too, so some adjacent pair is equal; conversely an equal adjacent pair is an equal pair of the input. Merge sort is correct by induction on the merge passes.",
+      "time_complexity": "Theta(n log n) on every input (merge sort: ceil(log2 n) passes of Theta(n) each; final scan O(n), exactly n - 1 tests on distinct inputs; at most n ceil(log2 n) + n - 1 comparisons; PROOFS.md sections 2 and 4)",
+      "space_complexity": "Theta(n): exactly 2n words besides the input (PROOFS.md section 4)",
+      "correctness": "If a_i = a_j then, after sorting, every element between the two copies equals them too, so some adjacent pair is equal; conversely an equal adjacent pair is an equal pair of the input. Merge sort is correct by induction on the merge passes. Complete proof: PROOFS.md section 4.",
       "implementation": "implementations/sort_adjacent.py:distinct_by_sorting",
       "harness": {
         "scaling": { "cost": "n*log(n)", "n_values": [1000, 2000, 4000, 8000, 16000, 32000, 64000, 128000], "measure": "reported", "tolerance": 0.03, "rivals": ["n", "n*log(n)**2", "n**2"], "shape": {"sequence": "doubling", "n_range": [2, 4096], "note": "count depends on the drawn instance; kept so the record says why the diagnostic cannot decide"} }
@@ -39,12 +39,12 @@
   "lower_bounds": [
     {
       "model": "classical-deterministic",
-      "bound": "Omega(n log n) operations (the depth of any algebraic computation tree that decides element distinctness)",
-      "setting": "algebraic computation tree model over the reals: real-valued inputs, arithmetic operations and sign tests at unit cost. Ben-Or's bound is in terms of the number of connected components of the set of yes-inputs; the inputs with pairwise distinct coordinates form n! components (one per ordering).",
-      "source": "Ben-Or 1983"
+      "bound": "at least ceil(log2(n!)) >= n log2 n - n log2 e comparisons in the worst case, already on inputs of n distinct integers",
+      "setting": "comparison model: the algorithm accesses the n input values only by comparing two of them (outcome <, = or >, or any function of that outcome, such as <= or ==), as both implementations here do. Proved in PROOFS.md section 5; Ben-Or's stronger model (algebraic computation trees on real-valued inputs) is listed under background.",
+      "source": "own proof in PROOFS.md section 5 (the classical counting argument for comparison sorting; credit: Knuth 1998)"
     }
   ],
-  "relationship": "Theta(n^2) -> Theta(n log n). Sorting brings equal values together, so n - 1 neighbour comparisons replace n(n-1)/2 pair comparisons. In the algebraic computation tree model on real-valued inputs, Theta(n log n) is optimal (Ben-Or 1983), so sorting-based algorithms are optimal there; the caveats discuss this entry's integer inputs.",
+  "relationship": "Theta(n^2) -> Theta(n log n). Sorting brings equal values together, so n - 1 neighbour comparisons replace n(n-1)/2 pair comparisons. Among comparison algorithms (which access the values only by comparing two of them, as both implementations here do), at least ceil(log2(n!)) >= n log2 n - 1.443 n comparisons are needed in the worst case, even on integer inputs, so the sorting algorithm is optimal there up to a factor that tends to 1 (PROOFS.md section 5). The algebraic computation tree lower bound for real-valued inputs and the hashing method for integers are listed under background.",
   "sources": [
     {
       "authors": "Ben-Or, M.",
@@ -59,27 +59,48 @@
       "title": "Universal classes of hash functions",
       "venue": "Journal of Computer and System Sciences 18(2), 143-154",
       "doi": "10.1016/0022-0000(79)90044-8",
-      "note": "Universal hashing; basis of the expected-linear-time method mentioned in caveats (outside the algebraic computation tree model)."
+      "note": "Background only."
     },
     {
       "authors": "Knuth, D. E.",
       "year": 1998,
       "title": "The Art of Computer Programming, Vol. 3: Sorting and Searching (2nd ed.)",
       "venue": "Addison-Wesley",
-      "isbn": "978-0-201-89685-5",
-      "note": "Section 5.2.4 (sorting by merging)."
+      "isbn": "978-0-201-89685-5"
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree with each other and with an independent oracle (len(set(values)) == n, i.e. hashing) on four kinds of inputs (distinct values, distinct values with one planted duplicate, values from [0, n), and distinct values up to 10^18 in magnitude with both signs), n = 0..8, 16, 50, 300 (all pairs up to 300) and 3000, 20000 (sorting). V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md): on distinct inputs (the all-pairs worst case), the measured quantity is the exact number of COMPARISONS BETWEEN INPUT VALUES (==, <= and the other order operators) made by the unchanged implementations, counted by an instrumented value type (CountingKey in harness.py). All pairs: exactly n(n-1)/2 at n = 500, 1000, 1500, 2000, 3000, 4000 (124750 ... 7998000); alpha = 1.000 against n^2. Sorting: merge-sort comparisons plus the n - 1 neighbour tests, 9710, 21426, 46876, 101729, 219403, 471108, 1006063, 2140632 at n = 1000, 2000, ..., 128000, i.e. n log2 n - c n with c = 0.24 to 0.26; alpha = 1.002 against n log n. The merge part of every count lies within bounds computed from the run lengths alone (sum of min(left, right) <= C <= sum of (left + right - 1)); these bounds hold for every input, since each step of the merge loop makes one comparison and outputs one element and the loop stops as soon as one run is exhausted, so merging runs of lengths left, right >= 1 takes at least min(left, right) and, as the other run still has an element left, at most left + right - 1 comparisons. One seeded instance per n (the sorting count depends on the input order). Tolerance 0.03: exact counts carry no timing noise, so the band only covers lower-order terms (largest |alpha - 1| here 0.002) and stays below half the distance to the nearest rival. Rivals that must NOT fit, all rejected: all pairs against n log n (alpha = 1.757) and n^2 log n (0.936); sorting against n (1.111), n log^2 n (0.912) and n^2 (0.556). So the log factor is resolved for both, which the earlier timing fit could not do (in experiments/2026-10-07_element_distinctness_probe.py the merge-sort timings gave alpha = 1.001 against n log n and 1.125 against n, both inside tolerance 0.25). experiments/2026-10-07b_count_v2_element_distinctness.py reproduces every count above.",
-    "artifacts": ["implementations/all_pairs.py", "implementations/sort_adjacent.py", "harness.py", "../../experiments/2026-10-07_element_distinctness_probe.py", "../../experiments/2026-10-07b_count_v2_element_distinctness.py"]
+    "method": "V1: both implementations agree with each other and with an independent oracle (len(set(values)) == n, i.e. hashing) on four kinds of inputs (distinct values, distinct values with one planted duplicate, values from [0, n), and distinct values up to 10^18 in magnitude with both signs), n = 0..8, 16, 50, 300 (all pairs up to 300) and 3000, 20000 (sorting). V2 (since 2026-10-07, research/2026-10-07b_count_based_v2.md): on distinct inputs (the all-pairs worst case), the measured quantity is the exact number of COMPARISONS BETWEEN INPUT VALUES (==, <= and the other order operators) made by the unchanged implementations, counted by an instrumented value type (CountingKey in harness.py). All pairs: exactly n(n-1)/2 at n = 500, 1000, 1500, 2000, 3000, 4000 (124750 ... 7998000); alpha = 1.000 against n^2. Sorting: merge-sort comparisons plus the n - 1 neighbour tests, 9710, 21426, 46876, 101729, 219403, 471108, 1006063, 2140632 at n = 1000, 2000, ..., 128000, i.e. n log2 n - c n with c = 0.24 to 0.26; alpha = 1.002 against n log n. The merge part of every count lies within bounds computed from the run lengths alone (sum of min(left, right) <= C <= sum of (left + right - 1)); these bounds hold for every input, since each step of the merge loop makes one comparison and outputs one element and the loop stops as soon as one run is exhausted, so merging runs of lengths left, right >= 1 takes at least min(left, right) and, as the other run still has an element left, at most left + right - 1 comparisons. One seeded instance per n (the sorting count depends on the input order). Tolerance 0.03: exact counts carry no timing noise, so the band only covers lower-order terms (largest |alpha - 1| here 0.002) and stays below half the distance to the nearest rival. Rivals that must NOT fit, all rejected: all pairs against n log n (alpha = 1.757) and n^2 log n (0.936); sorting against n (1.111), n log^2 n (0.912) and n^2 (0.556). So the log factor is resolved for both, which the earlier timing fit could not do (in experiments/2026-10-07_element_distinctness_probe.py the merge-sort timings gave alpha = 1.001 against n log n and 1.125 against n, both inside tolerance 0.25). experiments/2026-10-07b_count_v2_element_distinctness.py reproduces every count above. Proofs: PROOFS.md proves every claim of this entry from the code (the exact counts and bounds on their domains, correctness of both algorithms including merge sort, the time and space bounds, the comparison lower bound in lower_bounds, and the reduction to closest pair) and names the deterministic checks of each, among them tests/test_proofs_distinctness.py.",
+    "artifacts": ["PROOFS.md", "implementations/all_pairs.py", "implementations/sort_adjacent.py", "harness.py", "../../experiments/2026-10-07_element_distinctness_probe.py", "../../experiments/2026-10-07b_count_v2_element_distinctness.py", "../../tests/test_proofs_distinctness.py"]
   },
   "test_harness": {
     "module": "harness.py",
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 16, 50, 300, 3000, 20000],
     "trials": 6
   },
-  "caveats": "The Omega(n log n) lower bound is a theorem about algebraic computation trees on real-valued inputs; this entry's inputs are integers, and the lower bound does not automatically carry over to models that exploit the representation of integers. On a word RAM, inserting the values into a hash table of size Theta(n) with a function drawn from a universal class (Carter & Wegman 1979) decides distinctness in O(n) expected time: any two distinct keys collide with probability at most 1/(table size), so the expected number of colliding pairs is O(n). That algorithm is randomized and outside the comparison/algebraic model; it is not implemented here (the V1 oracle uses Python's built-in set, whose integer hash is not universal, only as a correctness check). The all-pairs scan is fast when duplicates occur early; it makes exactly n(n - 1)/2 comparisons on every yes-instance, and also on no-instances whose only equal pair is the last pair it examines.",
-  "notes": "Element distinctness is a common source of Omega(n log n) lower bounds by reduction (e.g. closest pair: the minimum distance is 0 iff two points coincide; compare pairs/closest-pair-brute-vs-divide-conquer). Its quantum query complexity is a separate topic, not covered by this entry."
+  "caveats": "The comparison lower bound (lower_bounds; PROOFS.md section 5) covers only algorithms that use comparisons alone, and Ben-Or's algebraic lower bound (background) is a theorem about real-valued inputs; neither applies to algorithms that exploit the representation of integers, such as hashing with a universal class (background), which is randomized and not implemented here (the V1 oracle uses Python's built-in set, whose integer hash is a fixed function, only as a correctness check). The all-pairs scan is fast when duplicates occur early; it makes exactly n(n - 1)/2 comparisons on every yes-instance, and also on no-instances whose only equal pair is the last pair it examines (PROOFS.md section 1).",
+  "notes": "Element distinctness reduces to closest pair: n numbers are pairwise distinct iff the points (x_i, 0) have a positive minimum distance (PROOFS.md section 6; compare pairs/closest-pair-brute-vs-divide-conquer). Its quantum query complexity is a separate topic, not covered by this entry.",
+  "background": [
+    {
+      "statement": "Any algebraic computation tree (real-valued inputs; arithmetic operations and sign tests at unit cost) that decides element distinctness has worst-case complexity Omega(n log n). The general bound is in terms of the number of connected components of the set of yes-inputs, which here has n! components, one per ordering.",
+      "source": "Ben-Or 1983, Theorem 1 (general form: Theorems 3 and 4)"
+    },
+    {
+      "statement": "Universal hashing: Carter & Wegman 1979 ('Universal classes of hash functions'). Hashing uses the representation of the keys and is outside the comparison and algebraic computation tree models; its bounds are not restated here, and no hashing method is analysed or implemented in this entry.",
+      "source": "Carter & Wegman 1979"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_distinctness.py",
+      "../../experiments/2026-10-07b_count_v2_element_distinctness.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py"
+    ],
+    "audit": "RL-107"
+  }
 }

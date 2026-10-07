@@ -1,7 +1,7 @@
 {
   "id": "regex-matching-backtracking-vs-thompson",
   "title": "Regular-expression matching: backtracking vs memoised backtracking vs Thompson's NFA simulation",
-  "problem_statement": "Dialect (defined here): a pattern is a sequence of atoms; an atom is a symbol, either a lowercase letter a-z (matches that letter) or '.' (matches any one character), optionally followed by one quantifier '?' (zero or one occurrence) or '*' (zero or more occurrences). No parentheses, alternation, character classes, anchors, escapes, lazy quantifiers or backreferences. Given a pattern with m atoms and a text t of length |t| over a-z, decide whether the WHOLE text matches the pattern (full match; Python's re.fullmatch semantics, of which this dialect is a subset).",
+  "problem_statement": "Dialect (defined here): a pattern is a sequence of atoms; an atom is a symbol, either a lowercase letter a-z (matches that letter) or '.' (matches any one character), optionally followed by one quantifier '?' (zero or one occurrence) or '*' (zero or more occurrences). No parentheses, alternation, character classes, anchors, escapes, lazy quantifiers or backreferences. Given a pattern with m atoms and a text t of length |t| over a-z, decide whether the WHOLE text matches the pattern, that is, whether the text is a concatenation w_1 ... w_m in which w_i is matched by atom i (full match). On this dialect this agrees with Python's re.fullmatch, which serves as the V1 oracle; that agreement is tested, not proved.",
   "input": {
     "parameter": "n = size parameter: the pattern has at most 2n atoms (at most 4n characters) and the text at most 2n characters. The worst-case family is P_n = pattern (a?)^n a^n (m = 2n atoms) against text a^n (|t| = n).",
     "size_measure": "Theta(n) characters (pattern plus text). General bounds below are stated in m and |t|."
@@ -9,12 +9,12 @@
   "algorithms": [
     {
       "name": "backtracking (consume first)",
-      "idea": "Depth-first search over the choices, as in Perl-style engines: for 'c?' try consuming one character, then skipping the atom; for 'c*' try consuming and staying on the atom, then leaving it. Nothing is remembered between branches.",
+      "idea": "Depth-first search over the choices: for 'c?' try consuming one character, then skipping the atom; for 'c*' try consuming and staying on the atom, then leaving it. Nothing is remembered between branches.",
       "model": "classical-deterministic",
       "pseudocode": "match(i, j): if i == m: return j == |t|; (c, q) = atom i; ok = j < |t| and (c == '.' or c == t[j]); plain: ok and match(i+1, j+1); '?': (ok and match(i+1, j+1)) or match(i+1, j); '*': (ok and match(i, j+1)) or match(i+1, j). Answer match(0, 0).",
       "time_complexity": "Exponential in the worst case. On P_n exactly (n + 2) * 2^(n-1) - 1 symbol-character comparisons, Theta(n * 2^n). In general O(2^(m + |t|)): every call makes at most two recursive calls and each increases i + j, so the call tree has depth <= m + |t| + 1.",
       "space_complexity": "O(m + |t|) (recursion depth)",
-      "correctness": "The recursion is the definition of full matching for a concatenation of atoms, explored exhaustively (an atom 'c?' matches the empty string or one character matching c; 'c*' matches the empty string or one character followed by a match of 'c*'). Count on P_n (proof): the n atoms 'a?' always can consume (j <= i < n), and the only accepting branch is 'skip all n', which consume-first explores last, so all 2^n branches of the first n atoms are explored, costing one comparison per internal node of the full binary tree: 2^n - 1. A branch that consumed j characters reaches the plain atoms with n - j characters left, compares n - j times and then fails at j = |t| without a comparison (or accepts if j = 0, after n comparisons). Total 2^n - 1 + sum_j C(n, j)(n - j) = 2^n - 1 + n 2^(n-1) = (n + 2) 2^(n-1) - 1.",
+      "correctness": "The recursion is the definition of full matching for a concatenation of atoms, explored exhaustively (an atom 'c?' matches the empty string or one character matching c; 'c*' matches the empty string or one character followed by a match of 'c*'). Count on P_n (proof): the n atoms 'a?' always can consume (j <= i < n), and the only accepting branch is 'skip all n', which consume-first explores last, so all 2^n branches of the first n atoms are explored, costing one comparison per internal node of the full binary tree: 2^n - 1. A branch that consumed j characters reaches the plain atoms with n - j characters left, compares n - j times and then fails at j = |t| without a comparison (or accepts if j = 0, after n comparisons). Total 2^n - 1 + sum_j C(n, j)(n - j) = 2^n - 1 + n 2^(n-1) = (n + 2) 2^(n-1) - 1. Full proofs: PROOFS.md, sections 4 and 5 (correctness, calls, depth) and 1 (count).",
       "implementation": "implementations/backtracking.py:match_backtracking",
       "harness": {
         "v1_max_n": 12,
@@ -34,8 +34,8 @@
       "model": "classical-deterministic",
       "pseudocode": "as backtracking, but match(i, j) first looks (i, j) up in a dictionary and stores its result",
       "time_complexity": "O((m + 1)(|t| + 1)) subproblems with O(1) work each (O(1) dictionary operations, each counted as one step), i.e. O(n^2) for the stated n. On P_n exactly n(n + 1) symbol-character comparisons, Theta(n^2).",
-      "space_complexity": "O(m |t|)",
-      "correctness": "Same recursion as backtracking; the result of match(i, j) depends only on (i, j), so caching it does not change the answer. Count on P_n (proof): one comparison per distinct visited state (i, j) with i < m and j < |t| whose atom is a letter; the visited states are (i, j) with 0 <= j <= i < n (n(n+1)/2 comparisons) and the chains (n + s, j + s) with j + s < n (another n(n+1)/2).",
+      "space_complexity": "O((m + 1)(|t| + 1))",
+      "correctness": "Same recursion as backtracking; the result of match(i, j) depends only on (i, j), so caching it does not change the answer. Count on P_n (proof): one comparison per distinct visited state (i, j) with i < m and j < |t| whose atom is a letter; the visited states are (i, j) with 0 <= j <= i < n (n(n+1)/2 comparisons) and the chains (n + s, j + s) with j + s < n (another n(n+1)/2). Full proofs: PROOFS.md, sections 6 (correctness, evaluations) and 2 (count).",
       "implementation": "implementations/memoized.py:match_memoized",
       "harness": {
         "scaling": {
@@ -53,9 +53,9 @@
       "idea": "Treat the atoms as NFA states 0..m and advance the SET of all states reachable after each text character in lock step: epsilon-closure (an optional atom can be skipped), then one transition per active state. No branch is ever revisited.",
       "model": "classical-deterministic",
       "pseudocode": "S = closure({0}); for each character x of t: S = closure({i or i+1 : i in S, i < m, atom i matches x}); if S is empty: reject. Accept iff m in S. ('c*' stays at i, 'c' and 'c?' move to i + 1; closure follows optional atoms forward.)",
-      "time_complexity": "O(m (|t| + 1)): at most m + 1 states per step with O(1) work each, plus an O(m) closure per step; O(n^2) for the stated n. On P_n exactly n(n + 1) symbol-character comparisons, Theta(n^2).",
-      "space_complexity": "O(m)",
-      "correctness": "Thompson 1968. Invariant: after reading t[:j], S is exactly the set of atom positions i (0 <= i <= m) such that t[:j] fully matches atoms[:i] followed by c* when atom i is a starred atom c* (atoms[:i] alone otherwise); this set is closed under skipping optional atoms. Count on P_n (proof): the active set before reading character j + 1 is {j, ..., n + j} (n + 1 states, all < 2n), one comparison each, over n characters: n(n + 1).",
+      "time_complexity": "O((m + 1)(|t| + 1)): at most m + 1 states per step with O(1) work each, plus an O(m + 1) closure per step; O(n^2) for the stated n. On P_n exactly n(n + 1) symbol-character comparisons, Theta(n^2).",
+      "space_complexity": "O(m + 1)",
+      "correctness": "The method is Thompson's (1968); the proof is in PROOFS.md, section 7. Invariant: after reading t[:j], S is exactly the set of atom positions i (0 <= i <= m) such that t[:j] fully matches atoms[:i] followed by c* when atom i is a starred atom c* (atoms[:i] alone otherwise); this set is closed under skipping optional atoms. Count on P_n (proof): the active set before reading character j + 1 is {j, ..., n + j} (n + 1 states, all < 2n), one comparison each, over n characters: n(n + 1) (PROOFS.md, section 3).",
       "implementation": "implementations/thompson.py:match_thompson",
       "harness": {
         "scaling": {
@@ -82,13 +82,15 @@
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: the three matchers agree with each other and with Python's re.fullmatch (an independent engine, used only as the oracle in harness.check) on seeded random instances for n = 0..12, 16, 20, 24, 6 trials each (backtracking up to n = 12); about a quarter of the instances for n <= 12 are the pathological P_n. A larger battery in experiments/2026-10-07b_regex_counts.py found 0 disagreements in 3300 instances (2275 matches). V2 (measure 'reported', RESEARCH_LOG RL-047 method): the measured quantity is the exact number of comparisons between a pattern symbol and a text character, counted by an instrumented character type (the text of P_n is built from it) while the matchers run unchanged. The counts equal the closed forms proved in this entry at every measured n (backtracking n = 0..16; memoised and Thompson n = 0..16, 24, 32, 48, 64). Fits: backtracking alpha = 0.974 against n*2^n at tolerance 0.035 (the 0.026 deviation is fixed by the exact lower-order terms of (n + 2) 2^(n-1) - 1; rivals 2^n 1.131, n^2*2^n 0.854, n^2 3.386, rejected; the log-factor diagnostic, 0.912 against n log n 2^n and 1.044 against n 2^n / log n, is resolved at this tolerance but was not at 0.06); memoised and Thompson alpha = 0.981 against n^2 at tolerance 0.05 (exact count n^2 + n; rivals n 1.962, n^3 0.654, n*2^n 0.058, rejected; log factor resolved: 0.852 and 1.156). Each tolerance exceeds the exact deviation and lies below every rival gap; see the validator output recorded in research/2026-10-07b_new_candidates.md.",
+    "method": "V1: the three matchers agree with each other and with Python's re.fullmatch (an independent engine, used only as the oracle in harness.check) on seeded random instances for n = 0..12, 16, 20, 24, 6 trials each (backtracking up to n = 12); about a quarter of the instances for n <= 12 are the pathological P_n. A larger battery in experiments/2026-10-07b_regex_counts.py found 0 disagreements in 3300 instances (2275 matches). V2 (measure 'reported', RESEARCH_LOG RL-047 method): the measured quantity is the exact number of comparisons between a pattern symbol and a text character, counted by an instrumented character type (the text of P_n is built from it) while the matchers run unchanged. The counts equal the closed forms proved in this entry at every measured n (backtracking n = 0..16; memoised and Thompson n = 0..16, 24, 32, 48, 64). Fits: backtracking alpha = 0.974 against n*2^n at tolerance 0.035 (the 0.026 deviation is fixed by the exact lower-order terms of (n + 2) 2^(n-1) - 1; rivals 2^n 1.131, n^2*2^n 0.854, n^2 3.386, rejected; the log-factor diagnostic, 0.912 against n log n 2^n and 1.044 against n 2^n / log n, is resolved at this tolerance but was not at 0.06); memoised and Thompson alpha = 0.981 against n^2 at tolerance 0.05 (exact count n^2 + n; rivals n 1.962, n^3 0.654, n*2^n 0.058, rejected; log factor resolved: 0.852 and 1.156). Each tolerance exceeds the exact deviation and lies below every rival gap; see the validator output recorded in research/2026-10-07b_new_candidates.md. Proofs: PROOFS.md proves every claim of this entry (the exact comparison counts for all sizes of their domains, the correctness of the three matchers with the corrected Thompson invariant, their call, time and space bounds, the uncounted work and the caveats) and names the scripts and tests that check each one (tests/test_proofs_regex.py and the count-check scripts).",
     "artifacts": [
+      "PROOFS.md",
       "implementations/backtracking.py",
       "implementations/memoized.py",
       "implementations/thompson.py",
       "harness.py",
-      "../../experiments/2026-10-07b_regex_counts.py"
+      "../../experiments/2026-10-07b_regex_counts.py",
+      "../../tests/test_proofs_regex.py"
     ]
   },
   "test_harness": {
@@ -96,6 +98,18 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 24],
     "trials": 6
   },
-  "caveats": "The exponential cost of backtracking is family-specific: on most patterns it is fast, and P_n is one witness family (both pattern and text grow with n). Counts are symbol-character comparisons; loop control, the epsilon-closure and dictionary operations are not counted (they are O(1) per counted comparison or per state, so the asymptotic claims are unaffected). Backreferences are excluded: they can make the language non-regular and are handled by neither the NFA simulation nor this entry. Python's re is used only as the V1 oracle, never timed.",
-  "notes": "Real backtracking engines add heuristics (and some memoise), but the consume-first depth-first strategy shown here is the classic source of 'catastrophic backtracking'. The memoised matcher and Thompson's simulation make the same number of comparisons on P_n, n(n + 1); they differ in that the simulation needs no table and reads the text strictly left to right once."
+  "caveats": "The exponential cost of backtracking is a worst case, shown on the witness family P_n (both pattern and text grow with n). Counts are symbol-character comparisons; loop control, the epsilon-closure and dictionary operations are not counted (on P_n they are O(1) per counted comparison, so the exact counts give the asymptotic costs there; the general bounds count calls or states, uncounted work included; PROOFS.md, section 8). Backreferences are excluded: they can make the language non-regular (for example (a*)b\\1 matches exactly the texts a^k b a^k, a non-regular language; PROOFS.md, section 9) and are handled by neither the NFA simulation nor this entry. Python's re is used only as the V1 oracle, never timed.",
+  "notes": "The consume-first depth-first strategy shown here re-explores subproblems; on P_n this makes its cost exponential ('catastrophic backtracking'). The memoised matcher and Thompson's simulation make the same number of comparisons on P_n, n(n + 1); they differ in that the simulation needs no table and reads the text strictly left to right once.",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_regex.py",
+      "../../experiments/2026-10-07b_regex_counts.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py"
+    ],
+    "audit": "RL-107"
+  }
 }

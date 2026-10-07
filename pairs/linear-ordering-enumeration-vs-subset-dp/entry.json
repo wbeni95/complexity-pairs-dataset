@@ -1,7 +1,7 @@
 {
   "id": "linear-ordering-enumeration-vs-subset-dp",
   "title": "Linear ordering problem: enumeration of all n! orders vs dynamic programming over subsets",
-  "problem_statement": "Given an n x n integer matrix W (diagonal entries are ignored), find an order (permutation) of the n elements that maximises the sum of W[a][b] over all pairs in which a comes before b. Output the maximum and an order attaining it (ties: any optimal order). Minimising the weight of the backward pairs instead is the same problem (the two sums add up to a constant), and for 0/1 matrices of a digraph it is the feedback arc set problem.",
+  "problem_statement": "Given an n x n integer matrix W (diagonal entries are ignored), find an order (permutation) of the n elements that maximises the sum of W[a][b] over all pairs in which a comes before b. Output the maximum and an order attaining it (ties: any optimal order). Minimising the weight of the backward pairs instead is the same problem (the two sums add up to a constant), and for 0/1 matrices of a digraph it is the feedback arc set problem (PROOFS.md section 3).",
   "input": {
     "parameter": "n = number of elements (rows of W).",
     "size_measure": "n^2 integer matrix entries."
@@ -12,9 +12,9 @@
       "idea": "Evaluate the n! orders one by one, summing W over the n(n-1)/2 ordered pairs of each, and keep the best.",
       "model": "classical-deterministic",
       "pseudocode": "best = None\nfor order in permutations(0..n-1):\n  value = sum of W[order[p]][order[q]] over p < q\n  if best is None or value > best: best, best_order = value, order\nreturn (best, best_order)",
-      "time_complexity": "Theta(n! n^2) on every input. Exactly n! (n(n-1)/2 + 1) - 1 counted operations for every n >= 0: n(n-1)/2 additions per order and n! - 1 comparisons.",
-      "space_complexity": "Theta(n) besides the input",
-      "correctness": "Exhaustive over all orders.",
+      "time_complexity": "Theta(n! n^2) on every input, given the machine-model assumption on itertools.permutations (background; its O(n n!) total work is dominated). Exactly n! (n(n-1)/2 + 1) - 1 counted operations for every n >= 0: n(n-1)/2 additions per order and n! - 1 comparisons.",
+      "space_complexity": "Theta(n) besides the input (given the machine-model assumption on itertools.permutations, background)",
+      "correctness": "Exhaustive over all orders (given the documented behaviour of itertools.permutations, background; PROOFS.md section 4).",
       "implementation": "implementations/enumeration.py:linear_ordering_enumeration",
       "harness": {
         "v1_max_n": 8,
@@ -34,7 +34,7 @@
       "pseudocode": "best[{}] = 0\nfor S = 0 .. 2^n - 1 (as integers, so subsets come first):\n  for v not in S:\n    gain = sum of W[v][u] over u not in S + {v}\n    best[S | {v}] = max(best[S | {v}], best[S] + gain)   (remember the maximising v)\nreturn best[all] and the order rebuilt from the remembered elements",
       "time_complexity": "Theta(n^2 2^n) on every input. Exactly 2^(n-2) (n+4)(n-1) + 1 counted operations for n >= 2: n(n-1) 2^(n-2) gain additions (sum over S of (n - |S|)(n - |S| - 1)), n 2^(n-1) additions best[S] + gain, and n 2^(n-1) - 2^n + 1 comparisons (a set T is reached |T| times; the first arrival is stored without comparison).",
       "space_complexity": "Theta(2^n) table entries",
-      "correctness": "Induction on |S|: best[S] is the maximum, over the orders of S, of the weight of the pairs with a in S before b (b in S or not). In an order of S with last element v, the pairs starting at v go to the elements outside S, and the pairs starting at the other elements of S do not depend on where v stands among the later elements; so best[S] = max over v in S of best[S - {v}] + sum of W[v][u] over u not in S. The recurrence over (set placed so far, next element) is that of Held & Karp 1962; Bodlaender et al. 2012 treat vertex-ordering problems in this way.",
+      "correctness": "Proof: PROOFS.md section 5. Induction on |S|: best[S] is the maximum, over the orders of S, of the weight of the pairs with a in S before b (b in S or not). In an order of S with last element v, the pairs starting at v go to the elements outside S, and the pairs starting at the other elements of S do not depend on where v stands among the later elements; so best[S] = max over v in S of best[S - {v}] + sum of W[v][u] over u not in S. The recurrence over (set placed so far, next element) is that of Held & Karp 1962 (background).",
       "implementation": "implementations/subset_dp.py:linear_ordering_subset_dp",
       "harness": {
         "scaling": {
@@ -50,7 +50,7 @@
   ],
   "pair_type": "T6",
   "secondary_tags": ["T8"],
-  "relationship": "Factorial -> single exponential: Theta(n! n^2) -> Theta(n^2 2^n). Both stay exponential. The linear ordering problem is NP-hard (Grötschel, Jünger & Reinelt 1984; for 0/1 matrices it is the feedback arc set problem, NP-complete by Karp 1972), so a polynomial algorithm would imply P = NP: hence primary T6, with T8 for the verified improvement.",
+  "relationship": "Factorial -> single exponential: Theta(n! n^2) -> Theta(n^2 2^n). Both stay exponential (secondary T8). The primary tag T6 rests on the NP-hardness of the linear ordering problem (for 0/1 matrices it is the feedback arc set problem, PROOFS.md section 3), which is background (cited, not proved here): a polynomial algorithm would imply P = NP.",
   "sources": [
     {
       "authors": "Grötschel, M.; Jünger, M.; Reinelt, G.",
@@ -81,17 +81,27 @@
       "title": "A note on exact algorithms for vertex ordering problems on graphs",
       "venue": "Theory of Computing Systems 50(3), 420-432",
       "doi": "10.1007/s00224-011-9312-0"
+    },
+    {
+      "authors": "Python Software Foundation",
+      "year": 2026,
+      "title": "itertools - Functions creating iterators for efficient looping: itertools.permutations",
+      "venue": "The Python Standard Library documentation, Python 3.14",
+      "url": "https://docs.python.org/3.14/library/itertools.html#itertools.permutations",
+      "note": "Background only: the documented behaviour (successive permutations, lexicographic order, n!/(n - r)! of them) and the 'roughly equivalent' Python code, read on 2026-10-07."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: the validator runs n = 0..8, 10 and 12, 5 instances per size: random matrices with entries in -9..9 and in 0..9, tournaments (W[a][b] + W[b][a] = 1), hidden acyclic instances (positive entries only along a hidden order), zero matrices and entries up to 10^6; the diagonal holds random integers that must be ignored; the enumeration runs up to n = 8, the DP on every size. check is independent of both implementations: it requires a permutation, recomputes the value from positions, rejects a value above the upper bound sum over a < b of max(W[a][b], W[b][a]) and certifies a value equal to it, and otherwise computes the optimum by a depth-first branch and bound over prefixes (exact for n <= 8; above, a budget of 300 000 nodes, after which an improving move of one element proves non-optimality and anything else is undecided). experiments/2026-10-06i_linear_ordering.py adds 436 implementation runs on n = 0..12 (412 verdicts exact and true for n <= 8, 24 true above, 0 failures) and an oracle control: 2460 deliberately wrong outputs (value +- 1, worse orders with honest or optimal value, the value of the reversed order, the diagonal added, repeated or missing elements, wrong types) all rejected, 212 correct outputs accepted. V2 (exact counts): generate_scaling gives a matrix of CountingInt entries drawn from rng, which count every comparison and +, - on entry-derived values; the implementations are unchanged and the counts do not depend on the entries (checked on three matrices per n). Enumeration: exactly n! (n(n-1)/2 + 1) - 1 (checked for n = 2..8); fit on n = 4..8; rivals n! n, n! n^3 and n^2 2^n. DP: exactly 2^(n-2)(n+4)(n-1) + 1 (checked for n = 2..15); fit on n = 6..14; rivals n 2^n, n^3 2^n, 3^n and n!. No counted operation happens inside a CPython built-in.",
+    "method": "V1: the validator runs n = 0..8, 10 and 12, 5 instances per size: random matrices with entries in -9..9 and in 0..9, tournaments (W[a][b] + W[b][a] = 1), hidden acyclic instances (positive entries only along a hidden order), zero matrices and entries up to 10^6; the diagonal holds random integers that must be ignored; the enumeration runs up to n = 8, the DP on every size. check is independent of both implementations: it requires a permutation, recomputes the value from positions, rejects a value above the upper bound sum over a < b of max(W[a][b], W[b][a]) and certifies a value equal to it, and otherwise computes the optimum by a depth-first branch and bound over prefixes (exact for n <= 8; above, a budget of 300 000 nodes, after which an improving move of one element proves non-optimality and anything else is undecided). experiments/2026-10-06i_linear_ordering.py adds 436 implementation runs on n = 0..12 (412 verdicts exact and true for n <= 8, 24 true above, 0 failures) and an oracle control: 2460 deliberately wrong outputs (value +- 1, worse orders with honest or optimal value, the value of the reversed order, the diagonal added, repeated or missing elements, wrong types) all rejected, 212 correct outputs accepted. V2 (exact counts): generate_scaling gives a matrix of CountingInt entries drawn from rng, which count every comparison and +, - on entry-derived values; the implementations are unchanged and the counts do not depend on the entries (checked on three matrices per n). Enumeration: exactly n! (n(n-1)/2 + 1) - 1 (checked for n = 2..8); fit on n = 4..8; rivals n! n, n! n^3 and n^2 2^n. DP: exactly 2^(n-2)(n+4)(n-1) + 1 (checked for n = 2..15); fit on n = 6..14; rivals n 2^n, n^3 2^n, 3^n and n!. No counted operation happens inside a CPython built-in. Exact counts: PROOFS.md proves the exact operation counts of this entry for all sizes of their domains, from the code, and names the scripts and sizes that check each count. The other claims (problem-statement equivalences, correctness, space, the running-row-sum variant, the uncounted loop control, the oracle facts) are proved in PROOFS.md sections 3-10 and checked in tests/test_proofs_linear_ordering.py.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/enumeration.py",
       "implementations/subset_dp.py",
       "harness.py",
       "../../experiments/2026-10-06i_linear_ordering.py",
-      "../../tests/test_entries_2026_10_06i_linear_ordering.py"
+      "../../tests/test_entries_2026_10_06i_linear_ordering.py",
+      "../../tests/test_proofs_linear_ordering.py"
     ]
   },
   "test_harness": {
@@ -99,6 +109,27 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12],
     "trials": 5
   },
-  "caveats": "Arithmetic is unit cost. The DP recomputes each gain from scratch (n - |S| - 1 additions); keeping running row sums (a table of n 2^n partial sums) lowers the time to Theta(n 2^n) while using Theta(n 2^n) memory instead of Theta(2^n); it is not implemented here, and the rival n 2^n is rejected for this implementation. Loop control and subset arithmetic on plain integers are not counted; they are of the same order as the counted operations. The V1 oracle is exact for n <= 8 and, above, for the instances on which the upper bound is attained or branch and bound finishes within its budget. The entry makes no claim about the fastest known exact algorithms for the linear ordering or feedback arc set problem.",
-  "notes": "Relatives in the dataset: tsp-brute-vs-held-karp and hamiltonian-cycle-count-enumeration-vs-inclusion-exclusion use the same (set, last element) recurrence."
+  "caveats": "Arithmetic is unit cost. The DP recomputes each gain from scratch (n - |S| - 1 additions); keeping running row sums (a table of n 2^n partial sums) lowers the time to Theta(n 2^n) while using Theta(n 2^n) memory instead of Theta(2^n); it is not implemented here (PROOFS.md section 7), and the rival n 2^n is rejected for this implementation. Loop control and subset arithmetic on plain integers are not counted; they are of the same order as the counted operations (PROOFS.md section 8: n^2 2^(n-1) inner-loop tests against 2^(n-2)(n+4)(n-1) + 1 counted operations). The V1 oracle is exact for n <= 8 and, above, for the instances on which the upper bound is attained or branch and bound finishes within its budget. The entry makes no claim about the fastest known exact algorithms for the linear ordering or feedback arc set problem.",
+  "notes": "Relatives in the dataset: tsp-brute-vs-held-karp and hamiltonian-cycle-count-enumeration-vs-inclusion-exclusion use the same (set, last element) recurrence. Proofs of the claims: PROOFS.md.",
+  "background": [
+    {"statement": "The linear ordering problem is NP-hard, so a polynomial algorithm would imply P = NP. This is the reason for the primary tag T6.", "source": "Grötschel, Jünger & Reinelt 1984 (abstract)"},
+    {"statement": "FEEDBACK ARC SET, the 0/1 case of the problem, is NP-complete.", "source": "Karp 1972"},
+    {"statement": "The (set placed so far, next element) recurrence is that of Held & Karp for sequencing problems; Bodlaender et al. treat vertex-ordering problems in this way.", "source": "Held & Karp 1962; Bodlaender, Fomin, Koster, Kratsch & Thilikos 2012"},
+    {"statement": "Machine-model assumption of this entry: CPython's itertools.permutations(range(n)) behaves as its documented 'roughly equivalent' Python code. It yields every permutation of range(n) exactly once, as n-tuples in lexicographic order (documented behaviour); it does O(n * n!) work in total over the n! permutations, that is amortised O(n) per permutation, while a single step can take Theta(n^2); and it keeps O(n) words of state. pairs/permanent-naive-vs-ryser/PROOFS.md section 0.1 proves the two cost properties for the documented code; that the C implementation has the same costs is assumed, not proved.", "source": "Python Software Foundation 2026, itertools documentation: permutations, description and 'roughly equivalent' code"}
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "../permanent-naive-vs-ryser/PROOFS.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-06i_linear_ordering.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py",
+      "../../tests/test_entries_2026_10_06i_linear_ordering.py",
+      "../../tests/test_proofs_linear_ordering.py",
+      "../../tests/test_proofs_permutations.py"
+    ],
+    "audit": "RL-107"
+  }
 }

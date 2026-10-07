@@ -1,10 +1,12 @@
 {
   "id": "no-integral-form-z-half-schemes",
   "title": "No integer equivalent form for the ⟨2,4,5;32⟩ and ⟨3,3,6;40⟩ ℤ[1/2] matrix multiplication schemes",
-  "statement": "Let K be a field of characteristic 0. For a scheme (a_r, b_r, c_r), r = 1..R, for the format ⟨n,m,p⟩ (a_r: n×m, b_r: m×p, c_r: p×n, satisfying the Brent equations), call (λ_r U a_r V⁻¹, μ_r V b_r W⁻¹, (λ_r μ_r)⁻¹ W c_r U⁻¹) with U ∈ GL_n(K), V ∈ GL_m(K), W ∈ GL_p(K), λ_r, μ_r ∈ K^×, possibly followed by a reordering of the terms, an equivalent form. Then neither the ⟨2,4,5;32⟩ scheme nor the ⟨3,3,6;40⟩ scheme in the pinned files named in the README, both with coefficients in ℤ[1/2], has an equivalent form all of whose coefficients are integers. (The ⟨2,4,5;32⟩ file was checked once against AlphaEvolve's published decomposition (2025); the ⟨3,3,6;40⟩ file is attributed to Smirnov (2013) and is not compared with the paper here.) Certificates (the type of Moran–Schwartz–Yuan, Proposition 3), with term matrices M_j = a_j b_j c_j: tr(M_1) = 3/2 for ⟨3,3,6;40⟩ and tr(M_2 M_5) = 1/2 for ⟨2,4,5;32⟩. The action conjugates every M_j by U (term scalings cancel), so these traces are invariant, and they would be integers for an integer form.",
+  "statement": "Let K be a field of characteristic 0. For a scheme (a_r, b_r, c_r), r = 1..R, for the format ⟨n,m,p⟩ (a_r: n×m, b_r: m×p, c_r: p×n, satisfying the Brent equations), call (λ_r U a_r V⁻¹, μ_r V b_r W⁻¹, (λ_r μ_r)⁻¹ W c_r U⁻¹) with U ∈ GL_n(K), V ∈ GL_m(K), W ∈ GL_p(K), λ_r, μ_r ∈ K^×, possibly followed by a reordering of the terms, an equivalent form. Then neither the ⟨2,4,5;32⟩ scheme nor the ⟨3,3,6;40⟩ scheme in the pinned files named in the README, both with coefficients in ℤ[1/2], has an equivalent form all of whose coefficients are integers. (The ⟨2,4,5;32⟩ file agrees term by term with AlphaEvolve's published decomposition (2025), which verify.py checks; the ⟨3,3,6;40⟩ file is attributed to Smirnov (2013) and is not compared with the paper here.) Certificates (the type of Moran–Schwartz–Yuan, Proposition 3), with term matrices M_j = a_j b_j c_j: tr(M_1) = 3/2 for ⟨3,3,6;40⟩ and tr(M_2 M_5) = 1/2 for ⟨2,4,5;32⟩. The action conjugates every M_j by U (term scalings cancel), so these traces are invariant, and they would be integers for an integer form.",
   "provenance": {
     "class": "literature",
-    "bases": ["Moran–Schwartz–Yuan 2026, arXiv:2602.13171"]
+    "bases": ["Moran–Schwartz–Yuan 2026, arXiv:2602.13171"],
+    "pending": true,
+    "pending_note": "Moran, Schwartz and Yuan (2026, §3.2) state the result for a ⟨2,4,5,32⟩ ℤ[1/2] scheme that they attribute to Hopcroft and Kerr (1971), and for Smirnov's ⟨3,3,6,40⟩ ℤ[1/2] scheme. They print neither scheme and identify no files. No source checked supports a rank-32 Hopcroft–Kerr scheme for ⟨2,4,5⟩ (by the abstract of Hopcroft and Kerr (1971), their construction multiplies a 4×2 by a 2×5 matrix, the format corresponding to ⟨2,4,5⟩ under the permutation symmetry of formats, with 33 multiplications), and the pinned ⟨3,3,6;40⟩ file is attributed to Smirnov but not compared with his paper. The evidence (the ring ℤ[1/2] and the trace properties they describe hold for both pinned files) points to the pinned files but does not establish that their statements concern them or schemes equivalent to them. This note proves the statement for the pinned files."
   },
   "sources": [
     {
@@ -21,7 +23,7 @@
       "title": "AlphaEvolve: A coding agent for scientific and algorithmic discovery",
       "arxiv": "2506.13131",
       "url": "https://github.com/google-deepmind/alphaevolve_results",
-      "note": "Source of the ⟨2,4,5;32⟩ scheme. The pinned file agrees term by term, in order, with decomposition_245 in mathematical_results.ipynb at commit 4226acbf237ff9ad10ba7673a2af127a2d8a5971 (not re-checked by verify.py)."
+      "note": "Source of the ⟨2,4,5;32⟩ scheme. The pinned file agrees term by term, in order, with decomposition_245 in mathematical_results.ipynb at commit 4226acbf237ff9ad10ba7673a2af127a2d8a5971 (checked by verify.py; the notebook is a pinned input, see the last source)."
     },
     {
       "authors": "Smirnov, A. V.",
@@ -50,7 +52,22 @@
       "title": "FastMatrixMultiplication, schemes/known/tensor/3x3x6_tensor.mpl (SHA-256 3e79357c5d2540e5c54c2a5f484f17009f70799b10bd45ed8e4bf893b5e223ab)",
       "url": "https://raw.githubusercontent.com/dronperminov/FastMatrixMultiplication/64f58a5e40806bc47847b11dd8aceec043fa895d/schemes/known/tensor/3x3x6_tensor.mpl",
       "note": "Pinned input of verify.py (commit 64f58a5e40806bc47847b11dd8aceec043fa895d)."
+    },
+    {
+      "authors": "google-deepmind (GitHub)",
+      "title": "alphaevolve_results, mathematical_results.ipynb (SHA-256 2cce2543e48c89aa3e91614272a698a0147dd2548ea11cf92f1292b7435d38ff)",
+      "url": "https://raw.githubusercontent.com/google-deepmind/alphaevolve_results/4226acbf237ff9ad10ba7673a2af127a2d8a5971/mathematical_results.ipynb",
+      "note": "Pinned input of verify.py (commit 4226acbf237ff9ad10ba7673a2af127a2d8a5971); verify.py compares its decomposition_245 with the ⟨2,4,5;32⟩ file."
     }
   ],
-  "verify": "python theorems/no-integral-form-z-half-schemes/verify.py"
+  "verify": "python theorems/no-integral-form-z-half-schemes/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-107"
+  }
 }

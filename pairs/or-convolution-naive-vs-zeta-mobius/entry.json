@@ -34,7 +34,7 @@
       "pseudocode": "zf = zeta(f); zg = zeta(g)   (for each bit i, for each S containing i: z[S] += z[S without i])\np = zf * zg pointwise\nh = moebius(p)                (for each bit i, for each S containing i: p[S] -= p[S without i])",
       "time_complexity": "Theta(n * 2^n) = Theta(N log N): exactly 3n 2^(n-1) additions and subtractions plus 2^n multiplications, (3n + 2) 2^(n-1) ring operations for every n >= 0.",
       "space_complexity": "Theta(2^n)",
-      "correctness": "zeta(h)[S] = sum over T subset of S of h[T] = sum of f[A] g[B] over pairs with A | B subset of S = (sum over A subset of S of f[A]) (sum over B subset of S of g[B]) = zeta(f)[S] zeta(g)[S], because A | B is a subset of S iff A and B are. The Moebius transform is the inverse of zeta, so h = moebius(zeta(f) . zeta(g)) (the covering product of Bjorklund, Husfeldt, Kaski & Koivisto 2007). Yates' passes: after the passes for bits 0..i-1, z[S] sums f over the subsets of S that agree with S on bits >= i; each pass does 2^(n-1) additions, n passes per transform; the Moebius passes undo them in the same way with subtractions. Count: 3 transforms of n 2^(n-1) operations plus 2^n products.",
+      "correctness": "zeta(h)[S] = sum over T subset of S of h[T] = sum of f[A] g[B] over pairs with A | B subset of S = (sum over A subset of S of f[A]) (sum over B subset of S of g[B]) = zeta(f)[S] zeta(g)[S], because A | B is a subset of S iff A and B are. The Moebius transform is the inverse of zeta, so h = moebius(zeta(f) . zeta(g)) (see Bjorklund, Husfeldt, Kaski & Koivisto 2007). Yates' passes: after the passes for bits 0..i-1, z[S] sums f over the subsets of S that agree with S on bits >= i; each pass does 2^(n-1) additions, n passes per transform; the Moebius passes undo them in the same way with subtractions. Count: 3 transforms of n 2^(n-1) operations plus 2^n products.",
       "implementation": "implementations/zeta_mobius.py:or_convolution_zeta_mobius",
       "harness": {
         "scaling": {
@@ -48,33 +48,39 @@
     }
   ],
   "pair_type": "T3",
-  "relationship": "Theta(4^n) -> Theta(n 2^n) in the ground-set size n, i.e. Theta(N^2) -> Theta(N log N) in the input length N = 2^n. Both are polynomial in the input size, so this is T3. It is the subset-lattice analogue of the XOR convolution entry (pairs/xor-convolution-naive-vs-walsh-hadamard): there the Walsh-Hadamard transform diagonalises the XOR convolution, here the zeta transform diagonalises the OR convolution. The zeta transform alone is pairs/subset-sum-zeta-transform-naive-vs-yates; Bjorklund, Husfeldt, Kaski & Koivisto (2007) use the same transforms, ranked by set size, for the subset convolution (A | B = S with A & B empty) in O(n^2 2^n) ring operations.",
+  "relationship": "Theta(4^n) -> Theta(n 2^n) in the ground-set size n, i.e. Theta(N^2) -> Theta(N log N) in the input length N = 2^n. Both are polynomial in the input size, so this is T3. It is the subset-lattice analogue of the XOR convolution entry (pairs/xor-convolution-naive-vs-walsh-hadamard): there the Walsh-Hadamard transform diagonalises the XOR convolution, here the zeta transform diagonalises the OR convolution. The zeta transform alone is pairs/subset-sum-zeta-transform-naive-vs-yates. The use of the same transforms for the subset convolution is background (see background).",
+  "background": [
+    {
+      "statement": "Bjorklund, Husfeldt, Kaski and Koivisto evaluate the subset convolution (the sum of f(T) g(S minus T) over T subset of S, for every S) in O(n^2 2^n) additions and multiplications, via Moebius transform and inversion.",
+      "source": "Björklund, Husfeldt, Kaski & Koivisto 2007, abstract (arXiv:cs/0611101)"
+    }
+  ],
   "sources": [
     {
       "authors": "Björklund, A.; Husfeldt, T.; Kaski, P.; Koivisto, M.",
       "year": 2007,
       "title": "Fourier meets Möbius: fast subset convolution",
       "venue": "Proceedings of the 39th ACM Symposium on Theory of Computing (STOC 2007), 67-74",
-      "doi": "10.1145/1250790.1250801",
-      "note": "Covering product via zeta and Moebius transforms; subset convolution via ranked transforms."
+      "doi": "10.1145/1250790.1250801"
     },
     {
       "authors": "Kennes, R.",
       "year": 1992,
       "title": "Computational aspects of the Mobius transformation of graphs",
       "venue": "IEEE Transactions on Systems, Man, and Cybernetics 22(2), 201-223",
-      "doi": "10.1109/21.148425",
-      "note": "Fast Moebius transformation on the subset lattice."
+      "doi": "10.1109/21.148425"
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree on random set functions with values in [-9, 9] for n = 0..8 and 10 (the naive method up to n = 10; zeta-Moebius also at n = 11), 3 trials each. The independent check() verifies the zeta identity zeta(h)[S] = zeta(f)[S] zeta(g)[S] for every S, with each zeta vector computed by submask enumeration (Theta(3^n), not the Yates passes of the implementation); zeta is invertible, so this is a complete check at every n. For n <= 10 it also evaluates the definition at 6 seeded sets by explicit submask recursion. Oracle control (experiments/2026-10-06f_entries_or_convolution.py): on 86 seeded instances (n = 0..11) it accepts all 86 correct outputs and rejects all 383 wrong ones (86 single entries off by one, 71 AND convolutions, 72 XOR convolutions, 76 outputs with the Moebius step left out, 78 wrong lengths). An earlier version of check() that tested the zeta identity on 48 sampled sets for n > 8 missed 4 of the 86 off-by-one errors (a changed entry is seen only by its supersets); it was replaced by the complete check before any V1 run was recorded. V2 (exact counts, RESEARCH_LOG RL-047 method): set functions of a harness number type CountingInt that counts every +, - and * of the unchanged implementations. Counts equal 2 * 4^n (naive, n = 0..10) and (3n + 2) 2^(n-1) (zeta-Moebius, n = 1..16) exactly. Fits at tolerance 0.02: naive alpha = 1.000 against 4^n, rivals n 2^n 1.562, 3^n 1.262, n 4^n 0.877 rejected; zeta-Moebius alpha = 1.000 against (3n + 2) 2^n, rivals 2^n 1.149, n^2 2^n 0.868, 3^n 0.725 rejected.",
+    "method": "V1: both implementations agree on random set functions with values in [-9, 9] for n = 0..8 and 10 (the naive method up to n = 10; zeta-Moebius also at n = 11), 3 trials each. The independent check() verifies the zeta identity zeta(h)[S] = zeta(f)[S] zeta(g)[S] for every S, with each zeta vector computed by submask enumeration (Theta(3^n), not the Yates passes of the implementation); zeta is invertible, so this is a complete check at every n. For n <= 10 it also evaluates the definition at 6 seeded sets by explicit submask recursion. Oracle control (experiments/2026-10-06f_entries_or_convolution.py): on 86 seeded instances (n = 0..11) it accepts all 86 correct outputs and rejects all 383 wrong ones (86 single entries off by one, 71 AND convolutions, 72 XOR convolutions, 76 outputs with the Moebius step left out, 78 wrong lengths). An earlier version of check() that tested the zeta identity on 48 sampled sets for n > 8 missed 4 of the 86 off-by-one errors (a changed entry is seen only by its supersets); it was replaced by the complete check before any V1 run was recorded. V2 (exact counts, RESEARCH_LOG RL-047 method): set functions of a harness number type CountingInt that counts every +, - and * of the unchanged implementations. Counts equal 2 * 4^n (naive, n = 0..10) and (3n + 2) 2^(n-1) (zeta-Moebius, n = 1..16) exactly. Fits at tolerance 0.02: naive alpha = 1.000 against 4^n, rivals n 2^n 1.562, 3^n 1.262, n 4^n 0.877 rejected; zeta-Moebius alpha = 1.000 against (3n + 2) 2^n, rivals 2^n 1.149, n^2 2^n 0.868, 3^n 0.725 rejected. Proofs: PROOFS.md proves every claim of this entry from the code (the correctness of both algorithms, the completeness of the V1 check, the time and space bounds, the exact counts for all sizes of their domains, the value sizes and the AND mirror) and names the scripts and tests that check each one, among them tests/test_proofs_or_convolution.py.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/naive.py",
       "implementations/zeta_mobius.py",
       "harness.py",
-      "../../experiments/2026-10-06f_entries_or_convolution.py"
+      "../../experiments/2026-10-06f_entries_or_convolution.py",
+      "../../tests/test_proofs_or_convolution.py"
     ]
   },
   "test_harness": {
@@ -83,5 +89,19 @@
     "trials": 3
   },
   "caveats": "Costs count additions, subtractions and multiplications on integers with O(n) bits; index arithmetic and loop control are not counted. The fitted fast cost is the exact closed form (3n + 2) 2^n (proportional to the count): the bare n 2^n gives alpha = 0.989 on n = 4..16, inside the 0.02 band, so here the leading term would also pass, but the exact form leaves no lower-order slack. Counts measure arithmetic, not wall-clock time.",
-  "notes": "AND convolution: A & B = S iff (~A) | (~B) = ~S, so the AND convolution of f and g is the OR convolution of f' and g' (f'[X] = f[~X]) read at complemented indices; equivalently it uses sums over supersets instead of subsets. The experiment checks this mirror for both implementations on n = 0..9 (100 of 100 instance-implementation pairs correct). It is a reindexing, not a separate pair. The 3^n rival separates the fast method from the cost of the naive zeta transform (pairs/subset-sum-zeta-transform-naive-vs-yates)."
+  "notes": "AND convolution: A & B = S iff (~A) | (~B) = ~S, so the AND convolution of f and g is the OR convolution of f' and g' (f'[X] = f[~X]) read at complemented indices; equivalently it uses sums over supersets instead of subsets. The experiment checks this mirror for both implementations on n = 0..9 (100 of 100 instance-implementation pairs correct). It is a reindexing, not a separate pair. The 3^n rival separates the fast method from the cost of the naive zeta transform (pairs/subset-sum-zeta-transform-naive-vs-yates).",
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "../subset-sum-zeta-transform-naive-vs-yates/PROOFS.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py",
+      "../../experiments/2026-10-06f_entries_or_convolution.py",
+      "../../tests/test_proofs_or_convolution.py",
+      "../../tests/test_proofs_zeta.py"
+    ],
+    "audit": "RL-107"
+  }
 }

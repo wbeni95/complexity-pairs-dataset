@@ -1,6 +1,7 @@
 """Trial divisors: try d = min(a, b), min(a, b) - 1, ... until d divides both.
 
-Runs min(a, b) - gcd(a, b) + 1 iterations, so min(a, b) of them on coprime inputs: Theta(2^n) for n-bit inputs.
+For a, b >= 1 it runs min(a, b) - gcd(a, b) + 1 iterations, so min(a, b) of them on coprime inputs: Theta(2^n)
+in the worst case for n-bit inputs; none if a = 0 or b = 0. Proofs: ../PROOFS.md.
 """
 
 

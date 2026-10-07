@@ -1,4 +1,8 @@
-"""Try every assignment: all n! permutations, Theta(n) to cost each, Theta(n * n!) time in total."""
+"""Try every assignment: all n! permutations, Theta(n) to cost each.
+
+Omega(n * n!) time on every input; Theta(n * n!) in total assuming itertools.permutations does O(n * n!) work over
+the whole run, as its documented equivalent code does (see PROOFS.md, section 1).
+"""
 from itertools import permutations
 
 

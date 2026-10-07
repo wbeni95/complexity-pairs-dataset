@@ -30,7 +30,8 @@ def generate_scaling(n, rng):
     """Consecutive Fibonacci numbers (F(k+1), F(k)), F(k+1) the largest Fibonacci number below 2^n.
 
     They are coprime, so trial division runs all the way down to d = 1 (F(k) >= 2^(n-2) iterations),
-    and they are Lame's worst case for Euclid: k - 1 ~ 1.44 n division steps, every quotient but the last equal to 1.
+    and they are the worst case for Euclid (PROOFS.md section 5): k - 1 ~ 1.44 n division steps for n >= 2, every
+    quotient but the last equal to 1.
     """
     a, b = 1, 1                             # (F(k+1), F(k)) for k = 1
     while a + b < (1 << n):

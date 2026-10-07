@@ -1,7 +1,7 @@
 """Schoolbook (long) multiplication of digit lists: Theta(n^2) digit operations.
 
 Numbers are little-endian lists of base-2^15 digits (a[0] is the least significant digit).
-Every intermediate value stays below 2^30, so each step is a single-word operation.
+Every value computed from digits stays below 2^30, so each step is a single-word operation.
 """
 
 BITS = 15

@@ -10,21 +10,23 @@
 
 | Algorithm | Model | Queries | Error | Implementation |
 |---|---|---|---|---|
-| Scan until a difference or a majority | classical, deterministic | **2ⁿ⁻¹ + 1** worst case (optimal for exact algorithms); ≤ 3 on average over random balanced f (→ 3 as n grows) | none | [classical.py](implementations/classical.py) |
+| Scan until a difference or a majority | classical, deterministic | **2ⁿ⁻¹ + 1** worst case (optimal for exact algorithms); 3 − 4/(N + 2) < 3 on average over random balanced f | none | [classical.py](implementations/classical.py) |
 | K = 20 random queries | classical, randomized | **20** for every n (O(log 1/ε)) | one-sided, 2¹⁻ᴷ = 2⁻¹⁹ on balanced f | [randomized.py](implementations/randomized.py) |
 | Deutsch–Jozsa (one-query form) | quantum | **1** | none | [quantum.py](implementations/quantum.py) |
 
 **The exact lower bound (adversary argument).** Let any exact classical algorithm run, and answer 0 to each of its
 first 2ⁿ⁻¹ distinct queries. Both the constant-0 function and the balanced function that is 1 exactly on the
 unqueried points are consistent with those answers, so the algorithm cannot yet answer with certainty. It needs
-2ⁿ⁻¹ + 1 queries. The same argument applies to every run of a zero-error randomized algorithm on a constant input.
+2ⁿ⁻¹ + 1 queries. The same argument applies to every run of a zero-error randomized algorithm on a constant input
+(proved in [PROOFS.md](PROOFS.md) §6).
 
 **Why randomness removes the gap.** For a balanced f, each random query is a fair coin, so K random queries all
 agree with probability 2¹⁻ᴷ. For a constant f they always agree. Checked empirically: error rates for k = 2, 3, 4, 6, 8
 match 2¹⁻ᵏ with |z| ≤ 0.98 ([experiment](../../experiments/2026-10-07_deutsch_jozsa_checks.py)).
 
 **Why one quantum query suffices.** After H⊗ⁿ, one phase query and H⊗ⁿ, the amplitude of |0…0⟩ is
-(1/N)·Σₓ(−1)^f(x), which is ±1 for constant f and exactly 0 for balanced f.
+(1/N)·Σₓ(−1)^f(x), which is ±1 for constant f and exactly 0 for balanced f (in exact arithmetic; the floating-point
+simulation agrees up to rounding, about 10⁻¹⁵).
 
 **How it is verified.** Exact state-vector simulation ([lib/qsim.py](../../lib/qsim.py)) with a shared counting oracle.
 V1 checks every answer against the full truth table. V2 fits query counts. The deterministic algorithm is measured on
@@ -34,6 +36,14 @@ maximum is 2ⁿ⁻¹ + 1 and is attained on exactly these four inputs.
 
 **Caveats.** This is a promise problem, and the separation is relative to an oracle. It is an exact-vs-exact separation.
 It does not imply BQP ≠ BPP and does not even separate bounded-error query complexities.
+
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry: the exact counts, the correctness and error
+of the three algorithms, the average 3 − 4/(N + 2) on random balanced functions, and the exact classical lower bound.
+It names the deterministic checks of each ([tests/test_proofs_query.py](../../tests/test_proofs_query.py), the
+experiment and the count-check scripts).
+
+**Background (cited, not proved here).** The original algorithm of Deutsch & Jozsa (1992) used two queries; the
+one-query zero-error form is due to Cleve, Ekert, Macchiavello & Mosca (1998).
 
 **Sources.** Deutsch & Jozsa, *Rapid solution of problems by quantum computation*, Proc. R. Soc. A 1992.
 Cleve, Ekert, Macchiavello & Mosca, *Quantum algorithms revisited*, Proc. R. Soc. A 1998 (the one-query form).

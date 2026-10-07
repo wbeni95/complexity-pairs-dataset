@@ -42,7 +42,7 @@
       "pseudocode": "best = cur = a[0]; for j in 1..n-1: cur = a[j] if cur < 0 else cur + a[j]; best = max(best, cur)",
       "time_complexity": "Theta(n)",
       "space_complexity": "O(1) words",
-      "correctness": "Invariant after reading a[0..j]: cur is the best sum of a non-empty subarray ending at j, and best is the best sum of any non-empty subarray of a[0..j]. A subarray ending at j is a[j] alone or extends one ending at j - 1, and the best extension uses the best such one (Bentley 1984; CLRS Exercise 4.1-5).",
+      "correctness": "Invariant after reading a[0..j]: cur is the best sum of a non-empty subarray ending at j, and best is the best sum of any non-empty subarray of a[0..j]. A subarray ending at j is a[j] alone or extends one ending at j - 1, and the best extension uses the best such one (credit: Bentley 1984; Cormen et al. 2009).",
       "implementation": "implementations/kadane.py:max_subarray_kadane",
       "harness": {
         "scaling": { "cost": "n", "n_values": [3000, 10000, 30000, 100000, 300000, 1000000] }
@@ -57,22 +57,20 @@
       "year": 1984,
       "title": "Programming pearls: algorithm design techniques",
       "venue": "Communications of the ACM 27(9), 865-873",
-      "doi": "10.1145/358234.381162",
-      "note": "Presents the cubic, quadratic, divide-and-conquer Theta(n log n) and linear (credited to J. Kadane) algorithms for this problem."
+      "doi": "10.1145/358234.381162"
     },
     {
       "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
       "year": 2009,
       "title": "Introduction to Algorithms (3rd ed.)",
       "venue": "MIT Press",
-      "isbn": "978-0-262-03384-8",
-      "note": "Section 4.1 (the maximum-subarray problem, divide and conquer) and Exercise 4.1-5 (the linear-time scan)."
+      "isbn": "978-0-262-03384-8"
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: all three implementations agree with each other and with an independent oracle, the CLRS 4.1 divide-and-conquer algorithm (in harness.py), on random lists from [-100, 100] (some all-negative, some all-non-negative), n = 1..10, 15, 20, 40, 60, 200 and 1000 (brute force up to n = 60, running sums up to n = 200). V2: runtimes fit n^3 (n = 50..400), n^2 (n = 100..3200) and n (n = 3000..1000000). All three do the same amount of work on every input of a given length, so random inputs are worst-case inputs.",
-    "artifacts": ["implementations/brute_force.py", "implementations/running_sum.py", "implementations/kadane.py", "harness.py"]
+    "method": "V1: all three implementations agree with each other and with an independent oracle, a divide-and-conquer algorithm (Cormen et al. 2009; in harness.py), on random lists from [-100, 100] (some all-negative, some all-non-negative), n = 1..10, 15, 20, 40, 60, 200 and 1000 (brute force up to n = 60, running sums up to n = 200). V2: runtimes fit n^3 (n = 50..400), n^2 (n = 100..3200) and n (n = 3000..1000000). The loop counts of all three depend only on n (the only data-dependent work is the update of the maximum, at most one assignment per iteration), so random inputs are worst-case inputs for these counts. Proofs: PROOFS.md proves every claim of this entry (correctness, the exact loop and read counts n(n+1)(n+2)/6, n(n+1)/2 and n - 1 on every input, space, the caveats, and the correctness and Theta(n log n) cost of the divide-and-conquer oracle) and names the deterministic tests that check each one.",
+    "artifacts": ["PROOFS.md", "implementations/brute_force.py", "implementations/running_sum.py", "implementations/kadane.py", "harness.py"]
   },
   "test_harness": {
     "module": "harness.py",
@@ -80,5 +78,14 @@
     "trials": 5
   },
   "caveats": "The problem requires a non-empty subarray; the variant that allows the empty subarray (answer max(0, ...)) differs only on all-negative inputs. Kadane's scan is optimal up to a constant factor, since a correct algorithm must read every element: changing an unread element to a large value changes the answer.",
-  "notes": "The divide-and-conquer Theta(n log n) algorithm (CLRS 4.1, also in Bentley's column) sits between the quadratic and linear algorithms; it is used here as the independent V1 oracle rather than as a fourth recorded algorithm. Bentley attributes the problem to U. Grenander's work on pattern matching in digitized images."
+  "notes": "The divide-and-conquer Theta(n log n) algorithm (Cormen et al. 2009) sits between the quadratic and linear algorithms; it is used here as the independent V1 oracle rather than as a fourth recorded algorithm (its correctness and Theta(n log n) cost are proved in PROOFS.md, section 7).",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_max_subarray.py"
+    ],
+    "audit": "RL-107"
+  }
 }

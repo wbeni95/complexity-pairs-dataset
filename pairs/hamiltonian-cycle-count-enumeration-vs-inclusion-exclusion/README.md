@@ -1,6 +1,6 @@
 # Counting Hamiltonian cycles: enumeration vs inclusion–exclusion (and the Held–Karp counting DP)
 
-**Type:** T6 (open: the decision problem is NP-complete), secondary T8 (super-poly → faster super-poly) ·
+**Type:** T6 (open: the decision problem is NP-complete; cited background), secondary T8 (super-poly → faster super-poly) ·
 **Verification:** V2 (exact operation counts, with rivals)
 
 **Problem.** Input: a digraph on n vertices as an n × n 0/1 adjacency matrix (A[u][v] = 1 iff u → v is an arc;
@@ -10,7 +10,7 @@ matrix) with n ≥ 3 the answer is twice the number of undirected Hamiltonian cy
 
 | Algorithm | Time (n vertices) | Space | Implementation |
 |---|---|---|---|
-| Permutation enumeration (fix vertex 0, try all (n−1)! orders) | Θ(n!) arc tests; exactly n! on the complete digraph | Θ(n) | [enumeration.py](implementations/enumeration.py) |
+| Permutation enumeration (fix vertex 0, try all (n−1)! orders) | Θ(n!) arc tests; exactly n! on the complete digraph | Θ(n), given the documented cost of `itertools.permutations` | [enumeration.py](implementations/enumeration.py) |
 | Inclusion–exclusion over vertex subsets, closed walks counted by a walk-length DP | Θ(n³·2ⁿ); exactly n(n−1)(n+2)·2ⁿ⁻² + 2ⁿ⁻¹ − 1 operations on every input | Θ(n) numbers | [inclusion_exclusion.py](implementations/inclusion_exclusion.py) |
 | Held–Karp / Bellman DP over (subset, end vertex), with (+, ·) in place of (min, +) | Θ(n²·2ⁿ); exactly (n−1)(n−2)·2ⁿ⁻² + 2(n−1) operations on every input | Θ(n·2ⁿ) numbers | [held_karp_counting.py](implementations/held_karp_counting.py) |
 
@@ -20,8 +20,8 @@ and combine them with signs (−1)^(n−|T|). Walks that miss a vertex cancel ou
 are left. Each walk count is a short dynamic programme, so the n! orders become 2ⁿ⁻¹ subsets times a polynomial,
 in polynomial memory. The Held–Karp counting DP is faster by a factor Θ(n), but it stores a table of Θ(n·2ⁿ)
 numbers: a time/memory trade-off between the two exponential algorithms. All three stay exponential. Deciding
-whether a Hamiltonian cycle exists is NP-complete (Karp 1972), and a graph is Hamiltonian iff the count is
-positive, so a polynomial-time counting algorithm would imply P = NP.
+whether a Hamiltonian cycle exists is NP-complete (Karp 1972; cited background), and a graph is Hamiltonian iff the
+count is positive, so a polynomial-time counting algorithm would imply P = NP.
 
 **Verification.**
 - *V1:* the validator runs n = 0..12 and 14, 8 instances per size (112 instances, 296 implementation runs, 104
@@ -76,6 +76,12 @@ expressions (RL-062).
 - Above n = 10, `check` is exact only for the recognised families, or when the depth-first count finishes. There
   the agreement of inclusion–exclusion with Held–Karp (n = 10..12) carries the evidence.
 - The entry makes no claim about the fastest known algorithms for this problem.
+
+**Proofs.** [PROOFS.md](PROOFS.md) proves the exact operation counts of this entry for all sizes of their domains,
+from the code, and names the scripts and sizes that check each count. It also proves the correctness of the three
+algorithms (and what the DPs compute with integer weights), the undirected convention, the space and integer-size
+bounds, and the closed forms and bounds the oracle uses;
+[tests/test_proofs_hamiltonian.py](../../tests/test_proofs_hamiltonian.py) checks them on stated ranges.
 
 **Sources.** Kohn, Gottlieb & Kohn, ACM '77. Karp, Oper. Res. Lett. 1982. Bax, IPL 1993. Held & Karp, J. SIAM
 1962. Bellman, J. ACM 1962. Karp 1972 (NP-completeness of Hamiltonian cycle).

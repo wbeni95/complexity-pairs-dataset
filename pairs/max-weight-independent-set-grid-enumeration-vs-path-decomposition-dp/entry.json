@@ -1,7 +1,7 @@
 {
   "id": "max-weight-independent-set-grid-enumeration-vs-path-decomposition-dp",
   "title": "Maximum-weight independent set on k x n grids with diagonals: exhaustive search vs DP over a path decomposition",
-  "problem_statement": "Given k >= 1, n >= 0, non-negative integer weights w(r, c) on the vertices (r, c) of a k x n grid (rows r = 0..k-1, columns c = 0..n-1), and for every unit square a diagonal code (0 none, 1 the diagonal (r, c)-(r+1, c+1), 2 the diagonal (r, c+1)-(r+1, c), 3 both), compute the maximum total weight of an independent set of the graph whose edges join horizontal neighbours, vertical neighbours and the chosen diagonals; also output one optimal set. With all codes 3 the graph is the king's graph. Any square with a diagonal contains a triangle, so the graph is in general not bipartite.",
+  "problem_statement": "Given k >= 1, n >= 0, non-negative integer weights w(r, c) on the vertices (r, c) of a k x n grid (rows r = 0..k-1, columns c = 0..n-1), and for every unit square a diagonal code (0 none, 1 the diagonal (r, c)-(r+1, c+1), 2 the diagonal (r, c+1)-(r+1, c), 3 both), compute the maximum total weight of an independent set of the graph whose edges join horizontal neighbours, vertical neighbours and the chosen diagonals; also output one optimal set. With all codes 3 the graph is the king's graph. Any square with a diagonal contains a triangle, so the graph is in general not bipartite. The output set is returned as a sorted tuple.",
   "input": {
     "parameter": "n = number of columns; the number of rows k is a parameter of the instance (V2 uses k = 3).",
     "size_measure": "N = k n vertices: k n weights and (k-1)(n-1) diagonal codes. Weights are unit-cost integers."
@@ -12,9 +12,9 @@
       "idea": "Examine all 2^N subsets of the N = k n vertices; for each, sum the weights of all its members and test independence at every member (neighbour bitmask AND subset), with no early exit; keep the heaviest independent subset.",
       "model": "classical-deterministic",
       "pseudocode": "best = (0, empty set)\nfor mask in 0 .. 2^N - 1:\n  total = 0; independent = True\n  for each vertex i in mask: total += w(i); if neighbours(i) & mask: independent = False\n  if independent and total > best value: best = (total, mask)\nreturn best",
-      "time_complexity": "Theta(N 2^N) on every input (N = k n), i.e. 2^Theta(n) for every fixed k. Exactly N 2^(N-1) weight additions on every input: (3/2) n 8^n for k = 3 (the V2 family).",
-      "space_complexity": "Theta(N)",
-      "correctness": "Exhaustive: every independent set is examined and the maximum is kept. The returned set is the first maximum in increasing bitmask order. Each vertex lies in 2^(N-1) of the subsets, which gives the exact addition count.",
+      "time_complexity": "Theta(N 2^N) on every input with N = k n >= 1 under the background sort assumption (needed only for the final sorted() of the output), i.e. 2^Theta(n) for every fixed k (N-bit masks as words; the final sorted() of at most N output vertices is O(N log N) under the background sort assumption; PROOFS.md, section 5). Exactly N 2^(N-1) weight additions on every input: (3/2) n 8^n for k = 3 (the V2 family; PROOFS.md, section 1).",
+      "space_complexity": "Theta(N) (PROOFS.md, section 5)",
+      "correctness": "Exhaustive: every independent set is examined and the maximum is kept. The returned set is the first maximum in increasing bitmask order. Each vertex lies in 2^(N-1) of the subsets, which gives the exact addition count (PROOFS.md, sections 1 and 5).",
       "implementation": "implementations/brute_force.py:mwis_brute_force",
       "harness": {
         "v1_max_n": 5,
@@ -39,12 +39,12 @@
     },
     {
       "name": "DP over the columns (path decomposition of width 2k-1)",
-      "idea": "The bags column c + column c+1 form a path decomposition of width 2k-1, and column c separates the columns on its left from those on its right. For each column and each column subset s that is independent inside the column, keep the best weight of an independent set of the columns so far that meets the current column in s; transitions go over compatible state pairs (no horizontal or diagonal edge between them).",
+      "idea": "For n >= 2 the bags column c + column c+1 form a path decomposition of width 2k-1, and column c separates the columns on its left from those on its right. For each column and each column subset s that is independent inside the column, keep the best weight of an independent set of the columns so far that meets the current column in s; transitions go over compatible state pairs (no horizontal or diagonal edge between them).",
       "model": "classical-deterministic",
       "pseudocode": "states = k-bit masks with no two adjacent bits (F_{k+2} of them)\nbest_0(s) = w_0(s)\nfor c = 1 .. n-1:\n  best_c(s) = w_c(s) + max over states t compatible with s (no edge between t in column c-1 and s in column c) of best_{c-1}(t)\nreturn max over s of best_{n-1}(s), with the optimal set recovered from stored arg-max choices",
-      "time_complexity": "Theta(F_{k+2}^2 n) = Theta(phi^(2k) n) word operations (F_{k+2}^2 compatibility tests per column; F_{k+2} = 2, 3, 5, 8, 13, 21 for k = 1..6): Theta(n) for every fixed k, exponential in k. Weight additions: exactly n P_k + (n-1) F_{k+2} on every instance with n >= 1 and positive weights, where P_k is the total number of rows over all column states; 10n - 5 for k = 3 (P_3 = 5, F_5 = 5), the V2 family.",
-      "space_complexity": "Theta(F_{k+2} n) (the arg-max table for recovering the set; the value alone needs Theta(F_{k+2}))",
-      "correctness": "Every edge joins two vertices of the same column or of adjacent columns. Hence a vertex set is independent iff its intersection with each column is independent inside the column and the intersections with every two adjacent columns are compatible. By induction on c, best_c(s) is the maximum weight of an independent set of columns 0..c meeting column c in s: an optimal such set restricted to columns 0..c-1 meets column c-1 in some compatible t and is optimal for t. This is dynamic programming over a path decomposition, a special case of the dynamic programming over tree decompositions of bounded width (Arnborg & Proskurowski 1989).",
+      "time_complexity": "Theta(F_{k+2}^2 n) = Theta(phi^(2k) n) word operations for n >= 2 apart from sorting the output set, O(F_{k+2}^2) for n = 1 (F_{k+2}^2 compatibility tests per column; F_{k+2} = 2, 3, 5, 8, 13, 21 for k = 1..6). The final sorted() of the at most n ceil(k/2) chosen vertices adds O(n k log(n k)) under the background sort assumption. So for every fixed k: Theta(n) apart from that sort, O(n log n) with it; exponential in k (PROOFS.md, section 6). Weight additions: exactly n P_k + (n-1) F_{k+2} on every instance with n >= 1 and positive weights (with zero weights, exactly z fewer, z = the number of c in 1..n-1 such that columns 0..c-1 have only zero weights; PROOFS.md, section 2), where P_k is the total number of rows over all column states; 10n - 5 for k = 3 (P_3 = 5, F_5 = 5), the V2 family.",
+      "space_complexity": "Theta(F_{k+2} n) for n >= 2 (the arg-max table for recovering the set; the value alone can be computed in Theta(F_{k+2}) space; PROOFS.md, section 6)",
+      "correctness": "PROOFS.md, section 6. Every edge joins two vertices of the same column or of adjacent columns. Hence a vertex set is independent iff its intersection with each column is independent inside the column and the intersections with every two adjacent columns are compatible. By induction on c, best_c(s) is the maximum weight of an independent set of columns 0..c meeting column c in s: an optimal such set restricted to columns 0..c-1 meets column c-1 in some compatible t and is optimal for t. This is dynamic programming over a path decomposition, a special case of the dynamic programming over tree decompositions of bounded width (Arnborg & Proskurowski 1989).",
       "implementation": "implementations/column_dp.py:mwis_column_dp",
       "harness": {
         "scaling": {
@@ -68,7 +68,21 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Same problem. For every fixed number of rows k, exhaustive search costs Theta(N 2^N) = 2^Theta(n) while the column DP costs Theta(F_{k+2}^2 n) = Theta(n): exponential -> linear. The structure used is bounded path-width: column c separates the left part of the grid from the right part, so only F_{k+2} boundary states per column need to be remembered. The dependence on k stays exponential (phi^(2k)); for square grids (k = n) the DP is exponential in n, but in n rather than in N = n^2. On general graphs the problem is NP-hard: a set is independent in G iff it is a clique in the complement of G, and CLIQUE is NP-complete (Karp 1972).",
+  "relationship": "Same problem. For every fixed number of rows k, exhaustive search costs Theta(N 2^N) = 2^Theta(n) (its upper bound uses the background sort assumption for the final sort of at most N output vertices) while the column DP costs Theta(F_{k+2}^2 n) = Theta(n) apart from sorting the output set (O(n log n) with it, under the background sort assumption): exponential -> polynomial (linear apart from that sort; including the sort, polynomial under the background sort assumption, which the T2 classification therefore uses). The structure used is bounded path-width: column c separates the left part of the grid from the right part, so only F_{k+2} boundary states per column need to be remembered. The dependence on k stays exponential (phi^(2k)); for square grids (k = n) the DP is exponential in n, but in n rather than in N = n^2. On general graphs the problem is NP-hard (background).",
+  "background": [
+    {
+      "statement": "Machine-model assumption for the final sorting steps: CPython's sorted() sorts m items in O(m log m) worst-case time. The listed sources support it but do not state it as a theorem for the current CPython sort: Auger et al. prove that the Python version of TimSort runs in O(n log n) (abstract; TimSort's original merge policy), and CPython's list sort now uses the powersort merge strategy of Munro and Wild (Objects/listsort.txt in CPython 3.12 and 3.14), whose abstract describes nearly-optimal merging orders.",
+      "source": "Auger, Jugé, Nicaud & Pivoteau 2018 (abstract); Munro & Wild 2018 (abstract); CPython Objects/listsort.txt"
+    },
+    {
+      "statement": "Maximum-weight independent set is NP-hard on general graphs: a set is independent in G iff it is a clique in the complement of G, and CLIQUE is NP-complete.",
+      "source": "Karp 1972"
+    },
+    {
+      "statement": "For every fixed k, a tree decomposition of width at most k of a graph of treewidth at most k can be found in linear time.",
+      "source": "Bodlaender 1996, abstract"
+    }
+  ],
   "sources": [
     {
       "authors": "Arnborg, S.; Proskurowski, A.",
@@ -83,7 +97,7 @@
       "title": "A linear-time algorithm for finding tree-decompositions of small treewidth",
       "venue": "SIAM Journal on Computing 25(6), 1305-1317",
       "doi": "10.1137/S0097539793251219",
-      "note": "For general graphs of bounded treewidth a decomposition can be found in linear time; for the grids here the decomposition is given by the columns."
+      "note": "Background only (linear-time tree decompositions for bounded treewidth); for the grids here the decomposition is given by the columns."
     },
     {
       "authors": "Robertson, N.; Seymour, P. D.",
@@ -91,7 +105,7 @@
       "title": "Graph minors. I. Excluding a forest",
       "venue": "Journal of Combinatorial Theory, Series B 35(1), 39-61",
       "doi": "10.1016/0095-8956(83)90079-5",
-      "note": "Path decompositions and path-width."
+      "note": "Credit (path-width)."
     },
     {
       "authors": "Karp, R. M.",
@@ -99,18 +113,44 @@
       "title": "Reducibility among combinatorial problems",
       "venue": "Complexity of Computer Computations, Plenum Press, 85-103",
       "doi": "10.1007/978-1-4684-2001-2_9",
-      "note": "NP-completeness of CLIQUE (and of NODE COVER)."
+      "note": "Background only."
+    },
+    {
+      "authors": "Auger, N.; Jugé, V.; Nicaud, C.; Pivoteau, C.",
+      "year": 2018,
+      "title": "On the worst-case complexity of TimSort",
+      "venue": "26th European Symposium on Algorithms (ESA 2018), LIPIcs 112, 4:1-4:13",
+      "doi": "10.4230/LIPIcs.ESA.2018.4",
+      "note": "Background only. Abstract: the Python version of TimSort runs in O(n log n)."
+    },
+    {
+      "authors": "Munro, J. I.; Wild, S.",
+      "year": 2018,
+      "title": "Nearly-optimal mergesorts: fast, practical sorting methods that optimally adapt to existing runs",
+      "venue": "26th European Symposium on Algorithms (ESA 2018), LIPIcs 112, 63:1-63:16",
+      "doi": "10.4230/LIPIcs.ESA.2018.63",
+      "note": "Background only. Abstract: nearly-optimal merging orders (powersort)."
+    },
+    {
+      "authors": "CPython developers",
+      "year": 2025,
+      "title": "listsort.txt (description of CPython's list sort)",
+      "venue": "CPython source tree, Objects/listsort.txt, branches 3.12 and 3.14",
+      "url": "https://github.com/python/cpython/blob/3.14/Objects/listsort.txt",
+      "note": "Background only. States that the code uses the powersort merge strategy of Munro and Wild."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: the validator runs n = 0..6, 8, 12, 20, 50 with 8 instances per size (88 instances, 136 implementation runs); exhaustive search runs up to n = 5 (at most 15 vertices), so both algorithms are compared on 48 instances; k is 1..5 for n <= 3, 1..3 for n = 4, 5 and 1..6 for n >= 6; diagonal patterns: random codes, king's graph, none (bipartite grid), all code 1, all code 2, sparse; weights: uniform 0..9 or 0..1000, all equal (ties), half zeros, one heavy vertex. Both implementations agree on the value and pass check. check is independent of both implementations and always gives a verdict: the returned set must consist of distinct grid vertices, be independent (edges rebuilt from the instance) and weigh exactly the returned value, and the value must equal the optimum of a vertex-by-vertex DP in the harness (column-major order, state = membership of the last k+1 vertices, which contain every earlier neighbour of the next vertex; a decomposition of width k+1 instead of 2k-1, and separate code). experiments/2026-10-06f_entries_mis_pathwidth.py adds 600 instances (n = 0..5 with both algorithms, n = 6..60 with the DP; 0 failures) and an oracle control: 3393 deliberately wrong outputs on 330 instances (value +-1 with the same set; a suboptimal independent set with its honest weight, from dropping a vertex or from greedy-by-weight; a non-independent set with its honest weight, from adding a neighbour or from the optimum computed without the diagonals; duplicate or out-of-grid vertices; the empty set; wrong types): all 3393 rejected, 0 undecided, 0 accepted; all 510 correct outputs accepted. V2 (exact counts, RESEARCH_LOG RL-047 method): generate_scaling gives the 3 x n king's graph (k = 3, both diagonals in every square) with seeded weights 1..9 of the harness type CountingInt, which counts additions/subtractions on weight-derived values (comparisons are tallied separately and excluded from reported_cost); the implementations are unchanged. Exhaustive search: exactly N 2^(N-1) = 3n 2^(3n-1) additions (checked for n = 1..6 on the V2 family and on 77 random instances with any k, any diagonals and zero weights); fit against n * 8**n (= (2/3) 3n 2^(3n-1)) on n = 2..6: alpha = 1.000 (tol 0.02); rivals 8**n (1.130), n**2 * 8**n (0.896), 4**n (1.695) rejected. Column DP: exactly 10n - 5 additions (n P_k + (n-1) F_{k+2} with P_3 = F_5 = 5; the general form checked on 420 random instances with n = 1, 4, ..., 40, k = 1..6, all diagonal patterns, positive weights); fit against 10*n - 5 on n = 100..3200: alpha = 1.000; rivals n**2 (0.501) and n log n (0.862) rejected. The log-factor diagnostic is resolved in both fits. No counted value passes through a CPython built-in (sorted, min, max), so RL-069 does not apply. k-dependence (information, n = 20, king's graph): DP additions 58, 97, 195, 352, 647, 1159, 2066, 3645 for k = 1..8, each equal to n P_k + (n-1) F_{k+2}; compatibility tests (n-1) F_{k+2}^2 = 76 .. 57475.",
+    "method": "V1: the validator runs n = 0..6, 8, 12, 20, 50 with 8 instances per size (88 instances, 136 implementation runs); exhaustive search runs up to n = 5 (at most 15 vertices), so both algorithms are compared on 48 instances; k is 1..5 for n <= 3, 1..3 for n = 4, 5 and 1..6 for n >= 6; diagonal patterns: random codes, king's graph, none (bipartite grid), all code 1, all code 2, sparse; weights: uniform 0..9 or 0..1000, all equal (ties), half zeros, one heavy vertex. Both implementations agree on the value and pass check. check is independent of both implementations and returns True or False for every output whose two-element vertex tuples have integer coordinates (a vertex with a non-integer coordinate, e.g. a float, makes it raise, which the validator reports as a V1 failure): the returned set must consist of distinct grid vertices, be independent (edges rebuilt from the instance) and weigh exactly the returned value, and the value must equal the optimum of a vertex-by-vertex DP in the harness (column-major order, state = membership of the last k+1 vertices, which contain every earlier neighbour of the next vertex; a decomposition of width at most k+1 instead of 2k-1, and separate code; its exactness is proved in PROOFS.md, section 7). experiments/2026-10-06f_entries_mis_pathwidth.py adds 600 instances (n = 0..5 with both algorithms, n = 6..60 with the DP; 0 failures) and an oracle control: 3393 deliberately wrong outputs on 330 instances (value +-1 with the same set; a suboptimal independent set with its honest weight, from dropping a vertex or from greedy-by-weight; a non-independent set with its honest weight, from adding a neighbour or from the optimum computed without the diagonals; duplicate or out-of-grid vertices; the empty set; wrong types): all 3393 rejected, 0 undecided, 0 accepted; all 510 correct outputs accepted. V2 (exact counts, RESEARCH_LOG RL-047 method): generate_scaling gives the 3 x n king's graph (k = 3, both diagonals in every square) with seeded weights 1..9 of the harness type CountingInt, which counts additions/subtractions on weight-derived values (comparisons are tallied separately and excluded from reported_cost); the implementations are unchanged. Exhaustive search: exactly N 2^(N-1) = 3n 2^(3n-1) additions (checked for n = 1..6 on the V2 family and on 77 random instances with any k, any diagonals and zero weights); fit against n * 8**n (= (2/3) 3n 2^(3n-1)) on n = 2..6: alpha = 1.000 (tol 0.02); rivals 8**n (1.130), n**2 * 8**n (0.896), 4**n (1.695) rejected. Column DP: exactly 10n - 5 additions (n P_k + (n-1) F_{k+2} with P_3 = F_5 = 5; the general form checked on 420 random instances with n = 1, 4, ..., 40, k = 1..6, all diagonal patterns, positive weights); fit against 10*n - 5 on n = 100..3200: alpha = 1.000; rivals n**2 (0.501) and n log n (0.862) rejected. The log-factor diagnostic is resolved in both fits. No counted value passes through a CPython built-in (sorted, min, max), so RL-069 does not apply. k-dependence (information, n = 20, king's graph): DP additions 58, 97, 195, 352, 647, 1159, 2066, 3645 for k = 1..8, each equal to n P_k + (n-1) F_{k+2}; compatibility tests (n-1) F_{k+2}^2 = 76 .. 57475. Exact counts: PROOFS.md proves the exact operation counts of this entry for all sizes of their domains, from the code, and names the scripts and sizes that check each count. Proofs of the other claims: PROOFS.md, sections 4-9 (graph facts, correctness, time and space of both algorithms, the oracle's decomposition, the min-cut reduction for grids without diagonals); tests/test_proofs_mwis.py checks their computable parts (120 instances against a brute-force optimum written in the test, the compatibility test for k = 1..5 and all diagonal codes, the state counts, the oracle's window, tracemalloc peaks, and 40 grids without diagonals solved through the max-flow entry's Dinic).",
     "artifacts": [
+      "PROOFS.md",
       "implementations/brute_force.py",
       "implementations/column_dp.py",
       "harness.py",
       "../../experiments/2026-10-06f_entries_mis_pathwidth.py",
-      "../../tests/test_entries_2026_10_06f_mis.py"
+      "../../tests/test_entries_2026_10_06f_mis.py",
+      "../../tests/test_proofs_mwis.py"
     ]
   },
   "test_harness": {
@@ -130,6 +170,20 @@
     ],
     "trials": 8
   },
-  "caveats": "The V2 family fixes k = 3; n * 8**n is the k = 3 instance of N 2^N, and 10n - 5 the k = 3 instance of n P_k + (n-1) F_{k+2}. Only additions on weight-derived values are counted. The DP's (n-1) F_{k+2}^2 compatibility tests (25 per column for k = 3), its comparisons (6n - 2 for k = 3 and n >= 1, tallied separately) and the exhaustive search's independence tests (one bitmask AND per member of each subset) are not in the count; for fixed k they are of the same order as the counted additions: linear in n for the DP, Theta(N 2^N) for exhaustive search. The DP's addition count is exact for positive weights. With zero weights, an addition of two plain zeros (the empty column state's weight and a best value that is still the initial plain 0) is not seen by the counting type: with weights in {0, 1}, up to 6 additions were missing in 59 of 420 instances. The exhaustive search count is exact for every weight. The time bound of the DP, Theta(F_{k+2}^2 n), is exponential in k: for k growing with n (e.g. square grids, k = n) the DP is exponential in n, though not in N = k n. The column decomposition has width 2k-1. The bags {vertex i and the k+1 vertices before it} in column-major order form a path decomposition of width k+1 (every earlier neighbour of a vertex is at most k+1 positions back), and the oracle's DP over it has at most 2^(k+1) states per vertex, i.e. O(2^k k n) time, which grows more slowly in k than the column DP's F_{k+2}^2 n. In all batteries the two algorithms returned the same optimal set (0 differences in 348 compared instances), so the value-only equal() was never needed to absorb a tie.",
-  "notes": "Without diagonals the grid is bipartite (colour (r, c) by the parity of r + c), and maximum-weight independent set on bipartite graphs reduces to a minimum s-t cut (source -> one side with capacities w, other side -> sink with capacities w, infinite capacity on the edges between the sides; finite cuts are exactly vertex covers, of capacity equal to their weight, and a maximum independent set is the complement of a minimum vertex cover), so plain grids are already solved in polynomial time by max-flow (pairs/max-flow-edmonds-karp-vs-dinic). A square with a diagonal contains a triangle, the graph is then not bipartite, and the column DP is the tool used here; it does not depend on bipartiteness. The flow method is not implemented in this entry. Relatives in the dataset: tsp-brute-vs-held-karp and the Hamiltonian-cycle counting entry are DPs over subsets (exponential state spaces); here the state space is exponential only in the width k, not in n."
+  "caveats": "The V2 family fixes k = 3; n * 8**n is the k = 3 instance of N 2^N, and 10n - 5 the k = 3 instance of n P_k + (n-1) F_{k+2}. Only additions on weight-derived values are counted. The DP's (n-1) F_{k+2}^2 compatibility tests (25 per column for k = 3), its comparisons (between n (F_{k+2} - 1) and (n-1) F_{k+2} (F_{k+2} - 1) + F_{k+2} - 1; exactly 6n - 2 on the 3 x n king's graph, the V2 family, for n >= 1; tallied separately) and the exhaustive search's N 2^(N-1) independence tests (one bitmask AND per member of each subset) are not in the count; for fixed k they are of the same order as the counted additions: linear in n for the DP, Theta(N 2^N) for exhaustive search. The DP's addition count is exact for positive weights. With zero weights, an addition of two plain zeros (the empty column state's weight and a best value that is still the initial plain 0) is not seen by the counting type; this happens exactly at the columns c >= 1 preceded only by all-zero columns (PROOFS.md, section 2). Measured: with weights in {0, 1}, up to 6 additions were missing in 59 of 420 instances. The exhaustive search count is exact for every weight. The time bound of the DP, Theta(F_{k+2}^2 n), is exponential in k: for k = Theta(n) (e.g. square grids, k = n) the DP is exponential in n, though not in N = k n. The column decomposition has width 2k-1 (n >= 2). The bags {vertex i and the k+1 vertices before it} in column-major order form a path decomposition of width at most k+1 (min(N, k+2) - 1; every earlier neighbour of a vertex is at most k+1 positions back), and the oracle's DP over it has at most 2^(k+1) states per vertex, i.e. O(2^k k n) dictionary operations, which grows more slowly in k than the column DP's F_{k+2}^2 n (PROOFS.md, section 7). In all batteries the two algorithms returned the same optimal set (0 differences in 348 compared instances), so the value-only equal() was never needed to absorb a tie.",
+  "notes": "Without diagonals the grid is bipartite (colour (r, c) by the parity of r + c), and maximum-weight independent set on bipartite graphs reduces to a minimum s-t cut (source -> one side with capacities w, other side -> sink with capacities w, infinite capacity on the edges between the sides; finite cuts are exactly vertex covers, of capacity equal to their weight, and a maximum independent set is the complement of a minimum vertex cover), so the optimum value of plain grids is already computed in polynomial time by max-flow (pairs/max-flow-edmonds-karp-vs-dinic; an optimal set can be read off a minimum cut, which those implementations do not return; proof of the reduction with a finite capacity w(V) + 1 in place of infinity: PROOFS.md, section 8). A square with a diagonal contains a triangle, the graph is then not bipartite, and the column DP is the tool used here; it does not depend on bipartiteness. The flow method is not implemented in this entry. Relatives in the dataset: tsp-brute-vs-held-karp and the Hamiltonian-cycle counting entry are DPs over subsets (exponential state spaces); here the state space is exponential only in the width k, not in n.",
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "../max-flow-edmonds-karp-vs-dinic/PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_mwis.py",
+      "../../tests/test_entries_2026_10_06f_mis.py",
+      "../../experiments/2026-10-06f_entries_mis_pathwidth.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py"
+    ],
+    "audit": "RL-107"
+  }
 }

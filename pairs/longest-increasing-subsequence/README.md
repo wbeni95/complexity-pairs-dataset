@@ -8,12 +8,12 @@
 |---|---|---|
 | Subset enumeration | Θ(2ⁿ n) | [subset_enumeration.py](implementations/subset_enumeration.py) |
 | Quadratic DP | Θ(n²) | [quadratic_dp.py](implementations/quadratic_dp.py) |
-| Patience sorting + binary search | O(n log L) ≤ O(n log n), L = answer | [patience.py](implementations/patience.py) |
+| Patience sorting + binary search | O(n(1 + log L)) ≤ O(n log n), L = answer | [patience.py](implementations/patience.py) |
 
 **Why it's a pair.** Trying all 2ⁿ subsequences is wasteful. The best subsequence ending at position i depends
 only on the best ones ending earlier, which gives Θ(n²) (T2). Keeping just the smallest possible tail for each
-length gives a sorted array, so the inner scan becomes a binary search: O(n log n) (T3). Its length matches the
-first row of Schensted's tableau.
+length gives a sorted array, so the inner scan becomes a binary search: O(n log n) (T3). For distinct elements the
+array is the first row of Schensted's insertion tableau.
 
 **Verification.** V1: the three agree with each other and with an independent oracle, LIS(a) = LCS(a,
 sorted(set(a))), on inputs with many ties. V2 uses strictly increasing input, the worst case for patience
@@ -26,5 +26,14 @@ tolerance 0.03, every declared rival is rejected: 2ⁿ (α = 1.113) and 2ⁿn² 
 enumeration's count is of comparisons, not of its 2ⁿn loop steps. Details:
 `experiments/2026-10-07b_count_v2_inversions_lis.py` and `research/2026-10-07b_count_based_v2.md`.
 
-**Sources.** Schensted 1961 (Canad. J. Math. 13). Fredman 1975 (Discrete Math. 11). CLRS (3rd ed.),
-Exercises 15.4-5 and 15.4-6.
+**Proofs.** [PROOFS.md](PROOFS.md) proves every claim of this entry from the code: the correctness of the three
+algorithms (including the patience-sorting invariant), the time bounds (patience sorting makes at most n(1 + log₂ L)
+comparisons, Θ(n log n) on increasing input, and is not Θ(n log L) on every input), the space bounds, the exact counts
+for all sizes of their domains, and the LCS reduction of the oracle. It names the scripts and tests that check each
+one (`tests/test_proofs_lis.py` among them).
+
+**Background (cited, not proved here).** Logan & Shepp (1977) and Vershik & Kerov (1977) study the limiting form of
+random Young tableaux; what this implies for L on random permutations is not stated or checked here. Fredman (1975)
+analyses the comparison complexity of the problem; no lower bound from it is recorded here.
+
+**Sources.** Schensted 1961 (Canad. J. Math. 13). Fredman 1975 (Discrete Math. 11). CLRS (3rd ed.).

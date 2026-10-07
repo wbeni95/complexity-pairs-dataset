@@ -1,4 +1,4 @@
-"""Boolean matrix multiplication via integer Strassen (Fischer & Meyer 1971; Munro 1971).
+"""Boolean matrix multiplication via integer Strassen.
 
 Read the 0/1 entries as integers and compute the integer product P = AB with Strassen's algorithm (1969). Then
 P[i][j] = number of k with A[i][k] = B[k][j] = 1, so the Boolean product is C[i][j] = 1 iff P[i][j] > 0.

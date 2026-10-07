@@ -4,7 +4,7 @@
   "problem_statement": "Given an n x n matrix A of integers, compute its permanent perm(A) = sum over all permutations s of {0..n-1} of prod_i A[i][s(i)], exactly (as an unbounded integer). The permanent of the 0 x 0 matrix is 1.",
   "input": {
     "parameter": "n = matrix dimension.",
-    "size_measure": "n^2 entries, small integers in the harness. Costs count arithmetic operations; intermediate values have O(n log(n M)) bits for entries bounded by M in absolute value (at most a few machine words at the tested sizes)."
+    "size_measure": "n^2 entries, small integers in the harness. Costs count arithmetic operations; intermediate values have at most n log2(2 n M) + 1 = O(n log(n M)) bits for entries bounded by M >= 1 in absolute value (PROOFS.md section 4; at most a few machine words at the tested sizes)."
   },
   "algorithms": [
     {
@@ -12,9 +12,9 @@
       "idea": "Evaluate the definition directly: for each of the n! permutations, multiply the n selected entries and add.",
       "model": "classical-deterministic",
       "pseudocode": "total = 0; for each permutation s: total += prod_i A[i][s(i)]",
-      "time_complexity": "Theta(n * n!) arithmetic operations",
-      "space_complexity": "Theta(n)",
-      "correctness": "Definition of the permanent.",
+      "time_complexity": "Theta(n * n!) arithmetic operations: exactly n * n! multiplications and n! additions for n >= 1 (PROOFS.md section 1); Theta(n * n!) time given the machine-model assumption on itertools.permutations (background; PROOFS.md section 1.3)",
+      "space_complexity": "Theta(n) (given the machine-model assumption on itertools.permutations, background)",
+      "correctness": "Definition of the permanent: every permutation is generated once (documented behaviour of itertools.permutations, background; PROOFS.md section 1).",
       "implementation": "implementations/naive.py:permanent_naive",
       "harness": {
         "v1_max_n": 8,
@@ -29,9 +29,9 @@
       "idea": "Inclusion-exclusion over the set S of columns the rows may use: perm(A) = (-1)^n sum_S (-1)^|S| prod_i (sum_{j in S} A[i][j]). Visiting the subsets in Gray-code order changes one column per step, so the n row sums are updated in Theta(n).",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(n 2^n) arithmetic operations",
+      "time_complexity": "Theta(n 2^n) arithmetic operations: exactly (n + 1)(2^n - 1) additions and subtractions, n (2^n - 1) multiplications and 2^(n-1) + [n odd] negations for n >= 1 (PROOFS.md section 2)",
       "space_complexity": "Theta(n^2) (a transposed copy of A; Theta(n) working state)",
-      "correctness": "Ryser 1963. Expanding prod_i sum_{j in S} A[i][j] gives the sum, over all maps f from rows to S, of prod_i A[i][f(i)]. By inclusion-exclusion the alternating sum over S keeps exactly the maps whose image is all n columns, i.e. the permutations.",
+      "correctness": "Formula: Ryser 1963; proof: PROOFS.md section 2. Expanding prod_i sum_{j in S} A[i][j] gives the sum, over all maps f from rows to S, of prod_i A[i][f(i)]. By inclusion-exclusion the alternating sum over S keeps exactly the maps whose image is all n columns, i.e. the permutations. The Gray-code order k XOR (k >> 1) visits every non-empty column set once.",
       "implementation": "implementations/ryser.py:permanent_ryser",
       "harness": {
         "scaling": {
@@ -45,7 +45,7 @@
   "secondary_tags": [
     "T8"
   ],
-  "relationship": "Super-exponential -> single exponential: Theta(n * n!) vs Theta(n 2^n), an improvement that stays exponential (the V2 check is a runtime fit). No polynomial algorithm is expected: computing the permanent is #P-complete, even for 0/1 matrices (Valiant 1979), so a polynomial-time algorithm would give FP = #P and in particular P = NP. Glynn's formula (2010) gives the same Theta(n 2^n) bound as Ryser's.",
+  "relationship": "Super-exponential -> single exponential: Theta(n * n!) vs Theta(n 2^n), an improvement that stays exponential (secondary T8). The V2 check is a runtime fit; the exact operation counts are proved in PROOFS.md and checked in tests/test_proofs_permanent.py. The primary tag T6 rests on the #P-completeness of the permanent, which is background (cited, not proved here).",
   "sources": [
     {
       "authors": "Ryser, H. J.",
@@ -82,15 +82,25 @@
       "title": "The computational complexity of linear optics",
       "venue": "Theory of Computing 9, 143-252",
       "doi": "10.4086/toc.2013.v009a004"
+    },
+    {
+      "authors": "Python Software Foundation",
+      "year": 2026,
+      "title": "itertools - Functions creating iterators for efficient looping: itertools.permutations",
+      "venue": "The Python Standard Library documentation, Python 3.14",
+      "url": "https://docs.python.org/3.14/library/itertools.html#itertools.permutations",
+      "note": "Background only: the documented behaviour (successive permutations, lexicographic order, n!/(n - r)! of them) and the 'roughly equivalent' Python code, read on 2026-10-07."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both implementations agree for n = 0..8 (the permutation sum is capped at n = 8) on random 0/1 matrices and on matrices with entries in [-2, 3]; Ryser alone is also run at n = 10, 12, 15. harness.check is independent of both: for n <= 12 it compares with an exact O(n 2^n) DP over column subsets (a third algorithm, no inclusion-exclusion), and for every n it checks perm(A) = det(A) mod 2 with a GF(2) elimination. Spot checks during development also matched perm(J_n) = n! and the derangement numbers perm(J_n - I). V2: runtimes fitted against n * n! and n 2^n on matrices with entries in [1, 4].",
+    "method": "V1: both implementations agree for n = 0..8 (the permutation sum is capped at n = 8) on random 0/1 matrices and on matrices with entries in [-2, 3]; Ryser alone is also run at n = 10, 12, 15. harness.check is independent of both: for n <= 12 it compares with an exact O(n 2^n) DP over column subsets (a third algorithm, no inclusion-exclusion), and for every n it checks perm(A) = det(A) mod 2 with a GF(2) elimination. tests/test_proofs_permanent.py checks perm(J_n) = n! and the derangement numbers perm(J_n - I) (both implementations for n = 0..8, Ryser for n = 0..12) and the exact operation counts of PROOFS.md. V2: runtimes fitted against n * n! and n 2^n on matrices with entries in [1, 4].",
     "artifacts": [
+      "PROOFS.md",
       "implementations/naive.py",
       "implementations/ryser.py",
-      "harness.py"
+      "harness.py",
+      "../../tests/test_proofs_permanent.py"
     ]
   },
   "test_harness": {
@@ -98,6 +108,23 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 15],
     "trials": 4
   },
-  "caveats": "Tagged T6 (primary) because no polynomial algorithm is known or expected, and T8 because the pair itself is a super-polynomial -> faster super-polynomial improvement. The operation counts treat integer arithmetic as unit cost; the integers involved grow to O(n log(n M)) bits, which adds at most a small polynomial factor in bit complexity.",
-  "notes": "Contrast with determinant-cofactor-vs-gaussian: the determinant is the same sum with signs sgn(s) and is computable in O(n^3). Mod 2 the signs vanish (-1 = 1), so perm(A) mod 2 = det(A) mod 2 is easy; the hardness is about the exact integer value. For matrices with non-negative entries, a randomized fully polynomial approximation scheme exists (Jerrum, Sinclair & Vigoda 2004); that is approximation, not exact computation, and it does not cover matrices with negative or complex entries. The permanent also underlies BosonSampling (Aaronson & Arkhipov 2013), a proposed quantum-advantage experiment: output probabilities of non-interacting photons in a linear-optical network are squared absolute values of permanents of submatrices of the network's unitary. They show that efficient exact classical sampling would collapse the polynomial hierarchy, and argue hardness of approximate sampling under further conjectures. BosonSampling samples from this distribution; it does not compute permanents, so it gives no quantum algorithm for this problem."
+  "caveats": "The primary tag T6 rests on background (see below), and T8 on the pair itself, a super-polynomial -> faster super-polynomial improvement (PROOFS.md section 3). The operation counts treat integer arithmetic as unit cost; the integers involved have at most n log2(2 n M) + 1 = O(n log(n M)) bits (PROOFS.md section 4), which adds at most a small polynomial factor in bit complexity.",
+  "notes": "Contrast with determinant-cofactor-vs-gaussian: the determinant is the same sum with signs sgn(s), and over a field Gaussian elimination computes it with O(n^3) field operations (proved in that entry). Mod 2 the signs vanish (-1 = 1), so perm(A) mod 2 = det(A) mod 2, which elimination over GF(2) computes (PROOFS.md section 5); the exact integer value is the hard part. Approximation and BosonSampling are listed under background.",
+  "background": [
+    {"statement": "Computing the permanent is #P-complete, even for 0/1 matrices, so a polynomial-time algorithm would give FP = #P and in particular P = NP. This is the reason for the primary tag T6: no polynomial algorithm is known or expected.", "source": "Valiant 1979"},
+    {"statement": "Glynn's formula gives the same Theta(n 2^n) operation count as Ryser's.", "source": "Glynn 2010"},
+    {"statement": "For matrices with non-negative entries a randomized fully polynomial approximation scheme exists. It approximates, it does not compute exactly, and it does not cover matrices with negative or complex entries.", "source": "Jerrum, Sinclair & Vigoda 2004"},
+    {"statement": "BosonSampling, a proposed quantum-advantage experiment, samples photon output patterns of a linear-optical network whose probabilities are squared absolute values of permanents of submatrices of the network's unitary. Efficient exact classical sampling would collapse the polynomial hierarchy, and approximate sampling is argued to be hard under further conjectures. BosonSampling samples from this distribution; it does not compute permanents, so it gives no quantum algorithm for this problem.", "source": "Aaronson & Arkhipov 2013"},
+    {"statement": "Machine-model assumption of this entry: CPython's itertools.permutations(range(n)) behaves as its documented 'roughly equivalent' Python code. It yields every permutation of range(n) exactly once, as n-tuples in lexicographic order (documented behaviour); it does O(n * n!) work in total over the n! permutations, that is amortised O(n) per permutation, while a single step can take Theta(n^2); and it keeps O(n) words of state. PROOFS.md section 0.1 proves the two cost properties for the documented code; that the C implementation has the same costs is assumed, not proved.", "source": "Python Software Foundation 2026, itertools documentation: permutations, description and 'roughly equivalent' code"}
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_permanent.py",
+      "../../tests/test_proofs_permutations.py"
+    ],
+    "audit": "RL-107"
+  }
 }

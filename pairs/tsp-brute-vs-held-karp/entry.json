@@ -12,9 +12,9 @@
       "idea": "Fix city 0 as the start and evaluate all (n-1)! orders of the remaining cities.",
       "model": "classical-deterministic",
       "pseudocode": "for each permutation p of 1..n-1: best = min(best, length(0, p, 0))",
-      "time_complexity": "Theta(n!) ((n-1)! tours, Theta(n) each)",
-      "space_complexity": "Theta(n)",
-      "correctness": "Exhaustive over all tours.",
+      "time_complexity": "Theta(n!) ((n-1)! tours, Theta(n) amortised each, with the cost of itertools.permutations as in background; exactly (n-1)! (n-1) additions)",
+      "space_complexity": "Theta(n) beyond the input",
+      "correctness": "Exhaustive over all tours: every tour can be rotated to start at city 0 (PROOFS.md section 1).",
       "implementation": "implementations/brute_force.py:tsp_brute",
       "harness": {
         "v1_max_n": 8,
@@ -29,9 +29,9 @@
       "idea": "best[S][j] = shortest path from city 0 through exactly the set S, ending at j. Combine over subsets of increasing size.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(n^2 2^n)",
-      "space_complexity": "Theta(n 2^n)",
-      "correctness": "Held & Karp 1962; Bellman 1962: optimal substructure over (visited set, last city).",
+      "time_complexity": "Theta(n^2 2^n) on every input: exactly (n-1)^2 2^(n-2) inner iterations (n >= 2)",
+      "space_complexity": "Theta(n 2^n): a table of 2^(n-1) rows of n-1 entries",
+      "correctness": "Optimal substructure over (visited set, last city): best[S][j] is the shortest path from city 0 through exactly S ending at j, by induction over the sets in increasing order (PROOFS.md section 2; credit: Held & Karp 1962, Bellman 1962).",
       "implementation": "implementations/held_karp.py:tsp_held_karp",
       "harness": {
         "scaling": {
@@ -42,7 +42,7 @@
     }
   ],
   "pair_type": "T6",
-  "relationship": "Factorial -> single exponential: n! vs n^2 2^n. A real, large improvement that still stays exponential. No polynomial algorithm is known; TSP is NP-hard, so one would imply P = NP.",
+  "relationship": "Factorial -> single exponential: n! vs n^2 2^n, both proved in PROOFS.md. A real, large improvement that still stays exponential. TSP is NP-hard: the Hamiltonian circuit problem is NP-complete (background), and it reduces to the minimum tour length for n >= 2 (PROOFS.md section 4), so a polynomial algorithm would imply P = NP.",
   "sources": [
     {
       "authors": "Held, M.; Karp, R. M.",
@@ -63,17 +63,25 @@
       "year": 1972,
       "title": "Reducibility among combinatorial problems",
       "venue": "Complexity of Computer Computations, Plenum Press, 85-103",
-      "doi": "10.1007/978-1-4684-2001-2_9",
-      "note": "NP-completeness of Hamiltonian cycle, hence NP-hardness of TSP."
+      "doi": "10.1007/978-1-4684-2001-2_9"
+    },
+    {
+      "authors": "Python Software Foundation",
+      "year": 2026,
+      "title": "The Python Standard Library: itertools.permutations",
+      "url": "https://docs.python.org/3/library/itertools.html",
+      "note": "Background only (machine-model assumption). Read on 2026-10-07: the permutation tuples are emitted in lexicographic order of the input positions, and the documentation gives roughly equivalent Python code (indices and cycles)."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: both agree on random asymmetric distance matrices (weights 1..100, n <= 8 for enumeration) and respect independent bounds. V2: runtimes fitted against n! and n^2 2^n.",
+    "method": "V1: both agree on random asymmetric distance matrices (weights 1..100, n <= 8 for enumeration) and respect independent bounds. V2: runtimes fitted against n! and n^2 2^n (measurements, not proofs). Proofs: PROOFS.md proves every claim of the entry (correctness of both algorithms, the exact tour and iteration counts, time and space, the reduction behind NP-hardness); tests/test_proofs_tsp.py checks the computable facts on stated ranges, including both outputs against an independent recursion over Hamiltonian paths.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/brute_force.py",
       "implementations/held_karp.py",
-      "harness.py"
+      "harness.py",
+      "../../tests/test_proofs_tsp.py"
     ]
   },
   "test_harness": {
@@ -81,9 +89,28 @@
     "v1_sizes": [1, 2, 3, 4, 5, 6, 7, 8, 11],
     "trials": 5
   },
-  "caveats": "Primary T6 because polynomial time is open (NP-hard); secondary T8 for the factorial -> single-exponential improvement, measured by V2 runtime fits (the Held-Karp bound is not derived here).",
+  "caveats": "Primary T6 rests on background: polynomial time is open, and the problem is NP-hard (see background and PROOFS.md section 4). Secondary T8 for the factorial -> single-exponential improvement, proved in PROOFS.md (sections 1-3) and also measured by V2 runtime fits.",
   "notes": "Shows that dramatic speedups (factorial -> 2^n) can exist while the polynomial barrier is untouched.",
   "secondary_tags": [
     "T8"
-  ]
+  ],
+  "background": [
+    {
+      "statement": "Deciding whether a directed graph has a Hamiltonian circuit is NP-complete; so it has a polynomial-time algorithm only if P = NP, which is open.",
+      "source": "Karp 1972"
+    },
+    {
+      "statement": "Machine-model assumption of this entry: itertools.permutations on r items behaves as its documented equivalent code (indices and cycles), at O(1) per elementary step of that code, and yields each permutation exactly once (in lexicographic order of positions). By PROOFS.md, Lemma 0, this is O(r) work per tuple amortised; a single step can take Theta(r^2).",
+      "source": "Python Software Foundation, Python documentation: itertools.permutations (documented equivalent code), read 2026-10-07"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_tsp.py"
+    ],
+    "audit": "RL-107"
+  }
 }

@@ -13,7 +13,7 @@ Algorithm (one pass to build, one propagation):
      in which NOT v occurs. A counter that reaches 0 fires its clause: a goal clause means UNSAT, otherwise its head
      goes on the queue.
 Every variable is set true at most once, so every negative literal occurrence is decremented at most once, and
-every clause fires at most once: O(n + L) time, L = total clause length (Theta(n + L) when no clause is empty;
+every clause fires at most once: O(n + L + 1) time, L = total clause length (Theta(n + L) when no clause is empty;
 an empty clause stops the build pass at once).
 
 Correctness (Dowling & Gallier 1984): every variable set true is true in every model (induction on the order in

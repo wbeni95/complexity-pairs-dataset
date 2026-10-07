@@ -1,9 +1,11 @@
 """Hungarian method as successive shortest augmenting paths with potentials: O(n^3) time.
 
-Rows are inserted one at a time. For each new row, a Dijkstra-like search over columns, run on
-reduced costs c(i, j) - u[i] - v[j] >= 0 (array version, O(n) per step), finds a cheapest augmenting
-path to a free column; the potentials u, v are then updated so that reduced costs stay non-negative
-and are zero on the current matching. At most n search steps per row, O(n) each, n rows: O(n^3).
+Rows are inserted one at a time. For each new row, a Dijkstra-like search over columns, run on the
+reduced costs c(i, j) - u[i] - v[j] (array version, O(n) per step), finds a cheapest augmenting path to
+a free column. The reduced costs are non-negative on the rows already inserted; those of the new row may
+be negative, but every search path starts with exactly one of them. The potentials u, v are then updated
+so that the reduced costs of the inserted rows stay non-negative and are zero on the current matching.
+At most n search steps per row, O(n) each, n rows: O(n^3).
 
 Indices are 1-based internally; column 0 is a sentinel that holds the row being inserted.
 """

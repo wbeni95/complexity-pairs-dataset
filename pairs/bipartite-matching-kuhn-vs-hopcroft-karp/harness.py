@@ -8,8 +8,9 @@ the adversarial family below (when n has the form 4k^2 + k).
 generate_scaling() returns the adversarial family G_k, with n = V = 4k^2 + k (n must have this form):
   * a dense gadget K_{2a,a}, a = k^2: left vertices 0..2a-1, right vertices 0..a-1, every adjacency list in
     the order 0..a-1. Only a of the 2a left vertices can be matched, so each of the a failing Kuhn searches
-    explores the whole gadget, Theta(a^2) edges each: Theta(a^3) = Theta(V E) in total. Hopcroft-Karp's BFS and
-    DFS also scan the whole gadget in every phase, because its a free left vertices are roots of every phase.
+    reads the lists of its root and of all a matched gadget vertices, a(a + 1) = Theta(a^2) entries each:
+    Theta(a^3) = Theta(V E) in total. Hopcroft-Karp's BFS reads all 2a^2 gadget entries in every phase (and its
+    DFS in every phase 2..k), because the a free left vertices are roots of every phase.
   * paths P_2, P_4, ..., P_2k: path j has left vertices L_1..L_j and right vertices R_1..R_j, edges L_i-R_i and
     L_(i+1)-R_i. The left vertices are numbered L_2, ..., L_j, L_1 and adj[L_i] = (R_(i-1), R_i), so the first
     Hopcroft-Karp phase (which matches free left vertices to the first free neighbour, in index order) picks

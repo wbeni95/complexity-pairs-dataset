@@ -1,7 +1,7 @@
 """The same backtracking recursion, memoised on (atom index, text position).
 
 There are at most (m + 1)(n + 1) distinct subproblems (m atoms, text length n) and each one does O(1) work
-besides its recursive calls, so the matcher runs in O(m n). This is the memoisation step of RESEARCH_LOG RL-039:
+besides its recursive calls, so the matcher runs in O((m + 1)(n + 1)). This is the memoisation step of RESEARCH_LOG RL-039:
 here, unlike for the cofactor determinant, the natural key has polynomially many values.
 Recursion depth is at most m + n + 1.
 """

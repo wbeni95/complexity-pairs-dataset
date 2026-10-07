@@ -11,11 +11,14 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.14"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python-version }}
       - run: pip install -r requirements.txt
       - name: Validator self-tests (must reject wrong claims)
         run: python -m unittest discover -s tests -v
@@ -27,14 +30,32 @@ jobs:
   scaling:
     needs: validate
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.14"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python-version }}
       - run: pip install -r requirements.txt
       - name: Re-measure every V2 scaling claim
         run: python tools/validate.py --scaling -v
+
+  proofs:
+    needs: validate
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -r requirements.txt
+      - name: Replay the checks behind every item with the check mark
+        run: python tools/replay_proofs.py
 
   sources:
     needs: validate

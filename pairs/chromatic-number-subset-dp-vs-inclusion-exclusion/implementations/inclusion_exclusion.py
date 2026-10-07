@@ -11,7 +11,8 @@ v in S (independent sets avoiding v; and {v} plus an independent subset of S min
 neighbourhood), a(empty) = 0: 2^n - 1 steps of two additions.
 Step 2 tries k = 1, 2, ... and stops at the first k with c_k > 0, i.e. after chi(G) rounds. Round k updates
 p(S) = a(S)^k by one multiplication p(S) * a(S) and adds +-p(S) to the sum: two arithmetic operations per
-subset. All numbers are exact integers of at most n * chi(G) bits (a(S) < 2^n).
+subset. All numbers are exact integers: the table entries have at most n * chi(G) bits (a(S) < 2^n), the
+running sum at most n * (chi(G) + 1) bits (PROOFS.md section 2.6).
 
 Total: (2 chi(G) + 2) 2^n - 2 arithmetic operations, O(n 2^n) in the unit-cost model since chi(G) <= n;
 Theta(2^n) space for the tables.

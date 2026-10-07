@@ -12,20 +12,22 @@ generate(n, rng): k in 1..5 for n <= 3, 1..3 for n = 4, 5 (so exhaustive search 
 all code 2, sparse random codes. Weights: uniform 0..9, uniform 0..1000, all equal to 1 (many ties), half zeros
 and half 1..20, or 0..3 with one heavy vertex.
 
-check(instance, output) is independent of both implementations and always gives a verdict:
+check(instance, output) is independent of both implementations and returns True or False for every output whose
+vertex pairs have integer coordinates (a non-integer coordinate makes it raise, which the validator reports as a
+failure):
   1. the returned set must consist of distinct vertices of the grid, be independent (edges built here from the
      instance), and have exactly the returned weight;
   2. the returned value must equal the optimum of a vertex-by-vertex ("broken profile") DP written here: the
      vertices are processed in column-major order, and the state is the membership of the last k+1 processed
      vertices, which contain every earlier neighbour of the next vertex ((r-1, c), (r, c-1), (r-1, c-1) and
-     (r+1, c-1)). This is a different decomposition (width k+1 instead of 2k-1) and different code.
+     (r+1, c-1)). This is a different decomposition (width at most k+1 instead of 2k-1) and different code.
 
 V2 (measure "reported"): generate_scaling(n, rng) is the 3 x n king's graph (k = 3, every square has both
 diagonals) with seeded weights 1..9 wrapped in CountingInt; it resets the counters. CountingInt counts additions
 and subtractions on weight-derived values; comparisons are recorded in a separate counter that reported_cost does
 not include. Exact addition counts (derived in entry.json, checked in experiments/2026-10-06f_entries_mis_pathwidth.py):
   exhaustive search  N 2^(N-1) with N = 3n, i.e. (3/2) n 8^n   (on every instance; zero weights included)
-  column DP          10n - 5                                    (k = 3; any diagonals; all weights positive)
+  column DP          10n - 5                                    (k = 3, n >= 1; any diagonals; all weights positive)
 No counted value passes through a CPython built-in such as sorted, min or max.
 """
 

@@ -12,7 +12,7 @@
       "idea": "Try every odd divisor d with d^2 <= N.",
       "model": "classical-deterministic",
       "pseudocode": "if N < 2: no; if N even: N == 2; for d = 3, 5, 7, ... while d*d <= N: if d | N: no; yes",
-      "time_complexity": "Theta(sqrt(N)) = Theta(2^(n/2)) divisions in the worst case (N prime)",
+      "time_complexity": "Theta(sqrt(N)) = Theta(2^(n/2)) divisions in the worst case (N prime): exactly 1 + floor((floor(sqrt N) - 1)/2) divisions on an odd prime N and at most that many on any N >= 2; n-bit primes exist for every n >= 2 (Bertrand's postulate, proved in PROOFS.md)",
       "space_complexity": "O(n) bits",
       "correctness": "A composite N has a divisor d with 1 < d <= sqrt(N).",
       "implementation": "implementations/trial_division.py:is_prime_trial",
@@ -22,18 +22,18 @@
     },
     {
       "name": "AKS",
-      "idea": "N is prime iff (X + a)^N = X^N + a mod (X^r - 1, N) for a small r and few a, after ruling out perfect powers and small factors. Working modulo X^r - 1 keeps polynomials of degree < r = O(n^5).",
+      "idea": "N is prime iff (X + a)^N = X^N + a mod (X^r - 1, N) for a small r and few a, after ruling out perfect powers and small factors. Working modulo X^r - 1 keeps polynomials of degree < r <= max(16, n (n^2 + 1)^2) = O(n^5).",
       "model": "classical-deterministic",
-      "pseudocode": "see implementation (the six steps of AKS 2004, Section 4)",
-      "time_complexity": "Õ(n^(21/2)) as proven in AKS 2004 (Õ(n^(15/2)) using Fouvry's theorem); Õ(n^6) for the Lenstra-Pomerance variant",
-      "space_complexity": "Õ(n^6) bits in the original analysis (r coefficients of n bits each, r = O(n^5))",
-      "correctness": "Agrawal, Kayal, Saxena 2004, Theorem 4.1 (the algorithm returns PRIME iff N is prime).",
+      "pseudocode": "see implementation (the six steps of AKS 2004, with log2 N replaced in steps 2 and 5 by an exact rational upper bound lam, log2 N <= lam <= n)",
+      "time_complexity": "Õ(n^(21/2)) bit operations when multiplication and division of m-bit integers cost Õ(m), and O(n^(33/2)) with schoolbook integer arithmetic: polynomial, for this implementation. On every n-bit prime with n >= 24 it performs at least (n - 1)^4 n coefficient operations (Omega(n^5)). Faster analyses and the Lenstra-Pomerance variant: see background.",
+      "space_complexity": "O(n^6) bits (polynomials with r coefficients of O(n) bits, r = O(n^5))",
+      "correctness": "Returns True iff N is prime, for every N >= 0 (proved in PROOFS.md, Part A, following Agrawal, Kayal, Saxena 2004).",
       "implementation": "implementations/aks.py:is_prime_aks",
       "harness": { "v1_max_n": 16 }
     }
   ],
   "pair_type": "T1",
-  "relationship": "Trial division is exponential in the input size n (2^(n/2)); AKS is polynomial in n. Same problem, same deterministic model: the first unconditional deterministic polynomial-time primality test.",
+  "relationship": "Trial division is exponential in the input size n (Theta(2^(n/2)) divisions in the worst case); AKS is polynomial in n. Same problem, same deterministic model.",
   "sources": [
     {
       "authors": "Agrawal, M.; Kayal, N.; Saxena, N.",
@@ -48,18 +48,59 @@
       "title": "Primality testing with Gaussian periods",
       "venue": "Journal of the European Mathematical Society 21(4), 1229-1269",
       "doi": "10.4171/JEMS/861"
+    },
+    {
+      "authors": "Sorenson, J.; Webster, J.",
+      "year": 2017,
+      "title": "Strong pseudoprimes to twelve prime bases",
+      "venue": "Mathematics of Computation 86(304), 985-1003",
+      "doi": "10.1090/mcom/3134",
+      "arxiv": "1509.00864",
+      "note": "Background only: Theorem 1.1 gives psi_12 = 318665857834031151167461, the smallest strong pseudoprime to the first twelve prime bases (and psi_13); the bound used by the V2 generator's deterministic Miller-Rabin test."
+    },
+    {
+      "authors": "Nair, M.",
+      "year": 1982,
+      "title": "On Chebyshev-type inequalities for primes",
+      "venue": "The American Mathematical Monthly 89(2), 126-129",
+      "doi": "10.1080/00029890.1982.11995398",
+      "note": "Credit for the lower bound lcm(1, ..., m) >= 2^m used in PROOFS.md, Lemma A2 (proved there)."
     }
   ],
   "verification": {
     "level": "V1",
-    "method": "Both implementations agree with each other and with a sieve-of-Eratosthenes oracle on random n-bit integers (half of them primes), n = 0..20 (AKS up to 16 bits, where step 5 is genuinely exercised: N > r). Trial division's 2^(n/2) scaling is measured; AKS scaling is not (its polynomial only dominates far beyond what pure Python can time), so the pair stays at V1.",
-    "artifacts": ["implementations/trial_division.py", "implementations/aks.py", "harness.py"]
+    "method": "Both implementations agree with each other and with a sieve-of-Eratosthenes oracle on random n-bit integers (each one a uniformly chosen n-bit prime with probability 1/2, otherwise a uniform n-bit integer), n = 0..20 (AKS up to 16 bits, where step 5 is genuinely exercised: N > r). Trial division's 2^(n/2) scaling is measured; AKS scaling is not (its polynomial only dominates far beyond what pure Python can time), so the pair stays at V1. Proofs: PROOFS.md proves every claim of this entry (trial division's correctness, exact division counts and worst case; the correctness of the AKS implementation for every N, the bound on r, its polynomial time and space bounds and a lower bound on primes; the harness facts) and names the deterministic tests that check each one.",
+    "artifacts": ["PROOFS.md", "implementations/trial_division.py", "implementations/aks.py", "harness.py"]
   },
   "test_harness": {
     "module": "harness.py",
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
     "trials": 6
   },
-  "caveats": "AKS matters for theory. In practice primality is tested with Miller-Rabin/BPSW (probabilistic) or ECPP (certificate-producing). 'Exponential' for trial division refers to the bit length n. Trial division is polynomial in the value N, which is exponentially larger than the input.",
-  "notes": "See primality-miller-rabin-vs-aks for the randomized-vs-deterministic (T4) view of the same problem."
+  "caveats": "AKS matters for theory: its proved running time is a polynomial of high degree, and on every n-bit prime with n >= 24 it performs Omega(n^5) operations, against O(n^3) bit operations per round for the randomized Miller-Rabin test (primality-miller-rabin-vs-aks). 'Exponential' for trial division refers to the bit length n. Trial division is polynomial in the value N (O(sqrt N) divisions), which is exponentially larger than the input.",
+  "notes": "See primality-miller-rabin-vs-aks for the randomized-vs-deterministic (T4) view of the same problem.",
+  "background": [
+    {
+      "statement": "Agrawal, Kayal and Saxena give an unconditional deterministic polynomial-time primality test.",
+      "source": "Agrawal, Kayal, Saxena 2004"
+    },
+    {
+      "statement": "Lenstra and Pomerance give a deterministic primality test that runs in time (log N)^6 (2 + log log N)^c for an effectively computable constant c; according to their abstract, the same result with 21/2 in place of 6 was proved by Agrawal, Kayal and Saxena.",
+      "source": "Lenstra and Pomerance 2019, abstract"
+    },
+    {
+      "statement": "The V2 generator's Miller-Rabin test with the twelve prime bases 2, ..., 37 is used only below 318665857834031151167461 = 399165290221 * 798330580441, which Sorenson and Webster prove to be psi_12, the smallest strong pseudoprime to the first twelve prime bases, so the test is exact below it (cited, not proved here; that this number is composite and passes all twelve bases is checked in tests/test_proofs_primality.py). The V2 instances (n <= 40 bits) are checked prime by trial division in tests/test_proofs_primality.py.",
+      "source": "Sorenson & Webster (arXiv:1509.00864, Theorem 1.1)"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_primality.py",
+      "../../experiments/2026-10-07_primality_proof_checks.py"
+    ],
+    "audit": "RL-107"
+  }
 }

@@ -12,9 +12,9 @@
       "idea": "Every spanning tree has exactly n-1 edges. Try each of the C(n(n-1)/2, n-1) subsets of n-1 edges; it is a spanning tree iff it connects all n vertices (one depth-first search). Keep the lightest.",
       "model": "classical-deterministic",
       "pseudocode": "for each (n-1)-subset T of the edges: if T is connected: best = min(best, weight(T))",
-      "time_complexity": "Theta(n * C(n(n-1)/2, n-1)) = 2^Theta(n log n) (C(m, n-1) subsets, Theta(n) each to build, search and weigh)",
-      "space_complexity": "Theta(n^2) (the edge list)",
-      "correctness": "Exhaustive. A graph with n vertices and n-1 edges is a tree iff it is connected, so the connected subsets are exactly the spanning trees.",
+      "time_complexity": "Theta(n * C(n(n-1)/2, n-1)) = 2^Theta(n log n) under the background assumption on itertools.combinations (C(m, n-1) subsets, Theta(n) each to generate, build, search and weigh; PROOFS.md, section 6)",
+      "space_complexity": "Theta(n^2) (the edge list; PROOFS.md, section 8)",
+      "correctness": "Exhaustive (itertools.combinations yields every (n-1)-subset once: background). A graph with n vertices and n-1 edges is a tree iff it is connected, so the connected subsets are exactly the spanning trees (PROOFS.md, section 4).",
       "implementation": "implementations/brute_force.py:mst_brute",
       "harness": {
         "v1_max_n": 7,
@@ -32,9 +32,9 @@
       "idea": "Sort the edges by weight and scan them, keeping each edge that joins two different components (tracked by union-find with union by size and path halving).",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "O(m log m) = O(n^2 log n) on K_n (comparison sort of the m edges; the union-find work is O(m alpha(n)))",
-      "space_complexity": "Theta(n^2) (the sorted edge list)",
-      "correctness": "Kruskal 1956. Cut property: the lightest edge crossing a cut that respects the current forest belongs to some minimum spanning tree containing that forest, so every edge kept is safe. Edges inside a component would close a cycle and are skipped.",
+      "time_complexity": "Omega(n^2 log n) in the worst case if sorted() is a deterministic comparison sort and O(n^2 log n) if it runs in O(m log m) worst-case time (both background assumptions): for every n some weight assignment of K_n makes sorted() perform at least log2(m!) comparisons (decision-tree argument, under the machine-model assumption that sorted() is deterministic and learns about the keys only from < comparisons); the rest of the work is O(m log n), since union by size keeps every union-find tree of height at most log2 n. PROOFS.md, section 6.",
+      "space_complexity": "Theta(n^2) (the sorted edge list; PROOFS.md, section 8)",
+      "correctness": "Kruskal 1956; proof in PROOFS.md, section 5. Cut property: the lightest edge crossing a cut that respects the current forest belongs to some minimum spanning tree containing that forest, so every edge kept is safe. Edges inside a component would close a cycle and are skipped.",
       "implementation": "implementations/kruskal.py:mst_kruskal",
       "harness": {
         "scaling": {
@@ -52,9 +52,9 @@
       "idea": "Grow one tree from vertex 0. Keep for every outside vertex the cheapest edge to the tree; each round adds the closest outside vertex and updates the others by scanning its row.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(n^2) on K_n (n-1 rounds, two Theta(n) scans each), linear in the input size",
-      "space_complexity": "Theta(n)",
-      "correctness": "Prim 1957. Each round adds the lightest edge crossing the cut (tree, rest), which is safe by the cut property.",
+      "time_complexity": "Theta(n^2) on K_n (n-1 rounds, two Theta(n) scans each), linear in the input size (PROOFS.md, section 6)",
+      "space_complexity": "Theta(n) (PROOFS.md, section 8)",
+      "correctness": "Prim 1957; proof in PROOFS.md, section 5. Each round adds the lightest edge crossing the cut (tree, rest), which is safe by the cut property.",
       "implementation": "implementations/prim.py:mst_prim",
       "harness": {
         "scaling": {
@@ -69,21 +69,43 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Super-exponential -> polynomial: Theta(n * C(n(n-1)/2, n-1)) = 2^Theta(n log n) vs O(n^2 log n) (Kruskal) and Theta(n^2) (Prim, linear in the input on dense graphs). The cut property makes greedy choices safe, so no search is needed. Even enumerating only the spanning trees would not help: K_n has n^(n-2) of them (Cayley's formula). On sparse graphs the line continues with Chazelle 2000 (O(m alpha(m, n)), deterministic) and Karger-Klein-Tarjan 1995 (expected O(m), randomized).",
+  "relationship": "Super-exponential -> polynomial: Theta(n * C(n(n-1)/2, n-1)) = 2^Theta(n log n) (under the background itertools assumption) vs Omega(n^2 log n) in the worst case (under the background assumption that sorted() is a deterministic comparison sort) and O(n^2 log n) under the background sort-time assumption (Kruskal) and Theta(n^2) (Prim, linear in the input on dense graphs). The cut property makes greedy choices safe, so no search is needed. Even enumerating only the spanning trees would not help: K_n has n^(n-2) of them (Cayley's formula, proved in PROOFS.md, section 1). On sparse graphs the line continues with Chazelle 2000 and Karger-Klein-Tarjan 1995 (background).",
+  "background": [
+    {
+      "statement": "Chazelle's deterministic algorithm computes a minimum spanning tree of a connected graph with n vertices and m edges in O(m alpha(m, n)) time.",
+      "source": "Chazelle 2000, abstract"
+    },
+    {
+      "statement": "Karger, Klein and Tarjan give a randomized linear-time algorithm for minimum spanning trees.",
+      "source": "Karger, Klein & Tarjan 1995, abstract"
+    },
+    {
+      "statement": "Machine-model assumption for Kruskal's upper bound: CPython's sorted() sorts m items in O(m log m) worst-case time. The listed sources support it but do not state it as a theorem for the current CPython sort: Auger et al. prove that the Python version of TimSort runs in O(n log n) (abstract; TimSort's original merge policy), and CPython's list sort now uses the powersort merge strategy of Munro and Wild (Objects/listsort.txt in CPython 3.12 and 3.14), whose abstract describes nearly-optimal merging orders.",
+      "source": "Auger, Jugé, Nicaud & Pivoteau 2018 (abstract); Munro & Wild 2018 (abstract); CPython Objects/listsort.txt"
+    },
+    {
+      "statement": "Machine-model assumption for Kruskal's worst-case lower bound and hence for the secondary T3 tag: sorted() is deterministic and learns about the keys only from the outcomes of < comparisons. The Sorting HOW-TO states that the sort routines use < when making comparisons between two objects; determinism and 'only from <' are premises about the runtime.",
+      "source": "Python documentation, Sorting Techniques (Odds and Ends)"
+    },
+    {
+      "statement": "Machine-model assumption for the enumeration: itertools.combinations(pool, r) behaves like its documented roughly equivalent code. It yields every r-element subsequence of the pool (elements unique by position) exactly once, C(m, r) tuples in all (m = len(pool)); in the equivalent code each further tuple costs O(r) steps (the index scan, the index reset and the tuple construction each take at most r steps) after an O(m) start, so all tuples together cost O(m + r C(m, r)). The documentation calls the code roughly equivalent to the C implementation; the cost bound is a premise about the runtime.",
+      "source": "Python documentation, itertools.combinations"
+    }
+  ],
   "sources": [
     {
       "authors": "Boruvka, O.",
       "year": 1926,
       "title": "O jistém problému minimálním",
       "venue": "Práce Moravské přírodovědecké společnosti 3, 37-58",
-      "note": "No DOI. The first MST algorithm; used here as the independent oracle in harness.check."
+      "note": "No DOI. Used here as the independent oracle in harness.check (its correctness: PROOFS.md, section 9)."
     },
     {
       "authors": "Cayley, A.",
       "year": 1889,
       "title": "A theorem on trees",
       "venue": "Quarterly Journal of Pure and Applied Mathematics 23, 376-378",
-      "note": "No DOI. K_n has n^(n-2) spanning trees."
+      "note": "No DOI. Credit for Cayley's formula (proved by double counting in PROOFS.md, section 1)."
     },
     {
       "authors": "Kruskal, J. B.",
@@ -112,17 +134,59 @@
       "title": "A minimum spanning tree algorithm with inverse-Ackermann type complexity",
       "venue": "Journal of the ACM 47(6), 1028-1047",
       "doi": "10.1145/355541.355562"
+    },
+    {
+      "authors": "Auger, N.; Jugé, V.; Nicaud, C.; Pivoteau, C.",
+      "year": 2018,
+      "title": "On the worst-case complexity of TimSort",
+      "venue": "26th European Symposium on Algorithms (ESA 2018), LIPIcs 112, 4:1-4:13",
+      "doi": "10.4230/LIPIcs.ESA.2018.4",
+      "note": "Background only. Abstract: the Python version of TimSort runs in O(n log n)."
+    },
+    {
+      "authors": "Munro, J. I.; Wild, S.",
+      "year": 2018,
+      "title": "Nearly-optimal mergesorts: fast, practical sorting methods that optimally adapt to existing runs",
+      "venue": "26th European Symposium on Algorithms (ESA 2018), LIPIcs 112, 63:1-63:16",
+      "doi": "10.4230/LIPIcs.ESA.2018.63",
+      "note": "Background only. Abstract: nearly-optimal merging orders (powersort)."
+    },
+    {
+      "authors": "CPython developers",
+      "year": 2025,
+      "title": "listsort.txt (description of CPython's list sort)",
+      "venue": "CPython source tree, Objects/listsort.txt, branches 3.12 and 3.14",
+      "url": "https://github.com/python/cpython/blob/3.14/Objects/listsort.txt",
+      "note": "Background only. States that the code uses the powersort merge strategy of Munro and Wild."
+    },
+    {
+      "authors": "Python Software Foundation",
+      "year": 2026,
+      "title": "Sorting Techniques (Python HOW-TO)",
+      "venue": "Python 3.14.8 documentation, section Odds and Ends (accessed 2026-10-07)",
+      "url": "https://docs.python.org/3/howto/sorting.html",
+      "note": "Background only. States: \"The sort routines use < when making comparisons between two objects.\""
+    },
+    {
+      "authors": "Python Software Foundation",
+      "year": 2026,
+      "title": "itertools - Functions creating iterators for efficient looping",
+      "venue": "Python 3.14.8 documentation, itertools.combinations (accessed 2026-10-07)",
+      "url": "https://docs.python.org/3/library/itertools.html#itertools.combinations",
+      "note": "Background only. Documents that combinations(iterable, r) returns the r-length subsequences in lexicographic order of positions, treats elements as unique by position, has math.comb(n, r) items, and gives roughly equivalent Python code."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: all three implementations agree for n = 1..7 (enumeration capped at n = 7, i.e. 54,264 subsets) on random weights in [1, 100] and, in some trials, in [1, 3] (many ties); Kruskal and Prim also agree at n = 20, 60 and 200. harness.check is independent of all three: Boruvka's algorithm with (w, u, v) tie-breaking, plus the bounds (sum of the n-1 lightest edges) <= answer <= (weight of the path 0-1-...-(n-1)). V2 by exact operation counts (measure 'reported', round 2026-10-06c) on weights in [1, 10^9], with the same seeded draws as the earlier timing fit. generate_scaling wraps every off-diagonal weight in an instrumented type that counts each comparison and each arithmetic operation (+, *, divmod) with an input weight as an operand. Kruskal's packed key w*n^2 + u*n + v is then itself an instrumented value, so the comparisons made inside sorted() call its __lt__ and are counted. The implementations are unchanged and return the same MST weights on the counting type (experiments/2026-10-06c_mst_counts.py). Kruskal: count = 3m packing operations + sort comparisons + one divmod per scanned key (m = n(n-1)/2), cross-checked against sorted() applied to the same keys and a replay of the scan on plain ints; 14811, 69526, 319007, 1438399, 6400007 for n = 50..800 under Python 3.14.2 (1.095-1.179 m log2 m; see caveats for 3.12); alpha = 0.998 against n^2 log n at tolerance 0.03, rivals n^2 (1.094), n^2 log^2 n (0.917) and n^3 (0.729) rejected, so the log factor is resolved. Prim: exactly (n-1)(n-2) comparisons + (n-1) additions = (n-1)^2; alpha = 1.007 against n^2, rivals n^2 log n (0.918) and n^3 (0.671) rejected. Enumeration: exactly (n-1) C(m, n-1) additions + n^(n-2) - 1 comparisons (one per spanning tree after the first; Cayley's formula), 75, 964, 16310, 342390 for n = 4..7; alpha = 0.995 against n C(m, n-1), rivals C(m, n-1) (1.065), n^2 C(m, n-1) (0.934) and n^(n-2) (1.210) rejected. Not counted: the union-find operations (on plain vertex ints) and the enumeration's depth-first search. Timing history: an earlier Kruskal version that sorted (w, u, v) tuples measured alpha ~1.19, attributed to cache effects once m exceeds ~10^5 edges (the cause was not tested); packing each edge into one integer key (same sort order) removed this. The timing fit could not resolve Kruskal's log factor.",
+    "method": "V1: all three implementations agree for n = 1..7 (enumeration capped at n = 7, i.e. 54,264 subsets) on random weights in [1, 100] and, in some trials, in [1, 3] (many ties); Kruskal and Prim also agree at n = 20, 60 and 200. harness.check is independent of all three: Boruvka's algorithm with (w, u, v) tie-breaking, plus the bounds (sum of the n-1 lightest edges) <= answer <= (weight of the path 0-1-...-(n-1)). V2 by exact operation counts (measure 'reported') on weights in [1, 10^9], with the same seeded draws as the earlier timing fit. generate_scaling wraps every off-diagonal weight in an instrumented type that counts each comparison and each arithmetic operation (+, *, divmod) with an input weight as an operand. Kruskal's packed key w*n^2 + u*n + v is then itself an instrumented value, so the comparisons made inside sorted() call its __lt__ and are counted. The implementations are unchanged and return the same MST weights on the counting type (experiments/2026-10-06c_mst_counts.py). Kruskal: count = 3m packing operations + sort comparisons + one divmod per scanned key (m = n(n-1)/2), cross-checked against sorted() applied to the same keys and a replay of the scan on plain ints; 14811, 69526, 319007, 1438399, 6400007 for n = 50..800 under Python 3.14.2 (1.095-1.179 m log2 m; see caveats for 3.12); alpha = 0.998 against n^2 log n at tolerance 0.03, rivals n^2 (1.094), n^2 log^2 n (0.917) and n^3 (0.729) rejected, so the log factor is resolved. Prim: exactly (n-1)(n-2) comparisons + (n-1) additions = (n-1)^2; alpha = 1.007 against n^2, rivals n^2 log n (0.918) and n^3 (0.671) rejected. Enumeration: exactly (n-1) C(m, n-1) additions + n^(n-2) - 1 comparisons (one per spanning tree after the first; Cayley's formula), 75, 964, 16310, 342390 for n = 4..7; alpha = 0.995 against n C(m, n-1), rivals C(m, n-1) (1.065), n^2 C(m, n-1) (0.934) and n^(n-2) (1.210) rejected. Not counted: the union-find operations (on plain vertex ints) and the enumeration's depth-first search. Timing history: an earlier Kruskal version that sorted (w, u, v) tuples measured alpha ~1.19, attributed to cache effects once m exceeds ~10^5 edges (the cause was not tested); packing each edge into one integer key (same sort order) removed this. The timing fit could not resolve Kruskal's log factor. Exact counts: PROOFS.md proves the exact operation counts of this entry for all sizes of their domains, from the code, and names the scripts and sizes that check each count. Proofs of the other claims: PROOFS.md, sections 4-9 (correctness of the three algorithms with the cut property, the time bounds with a worst-case Omega(n^2 log n) lower bound for Kruskal, Prim's optimality on K_n, space, the oracle); tests/test_proofs_mst.py checks their computable parts (70 matrices against all n^(n-2) trees, the binomial bounds, all m! weight orders for n = 3, 4 against log2(m!), the adversary instance for n = 2..8, tracemalloc peaks).",
     "artifacts": [
+      "PROOFS.md",
       "implementations/brute_force.py",
       "implementations/kruskal.py",
       "implementations/prim.py",
       "harness.py",
-      "../../experiments/2026-10-06c_mst_counts.py"
+      "../../experiments/2026-10-06c_mst_counts.py",
+      "../../tests/test_proofs_mst.py"
     ]
   },
   "test_harness": {
@@ -130,9 +194,21 @@
     "v1_sizes": [1, 2, 3, 4, 5, 6, 7, 20, 60, 200],
     "trials": 4
   },
-  "caveats": "On K_n Prim's Theta(n^2) array version is already optimal up to a constant factor among deterministic algorithms: an adversary that answers 2 to every weight query can still give any unread edge weight 1, which lowers the answer from 2(n - 1) to 2n - 3 (n >= 2; the edge lies on a spanning tree whose other n - 2 edges weigh 2), so every correct algorithm reads all n(n-1)/2 weights. For Kruskal only the upper bound O(n^2 log n) is stated (no worst-case lower bound is proved here); on the V2 draws its counts grow like n^2 log n, and the V2 counts resolve the log factor on these draws: n^2 is rejected for Kruskal and n^2 log n for Prim. Kruskal's count includes the comparisons made inside CPython's sorted() (Timsort), so its exact values depend on the sort implementation of the Python version; under CPython 3.12.10 the Kruskal counts are 0.17-0.30% lower than under 3.14.2 (14766 vs 14811 at n = 50, 6388918 vs 6400007 at n = 800), only in the sort comparisons, with alpha = 0.998 under both versions and the same verdicts. The other count series of this entry are identical under both versions. The counts leave out the union-find work and the enumeration's depth-first search.",
-  "notes": "The enumeration's count C(n(n-1)/2, n-1) grows like (e n / 2)^(n-1) up to polynomial factors; only n^(n-2) of these subsets are spanning trees (Cayley's formula). Secondary tag T3 (RL-056): Kruskal Theta(m log m) = Theta(n^2 log n) on K_n -> Prim Theta(n^2). The log factor rests on the comparison-sorting lower bound, which is background and not proved here; on the V2 draws the exact counts resolve it as a measurement.",
+  "caveats": "On K_n Prim's Theta(n^2) array version is already optimal up to a constant factor among deterministic algorithms: an adversary that answers 2 to every weight query can still give any unread edge weight 1, which lowers the answer from 2(n - 1) to 2n - 3 (n >= 2; the edge lies on a spanning tree whose other n - 2 edges weigh 2), so every correct algorithm reads all n(n-1)/2 weights (PROOFS.md, section 7). For Kruskal the worst case is Omega(n^2 log n) by the decision-tree argument, under the background assumption that sorted() is deterministic and learns only from < comparisons (PROOFS.md, section 6), and O(n^2 log n) under the background assumption that sorted() runs in O(m log m) worst-case time; on the V2 draws its counts grow like n^2 log n, and the V2 counts resolve the log factor on these draws: n^2 is rejected for Kruskal and n^2 log n for Prim. Kruskal's count includes the comparisons made inside CPython's sorted() (Timsort), so its exact values depend on the sort implementation of the Python version; under CPython 3.12.10 the Kruskal counts are 0.17-0.30% lower than under 3.14.2 (14766 vs 14811 at n = 50, 6388918 vs 6400007 at n = 800), only in the sort comparisons, with alpha = 0.998 under both versions and the same verdicts. The other count series of this entry are identical under both versions. The counts leave out the union-find work and the enumeration's depth-first search.",
+  "notes": "The enumeration's count C(n(n-1)/2, n-1) grows like (e n / 2)^(n-1) up to polynomial factors (between 2/(e n^(3/2)) times and 1 times that; PROOFS.md, section 6); only n^(n-2) of these subsets are spanning trees (Cayley's formula). Secondary tag T3 (RL-056): Kruskal Omega(n^2 log n) in the worst case on K_n (under the background assumption that sorted() is a deterministic comparison sort; and O(n^2 log n) under the background sort-time assumption) -> Prim Theta(n^2). The log factor rests on the comparison-sorting lower bound, which PROOFS.md, section 6 proves for this implementation under that machine-model assumption (decision-tree argument: on some weight assignment of every K_n, sorted() makes at least log2(m!) comparisons); the matching upper bound holds under the background sort assumption. On the V2 draws the exact counts also resolve the log factor as a measurement.",
   "secondary_tags": [
     "T3"
-  ]
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_mst.py",
+      "../../experiments/2026-10-06c_mst_counts.py",
+      "../../experiments/2026-10-07_closed_form_checks.py",
+      "../../experiments/2026-10-07_count_proof_checks.py"
+    ],
+    "audit": "RL-107"
+  }
 }

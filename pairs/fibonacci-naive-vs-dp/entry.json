@@ -13,8 +13,8 @@
       "model": "classical-deterministic",
       "pseudocode": "fib(n): if n < 2 return n; return fib(n-1) + fib(n-2)",
       "time_complexity": "Theta(phi^n), phi = (1+sqrt(5))/2 ~ 1.618",
-      "space_complexity": "Theta(n) (recursion depth)",
-      "correctness": "Direct transcription of the definition. The number of calls C(n) satisfies C(n) = C(n-1) + C(n-2) + 1, so C(n) = 2F(n+1) - 1 = Theta(phi^n).",
+      "space_complexity": "Theta(n): recursion depth exactly max(n, 1)",
+      "correctness": "Direct transcription of the definition (reduced mod 2^64 at every step). The number of calls C(n) satisfies C(n) = C(n-1) + C(n-2) + 1, so C(n) = 2F(n+1) - 1 = Theta(phi^n), since phi^(n-2) <= F(n) <= phi^(n-1) for n >= 1 (PROOFS.md section 2).",
       "implementation": "implementations/naive.py:fib_naive",
       "harness": {
         "v1_max_n": 25,
@@ -29,9 +29,9 @@
       "idea": "Compute F(0), F(1), ..., F(n) in order, keeping only the last two values. Each subproblem is solved once.",
       "model": "classical-deterministic",
       "pseudocode": "a, b = 0, 1; repeat n times: a, b = b, a + b; return a",
-      "time_complexity": "Theta(n) word operations",
+      "time_complexity": "Theta(n) word operations: exactly n loop iterations (range iteration at O(1) per step: machine-model assumption in background)",
       "space_complexity": "O(1) words",
-      "correctness": "Loop invariant: after k iterations (a, b) = (F(k), F(k+1)).",
+      "correctness": "Loop invariant: after k iterations (a, b) = (F(k), F(k+1)) mod 2^64 (PROOFS.md section 3).",
       "implementation": "implementations/dp.py:fib_dp",
       "harness": {
         "scaling": {
@@ -45,9 +45,9 @@
       "idea": "Use F(2k) = F(k)(2F(k+1) - F(k)) and F(2k+1) = F(k)^2 + F(k+1)^2 while scanning the bits of n; equivalent to computing [[1, 1],[1, 0]]^n by repeated squaring.",
       "model": "classical-deterministic",
       "pseudocode": "see implementation",
-      "time_complexity": "Theta(log n) word operations",
-      "space_complexity": "O(1) words",
-      "correctness": "The doubling identities follow from [[1, 1],[1, 0]]^k = [[F(k+1),F(k)],[F(k),F(k-1)]]. Invariant: after processing the top j bits of n (value k), (a, b) = (F(k), F(k+1)).",
+      "time_complexity": "Theta(log n) word operations: exactly n.bit_length() loop iterations (n >= 1), with bin(n) built in O(log n) (machine-model assumption in background)",
+      "space_complexity": "O(1) words of arithmetic state, plus the string bin(n) of floor(log2 n) + 3 characters that the implementation builds (as large as the input up to a constant factor)",
+      "correctness": "The doubling identities follow from [[1, 1],[1, 0]]^k = [[F(k+1),F(k)],[F(k),F(k-1)]]. Invariant: after processing the top j bits of n (value k), (a, b) = (F(k), F(k+1)) mod 2^64 (PROOFS.md section 4).",
       "implementation": "implementations/fast_doubling.py:fib_fast_doubling",
       "harness": {
         "scaling": {
@@ -58,34 +58,41 @@
     }
   ],
   "pair_type": "T2",
-  "relationship": "Naive recursion is exponential, Theta(phi^n). Memoising the recurrence (DP) gives Theta(n); exploiting the matrix structure gives Theta(log n). The waste in the naive method is pure recomputation of overlapping subproblems.",
+  "relationship": "Naive recursion is exponential, Theta(phi^n). Memoising the recurrence (DP) gives Theta(n); exploiting the matrix structure gives Theta(log n). The waste in the naive method is pure recomputation of overlapping subproblems: it calls itself only on 0..n, n + 1 distinct arguments, but 2F(n+1) - 1 times. Proofs of every claim: PROOFS.md.",
   "sources": [
     {
       "authors": "Cormen, T. H.; Leiserson, C. E.; Rivest, R. L.; Stein, C.",
       "year": 2009,
       "title": "Introduction to Algorithms (3rd ed.)",
       "venue": "MIT Press",
-      "isbn": "978-0-262-03384-8",
-      "note": "Problem 31-3 (Fibonacci numbers) and chapter 15 (dynamic programming)."
+      "isbn": "978-0-262-03384-8"
     },
     {
       "authors": "Knuth, D. E.",
       "year": 1997,
       "title": "The Art of Computer Programming, Vol. 1: Fundamental Algorithms (3rd ed.)",
       "venue": "Addison-Wesley",
-      "isbn": "978-0-201-89683-1",
-      "note": "Section 1.2.8 (Fibonacci numbers), including the matrix identity."
+      "isbn": "978-0-201-89683-1"
+    },
+    {
+      "authors": "Python Software Foundation",
+      "year": 2026,
+      "title": "The Python Standard Library: Built-in Functions (bin) and Built-in Types (Ranges)",
+      "url": "https://docs.python.org/3/library/functions.html",
+      "note": "Background only (machine-model assumption). Read on 2026-10-07: bin converts an integer to a binary string prefixed with '0b' (a non-int argument must define __index__); a range object always takes the same small amount of memory."
     }
   ],
   "verification": {
     "level": "V2",
-    "method": "V1: all three implementations agree on n = 0..25 and selected large n, and match OEIS A000045 for n <= 25. V2: measured runtimes fitted against phi^n, n and log n respectively. Exact-count V2 by harness instrumentation was examined in round 2026-10-06c and is not possible with the implementation unchanged: the only operation fast doubling performs on its input is bin(n), which makes one __index__ call on an instrumented non-int value and none on an int subclass; the loop runs over the characters of the str that bin() builds in C, and all arithmetic is on a and b, which start from the literals 0 and 1, and on the module constant MASK. The bottom-up DP likewise touches its input only through range(n) (one __index__ call). See experiments/2026-10-06c_value_reach_probe.py and research/2026-10-06c_count_v2_remaining.md.",
+    "method": "V1: all three implementations agree on n = 0..25 and selected large n, and match OEIS A000045 for n <= 25. V2: measured runtimes fitted against phi^n, n and log n respectively. Exact-count V2 by harness instrumentation was examined in round 2026-10-06c and is not possible with the implementation unchanged (observed on CPython 3.14.2; a measurement, not a proof): the only operation fast doubling performs on its input is bin(n), which makes one __index__ call on an instrumented non-int value and none on an int subclass; the loop runs over the characters of the str that bin() builds in C, and all arithmetic is on a and b, which start from the literals 0 and 1, and on the module constant MASK. The bottom-up DP likewise touches its input only through range(n) (one __index__ call). See experiments/2026-10-06c_value_reach_probe.py and research/2026-10-06c_count_v2_remaining.md. Proofs: PROOFS.md proves every claim of the entry (correctness, the exact call and iteration counts, time, space and the bit-size view, the time bounds under the machine-model assumption on bin and range in background) and records the observation above (CPython 3.14.2; measured, not proved) about what an instrumented input observes; tests/test_proofs_fib.py checks the computable facts on stated ranges.",
     "artifacts": [
+      "PROOFS.md",
       "implementations/naive.py",
       "implementations/dp.py",
       "implementations/fast_doubling.py",
       "harness.py",
-      "../../experiments/2026-10-06c_value_reach_probe.py"
+      "../../experiments/2026-10-06c_value_reach_probe.py",
+      "../../tests/test_proofs_fib.py"
     ]
   },
   "test_harness": {
@@ -93,9 +100,24 @@
     "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 100, 1000, 12345, 100000],
     "trials": 1
   },
-  "caveats": "Bit-size view: with input size b = log2(n) bits the three costs are Theta(phi^(2^b)), Theta(2^b) and Theta(b). So the DP is polynomial in the value n but EXPONENTIAL in the input length; only fast doubling is polynomial in input size. The mod 2^64 makes every arithmetic step O(1); computing the exact (unbounded) F(n) costs more because F(n) has ~0.694n bits.",
+  "caveats": "Bit-size view: with input size b = log2(n) bits the three costs are Theta(phi^(2^b)), Theta(2^b) and Theta(b). So the DP is polynomial in the value n but EXPONENTIAL in the input length; only fast doubling is polynomial in input size. The mod 2^64 makes every arithmetic step O(1); computing the exact (unbounded) F(n) costs more because F(n) has ~0.694n bits (n log2(phi) + O(1); PROOFS.md section 5).",
   "notes": "Canonical teaching example of T2: the naive method is wasteful, not the problem hard. Secondary tag T3 (added 2026-10-06, RL-056): DP Theta(n) -> fast doubling Theta(log n).",
   "secondary_tags": [
     "T3"
-  ]
+  ],
+  "background": [
+    {
+      "statement": "Machine-model assumption of this entry: bin(n) returns the '0b'-prefixed binary string of n (floor(log2 n) + 1 digits for n >= 1) in O(log n) time and space, and range(n) is a constant-size object whose iteration yields 0, ..., n - 1 at O(1) per step. The documentation states the format of bin and that a range object always takes the same small amount of memory; the time bounds are assumed, not proved in this repository.",
+      "source": "Python Software Foundation, Python documentation: Built-in Functions (bin) and Built-in Types (Ranges), read 2026-10-07"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../tests/test_proofs_fib.py"
+    ],
+    "audit": "RL-107"
+  }
 }

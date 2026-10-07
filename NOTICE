@@ -7,3 +7,14 @@ implementations/ folder) is licensed under the Apache License, Version 2.0: see 
 Data and documentation (entry.json files, entry READMEs, index.json, RESEARCH_LOG.md, ledger/, research/,
 notes/, search/schemes/, and the other documentation) are licensed under the Creative Commons Attribution
 4.0 International license: see LICENSE-DATA.
+
+Third-party files, kept unmodified under their own licences (not under the licences above):
+
+- theorems/no-integral-form-z-half-schemes/data/2x4x5_tensor.mpl and 3x3x6_tensor.mpl: from
+  https://github.com/dronperminov/FastMatrixMultiplication (commit 64f58a5e40806bc47847b11dd8aceec043fa895d),
+  MIT License, Copyright (c) 2025 Andrew Perminov; see data/LICENSE.FastMatrixMultiplication.
+- theorems/no-integral-form-z-half-schemes/data/mathematical_results.ipynb: from
+  https://github.com/google-deepmind/alphaevolve_results (commit 4226acbf237ff9ad10ba7673a2af127a2d8a5971),
+  Copyright 2025 Google LLC. Per that repository's README, its software is licensed under the Apache License 2.0
+  (see data/LICENSE.alphaevolve_results) and all other materials under the Creative Commons Attribution 4.0
+  International License (CC BY 4.0, https://creativecommons.org/licenses/by/4.0/legalcode).
