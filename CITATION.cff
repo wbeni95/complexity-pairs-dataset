@@ -20,7 +20,7 @@ identifiers:
 license:
   - Apache-2.0
   - CC-BY-4.0
-version: "0.3.0"
+version: "0.4.0"
 date-released: "2026-10-08"
 keywords:
   - computational complexity
@@ -31,6 +31,8 @@ keywords:
   - verification
   - quantum query complexity
   - matrix multiplication
+  - tensor rank
+  - algebraic complexity
 abstract: >-
   An open, machine-readable dataset of complexity pairs (computational problems for which two or more correct
   algorithms of different asymptotic cost are recorded) and of proved theorem notes. Every entry carries an explicit
