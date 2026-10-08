@@ -1,15 +1,62 @@
 name: validate
 
+# Each push or pull request checks what its change can affect (tools/ci_select.py explains the rule); the unit tests,
+# the schema and folder rules and the generated-files check always run in full. Changes to tools/ or .github/, release
+# tags, the weekly schedule and manual runs check everything.
 on:
   push:
     branches: [main]
+    tags: ["v*"]
   pull_request:
+  schedule:
+    - cron: "23 4 * * 1"   # full run every Monday, 04:23 UTC
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
+  select:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read          # gh run list: the last commit of main on which this workflow passed
+    outputs:
+      mode: ${{ steps.sel.outputs.mode }}
+      entries: ${{ steps.sel.outputs.entries }}
+      slugs: ${{ steps.sel.outputs.slugs }}
+      sources: ${{ steps.sel.outputs.sources }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0     # the base below can be many commits back
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Choose what to check
+        id: sel
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          HEAD: ${{ github.sha }}
+        run: |
+          full() { printf 'mode=full\nentries=\nslugs=\nsources=true\n' >> "$GITHUB_OUTPUT"; echo "full run: $1"; exit 0; }
+          case "$EVENT" in push|pull_request) ;; *) full "event $EVENT" ;; esac
+          case "$REF" in refs/tags/*) full "tag $REF" ;; esac
+          # Base: the last commit of main on which this workflow passed (push, schedule or manual run). A failure is
+          # then checked again by every later run, on main and in pull requests, until it is fixed.
+          BASE=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow validate.yml --branch main --status success \
+                   --limit 100 --json headSha,event \
+                   --jq '[.[] | select(.event == "push" or .event == "schedule" or .event == "workflow_dispatch")][0].headSha // empty') || BASE=
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then full "no passing run of main to compare with"; fi
+          # The selector never judges a change to itself, to the other tools or to this workflow.
+          CHANGED=$(git diff --name-only "$BASE" "$HEAD")
+          if grep -qE '^(tools/|\.github/)' <<< "$CHANGED"; then full "tools/ or .github/ changed since $BASE"; fi
+          python tools/ci_select.py --event "$EVENT" --ref "$REF" --base "$BASE" --head "$HEAD" >> "$GITHUB_OUTPUT"
+
   validate:
+    needs: select
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -22,13 +69,21 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Validator self-tests (must reject wrong claims)
         run: python -m unittest discover -s tests -v
-      - name: Schema, folder rules, V1 correctness runs
-        run: python tools/validate.py
-      - name: index.json and README table are up to date
+      - name: Schema and folder rules of every entry
+        run: python tools/validate.py --static
+      - name: V1 correctness runs
+        if: needs.select.outputs.mode == 'full' || needs.select.outputs.entries != ''
+        env:
+          ENTRIES: ${{ needs.select.outputs.entries }}
+        run: python tools/validate.py $ENTRIES
+      - name: index.json, README.md blocks and the at-a-glance chart are up to date
         run: python tools/build_index.py --check
+      - name: The other front-page charts are up to date (recorded run and proved formulas)
+        run: python tools/make_charts.py --check
 
   scaling:
-    needs: validate
+    needs: [select, validate]
+    if: needs.select.outputs.mode == 'full' || needs.select.outputs.entries != ''
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -39,11 +94,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install -r requirements.txt
-      - name: Re-measure every V2 scaling claim
-        run: python tools/validate.py --scaling -v
+      - name: Re-measure the V2 scaling claims
+        env:
+          ENTRIES: ${{ needs.select.outputs.entries }}
+        run: python tools/validate.py --scaling -v $ENTRIES
 
   proofs:
-    needs: validate
+    needs: [select, validate]
+    if: needs.select.outputs.mode == 'full' || needs.select.outputs.slugs != ''
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -54,11 +112,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install -r requirements.txt
-      - name: Replay the checks behind every item with the check mark
-        run: python tools/replay_proofs.py
+      - name: Replay the checks behind the items with the check mark
+        env:
+          SLUGS: ${{ needs.select.outputs.slugs }}
+        run: python tools/replay_proofs.py $SLUGS
 
   sources:
-    needs: validate
+    needs: [select, validate]
+    if: needs.select.outputs.sources == 'true'
     runs-on: ubuntu-latest
     # External APIs (Crossref, DataCite, arXiv) can be flaky: report, don't block.
     continue-on-error: true
@@ -69,3 +130,16 @@ jobs:
           python-version: "3.12"
       - name: Resolve every DOI / arXiv id and compare titles
         run: python tools/check_sources.py
+
+  # One check that is green only if every job passed or was skipped by the selection. Make this the required check if
+  # branch protection is turned on: a skipped matrix job reports one check without the "(3.12)" suffix.
+  ci-ok:
+    if: always()
+    needs: [select, validate, scaling, proofs]
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "job results: $RESULTS"
+          for r in $RESULTS; do case "$r" in success|skipped) ;; *) exit 1 ;; esac; done

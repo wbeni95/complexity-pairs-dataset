@@ -1565,3 +1565,37 @@ except for three changes:
 - `docs/` in the licence list.
 
 The outdated status line ("v0, bootstrapping") was replaced by a "What's new" note; its charter link moved to Layout.
+
+### RL-117 · DECISION · CI checks what a change can affect; shared code, releases and a weekly run check everything
+The owner asked that a push should not re-check every item when only a few changed. On the last runs, every push took
+about 10 min of unit tests, 6.5 min of scaling checks and 40 min of proof replay, on each of two Python versions.
+
+**Rule** (`tools/ci_select.py`, `.github/workflows/validate.yml`):
+- **Always, in full:** the unit tests, the schema and folder rules, the index freshness check and the chart
+  freshness check.
+- **Selective:**
+  - V1 runs and scaling checks: every changed entry, and every entry whose proof, implementation or test harness
+    names a changed file;
+  - proof replay: those items, plus one item listing each check that reads a changed file. A check reads a file
+    when it names its item folder or the helper file.
+- **Everything:**
+  - a change to `tools/` or `.github/` (decided in the workflow before the selector runs, so the selector never
+    judges a change to itself);
+  - shared code, an experiment file that no proof or check names, an unknown path, or a removed item;
+  - an unreadable entry;
+  - release tags, manual runs, and a weekly run (Monday 04:23 UTC).
+- **Base:** the last commit of main on which this workflow passed, so a failure is checked again by every later run
+  until it is fixed.
+
+**Review:** an independent referee found seven demonstrated gaps in the first draft. In each case all selected checks
+passed while a skipped check failed:
+- the theorem-note metadata test;
+- a ledger regression test;
+- two tests that read README.md;
+- a shared experiments helper;
+- a check that reads another entry's folder;
+- a test harness in another entry's folder.
+
+The referee also found two structural gaps, two bugs and weak tests. The adopted version is the referee's proposal,
+tested on scratch copies against every gap. Its tests write the expected selections out by hand (12 tests), and
+mutation testing kills 15 of 16 mutants; the survivor is an equivalent mutant.

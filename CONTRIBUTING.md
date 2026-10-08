@@ -16,7 +16,11 @@ is about verification.
    python tools/check_sources.py <your entry folder>
    python tools/build_index.py
    ```
-5. Open a PR. CI re-runs the validator, the scaling checks, the unit tests and the index freshness check.
+5. Open a PR. CI checks what the change can affect: the V1 runs and the scaling checks of every changed entry and
+   of every entry whose proof, implementation or test harness names a changed file, and the replayed proofs of those
+   items and of the items whose checks read a changed file. The unit tests, the schema and folder rules, the index
+   freshness check and the chart freshness check always run in full. Changes to tools/ or .github/, release tags,
+   manual runs and a weekly run check everything ([tools/ci_select.py](tools/ci_select.py)).
 
 Reviewers check three things. Is it a real pair (START_HERE section 1)? Is the tag correct? Is the level honest?
 
