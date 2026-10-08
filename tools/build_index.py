@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""Build index.json, the pairs table in README.md, and generated per-entry READMEs.
+"""Build index.json, the generated parts of README.md, and generated per-entry READMEs.
 
-After the tables, the generated part of README.md lists, under "Sources we could not read", every source named in
+README.md has two generated blocks: "at a glance" (the counts by provenance, with the chart docs/img/items-*.svg,
+which this tool also writes) and the tables. In every table the project's own results come first, then undetermined
+items, then the rest, each group in the order of index.json. After the tables, the generated part of README.md lists, under "Sources we could not read", every source named in
 an item's provenance.missing_sources; that section is omitted when no item has one.
 
 Per-entry README.md files are generated only when missing or when they carry the
@@ -19,11 +21,14 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import make_charts  # noqa: E402
 from validate import LEVELS, REPO, discover_entries, load_entry, location_of  # noqa: E402
 
 GENERATED = "<!-- generated from entry.json by tools/build_index.py; edit entry.json, not this file -->"
 TABLE_START = "<!-- PAIRS-TABLE:START -->"
 TABLE_END = "<!-- PAIRS-TABLE:END -->"
+GLANCE_START = "<!-- GLANCE:START -->"
+GLANCE_END = "<!-- GLANCE:END -->"
 PAIR_TAGS = ("T1", "T2", "T3", "T4", "T5", "T8", "T9")  # tags that record a real asymptotic improvement
 TAG_NAMES = {
     "T1": "exp → poly",
@@ -93,6 +98,52 @@ MISSING_SOURCES_INTRO = (
     "could not be read. If you have access to one of these sources and can tell us whether it contains the result, "
     "or know an open-access copy, please open an issue."
 )
+
+
+def own_first(items: list[dict]) -> list[dict]:
+    """Own results and extensions first, then undetermined items, then the rest; stable within each group."""
+    rank = {"own": 0, "own-extension": 0, "undetermined": 1}
+    return sorted(items, key=lambda it: rank.get(it["provenance"].get("class"), 2))
+
+
+# rows of the "at a glance" table: (group key of make_charts.ITEM_GROUPS, label, theorem notes can be in the group)
+GLANCE_ROWS = [
+    ("own", "🟠 **Our own results and extensions**: not found in the literature we searched", True),
+    ("und", "🟡⏳ **Undetermined**: may be our own; a source that might contain it could not be read", True),
+    ("known", "**Known results, proved again here**: our own proofs and checks of published results", True),
+    ("syn", "**Synthetic examples**: deliberately wasteful rewrites, never counted as pairs", False),
+    ("cited", "**Known results, cited only**: waiting in staging, not yet checked", False),
+]
+
+
+def glance_items(rows: list[dict], theorems: list[dict]) -> list[tuple[str, bool, bool]]:
+    """(group key, proved, is a theorem note) for every entry and theorem note."""
+    out = [(make_charts.item_group(r["location"], r["provenance"].get("class", "literature")), r["proved"], False)
+           for r in rows]
+    out += [(make_charts.item_group("theorems", t["provenance"].get("class", "literature")), t["proved"], True)
+            for t in theorems]
+    return out
+
+
+def glance_block(rows: list[dict], theorems: list[dict]) -> str:
+    """The generated "at a glance" block: the items chart and the counts by provenance."""
+    items = glance_items(rows, theorems)
+    n = lambda pred: sum(1 for it in items if pred(it))  # noqa: E731
+    lines = ["<picture>",
+             '  <source media="(prefers-color-scheme: dark)" srcset="docs/img/items-dark.svg">',
+             f'  <img src="docs/img/items-light.svg" width="760" alt="{len(items)} items, one square each, '
+             'coloured by whose result it is">',
+             "</picture>",
+             "",
+             "| Whose result | Pairs and entries | Theorem notes | ✅ Proved here |",
+             "|---|---:|---:|---:|"]
+    for key, label, notes_possible in GLANCE_ROWS:
+        e = n(lambda it, k=key: it[0] == k and not it[2])
+        t = n(lambda it, k=key: it[0] == k and it[2])
+        proved = n(lambda it, k=key: it[0] == k and it[1])
+        lines.append(f"| {label} | {e} | {t if notes_possible or t else '–'} | {proved} of {e + t} |")
+    lines.append(f"| **Total** | **{len(rows)}** | **{len(theorems)}** | **{n(lambda it: it[1])} of {len(items)}** |")
+    return "\n".join(lines)
 
 
 def _cell(text) -> str:
@@ -198,9 +249,10 @@ def readme_table(rows: list[dict], theorems: list[dict] | None = None) -> str:
         return "\n".join(lines)
 
     idx = build_index(rows, theorems)["counts"]
-    verified = [r for r in rows if r["location"] == "pairs"]
-    staging = [r for r in rows if r["location"] == "staging"]
-    synthetic = [r for r in rows if r["location"] == "synthetic"]
+    verified = own_first([r for r in rows if r["location"] == "pairs"])
+    staging = own_first([r for r in rows if r["location"] == "staging"])
+    synthetic = own_first([r for r in rows if r["location"] == "synthetic"])
+    theorems = own_first(theorems or [])
     parts = [
         f"**{idx['validated_pairs']} validated pairs** (V1+, tagged T1–T5, T8 or T9) · "
         f"{idx['open_problems_T6']} open problems (T6) · {idx['quantum_separations_T9_in_pairs']} quantum query separations in pairs/ (T9) · "
@@ -292,7 +344,13 @@ def main(argv=None) -> int:
         return 2
     head, rest = readme.split(TABLE_START, 1)
     _, tail = rest.split(TABLE_END, 1)
-    outputs[readme_path] = f"{head}{TABLE_START}\n{readme_table(rows, theorems)}\n{TABLE_END}{tail}"
+    readme = f"{head}{TABLE_START}\n{readme_table(rows, theorems)}\n{TABLE_END}{tail}"
+    if GLANCE_START in readme and GLANCE_END in readme:  # optional block; README.md places it
+        head, rest = readme.split(GLANCE_START, 1)
+        _, tail = rest.split(GLANCE_END, 1)
+        readme = f"{head}{GLANCE_START}\n{glance_block(rows, theorems)}\n{GLANCE_END}{tail}"
+        outputs.update(make_charts.items_charts([(g, pr) for g, pr, _ in glance_items(rows, theorems)], REPO))
+    outputs[readme_path] = readme
 
     for d, e in entries:
         p = d / "README.md"
@@ -305,6 +363,7 @@ def main(argv=None) -> int:
             print(f"stale: {p.relative_to(REPO).as_posix()}  (run python tools/build_index.py)")
         return 1 if stale else 0
     for p in stale:
+        p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text(outputs[p], encoding="utf-8", newline="\n")
         print(f"wrote {p.relative_to(REPO).as_posix()}")
     if not stale:

@@ -1513,3 +1513,55 @@ Ledger: [ledger/runs/20261008T085246Z.json](ledger/runs/20261008T085246Z.json). 
   - The V1 counts and the levels of the 74 earlier entries are unchanged.
 - **Unit tests:** 870 OK. **Citations:** 252 identifiers, 0 problems. **Index:** up to date.
 - **Replay:** `python tools/replay_proofs.py` passed 195 of 195 commands, and fully replayed all 85 marked items.
+
+### RL-116 · DECISION · Front page: results first, every number generated or pinned to its source
+The owner asked for a front page that opens with how many items are known results, how many are our own and how
+many are undetermined, what our results save, and where they could be used, with the existing lists kept below and
+our own results first in each group.
+
+**Generated from the data:**
+- The at-a-glance table and the chart `docs/img/items-*.svg` (one square per item, a tick on each item marked ✅)
+  are written by `tools/build_index.py` from the same data as `index.json`. `python tools/build_index.py --check`
+  covers them in CI.
+- In every generated table, own results come first, then undetermined items, then the rest. Within each group the
+  previous order is kept. `index.json` is unchanged.
+
+**Charts and the worked example:**
+- `tools/make_charts.py` draws three charts, each in a light and a dark version:
+  - comparisons at n = 1000 merges (1001 piles), from the closed forms proved in the PROOFS.md of the three
+    merge-cost entries;
+  - steps and time side by side for the maximum merge cost, from recorded run
+    [20261008T085246Z](ledger/runs/20261008T085246Z.json);
+  - measured seconds of the three X² + C counting algorithms, from the same run.
+- Before drawing, it checks that the counts recorded in the run equal the proved closed forms. It refuses to draw a
+  value outside an axis range. Counts are the evidence; seconds are supplementary data (RL-112).
+- `tools/savings_scenario.py` recomputes the worked example of the front page, with every assumption as an option.
+  The times for n = 1000 are the proved counts times the time per comparison measured at the largest n of the run,
+  and the front page says so.
+
+**Uses table:** "What is proved" restates each linked item's own statement, with its conditions. "Where it could
+help" is labelled as a suggestion, not a tested deployment.
+
+**Tests:** `tests/test_front_page.py` (18 tests) pins every number of the front page to its source and checks the
+charts' geometry. A tamper run showed that changing a number, or drawing a line outside the plot, makes a test fail.
+
+**Review:** an independent referee checked 85 sentences, numbers and table cells of the new part against
+index.json, PROOFS.md, the recorded run and each item's statement: 59 correct, 6 wrong, 19 imprecise, 1 unsupported.
+- **Wrong (6):** five places called n = 1000 "piles", but in the merge entries n is the number of merges (n + 1
+  piles); the numbers were right. The tagline said every algorithm is exact and every item proved.
+- **Unsupported (1):** a sentence about compiled code.
+- **Imprecise (19):** mainly cells of the uses table that dropped a condition of the item: a model, a tie rule, a
+  minimum repeat length, or the pinned schemes. Also the description of the review process.
+- **Fixes:** all were applied with the referee's texts, and a fix-check confirmed them.
+- **Fix-check finding (1):** a reworded suggestion cell said "as the merge costs are". Only the two maximum merge
+  costs are proved to satisfy the condition, so the cell now says so.
+- **Chart:** the referee found that one formula line was drawn below the plot. It was fixed, a geometry test now
+  guards it, and `tools/check_all.py` now also checks that the static charts are up to date.
+
+**Moved, not deleted:** "What counts as a pair" and the other existing sections now follow the tables, unchanged
+except for three changes:
+- the two sentences on verification levels from the old introduction;
+- the new tools in Quick start and Layout;
+- `docs/` in the licence list.
+
+The outdated status line ("v0, bootstrapping") was replaced by a "What's new" note; its charter link moved to Layout.

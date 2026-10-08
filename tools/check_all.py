@@ -5,6 +5,7 @@ Steps (in order):
   1. validator self-tests      python -m unittest discover -s tests
   2. validation                python tools/validate.py --scaling [--record]
   3. index freshness           python tools/build_index.py --check
+     chart freshness           python tools/make_charts.py --check
   4. citations (optional)      python tools/check_sources.py        (network)
 
 Usage:
@@ -40,6 +41,7 @@ def main(argv=None) -> int:
         ("unit tests", [py, "-m", "unittest", "discover", "-s", "tests"]),
         ("validation" + ("" if args.quick else " + scaling"), validate),
         ("index freshness", [py, "tools/build_index.py", "--check"]),
+        ("chart freshness", [py, "tools/make_charts.py", "--check"]),
     ]
     if args.sources:
         steps.append(("citations", [py, "tools/check_sources.py"]))

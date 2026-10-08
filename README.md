@@ -1,60 +1,169 @@
 # Complexity Pairs Dataset
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23184028.svg)](https://doi.org/10.5281/zenodo.23184028)
+[![checks](https://github.com/wbeni95/complexity-pairs-dataset/actions/workflows/validate.yml/badge.svg)](https://github.com/wbeni95/complexity-pairs-dataset/actions/workflows/validate.yml)
+[![code: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue)](LICENSE)
+[![data: CC BY 4.0](https://img.shields.io/badge/data-CC%20BY%204.0-blue)](LICENSE-DATA)
 
-An open, machine-readable, **verified** dataset of *complexity pairs*: computational problems for which
-we record two or more correct algorithms with **different asymptotic cost**, for example an
-exponential-time and a polynomial-time method for the same problem.
+**Algorithms that do the same job with far less work. Every item marked ✅ has a written proof and a check anyone can run.**
 
-The goal is training and benchmark data for algorithm-discovery systems (the AlphaTensor / AlphaDev /
-FunSearch family) and a reference map for anyone studying where efficient algorithms exist and where
-they are not known. Every entry carries an explicit verification level, and the validator enforces
-that level. Nothing is counted as validated just because a paper says so.
+An open dataset of *complexity pairs* (two or more correct algorithms for the same problem whose costs differ
+asymptotically) and theorem notes. It is built for engineers who implement, researchers who cite, and algorithm-discovery systems that learn from verified
+data.
 
-> Status: v0, bootstrapping. See [START_HERE.txt](START_HERE.txt) for the full charter.
+> [!NOTE]
+> **What's new: v0.3.0, 8 October 2026.** 66 validated pairs (19 more than v0.2.0); the 🟡⏳ *Undetermined* label,
+> with the list of [sources we could not read](#sources-we-could-not-read); and wall-clock time recorded next to every
+> exact count. [doi:10.5281/zenodo.23236967](https://doi.org/10.5281/zenodo.23236967)
 
-## What counts as a pair
+## At a glance
 
-A pair is a property of a **problem family** (defined for every input size n), not of a single number or
-expression. One entry records a problem with an explicit size parameter and at least two algorithms, checked
-against each other at V1, whose costs differ asymptotically. Items whose every claim has a written proof in this
-repository carry the check mark ✅ Proved.
+<!-- GLANCE:START -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/items-dark.svg">
+  <img src="docs/img/items-light.svg" width="760" alt="96 items, one square each, coloured by whose result it is">
+</picture>
 
-These are **not** pairs: a constant written two ways (`4 = 2^2`), a single instance with no family over n,
-or a cosmetic rewrite with the same cost. In this project, "exponential" always means a cost that
-grows like 2^n or faster in the input size. It never means a formula that happens to contain a power.
+| Whose result | Pairs and entries | Theorem notes | ✅ Proved here |
+|---|---:|---:|---:|
+| 🟠 **Our own results and extensions**: not found in the literature we searched | 4 | 8 | 12 of 12 |
+| 🟡⏳ **Undetermined**: may be our own; a source that might contain it could not be read | 0 | 5 | 5 of 5 |
+| **Known results, proved again here**: our own proofs and checks of published results | 62 | 2 | 64 of 64 |
+| **Synthetic examples**: deliberately wasteful rewrites, never counted as pairs | 4 | – | 4 of 4 |
+| **Known results, cited only**: waiting in staging, not yet checked | 11 | – | 0 of 11 |
+| **Total** | **81** | **15** | **85 of 96** |
+<!-- GLANCE:END -->
 
-| Tag | Meaning |
-|---|---|
-| T1 | exp → poly, same problem (rare) |
-| T2 | naive-exp → poly (the naive method was wasteful: DP, memoisation, a better idea) |
-| T3 | poly → faster poly |
-| T4 | randomized ↔ deterministic |
-| T5 | quantum → classical (dequantization) |
-| T6 | open / unpaired: only high-cost algorithms known (e.g. factoring classically) |
-| T7 | synthetic / bloated: deliberately wasteful rewrites. Low signal, stored separately, never counted |
-| T8 | super-poly → faster super-poly (e.g. n! → n²·2ⁿ): real improvements that stay exponential |
-| T9 | quantum separation in a query / oracle / black-box model (needs a classical lower bound in `lower_bounds`, cited or proved in the entry) |
+## What the new results save
 
-The primary tag is T6 whenever polynomial time is open for the problem; the improvement then goes in
-`secondary_tags` (e.g. TSP: T6 + T8). An entry counts as a **validated pair** if it is V1+ in `pairs/` and
-carries any of T1–T5, T8, T9.
+Each of our own pair results replaces a slower exact method by a faster one that returns the same answer. The
+operation counts are proved exactly in each entry's PROOFS.md; the recorded run measures the same counts and the time
+they take.
 
-| Level | Meaning | Enforced by `tools/validate.py` |
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/comparisons-n1000-dark.svg">
+  <img src="docs/img/comparisons-n1000-light.svg" width="760" alt="Comparisons for n = 1000 merges (1001 piles): 333,833,500 for the cubic interval DP against 1,499,500 for the endpoint DP (maximum merge cost and maximum total imbalance) and 1,000 for the closed form (minimum merge cost)">
+</picture>
+
+For a row of n + 1 piles (n merges), the counts are n(n+1)(2n+1)/6 for the cubic interval DP, n(3n−1)/2 for the endpoint DP and n for the closed form,
+proved in [pairs/max-merge-cost-larger-part-cubic-dp-vs-endpoint-dp](pairs/max-merge-cost-larger-part-cubic-dp-vs-endpoint-dp),
+[pairs/max-merge-imbalance-cubic-dp-vs-endpoint-dp](pairs/max-merge-imbalance-cubic-dp-vs-endpoint-dp) and
+[pairs/min-merge-cost-smaller-part-cubic-dp-vs-closed-form](pairs/min-merge-cost-smaller-part-cubic-dp-vs-closed-form).
+
+### Steps and time, side by side
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/steps-and-time-dark.svg">
+  <img src="docs/img/steps-and-time-light.svg" width="760" alt="Maximum merge cost: counted comparisons and measured seconds against n for the cubic interval DP and the endpoint DP">
+</picture>
+
+Steps are the evidence; time is the industry's yardstick, so the recorded run keeps both. On one core in CPython,
+n = 1000 merges (1001 piles) would take about 2 min 45 s with the cubic DP and about 1.1 s with the endpoint DP: the proved counts
+times the time per comparison measured at the largest n of the
+[recorded run](ledger/runs/20261008T085246Z.json) (n = 128 and n = 512).
+
+### Less time, much bigger inputs
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/same-time-bigger-inputs-dark.svg">
+  <img src="docs/img/same-time-bigger-inputs-light.svg" width="760" alt="Measured seconds against n for three exact algorithms that count n-bit integers with a cheap X^2 + C form">
+</picture>
+
+Counting the n-bit integers that have a cheap X² + C form
+([pairs/square-plus-offset-count-enumeration-vs-intervals-vs-groups](pairs/square-plus-offset-count-enumeration-vs-intervals-vs-groups)):
+listing every candidate takes 33.5 ms at n = 16 bits, one interval per root takes 19.5 ms at n = 32, and our
+root-group method takes 1.0 ms at n = 384. The proved costs are Θ(2ⁿ), Θ(2^(n/2)) and O(n log n) word operations in the entry's word-RAM model (words of
+n + 3 bits).
+The chart shows measured seconds only, because each algorithm counts a different unit.
+
+<details>
+<summary><b>What that could mean in practice: a worked example with stated assumptions</b></summary>
+
+<br>
+
+This is an illustration, not a measured saving. `python tools/savings_scenario.py` recomputes it, and its options take
+your own numbers.
+
+| Assumption | Value | Basis |
 |---|---|---|
-| V0 | claimed: cited, not independently checked | folder `staging/` |
-| V1 | correct on a test battery: ≥ 2 implementations agree with each other (and with an oracle where the harness defines one) | runs every implementation |
-| V2 | scaling: measured growth matches the claimed cost | fits log(time), or log(an exact reported count: oracle queries, multiplications), against log(cost(n)); slope must be 1 ± tolerance, and declared rival costs must *not* fit. Timing fits are only conclusive up to log factors (RL-048) |
-| V3 | proof cited: a complexity proof is cited in `verification.proofs` (a citation, not a proof written here; no entry claims V3) | requires `verification.proofs` |
+| Workload | maximum merge cost with n = 1000 merges (1001 piles), 10,000 times a day | example |
+| Time per comparison | 493 ns (cubic DP), 736 ns (endpoint DP) | recorded run, CPython, one core |
+| Power per busy core | 15 W | assumed |
+| Electricity price | $0.15 per kWh | assumed |
+| Cooling water | 1.8 L per kWh | assumed |
 
-**Exact shape diagnostic (informational).** For exact counts, the validator also runs a shape diagnostic (with `-v`
-or `--record`). It guesses an exact recurrence for the counts on a regular grid of n, checks it on held-out terms, and
-compares the growth it implies with the claimed cost, with no tolerance: the exponential base as an algebraic number,
-the power of n and the power of log n. It reports MATCH, MISMATCH, UNDETERMINED (with the reason) or SKIPPED, and it
-does not change V2 verdicts. Why it was added, what a MATCH does and does not show, and how edge cases are handled:
-[notes/v2-shape-diagnostic.md](notes/v2-shape-diagnostic.md).
+| Result of the example | Per day | Per year |
+|---|---:|---:|
+| Compute time saved | 454 core-hours | 165,713 core-hours |
+| Energy saved | 6.8 kWh | 2,486 kWh |
+| Electricity cost saved | $1.02 | $373 |
+| Cooling water saved | 12 L | 4,474 L |
 
-## The dataset
+The saving grows linearly with how often the computation runs, and faster than linearly with n. The ratio of comparisons
+(223× at n = 1000) does not depend on the language or the machine; only the time per comparison does.
+
+</details>
+
+## Where our results could be used
+
+What is proved is in the third column. The last column is our suggestion, not a tested deployment.
+
+| Area | Result | What is proved | Where it could help |
+|---|---|---|---|
+| Storage engines and databases | [Maximum merge cost (larger part)](pairs/max-merge-cost-larger-part-cubic-dp-vs-endpoint-dp) and [maximum total imbalance](pairs/max-merge-imbalance-cubic-dp-vs-endpoint-dp) 🟠 Own result | The largest total cost (larger part) or total imbalance over all merge orders of n + 1 adjacent runs, with exactly n(3n−1)/2 comparisons instead of n(n+1)(2n+1)/6. | Stress-testing merge and compaction policies in log-structured storage. |
+| | [Minimum merge cost (smaller part)](pairs/min-merge-cost-smaller-part-cubic-dp-vs-closed-form) 🟠 Own result | For n + 1 runs, the optimum is the total size minus the largest run: one pass, exactly n comparisons. | Instant cost prediction for small-into-large merging. |
+| | [Endpoint law for split-dependent weights](theorems/endpoint-law-split-dependent-weights) 🟠 Own result | If the split-dependent weights satisfy the note's rotation condition RS3w (proved for both maximum merge costs), the two end splits suffice: Θ(n³) becomes Θ(n²). | Interval DPs of this max form whose weights are proved to satisfy the condition, as the two maximum merge costs are. |
+| Data compression | [Exact pruning for LZ77-style parsing with repeat-offset slots](theorems/lz77-repeat-slots-exact-pruning) 🟡⏳ Undetermined | With minimum repeat length at least 2 and static token costs, the DP can drop every state whose cost is at least that of a cheapest state plus an explicit margin; the optimum is kept. | Optimal parsers in LZ77-family compressors that reuse recent offsets. |
+| | [State bounds for that parser](theorems/lz77-repeat-slots-state-bounds) 🟡⏳ Undetermined | Bounds on the states of the exact parser: Θ(n^(k+1)) in the worst case for fixed k, and still Θ(n^(k+1)) with the pruning on unbounded integer alphabets (nothing is claimed for fixed alphabets). | Memory planning for optimal parsing. |
+| Logistics, networks and scheduling | [Edmonds–Karp makes Θ(n³) reads](theorems/max-flow-random-dense-edmonds-karp-cubic-reads) 🟠 Own result · [Dinic Θ(n²)](theorems/max-flow-random-dense-dinic-short-residual-paths) 🟠 Own extension | On the random dense networks of the max-flow entry, with high probability. | Benchmarks with a proved answer to which max-flow algorithm wins. |
+| | [Trivial minimum cut on those networks](theorems/max-flow-random-dense-trivial-min-cut) 🟡⏳ Undetermined | With high probability the maximum flow is the smaller of the capacity out of the source and the capacity into the sink. | A warning for benchmark design: these networks test speed, not difficulty. |
+| | [Hungarian method, exact iteration count](theorems/hungarian-exact-iteration-count) 🟠 Own extension | Integer (or exact rational) matrices with non-decreasing rows make the entry's implementation run the most iterations possible. | Ready-made worst-case inputs for testing Hungarian codes that follow the entry's implementation. |
+| | [First-match rule prices](theorems/first-match-prices-not-pairwise) 🟡⏳ Undetermined | With at most two matching rules per item the price of a rule order is a sum of pairwise terms; from three on it need not be. | Ordering filter, routing or pricing rules. |
+| Compilers and software engineering | [Compressed memo keys](theorems/compressed-memo-keys-evaluation-orders) 🟠 Own result | For the recurrence family of the note: an exact test for when a flag can be dropped from a memo key for every data vector and every evaluation order (the note's order models D and S). | Smaller memo tables in dynamic programs. |
+| | [When binary powering is exact](theorems/binary-powering-exactness-in-magmas) 🟠 Own result | A finite test, whenever the powers of x are eventually periodic (for example in every finite magma), for when square-and-multiply returns the left power of x under a non-associative operation. | Fast powering in octonion-like algebras and other custom operations. |
+| | [Cheapest X^d + C representation](theorems/power-plus-offset-four-candidates) 🟠 Own result · [counting pair](pairs/square-plus-offset-count-enumeration-vs-intervals-vs-groups) 🟠 Own result | Four candidate roots always suffice for d ≥ 3; for X² + C, counting the n-bit integers with a cheap form drops from Θ(2ⁿ) to O(n log n) word operations (the pair's word-RAM model). | Compact encodings of integer constants. |
+| | [Knuth's root window for length weights](theorems/knuth-window-concave-length-weights) 🟡⏳ Undetermined | Knuth's speed-up is exact for concave nondecreasing length weights, under the largest- and the smallest-minimiser tie rules, with the chosen roots in closed form. | Optimal search trees and interval DPs whose weights depend on length only. |
+| Scientific computing and cryptography | [Characteristic-2 obstructions in two fast matrix multiplication schemes](theorems/per-term-2-integrality-z-half-schemes) 🟠 Own extension | No term of the pinned ℤ[1/2] ⟨3,3,6;40⟩ scheme, and at least 20 of the 32 terms of the pinned ℤ[1/2] ⟨2,4,5;32⟩ scheme (exactly 20 at best), can be made 2-integral in any equivalent form. | Choosing schemes for arithmetic over GF(2), as in coding theory. |
+
+## How results get here
+
+```mermaid
+flowchart LR
+    A["Our discovery system (private)"] --> B["Written proof in this repository"]
+    L["Published literature"] --> B
+    B --> C["Independent referee check (AI agent)"]
+    C --> D["Check anyone can run"]
+    D --> E["Release with a DOI"]
+    style A stroke-dasharray: 5 5
+```
+
+Our own results start as candidates from a discovery system that we keep private; the other items come from the cited
+literature. A candidate is published only after it has a complete written proof here, has been re-checked step by step
+by a separate AI referee with scripts of its own (RL-107, RL-113), and has a deterministic check that exits with an
+error if any case it checks fails. You never need the methods to trust a result:
+the proof is in the repository and the check runs on your machine. Corrections are made in public, and the
+[research log](RESEARCH_LOG.md) keeps every one.
+
+## Check it yourself
+
+```bash
+git clone https://github.com/wbeni95/complexity-pairs-dataset
+cd complexity-pairs-dataset
+pip install -r requirements.txt
+python tools/replay_proofs.py                    # every check behind every item marked ✅
+python tools/replay_proofs.py max-merge-cost-larger-part-cubic-dp-vs-endpoint-dp   # one item
+```
+
+## Work with us
+
+- **Using a result?** Open an issue and tell us where. We help adapt the proof to your setting.
+- **Have one of the papers we could not read?** Some results are 🟡⏳ undetermined until a few sources can be checked.
+  The list is under [Sources we could not read](#sources-we-could-not-read).
+- **Research partners, compute and funding.** We are looking for partners to run the discovery system on larger
+  problems. Open an issue titled "Partnership", or contact [@wbeni95](https://github.com/wbeni95).
+- **Follow new results:** Watch → Custom → Releases.
+
+## All results
 
 Labels: 🟠 **Own result** / 🟠 **Own extension** mark the project's own results; 🟡⏳ **Undetermined** marks results that are probably our own, where a source that might already contain them could not be read (listed under "Sources we could not read" below); ⏳ **Pending** on a literature item means a detail could not be verified because a source could not be read or identified (see [CONTRIBUTING.md](CONTRIBUTING.md#provenance-labels-whose-result-it-is)).
 
@@ -65,6 +174,10 @@ Labels: 🟠 **Own result** / 🟠 **Own extension** mark the project's own resu
 
 | Entry | Type | Level | Algorithms (time: leading bound; exact statement in each entry) |
 |---|---|---|---|
+| [Counting n-bit integers with a cheap representation X^2 + C: enumeration vs interval sweep vs root groups](pairs/square-plus-offset-count-enumeration-vs-intervals-vs-groups) ✅ Proved · 🟠 Own result | T2+T8 | V2 | enumeration of all k with three candidate roots: Theta(2^n) word operations in the word-RAM model of the entry<br>sweep over one interval per root: Theta(2^(n/2)) word operations in the word-RAM model of the entry<br>root groups of equal bit length: O(n log n) word operations in the word-RAM model of the entry |
+| [Worst-case merging of adjacent piles when a merge costs the larger part (max sum of max(L, R)): cubic interval DP vs endpoint DP](pairs/max-merge-cost-larger-part-cubic-dp-vs-endpoint-dp) ✅ Proved · 🟠 Own result | T3 | V2 | cubic interval DP (every split): Theta(n^3) on every input<br>endpoint DP (two candidate splits per row): Theta(n^2) on every input |
+| [Worst-case total imbalance of merging adjacent piles (max sum of abs(L - R)): cubic interval DP vs endpoint DP](pairs/max-merge-imbalance-cubic-dp-vs-endpoint-dp) ✅ Proved · 🟠 Own result | T3 | V2 | cubic interval DP (every split): Theta(n^3) on every input<br>endpoint DP (two candidate splits per row): Theta(n^2) on every input |
+| [Merging adjacent piles at the cost of the smaller part (min sum of min(L, R)): cubic interval DP vs the closed form S - max s](pairs/min-merge-cost-smaller-part-cubic-dp-vs-closed-form) ✅ Proved · 🟠 Own result | T3 | V2 | cubic interval DP (every split): Theta(n^3) on every input<br>closed form S - max s: Theta(n) on every input |
 | [Primality testing: trial division vs AKS](pairs/primality-trial-vs-aks) ✅ Proved | T1 | V1 | trial division: Theta(sqrt(N)) = Theta(2^(n/2)) divisions in the worst case<br>AKS: Õ(n^(21/2)) bit operations when multiplication and division of m-bit integers cost Õ(m) |
 | [Assignment problem: permutation enumeration vs the Hungarian method](pairs/assignment-brute-vs-hungarian) ✅ Proved | T2 | V2 | permutation enumeration: Theta(n * n!) under the machine-model assumption on itertools.permutations listed under background<br>Hungarian method (shortest augmenting paths with potentials): O(n^3) worst case |
 | [Powering in non-associative Cayley-Dickson algebras (octonions, sedenions, dimension 32): repeated multiplication vs square-and-multiply](pairs/cayley-dickson-powering-repeated-vs-square-multiply) ✅ Proved | T2 | V2 | repeated multiplication: Theta(e) = Theta(2^n) algebra products<br>left-to-right square-and-multiply (binary method): Theta(n) algebra products |
@@ -87,7 +200,6 @@ Labels: 🟠 **Own result** / 🟠 **Own extension** mark the project's own resu
 | [Regular-expression matching: backtracking vs memoised backtracking vs Thompson's NFA simulation](pairs/regex-matching-backtracking-vs-thompson) ✅ Proved | T2 | V2 | backtracking (consume first): Exponential in the worst case<br>memoised backtracking: O((m + 1)(|t| + 1)) subproblems with O(1) work each<br>Thompson's NFA simulation: O((m + 1)(|t| + 1)) |
 | [Single-pair shortest path: simple-path enumeration vs Dijkstra](pairs/shortest-path-enumeration-vs-dijkstra) ✅ Proved | T2 | V2 | simple-path enumeration: Theta(n (n-2)!) on every n x n input<br>Dijkstra (array version): Theta(n^2) with an array |
 | [Counting spanning trees: edge-subset enumeration vs Kirchhoff's matrix-tree theorem (Bareiss)](pairs/spanning-tree-count-enumeration-vs-kirchhoff) ✅ Proved | T2 | V2 | enumeration of all (n-1)-edge subsets: O(n^2 + n log n C(m, n-1)) under the background itertools assumption and Omega(n^2 + n C(m, n-1))<br>Kirchhoff's matrix-tree theorem with Bareiss fraction-free elimination: Theta(n^3) arithmetic operations |
-| [Counting n-bit integers with a cheap representation X^2 + C: enumeration vs interval sweep vs root groups](pairs/square-plus-offset-count-enumeration-vs-intervals-vs-groups) ✅ Proved · 🟠 Own result | T2+T8 | V2 | enumeration of all k with three candidate roots: Theta(2^n) word operations in the word-RAM model of the entry<br>sweep over one interval per root: Theta(2^(n/2)) word operations in the word-RAM model of the entry<br>root groups of equal bit length: O(n log n) word operations in the word-RAM model of the entry |
 | [2-SAT: brute force over all assignments vs implication graph + strongly connected components](pairs/two-sat-brute-force-vs-scc) ✅ Proved | T2 | V2 | brute force over all assignments: O(2^n * (m + 1)) always<br>Aspvall-Plass-Tarjan (implication graph + Tarjan SCC): O(n + m) on every input |
 | [XOR-SAT and #XOR-SAT: brute force over all assignments vs Gaussian elimination over GF(2)](pairs/xor-sat-brute-force-vs-gaussian-elimination) ✅ Proved | T2 | V2 | brute force over all assignments: O(2^n * (m + 1) * (n + 1)) bit operations and steps always<br>Gaussian elimination over GF(2): O(m n min(m, n) + m + n) bit operations and steps |
 | [All-pairs shortest paths on dense digraphs: Bellman-Ford from every source vs Floyd-Warshall](pairs/all-pairs-shortest-paths-bellman-ford-vs-floyd-warshall) ✅ Proved | T3 | V2 | Bellman-Ford from every source: Theta(n^2 m) for m >= 1 edges<br>Floyd-Warshall: Theta(n^3) on every input |
@@ -101,10 +213,7 @@ Labels: 🟠 **Own result** / 🟠 **Own extension** mark the project's own resu
 | [Matrix multiplication: schoolbook vs Strassen](pairs/matrix-multiplication-naive-vs-strassen) ✅ Proved | T3 | V2 | schoolbook: Theta(n^3)<br>Strassen: Theta(n^(log2 7)) ~ Theta(n^2.807) |
 | [Maximum flow: Edmonds-Karp vs Dinic](pairs/max-flow-edmonds-karp-vs-dinic) ✅ Proved | T3 | V1 | Edmonds-Karp: O(V E^2) for E >= 1<br>Dinic (blocking flows): O(V^2 E) for E >= 1 |
 | [Maximum number of heap orderings of a binary tree (minimum hook product): DP over the root split vs Knuth's root window vs the heap formula](pairs/max-heap-orderings-dp-vs-knuth-window-vs-heap-formula) ✅ Proved | T3 | V2 | dynamic program over the root split: Theta(N^2) on every input<br>Knuth's restricted root window (largest tie rule): Theta(N) on every input<br>heap formula (hook product of the heap-shaped tree): Theta(log N) on every input N >= 2 |
-| [Worst-case merging of adjacent piles when a merge costs the larger part (max sum of max(L, R)): cubic interval DP vs endpoint DP](pairs/max-merge-cost-larger-part-cubic-dp-vs-endpoint-dp) ✅ Proved · 🟠 Own result | T3 | V2 | cubic interval DP (every split): Theta(n^3) on every input<br>endpoint DP (two candidate splits per row): Theta(n^2) on every input |
-| [Worst-case total imbalance of merging adjacent piles (max sum of abs(L - R)): cubic interval DP vs endpoint DP](pairs/max-merge-imbalance-cubic-dp-vs-endpoint-dp) ✅ Proved · 🟠 Own result | T3 | V2 | cubic interval DP (every split): Theta(n^3) on every input<br>endpoint DP (two candidate splits per row): Theta(n^2) on every input |
 | [Maximum subarray sum: brute force vs running sums vs Kadane's scan](pairs/maximum-subarray) ✅ Proved | T3 | V2 | brute force (sum every subarray): Theta(n^3) on every input<br>running sums: Theta(n^2) on every input<br>Kadane's algorithm (linear scan): Theta(n) |
-| [Merging adjacent piles at the cost of the smaller part (min sum of min(L, R)): cubic interval DP vs the closed form S - max s](pairs/min-merge-cost-smaller-part-cubic-dp-vs-closed-form) ✅ Proved · 🟠 Own result | T3 | V2 | cubic interval DP (every split): Theta(n^3) on every input<br>closed form S - max s: Theta(n) on every input |
 | [Multi-pattern string matching: naive matching per pattern vs KMP per pattern vs Aho-Corasick](pairs/multi-pattern-matching-naive-vs-aho-corasick) ✅ Proved | T3 | V2 | naive matching per pattern: O(N L) character comparisons<br>Knuth-Morris-Pratt per pattern: Theta(P N + L) time on every input with P >= 1<br>Aho-Corasick: Theta(N + L) character comparisons for P >= 1 and a fixed alphabet of sigma characters |
 | [OR convolution (covering product): all index pairs vs zeta and Moebius transforms](pairs/or-convolution-naive-vs-zeta-mobius) ✅ Proved | T3 | V2 | all index pairs (naive): Theta(4^n) = Theta(N^2)<br>zeta transform, pointwise product, Moebius transform: Theta(n * 2^n) = Theta(N log N) |
 | [Polynomial multiplication over Z_p: schoolbook vs number-theoretic transform (FFT)](pairs/polynomial-multiplication-naive-vs-ntt) ✅ Proved | T3 | V2 | schoolbook convolution: Theta(n^2) in the worst case<br>number-theoretic transform (Cooley-Tukey over Z_p): Theta(n log n) |
@@ -164,18 +273,18 @@ Labels: 🟠 **Own result** / 🟠 **Own extension** mark the project's own resu
 | [When binary powering is exact in a magma](theorems/binary-powering-exactness-in-magmas) ✅ Proved · 🟠 Own result | `python theorems/binary-powering-exactness-in-magmas/verify.py` |
 | [Compressed memo keys: when is dropping a flag from the key exact for every evaluation order?](theorems/compressed-memo-keys-evaluation-orders) ✅ Proved · 🟠 Own result | `python theorems/compressed-memo-keys-evaluation-orders/verify.py` |
 | [Endpoint law for split-dependent interval weights](theorems/endpoint-law-split-dependent-weights) ✅ Proved · 🟠 Own result | `python theorems/endpoint-law-split-dependent-weights/verify.py` |
-| [First-match prices need not be pairwise once three rules can match an item](theorems/first-match-prices-not-pairwise) ✅ Proved · 🟡⏳ Undetermined (may be our own result) | `python theorems/first-match-prices-not-pairwise/verify.py` |
 | [Exact iteration count of the entry's Hungarian implementation: row-monotone worst case and rectangular counts](theorems/hungarian-exact-iteration-count) ✅ Proved · 🟠 Own extension | `python theorems/hungarian-exact-iteration-count/verify.py` |
+| [Residual s–t distance at most 6, and Dinic in Θ(n²) reads, on the max-flow entry's random dense networks](theorems/max-flow-random-dense-dinic-short-residual-paths) ✅ Proved · 🟠 Own extension | `python theorems/max-flow-random-dense-dinic-short-residual-paths/verify.py` |
+| [Edmonds–Karp makes Θ(n³) reads with high probability on the max-flow entry's random dense networks](theorems/max-flow-random-dense-edmonds-karp-cubic-reads) ✅ Proved · 🟠 Own result | `python theorems/max-flow-random-dense-edmonds-karp-cubic-reads/verify.py` |
+| [Term by term: how much of the ⟨2,4,5;32⟩ and ⟨3,3,6;40⟩ ℤ[1/2] schemes can be made 2-integral](theorems/per-term-2-integrality-z-half-schemes) ✅ Proved · 🟠 Own extension | `python theorems/per-term-2-integrality-z-half-schemes/verify.py` |
+| [The cheapest representation k = X^d + C for d ≥ 3: four candidate roots, and a polynomial count](theorems/power-plus-offset-four-candidates) ✅ Proved · 🟠 Own result | `python theorems/power-plus-offset-four-candidates/verify.py` |
+| [First-match prices need not be pairwise once three rules can match an item](theorems/first-match-prices-not-pairwise) ✅ Proved · 🟡⏳ Undetermined (may be our own result) | `python theorems/first-match-prices-not-pairwise/verify.py` |
 | [Knuth's root window is exact for concave nondecreasing length weights](theorems/knuth-window-concave-length-weights) ✅ Proved · 🟡⏳ Undetermined (may be our own result) | `python theorems/knuth-window-concave-length-weights/verify.py` |
 | [An exact pruning rule for optimal LZ77-style parsing with k repeat-offset slots](theorems/lz77-repeat-slots-exact-pruning) ✅ Proved · 🟡⏳ Undetermined (may be our own result) | `python theorems/lz77-repeat-slots-exact-pruning/verify.py` |
 | [How many states the exact DP for LZ77-style parsing with k repeat-offset slots holds, with and without exact pruning](theorems/lz77-repeat-slots-state-bounds) ✅ Proved · 🟡⏳ Undetermined (may be our own result) | `python theorems/lz77-repeat-slots-state-bounds/verify.py` |
-| [Residual s–t distance at most 6, and Dinic in Θ(n²) reads, on the max-flow entry's random dense networks](theorems/max-flow-random-dense-dinic-short-residual-paths) ✅ Proved · 🟠 Own extension | `python theorems/max-flow-random-dense-dinic-short-residual-paths/verify.py` |
-| [Edmonds–Karp makes Θ(n³) reads with high probability on the max-flow entry's random dense networks](theorems/max-flow-random-dense-edmonds-karp-cubic-reads) ✅ Proved · 🟠 Own result | `python theorems/max-flow-random-dense-edmonds-karp-cubic-reads/verify.py` |
 | [Trivial minimum cut on the max-flow entry's random dense networks](theorems/max-flow-random-dense-trivial-min-cut) ✅ Proved · 🟡⏳ Undetermined (may be our own result) | `python theorems/max-flow-random-dense-trivial-min-cut/verify.py` |
 | [No integer equivalent form for the ⟨2,4,5;32⟩ and ⟨3,3,6;40⟩ ℤ[1/2] matrix multiplication schemes](theorems/no-integral-form-z-half-schemes) ✅ Proved · ⏳ Pending | `python theorems/no-integral-form-z-half-schemes/verify.py` |
 | [Closed-form left powers in para-Cayley–Dickson algebras](theorems/para-cayley-dickson-closed-form-powers) ✅ Proved | `python theorems/para-cayley-dickson-closed-form-powers/verify.py` |
-| [Term by term: how much of the ⟨2,4,5;32⟩ and ⟨3,3,6;40⟩ ℤ[1/2] schemes can be made 2-integral](theorems/per-term-2-integrality-z-half-schemes) ✅ Proved · 🟠 Own extension | `python theorems/per-term-2-integrality-z-half-schemes/verify.py` |
-| [The cheapest representation k = X^d + C for d ≥ 3: four candidate roots, and a polynomial count](theorems/power-plus-offset-four-candidates) ✅ Proved · 🟠 Own result | `python theorems/power-plus-offset-four-candidates/verify.py` |
 
 ### Sources we could not read
 
@@ -195,6 +304,50 @@ These items are marked 🟡⏳ undetermined (or ⏳ pending) because a source th
 | [How many states the exact DP for LZ77-style parsing with k repeat-offset slots holds, with and without exact pruning](theorems/lz77-repeat-slots-state-bounds) | 🟡⏳ Undetermined (may be our own result) | not named in the thesis record (2010). *Parsing Algorithms for Data Compression*. PhD thesis, University of Pisa. [https://etd.adm.unipi.it/t/etd-05252010-115131](https://etd.adm.unipi.it/t/etd-05252010-115131) | not consultable until 2050 (the thesis record gives the release date 24 June 2050); only the abstract was read | whether the thesis counts or bounds the states of a dynamic program over (position, repeat-offset slots) |
 | [Trivial minimum cut on the max-flow entry's random dense networks](theorems/max-flow-random-dense-trivial-min-cut) | 🟡⏳ Undetermined (may be our own result) | Karp, R. M. (1979). *The probabilistic analysis of combinatorial optimization algorithms*. Tenth International Symposium on Mathematical Programming (cited as [Ka] by Karp, Motwani and Nisan, Mathematics of Operations Research 18(1), 71–97; the link is to that paper). [https://doi.org/10.1287/moor.18.1.71](https://doi.org/10.1287/moor.18.1.71) | Known only from its citation by Karp, Motwani and Nisan (reference [18] of their 1988 report, reference [Ka] of the journal version); no copy, publisher record or DOI of the 1979 work was found (Crossref title query, web search). The link is the DOI of the citing paper (Mathematics of Operations Research 18(1), 71-97), listed in this note's sources. | whether it states that the minimum cut is trivial in this model |
 <!-- PAIRS-TABLE:END -->
+
+## What counts as a pair
+
+Every entry carries an explicit verification level, and the validator enforces that level. Nothing is counted as
+validated just because a paper says so.
+
+A pair is a property of a **problem family** (defined for every input size n), not of a single number or
+expression. One entry records a problem with an explicit size parameter and at least two algorithms, checked
+against each other at V1, whose costs differ asymptotically. Items whose every claim has a written proof in this
+repository carry the check mark ✅ Proved.
+
+These are **not** pairs: a constant written two ways (`4 = 2^2`), a single instance with no family over n,
+or a cosmetic rewrite with the same cost. In this project, "exponential" always means a cost that
+grows like 2^n or faster in the input size. It never means a formula that happens to contain a power.
+
+| Tag | Meaning |
+|---|---|
+| T1 | exp → poly, same problem (rare) |
+| T2 | naive-exp → poly (the naive method was wasteful: DP, memoisation, a better idea) |
+| T3 | poly → faster poly |
+| T4 | randomized ↔ deterministic |
+| T5 | quantum → classical (dequantization) |
+| T6 | open / unpaired: only high-cost algorithms known (e.g. factoring classically) |
+| T7 | synthetic / bloated: deliberately wasteful rewrites. Low signal, stored separately, never counted |
+| T8 | super-poly → faster super-poly (e.g. n! → n²·2ⁿ): real improvements that stay exponential |
+| T9 | quantum separation in a query / oracle / black-box model (needs a classical lower bound in `lower_bounds`, cited or proved in the entry) |
+
+The primary tag is T6 whenever polynomial time is open for the problem; the improvement then goes in
+`secondary_tags` (e.g. TSP: T6 + T8). An entry counts as a **validated pair** if it is V1+ in `pairs/` and
+carries any of T1–T5, T8, T9.
+
+| Level | Meaning | Enforced by `tools/validate.py` |
+|---|---|---|
+| V0 | claimed: cited, not independently checked | folder `staging/` |
+| V1 | correct on a test battery: ≥ 2 implementations agree with each other (and with an oracle where the harness defines one) | runs every implementation |
+| V2 | scaling: measured growth matches the claimed cost | fits log(time), or log(an exact reported count: oracle queries, multiplications), against log(cost(n)); slope must be 1 ± tolerance, and declared rival costs must *not* fit. Timing fits are only conclusive up to log factors (RL-048) |
+| V3 | proof cited: a complexity proof is cited in `verification.proofs` (a citation, not a proof written here; no entry claims V3) | requires `verification.proofs` |
+
+**Exact shape diagnostic (informational).** For exact counts, the validator also runs a shape diagnostic (with `-v`
+or `--record`). It guesses an exact recurrence for the counts on a regular grid of n, checks it on held-out terms, and
+compares the growth it implies with the claimed cost, with no tolerance: the exponential base as an algebraic number,
+the power of n and the power of log n. It reports MATCH, MISMATCH, UNDETERMINED (with the reason) or SKIPPED, and it
+does not change V2 verdicts. Why it was added, what a MATCH does and does not show, and how edge cases are handled:
+[notes/v2-shape-diagnostic.md](notes/v2-shape-diagnostic.md).
 
 ## Classical vs quantum
 
@@ -241,7 +394,9 @@ python tools/validate.py --scaling -v    # also re-measure every V2 scaling clai
 python tools/validate.py --probe         # report entries that pass a higher level than claimed
 python tools/validate.py --scaling --record   # same, and store all results in ledger/runs/
 python tools/check_sources.py            # resolve every DOI / arXiv id and compare titles (network)
-python tools/build_index.py              # regenerate index.json and the table above
+python tools/build_index.py              # regenerate index.json, the tables and the at-a-glance block
+python tools/make_charts.py              # redraw the other front-page charts in docs/img/
+python tools/savings_scenario.py --help  # the worked example of the front page, with your own numbers
 python -m unittest discover -s tests     # the validator must reject wrong claims
 ```
 
@@ -262,10 +417,13 @@ mutations/                   mutation engine: mirrored and operation-swapped var
 methods/                     exact methods: recurrence and constant recognition, Boolean-function measures, LP, CSP predictor
 search/                      search environment: flip-graph search for matrix multiplication schemes (python -m search)
 research/                    detailed reports behind RESEARCH_LOG entries
-tools/                       validate.py, build_index.py, check_sources.py
+tools/                       validate.py, build_index.py, check_sources.py, replay_proofs.py, make_charts.py,
+                             savings_scenario.py
+docs/img/                    front-page charts (generated by tools/build_index.py and tools/make_charts.py)
 experiments/                 deterministic scripts behind RESEARCH_LOG entries
 ledger/runs/                 recorded validation runs (evidence)
 RESEARCH_LOG.md              the lab notebook
+START_HERE.txt               the project charter
 index.json                   generated registry of all entries
 ```
 
@@ -302,7 +460,7 @@ Everything is free to use, including commercially, with attribution.
 - **Code** (`tools/`, `lib/`, `search/`, `generators/`, `tests/`, `experiments/`, every `harness.py` and `implementations/`):
   [Apache License 2.0](LICENSE).
 - **Data and documentation** (entries, entry READMEs, `index.json`, `RESEARCH_LOG.md`, `ledger/`, `research/`, `notes/`,
-  `search/schemes/`): [CC BY 4.0](LICENSE-DATA).
+  `search/schemes/`, `docs/`): [CC BY 4.0](LICENSE-DATA).
 
 See [NOTICE](NOTICE). Collaboration, independent re-verification and corrections are very welcome. Open an issue,
 or contact [@wbeni95](https://github.com/wbeni95).
