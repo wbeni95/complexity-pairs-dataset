@@ -12,6 +12,9 @@ identifiers:
     value: "10.5281/zenodo.23184028"
     description: "Concept DOI: all versions (cite this unless you need a specific version)"
   - type: doi
+    value: "10.5281/zenodo.23236967"
+    description: "Version 0.3.0"
+  - type: doi
     value: "10.5281/zenodo.23184029"
     description: "Version 0.2.0"
 license:

@@ -291,7 +291,7 @@ If you use the dataset or its tools, please cite it. GitHub's "Cite this reposit
   year         = {2026},
   howpublished = {\url{https://github.com/wbeni95/complexity-pairs-dataset}},
   doi          = {10.5281/zenodo.23184028},
-  note         = {Version 0.2.0, doi:10.5281/zenodo.23184029}
+  note         = {Version 0.3.0, doi:10.5281/zenodo.23236967}
 }
 ```
 
