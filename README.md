@@ -17,6 +17,7 @@ data.
 > 26 ≤ border rank ≤ rank ≤ 29; the published bounds were 15 and 31. Also: a general bound for unbalanced
 > tripartitions that extends Flavi–Jelisiejew–Michałek, a corrected group construction from a preprint, exact small
 > cases, this front page, and CI that checks what a change can affect.
+> [doi:10.5281/zenodo.23240382](https://doi.org/10.5281/zenodo.23240382)
 
 ## At a glance
 
@@ -459,7 +460,7 @@ If you use the dataset or its tools, please cite it. GitHub's "Cite this reposit
   year         = {2026},
   howpublished = {\url{https://github.com/wbeni95/complexity-pairs-dataset}},
   doi          = {10.5281/zenodo.23184028},
-  note         = {Version 0.3.0, doi:10.5281/zenodo.23236967}
+  note         = {Version 0.4.0, doi:10.5281/zenodo.23240382}
 }
 ```
 
