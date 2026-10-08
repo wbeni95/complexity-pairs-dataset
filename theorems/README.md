@@ -7,9 +7,9 @@ them.
 
 ## What every note contains
 
-Each note is a folder `theorems/<id>/` with three files, and, where the proof is checked against third-party
-input files, a `data/` folder holding unmodified copies of them under their own licences (see `data/README.md`
-in that note):
+Each note is a folder `theorems/<id>/` with three files, and, where the proof is checked against input files, a
+`data/` folder holding them with their SHA-256: unmodified copies of third-party files under their own licences,
+or the project's own data under the repository's data licence (see `data/README.md` in that note):
 
 | File | Content |
 |---|---|
@@ -72,6 +72,11 @@ deterministic checks, and a logged audit. A citation in a note is credit, not pa
 | [compressed-memo-keys-evaluation-orders](compressed-memo-keys-evaluation-orders/) | own | For an explicit family of memoized recurrences, dropping a flag from the memo key is exact for every input and every evaluation order (per-node orders, or all supported assignments) iff δ = 0 or the flag is a function of the node; with one global order the converse fails. Computer-assisted, with public certificates. |
 | [first-match-prices-not-pairwise](first-match-prices-not-pairwise/) | undetermined 🟡⏳ | First-match prices are sums of pairwise terms when every item matches at most two rules; one item matched by three rules suffices to break this (least-squares distance 1/3). May be our own result; Martignon–Hoffrage (2002) could not be read. |
 | [para-cayley-dickson-closed-form-powers](para-cayley-dickson-closed-form-powers/) | literature | In the real Cayley–Dickson algebras of every dimension 2^m, the left powers of the para-product x ∗ y = x̄ ȳ have the closed form p_(2j+1) = n(x)^j x and p_(2j+2) = n(x)^j x̄². Additions of the note: remarks on binary powering with this product (right at e = 2^j − 1 and 2^j − 2, first wrong at e = 4 exactly when x⁴ ≠ n(x) x̄²) and an explicit witness that (x ∗ y) ∗ x = n(x) y fails in every dimension ≥ 16. |
+| [tripartition-tensor-p2-rank-at-most-29](tripartition-tensor-p2-rank-at-most-29/) | own | An explicit 29-term identity with coefficients in {−1, 0, 1} gives 4·P₂ = Σ a_r ⊗ b_r ⊗ c_r over ℤ, so the 15 × 15 × 15 balanced tripartitioning tensor has rank at most 29 over every field of characteristic ≠ 2; for k ≤ 10, R(P_k) ≥ C(3k,k) exceeds the threshold of Pratt's Corollary 1.12. |
+| [tripartition-tensor-p2-border-rank-at-least-26](tripartition-tensor-p2-border-rank-at-least-26/) | own | A Koszul–Young flattening (p = 3, explicit integer projection) shows that P₂ has border rank at least 26 over ℂ and over every field of characteristic 0 or of prime characteristic ≤ 31; with the previous note, 26 ≤ border rank ≤ rank ≤ 29. |
+| [partial-fourier-bound-tripartition-tensors](partial-fourier-bound-tripartition-tensors/) | own extension (base: Flavi–Jelisiejew–Michałek 2025, Proposition 6.18) | R(T_{a,b,c}) ≤ \|{S ⊕ T : \|S\| = a, \|T\| = b}\| over every field of characteristic ≠ 2 (for P_d the bound Σ_k C(3d,2k) of Flavi–Jelisiejew–Michałek, proved there in characteristic 0), and R(T_{1,1,c}) ≤ C(c+2,2)+1; no decomposition with characters in two factors is shorter when \|a − b\| ≤ 1, and for P_d the gain over 8^d/2 is only a factor 1 − O((27/32)^d). |
+| [pratt-remark-4-construction-even-k](pratt-remark-4-construction-even-k/) | own extension (base: Pratt, arXiv:2311.02774v1, item 4 after Corollary 1.12) | Of four readings of the map into Z₂^{3k−1} printed in arXiv v1, one has the required property exactly for odd k and the other three for no k; deleting coordinate 1 works for every k, so R(T_k) ≤ 2^{3k−1} (characteristic ≠ 2) holds. The STOC 2024 version does not contain this item. |
+| [tripartition-tensors-small-cases](tripartition-tensors-small-cases/) | own | R(T_{1,1,2}) = border rank = 7 (characteristic 0 and 3–31); 10 ≤ border rank ≤ R(T_{1,1,3}) ≤ 11; 13 ≤ border rank ≤ R(T_{1,2,2}) ≤ 14. |
 
 ## Running the checks
 
@@ -93,6 +98,11 @@ python theorems/binary-powering-exactness-in-magmas/verify.py  # offline
 python theorems/compressed-memo-keys-evaluation-orders/verify.py  # offline: checks certificates.txt.gz (--regenerate rebuilds and compares)
 python theorems/first-match-prices-not-pairwise/verify.py  # offline
 python theorems/para-cayley-dickson-closed-form-powers/verify.py  # offline
+python theorems/tripartition-tensor-p2-rank-at-most-29/verify.py  # offline: the pinned data/P2_rank29.json
+python theorems/tripartition-tensor-p2-border-rank-at-least-26/verify.py  # offline, a few seconds (reads the data of the previous note)
+python theorems/partial-fourier-bound-tripartition-tensors/verify.py  # offline, about ten seconds
+python theorems/pratt-remark-4-construction-even-k/verify.py  # offline, a few seconds
+python theorems/tripartition-tensors-small-cases/verify.py  # offline: the three pinned files in data/
 ```
 
 Each script prints one line per check and ends with `ALL CHECKS PASSED` (exit code 0) or a list of the failed
@@ -101,6 +111,7 @@ checks (exit code 1).
 ## License
 
 As for the rest of the repository: the scripts (`verify.py`) are under the [Apache License 2.0](../LICENSE), and
-the texts, metadata and certificate files (`README.md`, `meta.json`, `meta.schema.json`, `certificates.txt.gz`)
-are under [CC BY 4.0](../LICENSE-DATA).
+the texts, metadata, certificate files and the project's own data files (`README.md`, `meta.json`,
+`meta.schema.json`, `certificates.txt.gz`, the `data/*.json` files of tripartition-tensor-p2-rank-at-most-29 and tripartition-tensors-small-cases) are under
+[CC BY 4.0](../LICENSE-DATA).
 Corrections and independent re-verification are welcome. Please open an issue.

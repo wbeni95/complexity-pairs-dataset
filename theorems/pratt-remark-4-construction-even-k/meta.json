@@ -1,0 +1,58 @@
+{
+  "id": "pratt-remark-4-construction-even-k",
+  "title": "The group construction for R(T_k) ≤ 2^{3k−1} in Pratt's arXiv:2311.02774v1: the printed map and a corrected one",
+  "statement": "Let T_k = Σ x_S y_T z_U over all k-subsets S, T, U of [3k] with S ∪ T ∪ U = [3k] (Pratt, arXiv:2311.02774v1, Definition 1.4). For G = Z_2^m, a map f from k-subsets to G and x ∈ G, call (f, x) valid if f(S)+f(T)+f(U) = x holds exactly for the ordered partitions (S, T, U). (1) For every f and x, Σ_{y∈Z_2^m} (−1)^{y·x} u_y⊗u_y⊗u_y = 2^m H_f with u_y(S) = (−1)^{y·f(S)} and H_f the 0/1 tensor of the triples with f(S)+f(T)+f(U) = x; so a valid pair gives R(T_k) ≤ 2^m in characteristic ≠ 2. (2) G = Z_2^{3k}, f(S) = 1_S, x = all-ones is valid for every k. (3) The deletion map f(S) = 1_{S∖{1}} ∈ Z_2^{[3k]∖{1}}, x = all-ones, is valid for every k ≥ 1; hence R(T_k) ≤ 2^{3k−1} over every field of characteristic ≠ 2, as stated in item 4 after Corollary 1.12 of v1. (4) The improved map printed there (f(S) = Σ_{s∈S} e_s if 1 ∈ S, else 1^{3k−1} + Σ_{s∈S} e_s, x = all-ones, in Z_2^{3k−1}) is, when the element 1 has no coordinate (e_1 = 0), valid exactly for odd k; for even k its false positives are the ordered triples (A∪B, A∪C, B∪C) with A, B, C pairwise disjoint (k/2)-sets, (3k)!/((k/2)!^3 (3k/2)!) of them (120 for k = 2, 83160 for k = 4; 20 and 13860 unordered), e.g. ({1,2},{1,3},{2,3}). Read with another element missing (e_m = 0), or with the missing symbol read as the all-ones vector, it is valid for no k.",
+  "provenance": {
+    "class": "own-extension",
+    "bases": [
+      "Pratt 2023, arXiv:2311.02774v1, §1.2, item 4 of the comments after Corollary 1.12 (the bound 8^k/2 and its group construction)"
+    ]
+  },
+  "sources": [
+    {
+      "authors": "Pratt, K.",
+      "year": 2023,
+      "title": "A stronger connection between the asymptotic rank conjecture and the set cover conjecture",
+      "venue": "arXiv preprint (v1, 5 November 2023)",
+      "arxiv": "2311.02774",
+      "url": "https://arxiv.org/abs/2311.02774v1",
+      "note": "Base of the note. Version v1 read in full; §1.2, item 4 after Corollary 1.12 is quoted in the README (symbols retyped from the PDF text), Definition 1.4 defines T_k. The note proves which statements of that item hold: the bound, the principle and the first instantiation; and for which k the printed improved map is valid under each reading."
+    },
+    {
+      "authors": "Pratt, K.",
+      "year": 2024,
+      "title": "A stronger connection between the asymptotic rank conjecture and the set cover conjecture",
+      "venue": "Proceedings of the 56th Annual ACM Symposium on Theory of Computing (STOC 2024), 871-874",
+      "doi": "10.1145/3618260.3649620",
+      "note": "Published version, read (abstract; pp. 872–873). Its comments after Corollary 1.12 are items (1)–(4); item (4) is item 5 of arXiv v1. The item of v1 with the group construction (item 4) is not in this version, and its abstract speaks of 'a known upper bound of 8^n' on the tensor rank of T_n (v1: ½·8^n). Cited as background."
+    },
+    {
+      "authors": "Björklund, A.; Kaski, P.; Koana, T.; Nederlof, J.",
+      "year": 2026,
+      "title": "Kronecker Scaling of Tensors with Applications to Arithmetic Circuits and Algorithms",
+      "venue": "53rd International Colloquium on Automata, Languages, and Programming (ICALP 2026), LIPIcs, paper 36",
+      "doi": "10.4230/LIPIcs.ICALP.2026.36",
+      "arxiv": "2504.05772",
+      "note": "Read in full (the ICALP 2026 version). §1.5 (Related work) cites the bound R(P_n) ≤ 2^{3n−1} for char F ≠ 2 as observed by Pratt and does not reproduce the construction; the bound is true (Theorem 3 of the note)."
+    },
+    {
+      "authors": "Flavi, C.; Jelisiejew, J.; Michałek, M.",
+      "year": 2025,
+      "title": "Symmetric powers: structure, smoothability, and applications",
+      "venue": "International Mathematics Research Notices 2025, rnaf277",
+      "doi": "10.1093/imrn/rnaf277",
+      "arxiv": "2408.02754",
+      "note": "arXiv v2 §6 read. Proposition 6.18 (p. 31; 6.17 in v1) bounds R(T_k) by ½ 8^k − Σ_{i=k+1}^{⌊3k/2⌋} C(3k,2i) over algebraically closed fields of characteristic 0, which implies R(T_k) ≤ 2^{3k−1} there; they cite Pratt's bound (p. 31) and do not discuss his construction. Cited as background."
+    }
+  ],
+  "verify": "python theorems/pratt-remark-4-construction-even-k/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-119"
+  }
+}

@@ -1599,3 +1599,50 @@ passed while a skipped check failed:
 The referee also found two structural gaps, two bugs and weak tests. The adopted version is the referee's proposal,
 tested on scratch copies against every gap. Its tests write the expected selections out by hand (12 tests), and
 mutation testing kills 15 of 16 mutants; the survivor is an equivalent mutant.
+
+### RL-118 · LITERATURE + DECISION · Prior work and provenance of the five notes on tripartitioning tensors
+A prior-work search was made before classifying the notes of RL-119: known titles, identifiers and generic keywords
+only, the works citing Pratt (arXiv:2311.02774) and Björklund–Kaski–Koana–Nederlof (ICALP 2026), and equivalent
+descriptions of T_{1,1,c}.
+- **Flavi–Jelisiejew–Michałek** ("Symmetric powers: structure, smoothability, and applications", arXiv:2408.02754v2,
+  IMRN 2025), Proposition 6.18, already proves R(P_d) ≤ Σ_{k≤d} C(3d,2k) in characteristic 0 (31 for d = 2, 247 for
+  d = 3).
+  - This is the base of the partial-Fourier note, which is classified as **own extension**.
+  - The note goes beyond it with general (a, b, c), every characteristic ≠ 2, the bound for T_{1,1,c}, and
+    optimality within the family for |a − b| ≤ 1.
+  - The comparison for P₂ is therefore 31 → 29, not 32 → 29.
+- **Pratt's group construction** (arXiv v1, item 4 after Corollary 1.12) appears only in the arXiv version. The STOC
+  2024 version (doi:10.1145/3618260.3649620, read in full) does not contain the item, and its abstract states a known
+  upper bound of 8^n. No source read discusses the printed construction. The note is classified as **own extension**
+  with that item as its base.
+- **No prior statement was found** of R(P₂) ≤ 29, of border rank(P₂) ≥ 26 (the only published lower bound found is
+  the flattening bound 15), of the small cases, or of R(T_{1,1,c}) ≤ C(c+2,2)+1. These notes are classified as
+  **own**, as statements about this search, not claims of priority.
+
+### RL-119 · VERIFIED · Five theorem notes on tripartitioning tensors, with the check mark
+**New notes:**
+- [tripartition-tensor-p2-rank-at-most-29](theorems/tripartition-tensor-p2-rank-at-most-29) (own): an explicit 29-term
+  identity, R(P₂) ≤ 29 in every characteristic ≠ 2;
+- [tripartition-tensor-p2-border-rank-at-least-26](theorems/tripartition-tensor-p2-border-rank-at-least-26) (own):
+  border rank ≥ 26 over ℂ and in characteristic 0 or ≤ 31, by a Koszul–Young flattening with an explicit integer
+  projection;
+- [partial-fourier-bound-tripartition-tensors](theorems/partial-fourier-bound-tripartition-tensors) (own extension,
+  RL-118);
+- [pratt-remark-4-construction-even-k](theorems/pratt-remark-4-construction-even-k) (own extension, RL-118);
+- [tripartition-tensors-small-cases](theorems/tripartition-tensors-small-cases) (own): R(T_{1,1,2}) = 7, and bounds
+  for T_{1,1,3} and T_{1,2,2}.
+
+**Review:** two independent referees checked every claim, each with scripts of their own that do not import the
+notes' code.
+- They re-derived the 29-term identity on all 3375 entries, the flattening ranks (504 over ℚ; 502 mod 2), the
+  false-positive counts (120 and 83 160 ordered triples for k = 2 and 4), the decompositions of the general theorem
+  over F_3, F_5 and F_7, and every background statement against the sources.
+- Verdicts: 111 claims; no gap and no wrong result. Corrections before publication:
+  - 13 background details: locations, field and version, "a known" instead of "the known";
+  - 10 wordings, such as a missing condition or a header that said more than the scope;
+  - 2 script defects: a comparison that was not strict, and a label;
+  - 1 clause that pointed to an unproved statement, removed.
+- A fix-check confirmed every correction.
+
+**Checks:** the five `verify.py` scripts print 6, 18, 5, 10 and 14 [PASS] lines and exit 0, with identical output
+under PYTHONHASHSEED 0 and 12345. Every tamper copy (13) exits 1 with a [FAIL] line naming the changed fact.

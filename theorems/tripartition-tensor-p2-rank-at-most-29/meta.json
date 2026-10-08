@@ -1,0 +1,56 @@
+{
+  "id": "tripartition-tensor-p2-rank-at-most-29",
+  "title": "The balanced tripartitioning tensor P₂ has tensor rank at most 29",
+  "statement": "Let P_2 = Σ x_A y_B z_C, the sum over all ordered partitions (A, B, C) of {1,...,6} into three 2-sets; it is a 15 × 15 × 15 tensor (Pratt's T_2, arXiv:2311.02774v1, Definition 1.4; the P_2 of Björklund–Kaski–Koana–Nederlof, ICALP 2026). With coordinate i (i = 0..14) of each factor the i-th 2-subset of {1,...,6} in increasing order of Σ_{e∈S} 2^(e−1), the three 15 × 29 integer matrices A, B, C in data/P2_rank29.json (SHA-256 3a46395da0783d3b315509261ea69fb4bb511ce2418a05b432e4bd0bfea32351) have all entries in {−1, 0, 1} and satisfy 4·P_2 = Σ_{r=1}^{29} a_r ⊗ b_r ⊗ c_r over ℤ, where a_r, b_r, c_r are their r-th columns. Hence R_F(P_2) ≤ 29 for every field F of characteristic ≠ 2. Also, for every field F and k ≥ 1, R_F(P_k) ≥ C(3k,k) (conciseness), and C(3k,k) > 8^k C(3k,k) C(2k,k)/27^k exactly for 1 ≤ k ≤ 10, so the inequality of Pratt's Corollary 1.12 holds for these k without hypothesis and no upper bound on R(P_k) with k ≤ 10 can contradict it.",
+  "provenance": {
+    "class": "own",
+    "bases": []
+  },
+  "sources": [
+    {
+      "authors": "Pratt, K.",
+      "year": 2023,
+      "title": "A stronger connection between the asymptotic rank conjecture and the set cover conjecture",
+      "venue": "arXiv preprint (v1, 5 November 2023)",
+      "arxiv": "2311.02774",
+      "url": "https://arxiv.org/abs/2311.02774v1",
+      "note": "Version v1 read in full. Definition 1.4 (the tensor T_k = P_k of this note); Corollary 1.12 (under the set cover conjecture, R(T_k) ≥ 8^k C(3k,k) C(2k,k)/27^k for every k); §1.2, item 4 of the comments after Corollary 1.12 (p. 4): the upper bound R(T_k) ≤ 8^k/2 for any field with char(F) ≠ 2 (32 for k = 2). Cited as background; not used in the proof."
+    },
+    {
+      "authors": "Pratt, K.",
+      "year": 2024,
+      "title": "A stronger connection between the asymptotic rank conjecture and the set cover conjecture",
+      "venue": "Proceedings of the 56th Annual ACM Symposium on Theory of Computing (STOC 2024), 871-874",
+      "doi": "10.1145/3618260.3649620",
+      "note": "Published version, read (abstract; pp. 872–873). It does not contain item 4 of arXiv v1; its abstract refers to 'a known upper bound of 8^n on the tensor rank of T_n'. Cited as background."
+    },
+    {
+      "authors": "Flavi, C.; Jelisiejew, J.; Michałek, M.",
+      "year": 2025,
+      "title": "Symmetric powers: structure, smoothability, and applications",
+      "venue": "International Mathematics Research Notices 2025, rnaf277",
+      "doi": "10.1093/imrn/rnaf277",
+      "arxiv": "2408.02754",
+      "note": "arXiv v2 (29 August 2025) §6 read; the IMRN text was not read. Proposition 6.18 (v2, p. 31; Proposition 6.17 in v1): the rank of Pratt's tensor T_N, N = 3k, is at most ½ 8^k − Σ_{i=k+1}^{⌊N/2⌋} C(N, 2i), which is 31 for k = 2; standing assumption (p. 7): an algebraically closed field of characteristic zero. Cited as background (the published bound the Theorem is compared with); not used in the proof."
+    },
+    {
+      "authors": "Björklund, A.; Kaski, P.; Koana, T.; Nederlof, J.",
+      "year": 2026,
+      "title": "Kronecker Scaling of Tensors with Applications to Arithmetic Circuits and Algorithms",
+      "venue": "53rd International Colloquium on Automata, Languages, and Programming (ICALP 2026), LIPIcs, paper 36",
+      "doi": "10.4230/LIPIcs.ICALP.2026.36",
+      "arxiv": "2504.05772",
+      "note": "Read in full (the ICALP 2026 version; arXiv:2504.05772 is its full version, not compared). Abstract and equation (3): the tensors P_d. §1.5 (Related work): 'Pratt also observes the upper bound R(P_n) ≤ 2^{3n−1} over any field F with char F ≠ 2.' Cited as background; not used in the proof."
+    }
+  ],
+  "verify": "python theorems/tripartition-tensor-p2-rank-at-most-29/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-119"
+  }
+}

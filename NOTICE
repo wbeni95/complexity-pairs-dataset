@@ -5,7 +5,8 @@ Code (tools/, lib/, search/, generators/, tests/, experiments/, and every harnes
 implementations/ folder) is licensed under the Apache License, Version 2.0: see LICENSE.
 
 Data and documentation (entry.json files, entry READMEs, index.json, RESEARCH_LOG.md, ledger/, research/,
-notes/, search/schemes/, and the other documentation) are licensed under the Creative Commons Attribution
+notes/, search/schemes/, the theorem notes' own data files (theorems/tripartition-tensor-p2-rank-at-most-29/data/P2_rank29.json and
+theorems/tripartition-tensors-small-cases/data/*.json), and the other documentation) are licensed under the Creative Commons Attribution
 4.0 International license: see LICENSE-DATA.
 
 Third-party files, kept unmodified under their own licences (not under the licences above):

@@ -12,26 +12,28 @@ asymptotically) and theorem notes. It is built for engineers who implement, rese
 data.
 
 > [!NOTE]
-> **What's new: v0.3.0, 8 October 2026.** 66 validated pairs (19 more than v0.2.0); the 🟡⏳ *Undetermined* label,
-> with the list of [sources we could not read](#sources-we-could-not-read); and wall-clock time recorded next to every
-> exact count. [doi:10.5281/zenodo.23236967](https://doi.org/10.5281/zenodo.23236967)
+> **What's new: v0.4.0, 8 October 2026.** Five theorem notes on the balanced tripartitioning tensor P₂ (15 × 15 × 15),
+> which links the asymptotic rank conjecture to algorithms for set cover and the permanent. In characteristic 0,
+> 26 ≤ border rank ≤ rank ≤ 29; the published bounds were 15 and 31. Also: a general bound for unbalanced
+> tripartitions that extends Flavi–Jelisiejew–Michałek, a corrected group construction from a preprint, exact small
+> cases, this front page, and CI that checks what a change can affect.
 
 ## At a glance
 
 <!-- GLANCE:START -->
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/items-dark.svg">
-  <img src="docs/img/items-light.svg" width="760" alt="96 items, one square each, coloured by whose result it is">
+  <img src="docs/img/items-light.svg" width="760" alt="101 items, one square each, coloured by whose result it is">
 </picture>
 
 | Whose result | Pairs and entries | Theorem notes | ✅ Proved here |
 |---|---:|---:|---:|
-| 🟠 **Our own results and extensions**: not found in the literature we searched | 4 | 8 | 12 of 12 |
+| 🟠 **Our own results and extensions**: not found in the literature we searched | 4 | 13 | 17 of 17 |
 | 🟡⏳ **Undetermined**: may be our own; a source that might contain it could not be read | 0 | 5 | 5 of 5 |
 | **Known results, proved again here**: our own proofs and checks of published results | 62 | 2 | 64 of 64 |
 | **Synthetic examples**: deliberately wasteful rewrites, never counted as pairs | 4 | – | 4 of 4 |
 | **Known results, cited only**: waiting in staging, not yet checked | 11 | – | 0 of 11 |
-| **Total** | **81** | **15** | **85 of 96** |
+| **Total** | **81** | **20** | **90 of 101** |
 <!-- GLANCE:END -->
 
 ## What the new results save
@@ -124,6 +126,7 @@ What is proved is in the third column. The last column is our suggestion, not a 
 | | [Cheapest X^d + C representation](theorems/power-plus-offset-four-candidates) 🟠 Own result · [counting pair](pairs/square-plus-offset-count-enumeration-vs-intervals-vs-groups) 🟠 Own result | Four candidate roots always suffice for d ≥ 3; for X² + C, counting the n-bit integers with a cheap form drops from Θ(2ⁿ) to O(n log n) word operations (the pair's word-RAM model). | Compact encodings of integer constants. |
 | | [Knuth's root window for length weights](theorems/knuth-window-concave-length-weights) 🟡⏳ Undetermined | Knuth's speed-up is exact for concave nondecreasing length weights, under the largest- and the smallest-minimiser tie rules, with the chosen roots in closed form. | Optimal search trees and interval DPs whose weights depend on length only. |
 | Scientific computing and cryptography | [Characteristic-2 obstructions in two fast matrix multiplication schemes](theorems/per-term-2-integrality-z-half-schemes) 🟠 Own extension | No term of the pinned ℤ[1/2] ⟨3,3,6;40⟩ scheme, and at least 20 of the 32 terms of the pinned ℤ[1/2] ⟨2,4,5;32⟩ scheme (exactly 20 at best), can be made 2-integral in any equivalent form. | Choosing schemes for arithmetic over GF(2), as in coding theory. |
+| Algebraic complexity | [Rank of the 15 × 15 × 15 balanced tripartitioning tensor](theorems/tripartition-tensor-p2-rank-at-most-29) 🟠 Own result · [its border rank](theorems/tripartition-tensor-p2-border-rank-at-least-26) 🟠 Own result | In characteristic 0, 26 ≤ border rank ≤ rank ≤ 29 (published bounds: 15 and 31); the upper bound is an explicit 29-term identity valid in every characteristic ≠ 2. | A certified test case for tensor-decomposition software; a reference point for research on set cover and permanent algorithms. |
 
 ## How results get here
 
@@ -168,7 +171,7 @@ python tools/replay_proofs.py max-merge-cost-larger-part-cubic-dp-vs-endpoint-dp
 Labels: 🟠 **Own result** / 🟠 **Own extension** mark the project's own results; 🟡⏳ **Undetermined** marks results that are probably our own, where a source that might already contain them could not be read (listed under "Sources we could not read" below); ⏳ **Pending** on a literature item means a detail could not be verified because a source could not be read or identified (see [CONTRIBUTING.md](CONTRIBUTING.md#provenance-labels-whose-result-it-is)).
 
 <!-- PAIRS-TABLE:START -->
-**66 validated pairs** (V1+, tagged T1–T5, T8 or T9) · 15 open problems (T6) · 6 quantum query separations in pairs/ (T9) · 11 staged (V0) · 12 with a quantum algorithm (⚛) · 70 entries and 15 theorem notes proved here (✅)
+**66 validated pairs** (V1+, tagged T1–T5, T8 or T9) · 15 open problems (T6) · 6 quantum query separations in pairs/ (T9) · 11 staged (V0) · 12 with a quantum algorithm (⚛) · 70 entries and 20 theorem notes proved here (✅)
 
 ### Verified (`pairs/`, V1+)
 
@@ -276,8 +279,13 @@ Labels: 🟠 **Own result** / 🟠 **Own extension** mark the project's own resu
 | [Exact iteration count of the entry's Hungarian implementation: row-monotone worst case and rectangular counts](theorems/hungarian-exact-iteration-count) ✅ Proved · 🟠 Own extension | `python theorems/hungarian-exact-iteration-count/verify.py` |
 | [Residual s–t distance at most 6, and Dinic in Θ(n²) reads, on the max-flow entry's random dense networks](theorems/max-flow-random-dense-dinic-short-residual-paths) ✅ Proved · 🟠 Own extension | `python theorems/max-flow-random-dense-dinic-short-residual-paths/verify.py` |
 | [Edmonds–Karp makes Θ(n³) reads with high probability on the max-flow entry's random dense networks](theorems/max-flow-random-dense-edmonds-karp-cubic-reads) ✅ Proved · 🟠 Own result | `python theorems/max-flow-random-dense-edmonds-karp-cubic-reads/verify.py` |
+| [A partial Fourier bound for the rank of tripartitioning tensors](theorems/partial-fourier-bound-tripartition-tensors) ✅ Proved · 🟠 Own extension | `python theorems/partial-fourier-bound-tripartition-tensors/verify.py` |
 | [Term by term: how much of the ⟨2,4,5;32⟩ and ⟨3,3,6;40⟩ ℤ[1/2] schemes can be made 2-integral](theorems/per-term-2-integrality-z-half-schemes) ✅ Proved · 🟠 Own extension | `python theorems/per-term-2-integrality-z-half-schemes/verify.py` |
 | [The cheapest representation k = X^d + C for d ≥ 3: four candidate roots, and a polynomial count](theorems/power-plus-offset-four-candidates) ✅ Proved · 🟠 Own result | `python theorems/power-plus-offset-four-candidates/verify.py` |
+| [The group construction for R(T_k) ≤ 2^{3k−1} in Pratt's arXiv:2311.02774v1: the printed map and a corrected one](theorems/pratt-remark-4-construction-even-k) ✅ Proved · 🟠 Own extension | `python theorems/pratt-remark-4-construction-even-k/verify.py` |
+| [The balanced tripartitioning tensor P₂ has border rank at least 26](theorems/tripartition-tensor-p2-border-rank-at-least-26) ✅ Proved · 🟠 Own result | `python theorems/tripartition-tensor-p2-border-rank-at-least-26/verify.py` |
+| [The balanced tripartitioning tensor P₂ has tensor rank at most 29](theorems/tripartition-tensor-p2-rank-at-most-29) ✅ Proved · 🟠 Own result | `python theorems/tripartition-tensor-p2-rank-at-most-29/verify.py` |
+| [Rank and border rank of three small tripartitioning tensors](theorems/tripartition-tensors-small-cases) ✅ Proved · 🟠 Own result | `python theorems/tripartition-tensors-small-cases/verify.py` |
 | [First-match prices need not be pairwise once three rules can match an item](theorems/first-match-prices-not-pairwise) ✅ Proved · 🟡⏳ Undetermined (may be our own result) | `python theorems/first-match-prices-not-pairwise/verify.py` |
 | [Knuth's root window is exact for concave nondecreasing length weights](theorems/knuth-window-concave-length-weights) ✅ Proved · 🟡⏳ Undetermined (may be our own result) | `python theorems/knuth-window-concave-length-weights/verify.py` |
 | [An exact pruning rule for optimal LZ77-style parsing with k repeat-offset slots](theorems/lz77-repeat-slots-exact-pruning) ✅ Proved · 🟡⏳ Undetermined (may be our own result) | `python theorems/lz77-repeat-slots-exact-pruning/verify.py` |

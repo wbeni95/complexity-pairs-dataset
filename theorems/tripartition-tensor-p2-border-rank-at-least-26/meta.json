@@ -1,0 +1,67 @@
+{
+  "id": "tripartition-tensor-p2-border-rank-at-least-26",
+  "title": "The balanced tripartitioning tensor P₂ has border rank at least 26",
+  "statement": "Let P_2 = Σ x_A y_B z_C over all ordered partitions (A, B, C) of {1,...,6} into three 2-sets (a 15 × 15 × 15 tensor; Pratt's T_2, the P_2 of Björklund–Kaski–Koana–Nederlof). Then the border rank of P_2 over ℂ (limits in the Euclidean topology) is at least 26, and so is its border rank in the algebraic sense (Σ_{i≤r} u_i(ε)⊗v_i(ε)⊗w_i(ε) = ε^h P_2 + O(ε^(h+1)) with polynomial entries) over every field of characteristic 0 or of prime characteristic q ≤ 31; hence also its rank over these fields. Proof: the Koszul–Young flattening bound of Landsberg–Ottaviani, border rank(T) ≥ rank K_p((Φ⊗1⊗1)T)/C(2p,p), proved in the README over every field, with p = 3 and an explicit integer 7 × 15 projection Φ; the 525 × 525 integer matrix K_3((Φ⊗1⊗1)P_2) has rank 502 modulo 2 and 504 modulo every prime 3 ≤ q ≤ 31, and a rank modulo q is at most the rank over ℚ. With the companion note: 26 ≤ border rank(P_2) ≤ R(P_2) ≤ 29 over ℂ and over every field of characteristic 0 or of prime characteristic 3 ≤ q ≤ 31.",
+  "provenance": {
+    "class": "own",
+    "bases": []
+  },
+  "sources": [
+    {
+      "authors": "Landsberg, J. M.; Ottaviani, G.",
+      "year": 2015,
+      "title": "New lower bounds for the border rank of matrix multiplication",
+      "venue": "Theory of Computing 11(1), 285-298",
+      "doi": "10.4086/toc.2015.v011a011",
+      "arxiv": "1112.6007",
+      "note": "Credit for the bound of Lemma 3 of the README (Theorem 2.1 of arXiv:1112.6007v3, p. 3: border rank ≥ rank T_A^{∧p}/C(a−1,p), dim A = a; the journal text was not read), which the note proves itself; not used as evidence."
+    },
+    {
+      "authors": "Landsberg, J. M.; Ottaviani, G.",
+      "year": 2013,
+      "title": "Equations for secant varieties of Veronese and other varieties",
+      "venue": "Annali di Matematica Pura ed Applicata 192(4), 569-606",
+      "doi": "10.1007/s10231-011-0238-6",
+      "note": "Credit for Young flattenings; not used as evidence."
+    },
+    {
+      "authors": "Pratt, K.",
+      "year": 2023,
+      "title": "A stronger connection between the asymptotic rank conjecture and the set cover conjecture",
+      "venue": "arXiv preprint (v1, 5 November 2023)",
+      "arxiv": "2311.02774",
+      "url": "https://arxiv.org/abs/2311.02774v1",
+      "note": "Version v1 read in full. Definition 1.4 (the tensor T_k = P_k). The only unconditional lower bound on the rank stated there is the one for concise tensors (§1.1, p. 2; T_k is concise by Proposition 2.1); Corollaries 1.11 and 1.12 state lower bounds conditional on the set cover conjecture."
+    },
+    {
+      "authors": "Björklund, A.; Kaski, P.; Koana, T.; Nederlof, J.",
+      "year": 2026,
+      "title": "Kronecker Scaling of Tensors with Applications to Arithmetic Circuits and Algorithms",
+      "venue": "53rd International Colloquium on Automata, Languages, and Programming (ICALP 2026), LIPIcs, paper 36",
+      "doi": "10.4230/LIPIcs.ICALP.2026.36",
+      "arxiv": "2504.05772",
+      "note": "Read in full (the ICALP 2026 version). The only lower bound stated for P_d is the flattening bound R(P_d) ≥ C(3d,d) (§1.1, footnote 2; proof of Theorem 1.2, arXiv:2504.05772v1 p. 13, ICALP p. 36:16); cited as background."
+    },
+    {
+      "authors": "Flavi, C.; Jelisiejew, J.; Michałek, M.",
+      "year": 2025,
+      "title": "Symmetric powers: structure, smoothability, and applications",
+      "venue": "International Mathematics Research Notices 2025, rnaf277",
+      "doi": "10.1093/imrn/rnaf277",
+      "arxiv": "2408.02754",
+      "note": "Listed to document the literature search; arXiv v2 §6 read. Upper bounds on the rank of P_k only; no lower bound."
+    }
+  ],
+  "verify": "python theorems/tripartition-tensor-p2-border-rank-at-least-26/verify.py",
+  "proof": {
+    "documents": [
+      "README.md",
+      "../tripartition-tensor-p2-rank-at-most-29/README.md"
+    ],
+    "checks": [
+      "verify.py",
+      "../tripartition-tensor-p2-rank-at-most-29/verify.py"
+    ],
+    "audit": "RL-119"
+  }
+}

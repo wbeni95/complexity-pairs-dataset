@@ -1,0 +1,76 @@
+{
+  "id": "partial-fourier-bound-tripartition-tensors",
+  "title": "A partial Fourier bound for the rank of tripartitioning tensors",
+  "statement": "For integers a, b, c ≥ 0 with n = a+b+c ≥ 1 let T_{a,b,c} = Σ x_A y_B z_C over all ordered partitions (A, B, C) of [n] with |A| = a, |B| = b, |C| = c (P_d = T_{d,d,d} is Pratt's T_d and the P_d of Björklund–Kaski–Koana–Nederlof), and D_{a,b} = {S ⊕ T : |S| = a, |T| = b}, of size Σ_{j=0}^{min(a,b)} C(n, a+b−2j). (1) Over every field of characteristic ≠ 2, T_{a,b,c} = Σ_{l=1}^{|D_{a,b}|} u_{t_l} ⊗ u_{t_l} ⊗ W_l for suitable sign vectors t_l ∈ {±1}^n and vectors W_l, where u_t(S) = Π_{i∈S} t_i; hence R(T_{a,b,c}) ≤ |D_{a,b}|. For |a−b| ≤ 1 an explicit choice (t_n = +1 and at most min(a+b, n−1) entries −1) gives an integer identity 2^r T_{a,b,c} = Σ u_t ⊗ u_t ⊗ W̃_t, valid over every ring with 2 invertible. In particular R(P_d) ≤ Σ_{k=0}^{d} C(3d,2k) (4, 31, 247, 1981, ...), the bound of Flavi–Jelisiejew–Michałek (Proposition 6.18, there over algebraically closed fields of characteristic 0), and R(T_{1,1,c}) ≤ C(c+2,2)+1. (2) If |a−b| ≤ 1, every decomposition of this form (the same sign vector t in two factors, arbitrary third factor; over any field) has at least |D_{a,b}| terms; the same holds for any two factors whose sizes differ by at most 1. (3) D_d = |D_{d,d}| satisfies 8^d/2 − (27/4)^d ≤ D_d ≤ 8^d/2, so D_d/(8^d/2) → 1, D_d^{1/d} → 8 and log D_d / log C(3d,d) → 1/H(1/3).",
+  "provenance": {
+    "class": "own-extension",
+    "bases": [
+      "Flavi–Jelisiejew–Michałek 2025, arXiv:2408.02754v2, Proposition 6.18 (6.17 in v1), IMRN rnaf277: R(P_k) ≤ Σ_{j=0}^{k} C(3k,2j) over algebraically closed fields of characteristic 0"
+    ]
+  },
+  "sources": [
+    {
+      "authors": "Flavi, C.; Jelisiejew, J.; Michałek, M.",
+      "year": 2025,
+      "title": "Symmetric powers: structure, smoothability, and applications",
+      "venue": "International Mathematics Research Notices 2025, rnaf277",
+      "doi": "10.1093/imrn/rnaf277",
+      "arxiv": "2408.02754",
+      "note": "Base of the note. arXiv v2 (29 August 2025) §6 read; the IMRN text was not read. Proposition 6.18 (v2, p. 31; Proposition 6.17 in v1): the rank of Pratt's tensor T_N, N = 3k, is at most ½ 8^k − Σ_{i=k+1}^{⌊N/2⌋} C(N, 2i) = Σ_{j=0}^{k} C(3k,2j), proved (p. 32) by bounding the rank by the number of symmetric differences of two k-subsets (group tensor of Z_2 and the substitution method); standing assumption (§2, p. 7): an algebraically closed field of characteristic zero. Not in the paper: the unbalanced tensors T_{a,b,c}, fields of positive characteristic, the bound for T_{1,1,c}, the optimality within the family, Proposition 4."
+    },
+    {
+      "authors": "Pratt, K.",
+      "year": 2023,
+      "title": "A stronger connection between the asymptotic rank conjecture and the set cover conjecture",
+      "venue": "arXiv preprint (v1, 5 November 2023)",
+      "arxiv": "2311.02774",
+      "url": "https://arxiv.org/abs/2311.02774v1",
+      "note": "Version v1 read in full. Definition 1.4 (T_k = P_k); §1.2, item 4 of the comments after Corollary 1.12: the upper bound 8^k/2 (char ≠ 2), with a construction through a map into an abelian group. Cited as background."
+    },
+    {
+      "authors": "Björklund, A.; Kaski, P.; Koana, T.; Nederlof, J.",
+      "year": 2026,
+      "title": "Kronecker Scaling of Tensors with Applications to Arithmetic Circuits and Algorithms",
+      "venue": "53rd International Colloquium on Automata, Languages, and Programming (ICALP 2026), LIPIcs, paper 36",
+      "doi": "10.4230/LIPIcs.ICALP.2026.36",
+      "arxiv": "2504.05772",
+      "note": "Read in full (the ICALP 2026 version). §1.1: the exponent σ(P_ℕ), the bounds 1 ≤ σ(P_ℕ) ≤ H(1/3)^(−1) ≤ 1.0891 and the question whether σ(P_ℕ) < H(1/3)^(−1); Theorem 1.3 (permanent circuits under that assumption); §1.5: Pratt's bound 2^(3n−1). Cited as background."
+    },
+    {
+      "authors": "Ye, K.; Lim, L.-H.",
+      "year": 2018,
+      "title": "Fast Structured Matrix Computations: Tensor Rank and Cohn–Umans Method",
+      "venue": "Foundations of Computational Mathematics 18(1), 45-95",
+      "doi": "10.1007/s10208-016-9332-x",
+      "arxiv": "1601.00292",
+      "note": "Background, context only: Theorem 14.1 of arXiv:1601.00292v2, p. 27 (the journal text was not read): over ℂ, the symmetric matrix–vector product (diagonal included) has rank n(n+1)/2. The zero-diagonal case, T_{1,1,c} with n = c + 2 (Remark 1 of the README), is not treated there."
+    },
+    {
+      "authors": "Ilten, N.; Teitler, Z.",
+      "year": 2016,
+      "title": "Product Ranks of the 3 × 3 Determinant and Permanent",
+      "venue": "Canadian Mathematical Bulletin 59(2), 311-319",
+      "doi": "10.4153/CMB-2015-076-1",
+      "arxiv": "1503.00822",
+      "note": "Background: Remark 2.2 of arXiv:1503.00822v2, p. 4 (the journal text was not read), the tensor rank of the 3 × 3 permanent (= T_{1,1,1} = P_1) is 4, over fields of characteristic 0."
+    },
+    {
+      "authors": "Han, J. I.; Song, J.",
+      "year": 2026,
+      "title": "The rank of the 5×5 permanent tensor is sixteen",
+      "venue": "arXiv preprint (v2, 27 August 2026)",
+      "arxiv": "2608.09708",
+      "note": "Background: pp. 2–3 report that the 3 × 3 permanent has rank and border rank 4 over fields of characteristic 0 (border rank ≥ 4: Derksen–Makam 2019, not read directly; the value with Fischer's formula)."
+    }
+  ],
+  "verify": "python theorems/partial-fourier-bound-tripartition-tensors/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-119"
+  }
+}

@@ -25,8 +25,8 @@
       "T9": 8
     },
     "proved_entries": 70,
-    "theorems": 15,
-    "proved_theorems": 15
+    "theorems": 20,
+    "proved_theorems": 20
   },
   "entries": [
     {
@@ -3212,6 +3212,19 @@
       "verify": "python theorems/para-cayley-dickson-closed-form-powers/verify.py"
     },
     {
+      "id": "partial-fourier-bound-tripartition-tensors",
+      "title": "A partial Fourier bound for the rank of tripartitioning tensors",
+      "path": "theorems/partial-fourier-bound-tripartition-tensors",
+      "provenance": {
+        "class": "own-extension",
+        "bases": [
+          "Flavi–Jelisiejew–Michałek 2025, arXiv:2408.02754v2, Proposition 6.18 (6.17 in v1), IMRN rnaf277: R(P_k) ≤ Σ_{j=0}^{k} C(3k,2j) over algebraically closed fields of characteristic 0"
+        ]
+      },
+      "proved": true,
+      "verify": "python theorems/partial-fourier-bound-tripartition-tensors/verify.py"
+    },
+    {
       "id": "per-term-2-integrality-z-half-schemes",
       "title": "Term by term: how much of the ⟨2,4,5;32⟩ and ⟨3,3,6;40⟩ ℤ[1/2] schemes can be made 2-integral",
       "path": "theorems/per-term-2-integrality-z-half-schemes",
@@ -3234,6 +3247,52 @@
       },
       "proved": true,
       "verify": "python theorems/power-plus-offset-four-candidates/verify.py"
+    },
+    {
+      "id": "pratt-remark-4-construction-even-k",
+      "title": "The group construction for R(T_k) ≤ 2^{3k−1} in Pratt's arXiv:2311.02774v1: the printed map and a corrected one",
+      "path": "theorems/pratt-remark-4-construction-even-k",
+      "provenance": {
+        "class": "own-extension",
+        "bases": [
+          "Pratt 2023, arXiv:2311.02774v1, §1.2, item 4 of the comments after Corollary 1.12 (the bound 8^k/2 and its group construction)"
+        ]
+      },
+      "proved": true,
+      "verify": "python theorems/pratt-remark-4-construction-even-k/verify.py"
+    },
+    {
+      "id": "tripartition-tensor-p2-border-rank-at-least-26",
+      "title": "The balanced tripartitioning tensor P₂ has border rank at least 26",
+      "path": "theorems/tripartition-tensor-p2-border-rank-at-least-26",
+      "provenance": {
+        "class": "own",
+        "bases": []
+      },
+      "proved": true,
+      "verify": "python theorems/tripartition-tensor-p2-border-rank-at-least-26/verify.py"
+    },
+    {
+      "id": "tripartition-tensor-p2-rank-at-most-29",
+      "title": "The balanced tripartitioning tensor P₂ has tensor rank at most 29",
+      "path": "theorems/tripartition-tensor-p2-rank-at-most-29",
+      "provenance": {
+        "class": "own",
+        "bases": []
+      },
+      "proved": true,
+      "verify": "python theorems/tripartition-tensor-p2-rank-at-most-29/verify.py"
+    },
+    {
+      "id": "tripartition-tensors-small-cases",
+      "title": "Rank and border rank of three small tripartitioning tensors",
+      "path": "theorems/tripartition-tensors-small-cases",
+      "provenance": {
+        "class": "own",
+        "bases": []
+      },
+      "proved": true,
+      "verify": "python theorems/tripartition-tensors-small-cases/verify.py"
     }
   ]
 }
