@@ -1,0 +1,58 @@
+{
+  "id": "per-term-2-integrality-z-half-schemes",
+  "title": "Term by term: how much of the ⟨2,4,5;32⟩ and ⟨3,3,6;40⟩ ℤ[1/2] schemes can be made 2-integral",
+  "statement": "Let K be a field of characteristic 0 and call a subring A ⊆ K 2-admissible if it has a ring homomorphism to a field of characteristic 2 (e.g. ℤ, ℤ_(2), ℤ₂, valuation rings with 2 in the maximal ideal). For an equivalent form (λ_r U a_r V⁻¹, μ_r V b_r W⁻¹, (λ_r μ_r)⁻¹ W c_r U⁻¹) of a rational scheme, a term is A-integral if all its coefficients lie in A. With t(r,s,u) = tr(a_r b_s c_u): if a product of such traces whose three index multisets coincide is a rational number of negative 2-adic valuation, the terms occurring in it are never all A-integral. Consequently, for every K, every equivalent form and every 2-admissible A: (1) no term of the pinned ⟨3,3,6;40⟩ ℤ[1/2] scheme (attributed to Smirnov 2013) is A-integral (t(r,r,r) = 3/2 for 16 terms and 5/4 for 24); (2) at least 20 of the 32 terms of the pinned ⟨2,4,5;32⟩ ℤ[1/2] scheme of AlphaEvolve are not A-integral (exact minimum hitting set of the obstruction hypergraph built from a-pairs t(r,q,q)t(q,r,r), b-pairs t(q,r,q)t(r,q,r), c-pairs t(r,r,q)t(q,q,r) and 3-cycles t(r,s,q)t(q,r,s)t(s,q,r); 18 without the c-pairs), and an explicit equivalent form over ℚ has exactly 12 terms with all coefficients in ℤ and 20 terms that are not ℤ_(2)-integral, so for every 2-admissible A, in particular ℤ, the minimum over all equivalent forms over K is exactly 20. Files (read from the data/ folder of theorems/no-integral-form-z-half-schemes) and term numbering as in that note.",
+  "provenance": {
+    "class": "own-extension",
+    "bases": [
+      "Moran–Schwartz–Yuan 2026, arXiv:2602.13171 (Proposition 3, §3.2)"
+    ]
+  },
+  "sources": [
+    {
+      "authors": "Moran, Y.; Schwartz, O.; Yuan, S.",
+      "year": 2026,
+      "title": "Complex to Rational Fast Matrix Multiplication",
+      "venue": "arXiv preprint (v1, 13 February 2026)",
+      "arxiv": "2602.13171",
+      "note": "Credited as the base (not used as evidence); full text of v1 read. Proposition 3 and §3.2: with Proposition 3 as the tool, they state that the ⟨3,3,6,40⟩ ℤ[1/2] algorithm found by Smirnov has no ℤ equivalent form (some single trace is not an integer), and that a ⟨2,4,5,32⟩ algorithm over ℤ[1/2], which they attribute to Hopcroft and Kerr, has none 'for the same reason' as their ⟨4,4,4,48⟩ example. They print neither scheme and identify no files; whether their statements concern the pinned files is open (see the pending note of theorems/no-integral-form-z-half-schemes, which proves the statement for the pinned files). §5 (open problem 1) asks for a necessary and sufficient condition. Their integrality statements concern ℤ and all terms at once; the per-term statements, the exact value 20, the generalisation from ℤ to all 2-admissible rings and the mixed-trace invariants beyond the single traces t(r,r,r) are not in the paper."
+    },
+    {
+      "authors": "Novikov, A.; Vũ, N.; Eisenberger, M.; Dupont, E.; Huang, P.-S.; Wagner, A. Z.; Shirobokov, S.; Kozlovskii, B.; Ruiz, F. J. R.; Mehrabian, A.; Kumar, M. P.; See, A.; Chaudhuri, S.; Holland, G.; Davies, A.; Nowozin, S.; Kohli, P.; Balog, M.",
+      "year": 2025,
+      "title": "AlphaEvolve: A coding agent for scientific and algorithmic discovery",
+      "arxiv": "2506.13131",
+      "note": "Source of the ⟨2,4,5;32⟩ scheme. The pinned file agrees term by term with AlphaEvolve's published decomposition, which theorems/no-integral-form-z-half-schemes checks."
+    },
+    {
+      "authors": "Smirnov, A. V.",
+      "year": 2013,
+      "title": "The bilinear complexity and practical algorithms for matrix multiplication",
+      "venue": "Computational Mathematics and Mathematical Physics 53(12), 1781-1795",
+      "doi": "10.1134/S0965542513120129",
+      "note": "Attributed source of the ⟨3,3,6;40⟩ scheme in the pinned file; the file is not compared with the paper (as in theorems/no-integral-form-z-half-schemes)."
+    },
+    {
+      "authors": "dronperminov (GitHub)",
+      "title": "FastMatrixMultiplication, schemes/known/tensor/2x4x5_tensor.mpl (SHA-256 e03c7743a60f53ae21a3413af4a5f019600a12befc8ed22ffdf2baa8b0f7dd4b)",
+      "url": "https://raw.githubusercontent.com/dronperminov/FastMatrixMultiplication/64f58a5e40806bc47847b11dd8aceec043fa895d/schemes/known/tensor/2x4x5_tensor.mpl",
+      "note": "Pinned input of verify.py (commit 64f58a5e40806bc47847b11dd8aceec043fa895d), the same file as in theorems/no-integral-form-z-half-schemes; verify.py reads the unmodified copy in that note's data/ folder (MIT licence) and checks its SHA-256."
+    },
+    {
+      "authors": "dronperminov (GitHub)",
+      "title": "FastMatrixMultiplication, schemes/known/tensor/3x3x6_tensor.mpl (SHA-256 3e79357c5d2540e5c54c2a5f484f17009f70799b10bd45ed8e4bf893b5e223ab)",
+      "url": "https://raw.githubusercontent.com/dronperminov/FastMatrixMultiplication/64f58a5e40806bc47847b11dd8aceec043fa895d/schemes/known/tensor/3x3x6_tensor.mpl",
+      "note": "Pinned input of verify.py (commit 64f58a5e40806bc47847b11dd8aceec043fa895d), the same file as in theorems/no-integral-form-z-half-schemes; verify.py reads the unmodified copy in that note's data/ folder (MIT licence) and checks its SHA-256."
+    }
+  ],
+  "verify": "python theorems/per-term-2-integrality-z-half-schemes/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

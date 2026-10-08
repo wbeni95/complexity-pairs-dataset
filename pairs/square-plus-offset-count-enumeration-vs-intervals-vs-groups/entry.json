@@ -1,0 +1,127 @@
+{
+  "id": "square-plus-offset-count-enumeration-vs-intervals-vs-groups",
+  "title": "Counting n-bit integers with a cheap representation X^2 + C: enumeration vs interval sweep vs root groups",
+  "problem_statement": "For an integer v let L(v) be the number of binary digits of |v|, with L(0) = 1. Writing a non-negative integer k as k = X^2 + C with an integer root X >= 0 and the offset C = k - X^2 costs f_k(X) = L(X) + L(C) + [C < 0] bits (the root's digits, the offset's digits, one sign bit for a negative offset). For n >= 0 let S_n be the set of integers k with 0 <= k < 2^n that have some X >= 0 with f_k(X) <= n - 4. Given n, output |S_n|. (Decision version: given n and k, decide k in S_n.)",
+  "input": {
+    "parameter": "n, the bit width (a value; the instance is the number n itself).",
+    "size_measure": "Costs are stated in the value n, on a word RAM with words of n + 3 bits (unit-cost +, -, *, integer division, comparison, shift, bit length; machine-model assumption, see background). In binary the input occupies floor(log2 n) + 1 bits (n >= 1) and the output |S_n| <= 2^n at most n + 1 bits; see caveats."
+  },
+  "algorithms": [
+    {
+      "name": "enumeration of all k with three candidate roots",
+      "idea": "For every k < 2^n evaluate f_k at X = 0, r and r + 1 with r = isqrt(k), which suffices by Lemma A, and count the k whose minimum is at most n - 4. r is kept incrementally.",
+      "model": "classical-deterministic",
+      "pseudocode": "count = 0; r = 0\nfor k in 0 .. 2^n - 1:\n  while (r+1)^2 <= k: r += 1\n  if min(f_k(0), f_k(r), f_k(r+1)) <= n - 4: count += 1\nreturn count",
+      "time_complexity": "Theta(2^n) word operations in the word-RAM model of the entry (machine-model assumption, background; the lower bound counts loop iterations and does not depend on it): exactly 3 * 2^n evaluations of f_k (reported for V2), 2^n comparisons with the budget, isqrt(2^n - 1) increments of r (PROOFS.md sections 1.1, 4.1, 9.1).",
+      "space_complexity": "O(1) words (in the word-RAM model of the entry, machine-model assumption, background).",
+      "correctness": "Lemma A (PROOFS.md section 2): for every k >= 0, min over all X >= 0 of f_k(X) = min(f_k(0), f_k(r), f_k(r+1)), r = isqrt(k). Case analysis: (i) X >= r + 2 is dominated by r + 1 (negative offsets that grow with X); (ii) 1 <= X <= r - 1 with L(X) = L(r) is dominated by r; (iii) 1 <= X <= r - 1 with L(X) < L(r): if f_k(X) < f_k(0), then either L(X) >= 2, which forces k = 2^(2q), r = 2^q and f_k(X) >= f_k(r), or X = 1 and k = 2^p, where r or r + 1 is at least as cheap (for odd p using 2^q <= r < 2^(q+1/2), with the two boundary cases k = 8 and k = 32 checked directly). The incremental r equals isqrt(k) for every k (PROOFS.md section 4.1).",
+      "implementation": "implementations/enumeration.py:count_by_enumeration",
+      "harness": {
+        "v1_max_n": 16,
+        "scaling": {
+          "cost": "3*2**n",
+          "n_values": [6, 8, 10, 12, 14, 16],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": ["2**(n/2)", "n*2**n", "3**n"],
+          "shape": {"sequence": "consecutive", "n_range": [1, 16], "note": "exactly 3 * 2^n for every n >= 0"}
+        }
+      }
+    },
+    {
+      "name": "sweep over one interval per root",
+      "idea": "For a root X with w = n - 4 - L(X) >= 1 the k with f_k(X) <= n - 4 form one interval around X^2 (Lemma B). Measure the union of these intervals, clipped to [0, 2^n - 1], over X = 0 .. isqrt(2^n - 1) + 1 in one merge pass: the left ends increase with X (Lemma C).",
+      "model": "classical-deterministic",
+      "pseudocode": "B = 2^n - 1; T = isqrt(B) + 1\nfor X in 0 .. T:\n  w = n - 4 - L(X); if w < 1: continue\n  m = 2^(w-1) - 1 if w >= 2 else 0\n  lo = max(0, X^2 - m); hi = min(X^2 + 2^w - 1, B); if lo > hi: continue\n  merge [lo, hi] into the current component (left ends are non-decreasing)\nreturn total size of the components",
+      "time_complexity": "Theta(2^(n/2)) word operations in the word-RAM model of the entry (machine-model assumption, background, which also charges the single call math.isqrt(2^n - 1) O(n) word operations; the lower bound counts loop iterations and does not depend on it): exactly isqrt(2^n - 1) + 2 roots examined (reported for V2; 2^(n/2) + 1 for even n), O(1) word operations each (PROOFS.md sections 1.2, 9.2).",
+      "space_complexity": "O(1) words (in the word-RAM model of the entry, machine-model assumption, background).",
+      "correctness": "Lemma B (PROOFS.md section 3): for w >= 1, {k >= 0 : f_k(X) <= n - 4} = [max(0, X^2 - m), X^2 + 2^w - 1] with m = 2^(w-1) - 1 (w >= 2) or 0 (w = 1), and it is empty for w <= 0 (for C >= 0 the condition is C <= 2^w - 1; for C < 0 it is |C| <= 2^(w-1) - 1). Roots X > T = isqrt(2^n - 1) + 1 are not needed: for k < 2^n, every X >= r + 2 is dominated by r + 1 <= T (case (i) of Lemma A). Lemma C: the left ends X^2 - m strictly increase with X, because m does not increase when L(X) grows; so the clipped left ends are non-decreasing and a single merge pass in X order measures the union (PROOFS.md section 4.2). Empty clipped intervals (e.g. n = 13, X = 91) are skipped.",
+      "implementation": "implementations/interval_sweep.py:count_by_interval_sweep",
+      "harness": {
+        "v1_max_n": 34,
+        "scaling": {
+          "cost": "2**(n/2) + 1",
+          "n_values": [12, 16, 20, 24, 28, 32],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": ["2**n", "n*2**(n/2)", "n**3"],
+          "shape": {"sequence": "consecutive", "n_range": [2, 32], "step": 2, "note": "even n only, where the count isqrt(2^n - 1) + 2 equals 2^(n/2) + 1"}
+        }
+      }
+    },
+    {
+      "name": "root groups of equal bit length",
+      "idea": "Inside a group of roots with the same bit length the interval shape (w, m) is fixed, so the sweep of the interval algorithm can be done for a whole group at once: the roots after the first one that start a new component form a suffix of the group, whose first element is given by two closed-form thresholds (one of them an integer square root). Subtract the part below 0 (exactly m of the first group) and the part above 2^n - 1 (at most two roots reach it).",
+      "model": "classical-deterministic",
+      "pseudocode": "see implementation (implementations/groups.py) and PROOFS.md section 5, Theorem A3",
+      "time_complexity": "O(n log n) word operations in the word-RAM model of the entry (machine-model assumption, background): exactly floor(n/2) + 1 root groups for n >= 11 (reported for V2), O(1) arithmetic operations and at most two integer square roots per group (n + 2 square roots in total for n >= 11), each computed by Newton's iteration in at most floor(log2(n + 4)) + 2 steps; O(n) operations if an integer square root counts as one operation (PROOFS.md sections 1.3, 7, 9.3).",
+      "space_complexity": "O(1) words (in the word-RAM model of the entry, machine-model assumption, background).",
+      "correctness": "PROOFS.md section 5, Theorem A3, with Lemmas C, D, E (section 5) and N (section 6). Let J_X = [X^2 - m, X^2 + s] (s = 2^w - 1) be the unclipped intervals and U their union over the roots X <= T with w >= 1; by Lemma B, |S_n| = |U| - |U below 0| - |U above 2^n - 1|. Lemma D: in a group [a, b] (constant w, s, m), after the root a has been swept with right end E, a root X in (a, b] starts a new component iff X >= t1 = floor((s + m + 2)/2) + 1 (gap to the previous interval: 2X - 1 > s + m + 1) and X >= t2 = isqrt(E + 1 + m) + 1 (gap to everything before); both conditions are upward closed, so the roots before max(a + 1, t1, t2) extend the current component and each later root is a component of size 2^w + m. Lemma E: the part below 0 is exactly [-m_1, -1]; at most two roots X <= T have X^2 + s >= 2^n (they lie in a real interval of length < 1 + 2^-4). Lemma N: Newton's iteration from 2^ceil(L(q)/2) returns isqrt(q) after at most floor(log2(2 + log2 q)) + 2 steps. Group count: group l is processed iff l <= L(T) and l <= n - 5, and L(T) = floor(n/2) + 1 for n >= 2 (section 1.3). For n <= 5 no group is processed and the result 0 is |S_n| (every representation costs at least 2 bits).",
+      "implementation": "implementations/groups.py:count_by_groups",
+      "harness": {
+        "scaling": {
+          "cost": "n/2 + 1",
+          "n_values": [12, 24, 48, 96, 192, 384],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": ["n**2", "n*log(n)", "log(n)", "2**(n/2)"],
+          "shape": {"sequence": "consecutive", "n_range": [12, 60], "step": 2, "note": "even n >= 12, where the number of groups is n/2 + 1"}
+        }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "secondary_tags": ["T8"],
+  "relationship": "Same output, three costs: enumeration Theta(2^n) -> interval sweep Theta(2^(n/2)) -> root groups O(n log n) word operations, in the word-RAM model of the entry (background). The interval sweep is exponentially faster than the enumeration (secondary tag T8), but 2^(n/2) is not the complexity of the problem: the group algorithm needs only polynomially many operations in n (primary tag T2, naive exponential -> polynomial). The enumeration rests on Lemma A (three candidate roots suffice), the two interval methods on Lemma B (one interval per root); all proofs are in PROOFS.md. No lower bound for the problem is claimed.",
+  "sources": [
+    {
+      "authors": "Rissanen, J.",
+      "year": 1983,
+      "title": "A universal prior for integers and estimation by minimum description length",
+      "venue": "The Annals of Statistics 11(2)",
+      "doi": "10.1214/aos/1176346150",
+      "note": "The one related hit of the literature search; read in part (its introduction, pp. 416-417, and pp. 422-424 of its Section 3): it concerns a universal prior for integers, and these pages do not contain the result of this entry. Not a base of this entry and not used as evidence."
+    },
+    {
+      "authors": "Python Software Foundation",
+      "year": 2026,
+      "title": "The Python Standard Library: Built-in Types (int.bit_length, Ranges) and math (math.isqrt)",
+      "url": "https://docs.python.org/3/library/stdtypes.html",
+      "note": "Background only (machine-model assumption). Read on 2026-10-07: int.bit_length returns the number of bits necessary to represent an integer in binary, excluding the sign and leading zeros; a range object always takes the same small amount of memory; math.isqrt(n) (https://docs.python.org/3/library/math.html) returns the floor of the exact square root of the nonnegative integer n."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: the validator runs n = 0..17, 19, 21, ..., 33, 34, 40, 64, 100, 200 (the instance is n; one trial). The enumeration runs up to n = 16, the interval sweep up to n = 34, the group algorithm on every size. harness.check is independent of the three implementations: for n <= 12 it is a brute force over ALL roots X with X^2 < k + 2^L(k) for every k < 2^n (Lemma 0; it uses neither Lemma A nor Lemma B); for 13 <= n <= 34 it is the union of the clipped intervals of Lemma B, sorted and merged (no use of the monotone left ends or of the grouping); above n = 34 it returns None (PROOFS.md section 10). V2 (exact counts, measure 'reported'): each implementation returns (|S_n|, work). Enumeration: exactly 3 * 2^n cost evaluations, fitted on n = 6..16 (even), rivals 2^(n/2), n 2^n, 3^n. Interval sweep: exactly isqrt(2^n - 1) + 2 roots, which is 2^(n/2) + 1 on the even V2 sizes n = 12..32, rivals 2^n, n 2^(n/2), n^3. Groups: exactly floor(n/2) + 1 root groups for n >= 11, fitted on n = 12, 24, ..., 384, rivals n^2, n log n, log n, 2^(n/2). The counts are proved for every n in PROOFS.md section 1; they are functions of n alone and use no library result beyond the documented value of math.isqrt. experiments/2026-10-07_square_plus_offset_checks.py (standard library, deterministic, about a minute): Lemma A against a brute force over all roots in the window of Lemma 0 for every k < 2^18 (0 mismatches), Lemma 0, the boundary cases k = 8 and k = 32 of the proof and the example k = 80; Lemma B (sorted union = brute force, n = 1..16) and its example of an empty clipped interval (n = 13, X = 91); enumeration = interval sweep = groups for n = 0..22 and interval sweep = groups = sorted union for n = 0..42; the structure used by the group algorithm (strictly increasing left ends and component starts forming a suffix of every group for n = 5..36, the part below 0 for n = 6..60 (every root), at most two roots above 2^n - 1 for n = 5..400 as recorded by the implementation and for n = 6..3000 by a direct count that does not use it, L(T) = floor(n/2) + 1 for n = 2..3000, the number of groups for n = 0..400); Newton's integer square root against math.isqrt with its step bound (computed in exact integers); the exact work counts, n + 2 square roots of arguments below 2^(n+2) for n = 11..400 (counted by a wrapper), and the enumeration's isqrt(2^n - 1) increments of r, 2^n + isqrt(2^n - 1) evaluations of its loop test and 2^n budget comparisons for n = 0..16 (counted in an instrumented copy); the word sizes (an instrumented copy of each implementation records every integer value of every expression: below 2^(n+2) for n >= 1, at most 5 for n = 0; enumeration n = 0..16, interval sweep n = 0..34, groups n = 0..400); every value quoted in README.md and notes. tests/test_entry_square_plus_offset.py repeats the fast part (about a second). PROOFS.md proves every claim and names the check of each.",
+    "artifacts": ["PROOFS.md", "implementations/enumeration.py", "implementations/interval_sweep.py", "implementations/groups.py", "harness.py", "../../experiments/2026-10-07_square_plus_offset_checks.py", "../../tests/test_entry_square_plus_offset.py"]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 21, 23, 25, 27, 29, 31, 33, 34, 40, 64, 100, 200],
+    "trials": 1
+  },
+  "caveats": "Bit-size view: the input is the number n (floor(log2 n) + 1 bits) and the output |S_n| has at most n + 1 bits. The group algorithm is polynomial in n, but not in the binary length of the input (it processes floor(n/2) + 1 groups); the enumeration and the interval sweep are exponential in n. Cost model: word RAM with words of n + 3 bits, unit-cost +, -, *, integer division, comparison, shift and bit length (machine-model assumption, background); for n >= 1 every quantity handled is an integer of absolute value below 2^(n+2), and for n = 0 at most 5 (PROOFS.md section 8). An integer square root is not a unit operation; the group algorithm computes it by Newton's iteration in O(log n) steps (Lemma N). The V2 count of the group algorithm is the number of root groups; its O(n log n) word-operation bound is proved, not measured. The budget n - 4 is part of the problem; Lemma A does not depend on it, while Lemma B, the bound of at most two roots above 2^n - 1 and the counts are stated for this budget. |S_n| = 0 for n <= 5, since every representation costs at least 2 bits. No lower bound and no optimality of any algorithm is claimed.",
+  "notes": "Example (PROOFS.md section 2, remark after Lemma A): roots below r can be cheaper than r, so Lemma A does not follow from comparing roots with r alone: for k = 80 (r = 8), f(7) = 8 < f(8) = 9, and the minimum f(9) = 6 is attained only at r + 1. Values: |S_n| = 3, 8, 21, 51, 127, 257, 565, 1104, 2378, 4578, 9748 for n = 6..16; |S_29| = 77512574; |S_40| = 167502757888. Literature search (October 2026; Crossref 3 queries, arXiv 4, OpenAlex 2; generic keywords on counting integers close to perfect squares or powers, integers expressible as a square or power plus a small offset, and the bit length or description length of such representations; titles, metadata and abstracts screened): nothing relevant found; the only related hit, Rissanen (1983), was afterwards read in part (its introduction, pp. 416-417, and pp. 422-424 of its Section 3): it concerns a universal prior for integers, and these pages do not contain this result; it is not used as evidence. The search was shallow. Generalisation to X^d + C, d >= 3 (four candidate roots 0, 1, r, r + 1; a polynomial group algorithm): theorems/power-plus-offset-four-candidates.",
+  "provenance": {
+    "class": "own",
+    "note": "No prior literature was found after a documented search (README.md, Literature search); a statement about that search, not a claim of priority."
+  },
+  "background": [
+    {
+      "statement": "Machine-model assumption of this entry (PROOFS.md section 0): the algorithms are analysed on a word RAM with words of n + 3 bits, in which +, -, *, integer division, comparisons, shifts and int.bit_length on integers of absolute value below 2^(n+2) cost one word operation each (PROOFS.md section 8 proves that for n >= 1 the implementations handle no other integers), creating and iterating a range costs O(1) per step with O(1) words of memory, and one call math.isqrt(q) with 0 <= q < 2^(n+2) returns floor(sqrt(q)) and costs O(n) word operations. The documentation states what int.bit_length and math.isqrt return and that a range object always takes the same small amount of memory; the costs are assumed, not proved in this repository. The exact counts reported for V2, the correctness of the three algorithms and the word sizes do not depend on the assumed costs; they use only the documented results of int.bit_length, range and math.isqrt.",
+      "source": "PROOFS.md section 0; Python Software Foundation, Python documentation: Built-in Types (int.bit_length, Ranges) and math (math.isqrt), read 2026-10-07"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "../../theorems/power-plus-offset-four-candidates/README.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-07_square_plus_offset_checks.py",
+      "../../tests/test_entry_square_plus_offset.py",
+      "../../theorems/power-plus-offset-four-candidates/verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

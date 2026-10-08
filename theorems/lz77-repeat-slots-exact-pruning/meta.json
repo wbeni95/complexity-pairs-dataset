@@ -1,0 +1,86 @@
+{
+  "id": "lz77-repeat-slots-exact-pruning",
+  "title": "An exact pruning rule for optimal LZ77-style parsing with k repeat-offset slots",
+  "statement": "Model: a string s of length n is parsed from position 0 to n by tokens, carrying k slots R = (R[0..k-1]), initially (1, ..., 1): a literal (cost 9); a repeat of slot j with length L >= REPMIN, allowed if R[j] <= i and the text matches at distance R[j] (cost 3 + j + gamma(L); slot j moves to the front); a new match with distance d <= i and length L >= 2 (cost 2 + gamma(L-1) + gamma(d); d is pushed to the front and the last slot dropped); gamma(x) = 2 floor(log2 x) + 1. For slot tuples R != R' let a0 be the first index where they differ and D(R, R') = sum_{a >= a0} max(0, gamma(R[a]) - 1 - a). Theorem 1 (G3): if REPMIN >= 2, every continuation from (i, R) to position n can be simulated from (i, R') at extra cost at most D(R, R'), for arbitrary tuples. Theorem 2: if REPMIN >= 2, the forward DP over (position, slots) that at each position deletes every state R with value >= c(R*) + D(R, R*), for one chosen cheapest state R* (any choice), returns the optimum. Theorem 3 (G3*): the same holds for arbitrary static costs lit, new(L, d), rep(L, j) with the margin sum_{a >= a0} max(0, max_{j >= a, REPMIN <= L <= n - i} [new(L, R[a]) - rep(L, j)]); the maximum over j >= a cannot be replaced by j = a in the continuation bound (counterexample aaaababa). The margin D is attained (V(11,(9,5)) - V(11,(3,5)) = 5 = D on aabbbbabbaabaaaab, k = 2); with REPMIN = 1 the rule fails (aaaaba: optimum 32, G3-pruned DP 33 for k = 1, 2, 3 and every comparator choice); with adaptive costs the one-value-per-state DP fails (bbba); the margins K1 (k = 2, 3), NS (k = 2, 3) and NB, NB0 (k = 2) fail on explicit strings (REPMIN = 2).",
+  "provenance": {
+    "class": "undetermined",
+    "bases": [
+      "Folklore DP over (position, slot contents) and its approximate threshold pruning: Bloom 2015, blog post '01-23-15 - LZA New Optimal Parse' (not peer-reviewed)"
+    ],
+    "pending": true,
+    "pending_note": "The base is the folklore slot-content DP: Bloom's blog posts contain a {Pos,State} parser with a threshold early out (2011) and the DP with the repeat-match offsets in the state, pruned by a threshold he calls approximate (2015), without proof. Beyond the sources read, this note proves the exact pruning rule G3/G3*. Three sources that might contain it could not be read (missing_sources): the journal version of the dictionary-symbolwise flexible parsing (DSFP) paper and the full text of Langiu's Zip-case paper (the publisher's site refused automated access; the DSFP preprint was read in full and has no repeat-offset state), and the 2010 thesis 'Parsing algorithms for data compression' (University of Pisa; not consultable until 2050). Whether they contain the result could not be checked, so it may be our own result. Nothing read states an exact pruning rule of this kind.",
+    "missing_sources": [
+      {
+        "authors": "Crochemore, M.; Giambruno, L.; Langiu, A.; Mignosi, F.; Restivo, A.",
+        "year": 2012,
+        "title": "Dictionary-symbolwise flexible parsing",
+        "venue": "Journal of Discrete Algorithms 14, 74-90",
+        "doi": "10.1016/j.jda.2011.12.021",
+        "status": "journal version not read: the publisher's site refused automated access (the HAL preprint hal-00742078, which defers part of its material to the journal version, was read in full and has no repeat-offset state)",
+        "needed_for": "whether the journal version states an exact (optimum-preserving) pruning rule for parser states that hold repeat offsets"
+      },
+      {
+        "authors": "Langiu, A.",
+        "year": 2013,
+        "title": "On parsing optimality for dictionary-based text compression—the Zip case",
+        "venue": "Journal of Discrete Algorithms 20, 65-70",
+        "doi": "10.1016/j.jda.2013.04.001",
+        "status": "full text not read: the publisher's site refused automated access (only the abstract was read)",
+        "needed_for": "whether this survey of parsing optimality for dictionary-based compression states an exact pruning rule for parser states that hold repeat offsets"
+      },
+      {
+        "authors": "not named in the thesis record",
+        "year": 2010,
+        "title": "Parsing Algorithms for Data Compression",
+        "venue": "PhD thesis, University of Pisa",
+        "url": "https://etd.adm.unipi.it/t/etd-05252010-115131",
+        "status": "not consultable until 2050 (the thesis record gives the release date 24 June 2050); only the abstract was read",
+        "needed_for": "whether the thesis states an exact pruning rule for parser states that hold repeat offsets"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "authors": "Bloom, C.",
+      "year": 2015,
+      "title": "01-23-15 - LZA New Optimal Parse",
+      "venue": "cbloom rants (blog), 23 January 2015; not peer-reviewed",
+      "url": "https://cbloomrants.blogspot.com/2015/01/01-23-15-lza-new-optimal-parse.html",
+      "note": "Credit for the base: the DP over {state, pos} with the repeat-match offsets in the state, and pruning by a threshold described as approximate."
+    },
+    {
+      "authors": "Bloom, C.",
+      "year": 2011,
+      "title": "12-17-11 - LZ Optimal Parse with A Star Part 3",
+      "venue": "cbloom rants (blog), 17 December 2011; not peer-reviewed",
+      "url": "https://cbloomrants.blogspot.com/2011/12/12-17-11-lz-optimal-parse-with-star_17.html",
+      "note": "Credit: an early-out threshold rule on {Pos,State} nodes (with a general adaptive state), justified by an assumption; for the static-cost slot model, this note's Theorem 2 gives an explicit margin."
+    },
+    {
+      "authors": "Crochemore, M.; Giambruno, L.; Langiu, A.; Mignosi, F.; Restivo, A.",
+      "year": 2012,
+      "title": "Dictionary-symbolwise flexible parsing",
+      "venue": "Journal of Discrete Algorithms 14, 74-90",
+      "doi": "10.1016/j.jda.2011.12.021",
+      "note": "Checked, not credited. The journal version was not read here: the publisher's site refused automated access. The preprint (https://hal.science/hal-00742078) was read in full: one cost per edge of a graph on text positions, no repeat-offset state, no pruning of states, no state counts."
+    },
+    {
+      "authors": "University of Pisa (doctoral thesis; the thesis record read names no author)",
+      "year": 2010,
+      "title": "Parsing Algorithms for Data Compression",
+      "venue": "PhD thesis, University of Pisa",
+      "url": "https://etd.adm.unipi.it/t/etd-05252010-115131",
+      "note": "Checked, not credited. The thesis record marks the thesis as not consultable until 24 June 2050; only the abstract was read (bit-optimal LZ77 parsing as a shortest-path computation in a directed acyclic graph; no mention of repeat offsets)."
+    }
+  ],
+  "verify": "python theorems/lz77-repeat-slots-exact-pruning/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

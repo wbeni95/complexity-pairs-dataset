@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Build index.json, the pairs table in README.md, and generated per-entry READMEs.
 
+After the tables, the generated part of README.md lists, under "Sources we could not read", every source named in
+an item's provenance.missing_sources; that section is omitted when no item has one.
+
 Per-entry README.md files are generated only when missing or when they carry the
 GENERATED marker; hand-written READMEs are left alone.
 
@@ -62,19 +65,65 @@ def summarize(entry_dir: Path, entry: dict) -> dict:
     }
 
 
-PROVENANCE_BADGE = {"own": "🟠 Own result", "own-extension": "🟠 Own extension"}
+PROVENANCE_BADGE = {
+    "own": "🟠 Own result",
+    "own-extension": "🟠 Own extension",
+    # yellow dot: probably our own finding; hourglass: a source that might contain it could not be read
+    "undetermined": "🟡⏳ Undetermined (may be our own result)",
+}
+PENDING_BADGE = "⏳ Pending"
 PROVED_BADGE = "✅ Proved"
 
 
 def provenance_badge(prov: dict, proved: bool = False) -> str:
     """Green check mark for items whose every claim has a written proof here plus checks; orange label for the
-    project's own results; a pending flag where a source could not be checked."""
+    project's own results; yellow label (with the hourglass) for probable own results whose literature check could
+    not be finished; a pending flag where a source could not be checked."""
     parts = [PROVED_BADGE] if proved else []
     if prov.get("class") in PROVENANCE_BADGE:
         parts.append(PROVENANCE_BADGE[prov["class"]])
-    if prov.get("pending"):
-        parts.append("⏳ Pending")
+    if prov.get("pending") and prov.get("class") != "undetermined":  # the undetermined label carries the hourglass
+        parts.append(PENDING_BADGE)
     return (" " + " · ".join(parts)) if parts else ""
+
+
+MISSING_SOURCES_HEADING = "### Sources we could not read"
+MISSING_SOURCES_INTRO = (
+    "These items are marked 🟡⏳ undetermined (or ⏳ pending) because a source that might already contain the result "
+    "could not be read. If you have access to one of these sources and can tell us whether it contains the result, "
+    "or know an open-access copy, please open an issue."
+)
+
+
+def _cell(text) -> str:
+    """Text for one Markdown table cell: a single line, with literal pipes escaped."""
+    return " ".join(str(text).split()).replace("|", "\\|")
+
+
+def missing_source_ref(s: dict) -> str:
+    """One unread source, in the reference style of the generated entry READMEs, with its DOI and/or URL link."""
+    ref = f"{_cell(s['authors'])} ({s['year']}). *{_cell(s['title'])}*. {_cell(s['venue'])}."
+    if s.get("doi"):
+        ref += f" [doi:{_cell(s['doi'])}](https://doi.org/{s['doi'].replace('|', '%7C')})"
+    if s.get("url"):
+        ref += f" [{_cell(s['url'])}]({s['url'].replace('|', '%7C')})"
+    return ref
+
+
+def missing_sources_section(items: list[dict]) -> str:
+    """The README section listing every unread source of every item (entry or theorem note), one row per source, in
+    the order given; empty when no item lists missing sources."""
+    lines = []
+    for it in items:
+        prov = it["provenance"]
+        for s in prov.get("missing_sources", []):
+            lines.append(f"| [{_cell(it['title'])}]({it['path']}) | {provenance_badge(prov).strip()} | "
+                         f"{missing_source_ref(s)} | {_cell(s['status'])} | {_cell(s['needed_for'])} |")
+    if not lines:
+        return ""
+    return "\n".join([MISSING_SOURCES_HEADING, "", MISSING_SOURCES_INTRO, "",
+                      "| Item | Label | Source | Status | What it would decide |",
+                      "|---|---|---|---|---|", *lines])
 
 
 def discover_theorems() -> list[dict]:
@@ -173,6 +222,10 @@ def readme_table(rows: list[dict], theorems: list[dict] | None = None) -> str:
         for th in theorems:
             lines.append(f"| [{th['title']}]({th['path']}){provenance_badge(th['provenance'], th['proved'])} | `{th['verify']}` |")
         parts += ["", "### Theorems (`theorems/`: results that are not complexity pairs)", "", "\n".join(lines)]
+    # after every table, in the order of the tables above; omitted when no item lists missing sources
+    unread = missing_sources_section(verified + staging + synthetic + (theorems or []))
+    if unread:
+        parts += ["", unread]
     return "\n".join(parts)
 
 

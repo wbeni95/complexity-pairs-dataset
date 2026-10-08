@@ -2,12 +2,19 @@
 
 This file proves the claims of this entry about its two implementations: that both return the value of a maximum
 flow, the worst-case upper bounds O(V·E²) and O(V²·E), the space bound, the bounds in terms of the flow value that
-the caveats state, and the matching reduction mentioned in the notes. Each section names the deterministic checks.
-A check covers only its stated range; the proofs cover every network of the problem.
+the caveats state, the matching reduction mentioned in the notes, and a separation of the two implementations on the
+entry's own random family (sections 9 and 10). Each section names the deterministic checks. A check covers only its
+stated range; the proofs cover every network of the problem (sections 1 to 8) or every n in the stated range
+(section 10).
 
-The entry claims **upper bounds only**. No lower bound for Edmonds–Karp is proved here, so this file does not show
-that Dinic is asymptotically faster. The T3 tag is a classification by the published worst-case upper bounds
-(the `background` field of `entry.json`); it is not proved here.
+**What is shown about Dinic being faster.** The worst-case bounds O(V·E²) and O(V²·E) are proved as **upper bounds**
+only. On the random networks of `generate_scaling` (the model 𝔊ₙ of section 9, under the ideal-random-bits
+Assumption R), section 10 proves a separation: for every n ≥ 21 793, with probability at least 1 − 5/n, Edmonds–Karp
+makes at least 0.011·n³ reads while Dinic runs in O(n²) time. **No
+worst-case separation is proved:** the worst-case lower bound proved for Edmonds–Karp, Ω(n³) on networks with
+capacities ≤ 100 (Corollary S), does not exceed Dinic's proved worst-case bound O(V²·E). The T3 tag rests on the
+worst-case upper bounds proved in sections 3–4 (the published bounds of the two algorithms, listed in the `background`
+field of `entry.json`) and on that family separation.
 
 ## 0. Notation and the residual arrays
 
@@ -31,6 +38,14 @@ This keeps the sum per edge and non-negativity (δ is the minimum). On edge i, a
 arc 2i + 1 on P lowers f_i by δ, so each inner vertex x_j receives δ more net inflow through the arc (x_{j−1}, x_j)
 and sends δ more net outflow through (x_j, x_{j+1}): conservation holds, and the net outflow of s rises by δ.
 The paths used are simple (§2, §4), so no arc occurs twice on P. ∎
+
+**Cost model.** Running times count elementary operations, each O(1): indexing and assigning list entries, appending to
+a list, `deque.append` and `deque.popleft` (O(1) per the documentation of `collections.deque`), comparisons, and
+arithmetic on capacities and flow values; creating a list of length k costs O(k), and the built-in `min` over a path of
+k arcs costs O(k). Arithmetic on capacities and flow values is counted as unit cost. In the harness every capacity is
+at most 100 and every flow value at most 100·E, so these are machine-size integers; for arbitrary integer capacities
+the bounds count arithmetic operations. *Reads* (section 10) are particular elementary operations, so a lower bound
+on reads is a lower bound on time.
 
 ## 1. Lemma M (max-flow min-cut, from the residual graph)
 
@@ -118,7 +133,10 @@ admissible arcs remains. Every phase that starts with t reachable makes at least
 loop it passes an arc that is not admissible at that moment, which stays non-admissible (B1). At a retreat from a
 vertex x (the DFS stood at x with `it[x]` at the end of `adj[x]` and x ≠ t, since t is handled first), every arc of
 x is non-admissible or leads to a dead vertex by (ii) for x, so x is dead; the pointer of x's predecessor then
-passes the arc into x, which leads to a dead vertex, and stays so (B1). When the phase ends, (ii) for s says that s
+passes the arc into x, which leads to a dead vertex, and stays so (B1). That arc is the one at `it[u]` of the
+predecessor u: between the advance from u along it and this retreat, the DFS visited only vertices of higher level
+than u (levels rise by 1 along `path`, so u does not reappear on it) and made no augmentation (an augmentation clears
+`path`), so `it[u]` did not move. When the phase ends, (ii) for s says that s
 is dead. At the start of the phase a shortest residual s–t path is a path of admissible arcs, so s is not dead;
 admissibility changes only through augmentations, so at least one augmentation happened. ∎
 
@@ -205,3 +223,95 @@ cuts (enumerated in the test, independently of the harness) on 152 seeded networ
 generator, including zero capacities, parallel and antiparallel edges and unreachable t. The validator's V1 run
 (`python tools/validate.py pairs/max-flow-edmonds-karp-vs-dinic`, n = 2..10, 12, 14 with the cut-enumeration
 oracle) checks the same on its battery.
+
+## 9. The random family of `generate_scaling`
+
+`generate_scaling(n, rng)` in `harness.py` runs over u = 0, …, n − 1 and, inside, v = 0, …, n − 1. For u ≠ v it
+evaluates `rng.random() < 0.5` and, only if that holds, calls `rng.randint(1, 100)` and appends the edge (u, v) with
+that capacity. It returns (n, 0, n − 1, edges), with the edges in the order of the loops.
+
+**Model 𝔊ₙ.** Vertices 0, …, n − 1, s = 0, t = n − 1; every ordered pair (u, v) with u ≠ v is an edge independently
+with probability ½, and its capacity is independent of everything else and uniform on {1, …, 100}.
+
+**Assumption R (ideal random bits).** The successive values of `rng.random()` are independent and uniform on
+{k·2⁻⁵³ : 0 ≤ k < 2⁵³}, the successive values of `rng.randint(1, 100)` are independent and uniform on {1, …, 100}, and
+the two sequences are independent. This idealizes the Mersenne Twister generator behind `random.Random`, which is not
+analysed here; the assumption is listed in the `background` field.
+
+**Lemma G.** Under Assumption R, `generate_scaling(n, rng)` has the law 𝔊ₙ. Every instance, whatever the random
+values, has no loops, no parallel edges (each ordered pair is visited once) and capacities in {1, …, 100}.
+
+*Proof.* Each ordered pair (u, v), u ≠ v, uses its own call of `random()`, and it is an edge iff that value is < ½,
+which has probability P(k < 2⁵²) = ½. A capacity is drawn only for an edge, by its own call of `randint`. Distinct
+pairs use distinct calls, so the indicators are independent, and the capacities are independent of the indicators
+and of each other. The structural facts hold because the loops visit each ordered pair u ≠ v exactly once. ∎
+
+**Check.** `tests/test_proofs_maxflow.py`, class `RandomModel`: with a `random.Random` subclass that records every call,
+`generate_scaling` makes exactly one `random()` call per ordered pair u ≠ v in loop order, a `randint(1, 100)` call
+right after it exactly when the value is < ½, and returns exactly these edges with these capacities, s = 0 and t = n − 1
+(n = 2, 3, 5, 10, 25, 60; 4 seeds each). It also checks, as a check of the premise on these seeds only, that every value
+of `random()` is a multiple of 2⁻⁵³.
+
+## 10. Separation on the random family
+
+The separation uses three theorem notes of this repository, which prove their statements for exactly the model 𝔊ₙ
+and for these two implementation files:
+[max-flow-random-dense-trivial-min-cut](../../theorems/max-flow-random-dense-trivial-min-cut/) (Theorem 1 and the tail
+inequalities A1–A4 of its appendix),
+[max-flow-random-dense-dinic-short-residual-paths](../../theorems/max-flow-random-dense-dinic-short-residual-paths/)
+(Lemmas 1–3, Theorems 4 and 5, Corollary 7), and
+[max-flow-random-dense-edmonds-karp-cubic-reads](../../theorems/max-flow-random-dense-edmonds-karp-cubic-reads/)
+(Theorems 1, 2 and 4).
+
+**Reads.** For Edmonds–Karp, the executions of `v = to[e]` in its breadth-first search; for Dinic, the executions of
+`v = to[e]` in its breadth-first search plus the executions of the first `e = arcs[it[u]]` (current-arc scans). Each
+read is an elementary operation (section 0).
+
+**Theorem S.** Let the network be drawn from 𝔊ₙ. For every n ≥ 21 793, with probability at least 1 − 5/n, both
+(a) and (b) hold:
+
+(a) Edmonds–Karp makes at least 0.011·n³ reads, so it runs at least 0.011·n³ elementary operations;
+(b) Dinic makes at most 7 breadth-first searches and at most 26·n(n − 1) + 600(n − 1) ≤ 27·n² reads, and it runs in
+O(n²) time (an absolute constant times n²).
+
+On that event Edmonds–Karp makes at least (0.011/27)·n ≥ 4·10⁻⁴·n times as many reads as Dinic. On every instance of
+the family (whatever the random values) both implementations run in O(n³) time (Theorem F).
+
+*Proof.* By Lemma G, every instance has n vertices, no parallel edges and capacities in {1, …, 100}, which is the
+setting of the deterministic theorems of the notes.
+
+(a) Theorem 2 of the Edmonds–Karp note with p₁ = p₂ = 1/n: for every n ≥ 40 at which both factors of ℓ are
+positive (every n ≥ 98), except with probability 2/n + B(n) ≤ 3/n (B(n) ≤ 1/n for n ≥ 40 by Theorem 1(b) of the
+trivial-min-cut note), Edmonds–Karp makes at least ℓ(n)·n³ reads; ℓ is non-decreasing on that range and
+ℓ(21 793) ≥ 0.0112. So for n ≥ 21 793 it makes at least 0.0112·n³ ≥ 0.011·n³ reads.
+
+(b) Theorem 5 of the Dinic note with p = 1/n: for every n ≥ 21 793 the events 𝒫₁(k_s) and 𝒫₂(k_s + 1, ⌈n/2⌉) hold
+except with probability 2/n. On them, Theorem 4 of that note bounds every residual s–t distance by 6, so (Corollary 7)
+Dinic has at most 6 phases with t reachable, each with level[t] ≤ 6, and P ≤ 7 breadth-first searches, and its reads
+are at most 26E + 600(n − 1) ≤ 26n(n − 1) + 600(n − 1); for n ≥ 600 this is ≤ 26n² + 600n ≤ 27n². For the time: by the
+proof of Theorem DI, building the arrays costs O(V + E) and a phase with A_p augmentations and ℓ_p = level[t] costs
+O(V + E + ℓ_p·A_p); the final search costs O(V + E). With at most 6 phases, ℓ_p ≤ 6 and Σ_p A_p ≤ F ≤ 100(n − 1)
+(Theorem F), the total is O(7(V + E) + 6F) = O(n²), since V + E ≤ n².
+
+The union of the two exceptional events has probability ≤ 3/n + 2/n = 5/n. On the complement,
+0.011·n³ = (0.011/27)·n·27n² ≥ 4·10⁻⁴·n·(Dinic reads). The last sentence of the theorem is Theorem F(d). ∎
+
+**Corollary S (Edmonds–Karp's worst case for capacities ≤ 100).** For every n ≥ 1000 there is a network with n
+vertices, capacities in {1, …, 100} and no parallel edges on which Edmonds–Karp makes at least 0.0049·n³ reads. With
+Theorem F, its worst-case running time over such networks with n vertices is Θ(n³).
+
+*Proof.* By Theorem 2 of the Edmonds–Karp note (p₁ = p₂ = 1/n), the event "at least ℓ(n)·n³ reads" has probability at
+least 1 − 3/n > 0 in 𝔊ₙ, and ℓ(n) ≥ ℓ(1000) ≥ 0.0049 for n ≥ 1000; every outcome of 𝔊ₙ is such a network. The upper
+bound O(n³) is Theorem F(d) with E ≤ n(n − 1). ∎
+
+**What is not proved.** No worst-case separation: over networks with capacities ≤ 100 and no parallel edges,
+Dinic's proved worst-case bound is O(V·E) = O(n³) as well (Theorem F(d), E ≤ n(n − 1)), and over all networks the proved bounds are the
+upper bounds O(V·E²) and O(V²·E); no lower bound for Dinic beyond the trivial one is proved. Theorem S says nothing
+about n < 21 793, in particular nothing about the sizes at which the entry's tests and probe run (n ≤ 160), and it is
+about the model 𝔊ₙ under Assumption R, not about the Mersenne Twister.
+
+**Checks.** The probability bounds and constants of the notes are evaluated, with certified rounding, by their
+`verify.py` scripts (`theorems/max-flow-random-dense-*/verify.py`), which also check every deterministic step on seeded
+instances of `generate_scaling` against the unchanged implementations; the correspondence between the generator and
+𝔊ₙ is checked by the class `RandomModel` (section 9). The class `MeasuredCounts` reproduces the measured counts quoted
+in `entry.json` (verification) on the probe's instances; those counts are data, not part of the proof.

@@ -1,0 +1,268 @@
+{
+  "id": "max-heap-orderings-dp-vs-knuth-window-vs-heap-formula",
+  "title": "Maximum number of heap orderings of a binary tree (minimum hook product): DP over the root split vs Knuth's root window vs the heap formula",
+  "problem_statement": "Given N >= 0, compute H(N) = min over all binary trees T with N nodes of prod_{v in T} |T_v|, where |T_v| is the number of nodes in the subtree rooted at v (the hook product; H(0) = 1, the empty product). A heap ordering of T is a labelling of its nodes by 1..N that increases along every path away from the root. By the hook length formula for trees (proved in PROOFS.md, section 1), T has exactly N! / prod_v |T_v| heap orderings, so the maximum number of heap orderings of a binary tree with N nodes is N! / H(N). Binary trees are ordered (every node has a left and a right subtree, possibly empty). The instance is the pair (N, one), where one is the number 1, the hook product of the empty tree, in the integer type used for the computation (a Python int; the V2 harness passes a counting integer).",
+  "input": {
+    "parameter": "n = N, the number of tree nodes (a value: the input is the single integer N).",
+    "size_measure": "The input is the integer N, ceil(log2(N+1)) bits. Complexities are stated in the VALUE N and count multiplications and comparisons of hook-product values as unit cost; these values are integers of at most 4N bits (PROOFS.md, section 7). See caveats for the bit-size view."
+  },
+  "algorithms": [
+    {
+      "name": "dynamic program over the root split",
+      "idea": "A tree with d nodes is a root with subtrees of t and d - 1 - t nodes, and its hook product is d times the two subtree products; so H(d) = d * min over t of H(t) * H(d-1-t), filled for d = 1..N.",
+      "model": "classical-deterministic",
+      "pseudocode": "H[0] = one; for d = 1..N: best = min over t = 0..d-1 of H[t] * H[d-1-t]; H[d] = d * best; return H[N]",
+      "time_complexity": "Theta(N^2) on every input: exactly N(N+3)/2 multiplications and N(N-1)/2 comparisons of hook-product values, N(N+1) in total (PROOFS.md, sections 6.1 and 8)",
+      "space_complexity": "Theta(N) values of at most 4N bits each for N >= 1 (the list h of N + 1 values; at N = 0 the single value 1; PROOFS.md, sections 7 and 8)",
+      "correctness": "Optimal substructure: all factors are positive, so for a fixed root split t the smallest hook product is d * H(t) * H(d-1-t), and H(d) is the minimum over t (induction on d; PROOFS.md, section 2). Counts read off the code: size d makes d candidate products, d - 1 comparisons and one final multiplication; summing over d = 1..N gives N(N+3)/2 and N(N-1)/2 (PROOFS.md, section 6.1).",
+      "implementation": "implementations/dp.py:min_hook_product_dp",
+      "harness": {
+        "v1_max_n": 600,
+        "scaling": {
+          "cost": "n*(n+1)",
+          "n_values": [
+            16,
+            32,
+            64,
+            128,
+            256
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n",
+            "n*log(n)",
+            "n**1.5",
+            "n**2*log(n)",
+            "n**3"
+          ],
+          "shape": {
+            "sequence": "consecutive",
+            "n_range": [
+              1,
+              24
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "Knuth's restricted root window (largest tie rule)",
+      "idea": "Keep the chosen split tau(d-1) and try only t in {tau(d-1), tau(d-1) + 1} for size d, taking the largest minimiser; for this weight the window always contains an optimal split, and the run follows the heap's left subtree size L(d).",
+      "model": "classical-deterministic",
+      "pseudocode": "H[0] = one; tau = -1; for d = 1..N: W = [max(tau, 0), min(tau + 1, d - 1)]; best, tau = (min, largest argmin) over t in W of H[t] * H[d-1-t]; H[d] = d * best; return H[N]",
+      "time_complexity": "Theta(N) on every input: exactly 3N - 1 multiplications and N - 1 comparisons of hook-product values for N >= 1 (4N - 2 in total; none for N = 0) (PROOFS.md, sections 6.2 and 8)",
+      "space_complexity": "Theta(N) values of at most 4N bits each for N >= 1 (the list h of N + 1 values; at N = 0 the single value 1; PROOFS.md, sections 7 and 8)",
+      "correctness": "Proposition W (PROOFS.md, sections 4 and 5): the run is the one-dimensional restricted run of the repository note theorems/knuth-window-concave-length-weights for the concave, strictly increasing length weight h(s) = ln s (sum form C(d) = ln H(d); products compare like sums of logarithms, ties included). That note's Theorem 1 with its Remark (i), whose proof is written out there, gives exact values and the trajectory tau(d) = L(d), the left subtree size of the heap-shaped tree. Counts read off the code: one candidate for d = 1, two for every d >= 2, since the window keeps 0 <= tau(d-1) <= d - 2 (PROOFS.md, section 6.2).",
+      "implementation": "implementations/knuth_window.py:min_hook_product_window",
+      "harness": {
+        "scaling": {
+          "cost": "4*n - 2",
+          "n_values": [
+            64,
+            256,
+            1024,
+            4096,
+            16384
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "sqrt(n)",
+            "log(n)",
+            "n*log(n)",
+            "n**1.5",
+            "n**2"
+          ],
+          "shape": {
+            "sequence": "consecutive",
+            "n_range": [
+              1,
+              24
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "heap formula (hook product of the heap-shaped tree)",
+      "idea": "The heap-shaped tree (array layout, levels filled from the left) is the optimal shape, and its root subtrees are again heap-shaped with L(d) and d - 1 - L(d) nodes; a memoised recursion P(d) = d * P(L(d)) * P(d - 1 - L(d)) reaches only O(log N) distinct sizes.",
+      "model": "classical-deterministic",
+      "pseudocode": "P(d) = one if d <= 1, else d * P(L(d)) * P(d - 1 - L(d)), memoised, with L(d) = 2^(H-1) - 1 + min(e, 2^(H-1)) for d + 1 = 2^H + e, 0 <= e < 2^H; return P(N)",
+      "time_complexity": "Theta(log N) on every input N >= 2: 2 multiplications per distinct size >= 2 reached, at most 4 floor(log2(N+1)) - 2 and at least 2 (floor(log2((N+1)/3)) + 1) multiplications and no comparisons of hook-product values (PROOFS.md, section 6.3); exactly 4k - 4 for N = 2^k (k >= 2), and exactly 4k - 2 for N = 3 * 2^(k-1) (k >= 1); for k >= 2 this is the bound 4 floor(log2(N+1)) - 2; O(log N) further word operations on sizes d <= N (PROOFS.md, section 8)",
+      "space_complexity": "O(log N) memoised values (one per distinct size >= 2 reached, at most 2 floor(log2(N+1)) - 1 for N >= 1) and recursion depth at most 2 floor(log2(N+1)) for N >= 1 (at N = 0: no memoised value, depth 1) (PROOFS.md, section 8)",
+      "correctness": "Theorem H (PROOFS.md, section 4): the heap-shaped tree attains H(N); this is the case h = ln of Lemma E of the repository note theorems/knuth-window-concave-length-weights (proofs written out there; the translation is in PROOFS.md, section 4). The root subtrees of the heap layout are heap-shaped with L(d) and d - 1 - L(d) nodes (PROOFS.md, section 3, Lemma H), so the memoised recursion computes the hook product of the heap-shaped tree (section 5). Count: PROOFS.md, section 6.3 (one root subtree of a heap is always perfect).",
+      "implementation": "implementations/heap_formula.py:min_hook_product_heap",
+      "harness": {
+        "scaling": {
+          "cost": "4*log2(n) - 4",
+          "n_values": [
+            8,
+            32,
+            128,
+            512,
+            2048,
+            8192,
+            32768,
+            131072
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "sqrt(n)",
+            "n**0.25",
+            "log(n)**2",
+            "n"
+          ],
+          "shape": {
+            "sequence": "doubling",
+            "n_range": [
+              4,
+              65536
+            ],
+            "note": "The V2 family is N = 2^k, where the count is exactly 4k - 4 (k >= 2)."
+          }
+        }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "The DP tries every root split for every size: Theta(N^2). The heap-shaped tree is optimal (PROOFS.md, section 4, Theorem H), and Knuth's restricted window with two candidates per size is exact for this weight (Proposition W, same section): Theta(N). Evaluating the hook product of the heap-shaped tree directly needs O(log N) multiplications: Theta(log N). Exact counts of multiplications plus comparisons of hook-product values: N(N+1); 4N - 2 (N >= 1); at most 4 floor(log2(N+1)) - 2 (N >= 2), exactly 4k - 4 for N = 2^k (k >= 2). All three return H(N); the maximum number of heap orderings is N!/H(N).",
+  "background": [
+    {
+      "statement": "The GFB tree is the unique minimiser of the product over internal vertices of (n_v + c), for every c > -2, among rooted binary trees with n leaves (n_v = leaves below v); the GFB tree is the complete tree, which is the heap-shaped tree of this entry (PROOFS.md, section 3, Lemma H(4)). With c = -1 and n = N + 1 this is the uniqueness of the optimal shape. Not used in the proofs; PROOFS.md section 10 derives window exactness from it as a conditional remark.",
+      "source": "Cleary, Fischer & St. John 2025 (Corollary 7, Lemma 22)"
+    },
+    {
+      "statement": "Explicit formula for the minimum of the product over internal vertices of (n_v + c): the product over i = 2..n of (i + c)^(a_n(i)), with a_n(i) the number of subtrees of the GFB tree with i leaves, given by a case formula. The V1 oracle uses it with c = -1 as a consistency check for 20 < N <= 5000; no claim rests on it.",
+      "source": "Cleary, Fischer & St. John 2025 (Theorem 17, Corollary 18)"
+    },
+    {
+      "statement": "The restricted root window was introduced for optimal binary search trees.",
+      "source": "Knuth 1971"
+    }
+  ],
+  "sources": [
+    {
+      "authors": "Cleary, S.; Fischer, M.; St. John, K.",
+      "year": 2025,
+      "title": "The GFB tree and tree imbalance indices",
+      "venue": "Bulletin of Mathematical Biology 87(10)",
+      "doi": "10.1007/s11538-025-01522-1",
+      "arxiv": "2502.12854",
+      "note": "Credit: Corollary 7 (c = -1) states that the GFB tree, which their Lemma 22 identifies with the complete tree (the heap-shaped tree, PROOFS.md section 3, Lemma H(4)), is the unique minimiser of prod over internal vertices of (n_v + c) among unlabeled rooted binary trees with n leaves; Corollary 10 states it for the s-hat shape statistic sum log(n_v - 1). Theorem 17 and Corollary 18 give explicit formulas for the minimum, used by the V1 oracle as a consistency check. The entry's proofs do not rest on this paper."
+    },
+    {
+      "authors": "Knuth, D. E.",
+      "year": 1971,
+      "title": "Optimum binary search trees",
+      "venue": "Acta Informatica 1(1), 14-25",
+      "doi": "10.1007/BF00264289",
+      "note": "Credit: the restricted root window, introduced for optimal binary search trees."
+    }
+  ],
+  "provenance": {
+    "class": "literature",
+    "bases": [
+      "Cleary, S.; Fischer, M.; St. John, K. (2025). The GFB tree and tree imbalance indices. Bulletin of Mathematical Biology 87(10), doi:10.1007/s11538-025-01522-1 (arXiv:2502.12854). Corollary 7 with c = -1, Corollary 10, Lemma 22."
+    ],
+    "note": "Credit for the optimal tree: Cleary, Fischer & St. John (2025). The entry's proofs are written out in PROOFS.md and, for Theorem H and Proposition W, in the repository note theorems/knuth-window-concave-length-weights (case h = ln). The exactness of Knuth's window for this weight was not found stated in the sources read; with the uniqueness of the optimal shape (Cleary, Fischer & St. John, Corollary 7 with Lemma 22) it follows in a few lines (PROOFS.md, section 10, conditional on that cited result). The proof used here is the case h = ln of the repository note knuth-window-concave-length-weights, whose provenance is undetermined (it may be our own result) because sources that might contain its general statement could not be read; this does not concern its proof."
+  },
+  "verification": {
+    "level": "V2",
+    "method": "V1: the three implementations agree with each other and with an independent oracle in harness.py on N = 0..40 and 16 larger sizes up to 5000 (the DP up to N = 600; one instance per N, since the instance is determined by N). The oracle has two tiers: for N <= 20 it enumerates the set of hook products of all binary trees with N nodes (every value of every tree, built bottom-up) and requires the minimum; for N <= 5000 it requires, as a consistency check, the explicit formula of Cleary, Fischer & St. John (2025), Corollary 18 with c = -1, with the subtree counts of their Theorem 17 computed from the case formula. experiments/2026-10-07_heap_orderings_checks.py: (A) the hook length formula by counting all N! labellings of every binary tree with N <= 7 nodes (626 trees), and by the binomial recurrence for every tree with N <= 11 nodes (82 500 trees); (B) Theorem H by enumerating every binary tree with N <= 13 nodes (742 900 at N = 13): the minimum hook product is that of the heap-shaped tree; maxima of N!/H(N) for N = 1..13: 1, 1, 2, 3, 8, 20, 80, 210, 896, 3360, 19200, 79200, 506880; (C) DP = window = heap formula for every N <= 300 and N = 600, window = heap formula = the explicit formula for N <= 5000, = the minimum over all hook products for N <= 20; L(d) is an optimal root split for every d <= 600, and T(d) is contained in {L(d), R(d)} for d <= 600 (the hypothesis of the conditional remark in PROOFS.md section 10); the window chooses L(d) for every d <= 5000; (D) the formula for L(d) against the array layout, L(d) - L(d-1) in {0, 1}, d - 1 - L(d) <= L(d) and 'one root subtree is perfect' for d <= 20 000, and the heap layout equals the complete tree for d < 600; (E) the exact counts below; (F) 2^((N-1)/2) <= H(N) < 2^(4N) for N <= 5000, and H(d) <= H(d+1) for d < 5000; (G) every value multiplied or compared by the implementations is at most H(N) or a product H(t) H(t') with t + t' <= N - 1 (N <= 120) and has at most 4N bits (N <= 120 for the DP, 1000 for the window, 2000 for the heap formula), the heap formula's memo has |A(N)| entries and its recursion depth is at most |A(N)| + 1 (N <= 20 000), the DP and the window keep N + 1 values (N <= 300); (O) oracle control: 307 of 307 deliberately wrong values rejected (true value +- 1, twice the true value, the hook products of the path and of the maximally balanced tree, wrong types), 48 of 48 true values accepted. V2 (measure 'reported'): generate_scaling gives (N, CountingInt(1)); CountingInt counts every multiplication and comparison in which a hook-product value takes part, the implementations unchanged. DP: exactly N(N+1) = N(N+3)/2 multiplications + N(N-1)/2 comparisons (checked for N = 0..300), fit on N = 16..256. Window: exactly 4N - 2 = (3N - 1) + (N - 1) (checked for N = 1..300), fit on N = 64..16384. Heap formula: 2 multiplications per distinct size >= 2, between 2 (floor(log2((N+1)/3)) + 1) and 4 floor(log2(N+1)) - 2 (checked for every N <= 20 000), exactly 4k - 4 at N = 2^k (checked for k = 2..20) and 4k - 2 at N = 3 * 2^(k-1) (k = 1..20; the upper bound is attained for k >= 2, and at N = 2), fit on N = 2^3..2^17. Fits and rivals: see the README table. Every check line of the script starts with [PASS] or [FAIL], and the run ends with ALL CHECKS PASSED. PROOFS.md proves every claim of the entry and names the checks of each. tests/test_entry_heap_orderings.py repeats the essential checks.",
+    "artifacts": [
+      "PROOFS.md",
+      "implementations/dp.py",
+      "implementations/knuth_window.py",
+      "implementations/heap_formula.py",
+      "harness.py",
+      "../../experiments/2026-10-07_heap_orderings_checks.py",
+      "../../tests/test_entry_heap_orderings.py",
+      "../../theorems/knuth-window-concave-length-weights/README.md",
+      "../../theorems/knuth-window-concave-length-weights/verify.py"
+    ],
+    "proofs": [
+      "Hook length formula for trees (PROOFS.md, section 1): written proof by induction.",
+      "Theorem H (the heap shape is optimal) and Proposition W (window exact, trajectory L(d)): the case h = ln of Lemma E and Theorem 1 with Remark (i) of the repository note theorems/knuth-window-concave-length-weights (written proofs there); translation written in PROOFS.md, section 4.",
+      "DP recurrence, layout facts (Lemma H), correctness of the three implementations, sizes of the values (Lemma B), exact counts (sections 6.1 to 6.3, Lemma C), time and space, oracle facts (PROOFS.md, sections 2, 3, 5 to 9): written proofs."
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      63,
+      64,
+      65,
+      100,
+      127,
+      128,
+      129,
+      255,
+      256,
+      257,
+      511,
+      512,
+      600,
+      1000,
+      2048,
+      5000
+    ],
+    "trials": 1
+  },
+  "caveats": "Bit-size view: the input is the integer N (ceil(log2(N+1)) bits), so the DP and the window are exponential in the input length, like the DP of fibonacci-naive-vs-dp. The output H(N) itself has Theta(N) bits (between (N-1)/2 and 4N, PROOFS.md section 7), so no algorithm is polynomial in the input length in the bit model; the stated costs count multiplications and comparisons of these integers as unit cost. The maximum number of heap orderings N!/H(N) needs N! and one exact division, which are not counted. The heap formula also does O(log N) word operations on node counts d <= N (bit length, shifts) to compute L(d); they are not counted. The window is implemented and proved with the largest tie rule; no claim is made for other tie rules. No lower bound for the problem is claimed.",
+  "notes": "Relation to the repository note theorems/knuth-window-concave-length-weights: in sum form C(d) = ln H(d) satisfies C(d) = ln d + min_t [C(t) + C(d-1-t)], the one-dimensional recurrence of that note with the concave, strictly increasing length weight h(s) = ln s, and the window here is that note's restricted run; the note's proofs give Theorem H and Proposition W (PROOFS.md, section 4). That note's provenance is undetermined (unread sources might contain its general statement); this concerns its provenance, not its proof. The DP is the one-dimensional analogue of the optimal-BST recurrence (optimal-bst-recursion-vs-dp-vs-knuth).",
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "../../theorems/knuth-window-concave-length-weights/README.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-07_heap_orderings_checks.py",
+      "../../tests/test_entry_heap_orderings.py",
+      "../../theorems/knuth-window-concave-length-weights/verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

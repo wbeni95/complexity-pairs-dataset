@@ -150,7 +150,7 @@
       "type": "string"
     },
     "provenance": {
-      "description": "Whose result the entry is (optional; absent means 'literature'). 'literature': the result is in the cited literature and was re-proved or re-checked here. 'own': no prior literature was found after a documented search. 'own-extension': an own generalization or sharpening of the cited base result(s). 'pending': an inaccessible source might already cover the result (see pending_note).",
+      "description": "Whose result the entry is (optional; absent means 'literature'). 'literature': the result is in the cited literature and was re-proved or re-checked here. 'own': no prior literature was found after a documented search. 'own-extension': an own generalization or sharpening of the cited base result(s). 'undetermined': probably an own result, but a source that might already contain it could not be read (needs pending, pending_note and missing_sources). 'pending': a source that could not be read might already cover the result (see pending_note); only with 'literature' or 'undetermined'. 'missing_sources': the sources that could not be read, listed exactly; only with pending.",
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -161,7 +161,8 @@
           "enum": [
             "literature",
             "own",
-            "own-extension"
+            "own-extension",
+            "undetermined"
           ]
         },
         "bases": {
@@ -178,6 +179,14 @@
         "pending_note": {
           "type": "string",
           "minLength": 10
+        },
+        "missing_sources": {
+          "description": "The sources that might already contain the result but could not be read; required (non-empty) for 'undetermined', allowed only with pending. Listed in the README section 'Sources we could not read'.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/missing_source"
+          }
         },
         "note": {
           "type": "string"
@@ -533,6 +542,69 @@
         },
         "note": {
           "type": "string"
+        }
+      }
+    },
+    "missing_source": {
+      "description": "A source that might already contain the result but could not be read, listed exactly: the full reference, a DOI or a URL, why it could not be read, and what reading it would decide.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authors",
+        "year",
+        "title",
+        "venue",
+        "status",
+        "needed_for"
+      ],
+      "anyOf": [
+        {
+          "required": [
+            "doi"
+          ]
+        },
+        {
+          "required": [
+            "url"
+          ]
+        }
+      ],
+      "properties": {
+        "authors": {
+          "type": "string",
+          "minLength": 1
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 1800,
+          "maximum": 2100
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "venue": {
+          "type": "string",
+          "minLength": 1
+        },
+        "doi": {
+          "type": "string",
+          "pattern": "^10\\.\\d{4,9}/\\S+$"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://\\S+$"
+        },
+        "status": {
+          "description": "Why it could not be read, e.g. 'publisher site refused automated access', 'not consultable until 2050', 'no open-access copy found'.",
+          "type": "string",
+          "minLength": 10
+        },
+        "needed_for": {
+          "description": "What reading it would decide.",
+          "type": "string",
+          "minLength": 10
         }
       }
     },

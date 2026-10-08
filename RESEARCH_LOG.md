@@ -1437,3 +1437,79 @@ Ledger: [ledger/runs/20261008T021841Z.json](ledger/runs/20261008T021841Z.json). 
   - The errata changed check scripts and texts only; no measured number changed.
 - **Unit tests:** 763 OK. **Citations:** 244 identifiers, 0 problems. **Index:** up to date.
 - **Replay:** `python tools/replay_proofs.py` passed 163 of 163 commands, and fully replayed all 64 marked items, now judging every check by its exit code and its `[FAIL]` lines.
+
+### RL-112 · DECISION · A provenance class for results that are probably ours but could not be settled; wall-clock time recorded next to every exact-count series of a recorded run
+- **The class `undetermined` (🟡⏳ "Undetermined (may be our own result)").** It is for a result that is probably our own, where a source that might already contain it could not be read.
+  - The yellow dot says the result is probably our own finding.
+  - The hourglass says the classification is open because the literature could not be fully checked.
+  - Such an item has `pending: true`, a `pending_note`, and `missing_sources`: each unread source with its exact citation, a DOI or URL, why it could not be read, and what reading it would decide.
+  - Its text says what it proves beyond the sources that were read, that it may be our own result, and that this could not be checked.
+- **Sources we could not read.** The repository README lists every missing source, with an invitation: readers who have access can tell us whether a source contains the result, or point to an open-access copy.
+- **`pending` on literature items.** `literature` with `pending: true` (⏳) remains for a result that is itself in the literature, where only a detail could not be verified. `no-integral-form-z-half-schemes` is such a note: its source states the result, but the schemes it concerns could not be identified with the pinned files.
+- **No own label is ever pending.** The validator enforces these rules for entries and theorem notes, and theorems/meta.schema.json also encodes them for the notes.
+- **Steps and time together.** Exact operation counts stay this dataset's evidence. Wall-clock seconds are the industry-standard view used to compare with standard benchmarks.
+  - `tools/validate.py --scaling --record` (as run by `tools/check_all.py --record`) now times every exact-count series on the same instances and stores the seconds next to the counts, in the ledger run.
+  - This timing is informational: it runs after the verdicts and never changes one (`--no-timing` skips it). REPRODUCING.md describes it.
+
+### RL-113 · VERIFIED · Twenty new items with the check mark: own results, own extensions, undetermined results and literature items
+**The items.** Twenty new items, 7 pairs and 13 theorem notes, each with our own written proof of every claim and deterministic checks listed in its `proof` field. The published max-flow pair also gets the check mark (RL-114).
+- **Own results (🟠):**
+  - the endpoint law for split-dependent weights;
+  - the three merge-cost pairs (larger part, imbalance, smaller part);
+  - the count of X² + C representations;
+  - the four candidates for X^d + C;
+  - Edmonds–Karp's cubic reads on random dense networks;
+  - exactness of binary powering in magmas;
+  - compressed memo keys and evaluation orders.
+- **Own extensions (🟠):**
+  - per-term 2-integrality of the two ℤ[1/2] schemes (base: Moran–Schwartz–Yuan 2026);
+  - short residual paths for Dinic on random dense networks (base: Motwani 1994);
+  - the exact iteration count of the Hungarian code (base: the O(n)-per-row bound).
+- **Undetermined (🟡⏳):**
+  - the exact pruning rule and the state bounds for repeat slots;
+  - the trivial minimum cut on random dense networks;
+  - first-match prices not being pairwise.
+- **Literature:**
+  - the repeat-slot LZ77 pair;
+  - the heap-orderings pair;
+  - the Cayley–Dickson powering pair;
+  - the para-Cayley–Dickson closed form.
+
+**Review.**
+- Each item was prepared under the rules of RL-106 and RL-112.
+- An independent referee then checked every proof step and every check, with scripts of its own, and a second check confirmed each correction the referee asked for.
+- Statements found false or wider than true during this review were corrected before publication, for example small cases at n = 0, 1 or 2, and bounds rounded in the unsafe direction.
+- Where sources had not been read, a literature-access round read 19 of them and updated the texts. None of the sources read states a result labelled own, own extension or undetermined.
+- Every check script in these items prints each check as a `[PASS]` / `[FAIL]` line and exits 1 if any check fails (RL-110); the unit-test modules fail through `python -m unittest`. Each check script was also run in a deliberately broken copy, which exited 1 with a `[FAIL]` line naming the broken check.
+
+**Dates.** These results were obtained between 2026-10-06 and 2026-10-08 and kept unpublished until their proofs and checks were complete.
+
+### RL-114 · CORRECTED · Published entries updated with this batch
+- **pairs/max-flow-edmonds-karp-vs-dinic** gets the check mark. Its T3 tag now rests on two proved things:
+  - the worst-case upper bounds proved in its PROOFS.md;
+  - a separation proved on the entry's own random networks: for every n ≥ 21 793, with probability ≥ 1 − 5/n, assuming ideal random bits, Edmonds–Karp makes ≥ 0.011·n³ reads while Dinic runs in O(n²) time.
+
+  No worst-case separation is proved, and nothing is claimed at the sizes the entry runs. Its PROOFS.md proves that, with ideal random bits, the generator draws exactly the random model of the three max-flow notes.
+- **pairs/max-cost-bst-recursion-vs-cubic-dp-vs-endpoint-dp:** the entry said that +∞ entries under max are not covered. For inclusion-monotone weights with +∞ entries and no −∞ entries, Proposition 8 of the endpoint-law note proves that the endpoint recurrence gives c on every interval and that every interval has an optimal path tree. The entry now points to it; the case with both +∞ and −∞ entries stays not covered. Its `proof` field now includes that note's README and verify.py.
+- **theorems/knuth-window-concave-length-weights:** its class changes from literature (pending) to **undetermined** (RL-112). Its `missing_sources` lists three sources:
+  - Batty–Pelling–Rogers 1982 (abstract only);
+  - Batty–Rogers 1982 (abstract only; its results known here only from a 1993 survey's report);
+  - Glassey–Karp 1976.
+
+  The mathematics and the proof field are unchanged.
+
+### RL-115 · VERIFIED · Recorded run of batch 2 (RL-112–RL-114)
+Ledger: [ledger/runs/20261008T085246Z.json](ledger/runs/20261008T085246Z.json). The run's `git_commit` field names the previous commit (`6c88a60`, dirty). The run used the tree of this commit; after the run, only `RESEARCH_LOG.md` changed (this entry).
+- **Command:** `python tools/check_all.py --record --sources`, on CPython 3.14.2 with jsonschema 4.26.0 and PYTHONHASHSEED=0.
+- **Result:** 81/81 entries pass. V1 covered 70 entries, 5691 instances and 12115 implementation runs.
+- **V2:**
+  - 151 measurements, all passing: 102 exact counts and 49 wall-clock;
+  - 266 of 266 rivals rejected;
+  - the log factor resolved in 89 fits.
+- **Supplementary timing (RL-112):** all 102 exact-count series carry wall-clock seconds measured on the same instances, with 0 timing errors.
+- **Shape diagnostic:** 65 MATCH, 6 UNDETERMINED, 0 MISMATCH, 80 SKIPPED.
+- **Stability against RL-111:**
+  - All 86 earlier exact-count series are identical to run 20261008T021841Z, value by value.
+  - The V1 counts and the levels of the 74 earlier entries are unchanged.
+- **Unit tests:** 870 OK. **Citations:** 252 identifiers, 0 problems. **Index:** up to date.
+- **Replay:** `python tools/replay_proofs.py` passed 195 of 195 commands, and fully replayed all 85 marked items.

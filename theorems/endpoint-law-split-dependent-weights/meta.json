@@ -1,0 +1,36 @@
+{
+  "id": "endpoint-law-split-dependent-weights",
+  "title": "Endpoint law for split-dependent interval weights",
+  "statement": "Let n ≥ 0 and w(i,k,j) be real for 0 ≤ i < k ≤ j ≤ n, with c(i,i) = 0 and c(i,j) = max_{i<k≤j} [w(i,k,j) + c(i,k−1) + c(k,j)]. For 0 ≤ i < a < k < b ≤ j ≤ n let Δ_R = w(i,a,j) + w(a,k,j) − w(i,k,j) − w(i,a,k−1) and Δ_L = w(i,b,j) + w(i,k,b−1) − w(i,k,j) − w(k,b,j) (the value changes of the right and left rotation at an interior root k with children a and b). Theorem 1: if at every such index tuple Δ_R ≤ 0 and Δ_L ≤ 0 imply Δ_R = 0 (condition RS3w), then for every interval (i,j) with j > i some maximum-value tree is a path tree, k = i+1 or k = j attains the maximum, and c(i,j) = max(w(i,i+1,j) + c(i+1,j), w(i,j,j) + c(i,j−1)) for j − i ≥ 2. Corollary 2: the same under RS3 (Δ_R + Δ_L ≥ 0 at every index tuple), which implies RS3w. Min forms: the same for the min-recurrence if −w satisfies RS3w. For pile sizes s_0..s_n ≥ 0 with S(x,y) = s_x + ... + s_y, the merge cost w(i,k,j) = max(S(i,k−1), S(k,j)) satisfies RS3 (Lemma 10), and w(i,k,j) = |S(i,k−1) − S(k,j)| satisfies RS3w, even in the two-sided form Δ_R = Δ_L = 0 (Lemma 11), but not RS3; so for both merge costs the maximum total cost of merging adjacent piles is computed exactly by the endpoint DP, and some optimal merge tree is a caterpillar (Corollary 12). Interval weights (the case w(i,k,j) = w(i,j)), recurrence c(i,j) = w(i,j) + max_{i<k≤j} [c(i,k−1) + c(k,j)]: RS3 becomes the rotation-sum condition RS, w(a,j) + w(i,b−1) ≥ w(k,j) + w(i,k−1) for all 0 ≤ i < a < k < b ≤ j ≤ n, so RS suffices for the endpoint law (Corollary 5). Every inclusion-monotone table satisfies RS, and RS is strictly weaker (n = 3, w(1,3) = 1, all other weights 0) and not necessary (n = 3, w(2,3) = 1, all other weights 0) (Proposition 6); the monotone case is credited to Qian & Wang (2004, Lemma 1). Lemmas 3 and 4, Theorem 1, Corollary 2, the min forms, Corollary 5 and Proposition 6(a) hold verbatim over any totally ordered abelian group (Proposition 7). For interval weights in G ∪ {+∞} that are monotone in the extended order (no −∞), some optimal tree on every interval is a path tree and the endpoint recurrence gives c on every interval (Proposition 8). RS can be tested with O(n³) comparisons and additions (Proposition 9).",
+  "provenance": {
+    "class": "own",
+    "bases": []
+  },
+  "sources": [
+    {
+      "authors": "Qian, J.; Wang, C. A.",
+      "year": 2004,
+      "title": "Maximum weight triangulation of a special convex polygon",
+      "venue": "20th European Workshop on Computational Geometry (EWCG 2004), Seville",
+      "url": "http://hdl.handle.net/11441/55702",
+      "note": "Credit: Lemma 1 (in a semi-circled convex polygon, one of the two extreme edges belongs to a maximum weight triangulation; the exchange argument of its proof uses only that nested chords are shorter). The pair entry max-cost-bst-recursion-vs-cubic-dp-vs-endpoint-dp writes the argument out for inclusion-monotone interval weights (Theorem E'); that case is credited to them. The rotation-sum condition RS (Corollary 5) and split-dependent weights are not covered by Lemma 1."
+    },
+    {
+      "authors": "Tencent Cloud developer community",
+      "year": 2020,
+      "title": "Dynamic programming: interval DP (title translated)",
+      "url": "https://cloud.tencent.com/developer/article/1697989",
+      "note": "Credit for a merge special case: code for the maximum total cost of merging adjacent piles at the cost L + R (an interval weight) that tries only the two end splits of every interval, without a proof."
+    }
+  ],
+  "verify": "python theorems/endpoint-law-split-dependent-weights/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

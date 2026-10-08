@@ -1,0 +1,172 @@
+{
+  "id": "max-merge-imbalance-cubic-dp-vs-endpoint-dp",
+  "title": "Worst-case total imbalance of merging adjacent piles (max sum of abs(L - R)): cubic interval DP vs endpoint DP",
+  "problem_statement": "Given n >= 0 and n + 1 non-negative numbers s_0, ..., s_n (pile sizes in a row; integers or rationals in the implementations), merge the row into a single pile by n merges, each of which joins two adjacent piles of sizes L (left) and R (right) into one pile of size L + R at the cost |L - R|. Compute the largest possible total cost over all merge orders. Equivalently: the maximum, over all full binary trees whose leaves are s_0, ..., s_n in this order, of the sum over the internal nodes of |L - R|, where L and R are the total sizes of the node's left and right subtree. n = 0 gives 0. With S(x, y) = s_x + ... + s_y this is c(0, n) for c(i, i) = 0, c(i, j) = max_{i<k<=j} [|S(i, k-1) - S(k, j)| + c(i, k-1) + c(k, j)].",
+  "input": {
+    "parameter": "n = number of merges (the row has n + 1 piles).",
+    "size_measure": "n + 1 non-negative numbers. Complexities count comparisons of two size-derived values (the comparison model of the entry); additions and subtractions are counted separately in the caveats."
+  },
+  "algorithms": [
+    {
+      "name": "cubic interval DP (every split)",
+      "idea": "Fill c(i, j) for the rows of piles i..j in order of increasing length; every row tries every split k, i.e. every choice of the blocks i..k-1 and k..j joined by its last merge.",
+      "model": "classical-deterministic",
+      "pseudocode": "prefix sums P; c[i][i] = 0; for L = 1..n, for i = 0..n-L: j = i + L; c[i][j] = max over i < k <= j of (|(P[k] - P[i]) - (P[j+1] - P[k])| + c[i][k-1] + c[k][j]); return c[0][n]",
+      "time_complexity": "Theta(n^3) on every input: n(n+1)(n+2)/6 candidate splits; exactly n(n+1)(2n+1)/6 comparisons, namely n(n+1)(n+2)/6 inside the merge costs |L - R| plus (n+1)n(n-1)/6 between candidate values (PROOFS.md, sections 1 and 5)",
+      "space_complexity": "Theta(n^2): the (n + 1) x (n + 1) table c and n + 2 prefix sums (PROOFS.md, section 5)",
+      "correctness": "The merge trees of the row i..j whose last merge joins i..k-1 and k..j are exactly the pairs (merge tree of i..k-1, merge tree of k..j), and such a tree costs |S(i, k-1) - S(k, j)| plus the costs of the two subtrees; induction on j - i. Correct for any sizes. Count, read off the code: a row of length L tries L splits, with one comparison inside each merge cost (|L - R| is computed as L - R or R - L after one comparison) and L - 1 comparisons between candidates; sum_{L=1..n} (n - L + 1)(2L - 1) = n(n+1)(2n+1)/6, of which (n+1)n(n-1)/6 are between candidates. Proof: PROOFS.md, sections 1 and 3.",
+      "implementation": "implementations/cubic_dp.py:merge_max_imbalance_cubic",
+      "harness": {
+        "scaling": {
+          "cost": "n*(n+1)*(2*n+1)/6",
+          "n_values": [
+            16,
+            32,
+            64,
+            128
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**2",
+            "n**2*log(n)",
+            "n**3/log(n)",
+            "n**3*log(n)",
+            "n**4"
+          ],
+          "shape": {
+            "sequence": "consecutive",
+            "n_range": [
+              1,
+              20
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "endpoint DP (two candidate splits per row)",
+      "idea": "For non-negative sizes every row has a maximising split at one of its two ends (Theorem 1 with Lemma 11), so the last merge of an optimal tree for the row i..j can be taken to join the single pile s_i or s_j to the rest: c(i, j) = max(|s_i - S(i+1, j)| + c(i+1, j), |S(i, j-1) - s_j| + c(i, j-1)).",
+      "model": "classical-deterministic",
+      "pseudocode": "as the cubic DP, but for j - i >= 2 the maximum runs over k in {i+1, j} only; c[i][i+1] = |s_i - s_(i+1)|",
+      "time_complexity": "Theta(n^2) on every input: n^2 candidate splits; exactly n(3n-1)/2 comparisons, namely n^2 inside the merge costs plus n(n-1)/2 between candidate values (PROOFS.md, sections 2 and 5)",
+      "space_complexity": "Theta(n^2): the (n + 1) x (n + 1) table c and n + 2 prefix sums (PROOFS.md, section 5)",
+      "correctness": "theorems/endpoint-law-split-dependent-weights: for split-dependent weights w(i, k, j) that satisfy the weak rotation condition RS3w (at every index tuple i < a < k < b <= j, if both rotation changes Delta_R and Delta_L are <= 0 then Delta_R = 0), every interval of the max-recurrence c(i, j) = max_{i<k<=j} [w(i, k, j) + c(i, k-1) + c(k, j)] has a maximiser k in {i+1, j} (Theorem 1; proof by rotations at the root of an optimal tree). Lemma 11 of the same note proves, for w(i, k, j) = |S(i, k-1) - S(k, j)| with all sizes >= 0, that Delta_R <= 0 and Delta_L <= 0 imply Delta_R = Delta_L = 0, so RS3w holds. This weight does not satisfy the stronger condition RS3 in general (sizes (1, 0, 1, 2): Delta_R = 2, Delta_L = -3), so Corollary 2 alone would not suffice. Restricting the maximum to the two end splits therefore does not change c(i, j), and some optimal merge tree is a caterpillar. Without the precondition the restriction can fail: sizes (0, -1, 1, 0) give the optimum 4 and the endpoint value 3. Count: one merge-cost comparison for each of the n rows of length 1, and two merge-cost comparisons plus one candidate comparison for each of the n(n-1)/2 rows of length >= 2. Proof: README, section 'Correctness of the endpoint DP', from Theorem 1 and Lemma 11 of the note; PROOFS.md, sections 2 and 4.",
+      "implementation": "implementations/endpoint_dp.py:merge_max_imbalance_endpoint",
+      "harness": {
+        "scaling": {
+          "cost": "n*(3*n-1)/2",
+          "n_values": [
+            32,
+            64,
+            128,
+            256,
+            512
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n",
+            "n*log(n)",
+            "n**1.5",
+            "n**2/log(n)",
+            "n**2*log(n)",
+            "n**3"
+          ],
+          "shape": {
+            "sequence": "consecutive",
+            "n_range": [
+              1,
+              24
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "The cubic interval DP tries all splits of every row, Theta(n^3); for non-negative sizes the endpoint law (Theorem 1 with Lemma 11) leaves two candidate splits per row, which gives Theta(n^2). Exact comparison counts on every input: n(n+1)(2n+1)/6 vs n(3n-1)/2 (each merge cost |L - R| counted as one comparison); counting only the comparisons between candidate values, (n+1)n(n-1)/6 vs n(n-1)/2. Proofs: PROOFS.md and theorems/endpoint-law-split-dependent-weights.",
+  "sources": [
+    {
+      "authors": "Qian, J.; Wang, C. A.",
+      "year": 2004,
+      "title": "Maximum weight triangulation of a special convex polygon",
+      "venue": "20th European Workshop on Computational Geometry (EWCG 2004), Seville",
+      "url": "http://hdl.handle.net/11441/55702",
+      "note": "Credit: Lemma 1 (in a semi-circled convex polygon, one of the two extreme edges belongs to a maximum weight triangulation), an endpoint law for Euclidean chord weights; the entry max-cost-bst-recursion-vs-cubic-dp-vs-endpoint-dp writes its exchange argument out for inclusion-monotone interval weights (Theorem E'). This entry's merge cost depends on the split. The content of Lemma 1 is background."
+    },
+    {
+      "authors": "Tencent Cloud developer community",
+      "year": 2020,
+      "title": "Dynamic programming: interval DP (title translated)",
+      "url": "https://cloud.tencent.com/developer/article/1697989",
+      "note": "Credit for a merge special case (background): code for the maximum total cost of merging adjacent piles at the cost L + R that tries only the two end splits of every row, without a proof."
+    }
+  ],
+  "provenance": {
+    "class": "own",
+    "note": "No statement of the endpoint law for this merge cost, or of the endpoint DP for this problem, was found in the literature checked (README, section 'Literature checked'). This is a statement about that search, not a claim of priority."
+  },
+  "verification": {
+    "level": "V2",
+    "method": "V1: the validator runs n = 0..10, 12, 16, 25, 40, 70 with 12 instances per n from 12 families of non-negative sizes (bits, small values with many ties, all zero, constant, wide values up to 10^6, one heavy pile, geometric, ramps, sparse, valley, peak, exact rationals). check() is an oracle written separately from the implementations: for n <= 9 it enumerates every merge tree (Catalan(n) trees) and costs it from direct sums; for 10 <= n <= 150 it checks an exact certificate (an explicit caterpillar costed from direct sums as the lower bound, and a table U accepted only if U(a, b) >= |S(a, k-1) - S(k, b)| + U(a, k-1) + U(k, b) for every split, which bounds every merge tree by induction). On every V1 instance check() certified both outputs: it returned True (the validator itself rejects an output only when check() returns False, and requires the implementations to agree), and tests/test_entry_merge_imbalance.py asserts True on the whole V1 battery (the validator's seeds, 16 sizes x 12 trials). tests/test_entry_merge_imbalance.py: exhaustive equality of the two DPs with each other and with the tree enumeration on every size vector with n <= 4 and sizes 0..4, n = 5 and sizes 0..3, and n = 6 and sizes 0..2 (10 188 vectors; every interval is covered because every contiguous sub-row is itself in the set), the exact comparison and arithmetic counts for n = 0..40 (cubic) and 0..80 (endpoint), each for all 11 integer families, the candidate-only counts (one seeded family per n, n = 0..30), the RS3 failure on sizes (1, 0, 1, 2) with the endpoint DP still exact, the table sizes and the size of the numbers (PROOFS.md sections 5 and 6), the split dependence on sizes (1, 1, 0), and the counterexamples of the caveats. Theorem 1 and Lemma 11 are tested separately by theorems/endpoint-law-split-dependent-weights/verify.py. V2 (measure 'reported'): the exact number of comparisons of two size-derived values made by the unchanged implementations, counted by the harness's CountingInt number type; generate_scaling draws one of the 11 integer families, and the counts depend on n only. Cost expressions are the exact closed forms: cubic DP n(n+1)(2n+1)/6 (n = 16..128), endpoint DP n(3n-1)/2 (n = 32..512); rivals cubic n^2, n^2 log n, n^3/log n, n^3 log n, n^4; endpoint n, n log n, n^1.5, n^2/log n, n^2 log n, n^3. No counted comparison happens inside a CPython built-in. PROOFS.md proves every claim of the entry (exact counts, correctness, time and space, the size of the numbers, the oracle, the caveats) and names the checks and ranges of each proof.",
+    "artifacts": [
+      "PROOFS.md",
+      "implementations/cubic_dp.py",
+      "implementations/endpoint_dp.py",
+      "harness.py",
+      "../../tests/test_entry_merge_imbalance.py",
+      "../../theorems/endpoint-law-split-dependent-weights/verify.py"
+    ],
+    "proofs": [
+      "PROOFS.md: every claim of the entry (exact counts: sections 1-2; correctness: 3-4; time and space: 5; size of the numbers: 6; the V1 oracle: 7; caveats: 8), with the checks and ranges of each proof.",
+      "Exactness of the endpoint DP: Theorem 1 and Lemma 11 in theorems/endpoint-law-split-dependent-weights/README.md (written proofs; not machine-checked)."
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      12,
+      16,
+      25,
+      40,
+      70
+    ],
+    "trials": 12
+  },
+  "caveats": "The endpoint DP needs non-negative sizes; the cubic DP is correct for any sizes. With a negative size the endpoint law can fail: sizes (0, -1, 1, 0) (n = 3) have the optimum 4 (the last merge joins s_0 s_1 and s_2 s_3) and the endpoint value 3. The direction matters: the same merge cost under MIN (min sum of |L - R|) is not covered, and there the endpoint DP is wrong on sizes (0, 1, 1, 0) (optimum 2, endpoint value 3). What is counted: every comparison of two size-derived values, including the one inside each merge cost |L - R| (the comparison model); counting only the comparisons between candidate values gives (n+1)n(n-1)/6 and n(n-1)/2. Additions and subtractions (exact, checked by the tests): n + 1 for the prefix sums plus 5 per candidate split (two subtractions for the block sizes, one inside |L - R|, two additions), over n(n+1)(n+2)/6 candidate splits in the cubic DP and n^2 in the endpoint DP, i.e. (n + 1) + 5n(n+1)(n+2)/6 and (n + 1) + 5n^2; index arithmetic is not counted. Theta(n^2) is the cost of the endpoint DP, not a lower bound for the problem; no lower bound is claimed. Exact arithmetic is assumed (ties are decided by exact equality); for sizes >= 0 every number the DPs compute lies between 0 and n times the total size (PROOFS.md, section 6).",
+  "notes": "The weight |S(i, k-1) - S(k, j)| depends on the split (sizes (1, 1, 0): the row 0..2 costs 0 at the split k = 1 and 2 at k = 2), and it does not satisfy the rotation condition RS3 of Corollary 2; the proof uses the weaker condition RS3w (Theorem 1). Relatives: max-merge-cost-larger-part-cubic-dp-vs-endpoint-dp (merge cost max(L, R), same counts, proof via RS3) and min-merge-cost-smaller-part-cubic-dp-vs-closed-form (merge cost min(L, R), minimised: a closed form).",
+  "background": [
+    {
+      "statement": "In a semi-circled convex polygon, one of the two extreme edges belongs to a maximum weight triangulation; the exchange argument of the proof uses only that nested chords are shorter.",
+      "source": "Qian & Wang 2004 (EWCG 2004, Seville), Lemma 1"
+    },
+    {
+      "statement": "For merging adjacent piles at the cost L + R (an interval weight, the stone-merging problem), a 2020 article on interval dynamic programming gives code for the maximum total cost that tries only the two end splits of every row, without a proof.",
+      "source": "Tencent Cloud developer community 2020, article 1697989 (code listing)"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "README.md",
+      "../../theorems/endpoint-law-split-dependent-weights/README.md"
+    ],
+    "checks": [
+      "../../tests/test_entry_merge_imbalance.py",
+      "../../theorems/endpoint-law-split-dependent-weights/verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

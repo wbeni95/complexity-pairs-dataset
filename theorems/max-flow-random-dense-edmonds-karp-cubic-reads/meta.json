@@ -1,0 +1,99 @@
+{
+  "id": "max-flow-random-dense-edmonds-karp-cubic-reads",
+  "title": "Edmonds–Karp makes Θ(n³) reads with high probability on the max-flow entry's random dense networks",
+  "statement": "Model: vertices 0..n-1, s = 0, t = n-1, M = the other m = n-2 vertices; every ordered pair is an edge independently with probability 1/2 and capacity uniform on {1..100} (generate_scaling of pairs/max-flow-edmonds-karp-vs-dinic with ideal random bits). Reads = executions of `v = to[e]` in the BFS of the entry's Edmonds-Karp code; a_v = c(s, v), b_v = c(v, t), Phi_2 = sum over M of min(a_v, b_v), D = F - c(s, t) - Phi_2, delta_M = least adjacency-list length (out- plus in-degree) of a middle vertex, mu' = E(a_v - b_v)^+ = 13433/800. Theorem 1 (deterministic, every network without parallel edges and with capacities in {1..100}): D >= 0 and reads >= delta_M D^2/20000. Theorem 2: for p1, p2 in (0, 1), y = sqrt((n-1) ln(m/p1)), x = sqrt(10^4 m ln(2/p2)/2), with probability >= 1 - p1 - p2 - B(n) (B(n) the bound on P(not C) of the trivial-min-cut note), reads >= (n-1-y)(mu' m - x)^2/20000; with p1 = p2 = 1/n, for every n >= 40, with probability >= 1 - 3/n, reads >= ell(n) n^3 whenever both factors 1 - 1/n - sqrt(2 ln n/n) and mu'(1 - 2/n) - sqrt(5000 ln(2n)/n) are positive (every n >= 98), where ell(n) = (1 - 1/n - sqrt(2 ln n/n)) (mu'(1 - 2/n) - sqrt(5000 ln(2n)/n))^2/20000; ell is non-decreasing on that range with limit mu'^2/20000 = 0.0140973...; ell(1000) >= 0.0049. Corollary 3: if D >= 200, at least floor(D/200) + 1 BFS passes each dequeue >= 1 + D/200 vertices; for n >= 40 with mu' m - x >= 200 (x for p2 = 1/n), with probability >= 1 - 3/n more than a fraction (mu' m - x)/(200(mu(n-1) + z + 1)), z = sqrt(5000(n-1) ln n), of all passes dequeue more than 1 + (mu' m - x)/200 vertices (limits 0.003325 and 0.08395625 n). Theorem 4 (every network with non-negative integer capacities): A <= F and reads <= 2E(A+1) <= 2E(F+1); on the family reads <= 2n(n-1)(100n - 99). Hence for every n >= 1000, with probability >= 1 - 3/n, 0.0049 n^3 <= Edmonds-Karp reads <= 200 n^3; with integer capacities <= 100, reads/(V E^2) <= 202/V on every network.",
+  "provenance": {
+    "class": "own",
+    "bases": []
+  },
+  "sources": [
+    {
+      "authors": "Edmonds, J.; Karp, R. M.",
+      "year": 1972,
+      "title": "Theoretical improvements in algorithmic efficiency for network flow problems",
+      "venue": "Journal of the ACM 19(2), 248-264",
+      "doi": "10.1145/321694.321699",
+      "note": "Credit for the algorithm. Only the abstract and Section 2.1 were read."
+    },
+    {
+      "authors": "Karp, R. M.; Motwani, R.; Nisan, N.",
+      "year": 1993,
+      "title": "Probabilistic analysis of network flow algorithms",
+      "venue": "Mathematics of Operations Research 18(1), 71-97",
+      "doi": "10.1287/moor.18.1.71",
+      "note": "Checked in the literature search: abstract, an author's copy of the journal text, and the 1988 report at pp. 3-5, 10, 24-27, 29. No analysis of Edmonds-Karp."
+    },
+    {
+      "authors": "Motwani, R.",
+      "year": 1994,
+      "title": "Average-case analysis of algorithms for matchings and related problems",
+      "venue": "Journal of the ACM 41(6), 1329-1356",
+      "doi": "10.1145/195613.195663",
+      "note": "Checked in the literature search: author's copy (abstract, Sections 1-1.2, k-factor section, main theorems): 0-1 flows, matchings, k-factors, Dinic; no analysis of Edmonds-Karp."
+    },
+    {
+      "authors": "Grimmett, G. R.; Welsh, D. J. A.",
+      "year": 1982,
+      "title": "Flow in networks with random capacities",
+      "venue": "Stochastics 7(3), 205-229",
+      "doi": "10.1080/17442508208833219",
+      "note": "Checked in the literature search: Sections 1 and 3 read (limit theorems for the flow value)."
+    },
+    {
+      "authors": "Grimmett, G. R.; Suen, W.-C. S.",
+      "year": 1982,
+      "title": "The maximal flow through a directed graph with random capacities",
+      "venue": "Stochastics 8(2), 153-159",
+      "doi": "10.1080/17442508208833234",
+      "note": "Checked in the literature search: read in full (limit theorems for the flow value)."
+    },
+    {
+      "authors": "Khandwawala, M.; Sundaresan, R.",
+      "year": 2010,
+      "title": "Optimal multicommodity flow through the complete graph with random edge capacities",
+      "venue": "Journal of Applied Probability 47(1), 201-215",
+      "doi": "10.1239/jap/1269610826",
+      "note": "Checked in the literature search: abstract only (a different problem)."
+    },
+    {
+      "authors": "Zadeh, N.",
+      "year": 1972,
+      "title": "Theoretical efficiency of the Edmonds-Karp algorithm for computing maximal flows",
+      "venue": "Journal of the ACM 19(1), 184-192",
+      "doi": "10.1145/321679.321693",
+      "note": "Checked in the literature search: title only; the full text could not be accessed."
+    },
+    {
+      "authors": "Waissi, G. R.",
+      "year": 1991,
+      "title": "Worst case behavior of the Dinic algorithm",
+      "venue": "Applied Mathematics Letters 4(5), 57-60",
+      "doi": "10.1016/0893-9659(91)90145-l",
+      "note": "Checked in the literature search: read in full (networks on which Dinic attains its worst case)."
+    },
+    {
+      "authors": "Naparstek, O.; Leshem, A.",
+      "year": 2014,
+      "title": "Expected time complexity of the auction algorithm and the push relabel algorithm for maximum bipartite matching on random graphs",
+      "venue": "Random Structures & Algorithms 48(2), 384-395",
+      "doi": "10.1002/rsa.20578",
+      "note": "Checked in the literature search: preprint version read (abstract, introduction; the auction algorithm)."
+    }
+  ],
+  "verify": "python theorems/max-flow-random-dense-edmonds-karp-cubic-reads/verify.py",
+  "proof": {
+    "documents": [
+      "README.md",
+      "../max-flow-random-dense-trivial-min-cut/README.md",
+      "../max-flow-random-dense-dinic-short-residual-paths/README.md",
+      "../../pairs/max-flow-edmonds-karp-vs-dinic/PROOFS.md"
+    ],
+    "checks": [
+      "verify.py",
+      "../max-flow-random-dense-trivial-min-cut/verify.py",
+      "../max-flow-random-dense-dinic-short-residual-paths/verify.py",
+      "../../tests/test_proofs_maxflow.py"
+    ],
+    "audit": "RL-113"
+  }
+}

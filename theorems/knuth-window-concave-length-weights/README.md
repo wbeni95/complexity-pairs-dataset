@@ -1,7 +1,24 @@
 # Knuth's root window is exact for concave nondecreasing length weights
 
-> **Provenance: literature (pending).** This may be an own extension of the cited results; the closest source
-> (Batty–Pelling–Rogers 1982) was not accessible, so this could not be established.
+> **Provenance: 🟡⏳ Undetermined (may be our own result).** The result of this note is probably our own finding,
+> but sources that might already contain it could not be read.
+>
+> - *What the note proves beyond the sources read.* The sources, as far as they could be read (some only through a
+>   secondary description), give the optimal value and one optimal split, the heap split, of the one-dimensional
+>   recurrence for increasing concave costs. They do not address Knuth's restricted window in the interval recurrence, the two tie rules, the trajectory of the chosen
+>   roots once h becomes constant (k_max < N), or Lemmas C, F and G; these are proved here. When h is strictly
+>   increasing, the trajectory is the heap root (Remark (i)), and the additional content is only the exactness of the
+>   window under the two tie rules. Details are in [Literature](#literature).
+> - *Sources that could not be read, and why.* Batty–Pelling–Rogers 1982, *Some recurrence relations of recursive
+>   minimization*, SIAM J. Algebraic Discrete Methods 3(1), 13–29, doi:10.1137/0603002: the full text was not
+>   accessible; only its abstract was read, and its content is known otherwise only from the description by Chen
+>   and Chen (2003). Batty–Rogers 1982, *Some maximal solutions of the generalized subadditive inequality*, SIAM
+>   J. Algebraic Discrete Methods 3(3), 369–378, doi:10.1137/0603038: the full text was not accessible; only its abstract was read, which sets up the recursion but states no result, and its results are known here only from the report of a 1993 survey by Saha and Wagh (*Minmax recurrences in analysis of algorithms*), which lists among its
+>   results, without proof, that for increasing concave g the heap split is an optimal split. Glassey–Karp 1976,
+>   *On the optimality of Huffman trees*, SIAM J. Appl. Math. 31(2), 368–378, doi:10.1137/0131030: not accessible;
+>   known only from the description by Chen and Chen (2003).
+> - Whether these sources contain the result could not be checked, so it may be our own result. If you can tell us
+>   whether one of these sources contains the result, please open an issue.
 >
 > Bases: Glassey–Karp (1976); Batty–Pelling–Rogers (1982), SIAM J. Algebraic Discrete Methods 3(1),
 > doi:10.1137/0603002; Cleary–Fischer–St. John, arXiv:2502.12854. What is known about their content, and how it
@@ -419,7 +436,7 @@ restriction of h to {1, …, n} for each n, and use Proposition 5.
   the heap root (Remark (i)), so in
   that sub-case the additional content is only the exactness of the window under the two tie rules. Whether the
   full text of Batty, Pelling and Rogers covers non-strict monotonicity, all optimal splits, ties or the window could
-  not be checked; this is why the note is marked pending.
+  not be checked; this is why the provenance of the note is undetermined.
 
 ## Scope
 

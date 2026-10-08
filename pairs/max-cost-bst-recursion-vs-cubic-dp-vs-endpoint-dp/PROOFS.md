@@ -176,7 +176,7 @@ Theorem E′ does not use them.
 | BST weights are monotone ⇔ q_{l−1} + p_l ≥ 0 (l = 1..n − 1) and p_l + q_l ≥ 0 (l = 2..n); in particular for p, q ≥ 0 (`caveats`, `algorithms[2].correctness`) | README, "When BST weights are monotone" |
 | Theorem E (the maximum-cost BST with p, q ≥ 0) | README, Corollary (Theorem E) |
 | positive key frequencies (or strict adjacent sums): every maximising root is an endpoint (`notes`) | README, Corollary (positive key frequencies) |
-| entries −∞ (monotone in the extended order): the endpoint recurrence is exact in (max, +); the mirror for +∞ under min (negate, as in Corollary 1); +∞ under max not covered (`caveats`, `verification.proofs`) | README, "Extension to −∞ entries" |
+| entries −∞ (monotone in the extended order): the endpoint recurrence is exact in (max, +); the mirror for +∞ under min (negate, as in Corollary 1); +∞ under max not covered (`caveats`, `verification.proofs`); for +∞ entries without −∞ entries a pointer to the theorem note endpoint-law-split-dependent-weights (`caveats`, README) | README, "Extension to −∞ entries"; the pointer's statement (the endpoint recurrence gives c on every interval, and every interval has an optimal path tree) is the note's Proposition 8, proved in that note |
 | no failure is possible for n ≤ 2 (README, counterexamples) | every root of an interval with at most 2 nodes is an endpoint |
 | exact comparison counts, calls, additions | sections 1–4 |
 

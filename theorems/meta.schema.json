@@ -27,7 +27,7 @@
       "required": ["class", "bases"],
       "properties": {
         "class": {
-          "enum": ["literature", "own-extension", "own"]
+          "enum": ["literature", "own-extension", "own", "undetermined"]
         },
         "bases": {
           "description": "The cited results the label rests on (short citations).",
@@ -42,6 +42,12 @@
           "description": "Which source is missing and what remains open.",
           "type": "string",
           "minLength": 10
+        },
+        "missing_sources": {
+          "description": "The sources that might already contain the result but could not be read; required (non-empty) for 'undetermined', allowed only with pending. Listed in the README section 'Sources we could not read'.",
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/missing_source"}
         }
       },
       "allOf": [
@@ -55,6 +61,18 @@
         },
         {
           "if": {"required": ["pending_note"]},
+          "then": {"required": ["pending"], "properties": {"pending": {"const": true}}}
+        },
+        {
+          "if": {"properties": {"pending": {"const": true}}, "required": ["pending"]},
+          "then": {"properties": {"class": {"enum": ["literature", "undetermined"]}}}
+        },
+        {
+          "if": {"properties": {"class": {"const": "undetermined"}}, "required": ["class"]},
+          "then": {"required": ["pending", "pending_note", "missing_sources"], "properties": {"pending": {"const": true}}}
+        },
+        {
+          "if": {"required": ["missing_sources"]},
           "then": {"required": ["pending"], "properties": {"pending": {"const": true}}}
         }
       ]
@@ -109,6 +127,31 @@
         "arxiv": {"type": "string", "pattern": "^(\\d{4}\\.\\d{4,5}|[a-z\\-]+(\\.[A-Z]{2})?/\\d{7})$"},
         "url": {"type": "string", "format": "uri"},
         "note": {"type": "string"}
+      }
+    },
+    "missing_source": {
+      "description": "A source that might already contain the result but could not be read, listed exactly: the full reference, a DOI or a URL, why it could not be read, and what reading it would decide.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authors", "year", "title", "venue", "status", "needed_for"],
+      "anyOf": [{"required": ["doi"]}, {"required": ["url"]}],
+      "properties": {
+        "authors": {"type": "string", "minLength": 1},
+        "year": {"type": "integer", "minimum": 1800, "maximum": 2100},
+        "title": {"type": "string", "minLength": 1},
+        "venue": {"type": "string", "minLength": 1},
+        "doi": {"type": "string", "pattern": "^10\\.\\d{4,9}/\\S+$"},
+        "url": {"type": "string", "format": "uri", "pattern": "^https?://\\S+$"},
+        "status": {
+          "description": "Why it could not be read, e.g. 'publisher site refused automated access', 'not consultable until 2050', 'no open-access copy found'.",
+          "type": "string",
+          "minLength": 10
+        },
+        "needed_for": {
+          "description": "What reading it would decide.",
+          "type": "string",
+          "minLength": 10
+        }
       }
     }
   }

@@ -1,0 +1,29 @@
+{
+  "id": "power-plus-offset-four-candidates",
+  "title": "The cheapest representation k = X^d + C for d ≥ 3: four candidate roots, and a polynomial count",
+  "statement": "Let L(v) be the number of binary digits of |v| (L(0) = 1) and, for d ≥ 2 and integers k ≥ 0, X ≥ 0, let f_k(X) = L(X) + L(C) + [C < 0] with C = k − X^d; let r be the largest integer with r^d ≤ k. Theorem 1: for every d ≥ 3 and k ≥ 0, min over X ≥ 0 of f_k(X) = min(f_k(0), f_k(1), f_k(r), f_k(r + 1)). Corollary 2: for d ≥ 3, if the three candidates 0, r, r + 1 miss the minimum, then k = 2^p with p ≥ 1 and X = 1 is the unique minimiser; this happens for every d ≥ 3, at k = 2^(d+1) (for d = 3, k = 16: f = 6, 5, 6, 7 at X = 0, 1, 2, 3). Theorem 3: for S_n = {0 ≤ k < 2^n : min f_k ≤ n − 4}, B = 2^n − 1 and T = ⌊B^(1/d)⌋ + 1, S_n is the union over X = 0..T of [max(0, X^d − m), X^d + 2^w − 1] ∩ [0, B] for w = n − 4 − L(X) ≥ 1 (m = 2^(w−1) − 1 for w ≥ 2, m = 0 for w = 1). Theorem 4: for every d ≥ 2 an algorithm that sweeps these intervals one group of roots of equal bit length at a time returns |S_n| using at most ⌊n/d⌋ + 2 groups and O((⌊n/d⌋ + 2)^2 · log d) word operations (word RAM with words of n + 3 bits, d-th powers and integer d-th roots paid in full), i.e. O((n^2/d^2) log d) for d ≤ n; for n ≥ 1 every integer it computes is below 2^(n+2) in absolute value.",
+  "provenance": {
+    "class": "own",
+    "bases": []
+  },
+  "sources": [
+    {
+      "authors": "Rissanen, J.",
+      "year": 1983,
+      "title": "A universal prior for integers and estimation by minimum description length",
+      "venue": "The Annals of Statistics 11(2)",
+      "doi": "10.1214/aos/1176346150",
+      "note": "The one related hit of the literature search; read in part (its introduction, pp. 416–417, and pp. 422–424 of its Section 3): it concerns a universal prior for integers, and these pages do not contain the results of this note. Not a base of this note and not used as evidence."
+    }
+  ],
+  "verify": "python theorems/power-plus-offset-four-candidates/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

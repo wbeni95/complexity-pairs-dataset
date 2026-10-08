@@ -1,0 +1,35 @@
+{
+  "id": "compressed-memo-keys-evaluation-orders",
+  "title": "Compressed memo keys: when is dropping a flag from the key exact for every evaluation order?",
+  "statement": "Family F: ordered lists of k ∈ {2,3} moves (d_i, f_i), d_i ∈ {1..4}, f_i ∈ {0,1}, base b = max d_i; δ ∈ {0,1,2}; coefficients c_i ∈ {1..9}; data in {0..9}^17, D[m] = data[m mod 17]; leaves V(m,p) = D[m] + δp; sum mode V(m,p) = D[m](1+δp) + Σ c_i V(m−d_i, p⊕f_i) mod 1 000 003; min/max mode V(m,p) = opt_i [V(m−d_i, p⊕f_i) + ((c_i D[m] + i) mod 10)(1+δp)]. A compressed run memoizes on m only: each node m of M(n) (nodes reachable from (n,0)) is evaluated once with one flag p_m. PF: no reachable node carries both flags. (1) If the value is constant on the fibres of reachable states (in particular if δ = 0 or PF), every supported flag assignment, hence every evaluation order, is exact. (2) PF holds at every n iff f_i ≡ c d_i/g (mod 2) for a fixed c (lattice criterion); otherwise PF fails for all n ≥ b + 12. (3) Exactness for every data vector under one fixed order implies neither PF nor value-constancy. (4) Converse, per model of evaluation order: with one global push order (model G) it fails (moves (1,1),(3,0),(3,1), δ = 1, sum, c = (1,1,1), n = 4: all 6 global orders exact, PF fails); for supported assignments (model S) in sum mode it holds for every n (written proof with a finite fact, N(m*) ≤ 105 705 < 1 000 003); for per-node visit orders (model D) it holds in sum, min and max mode for every spec of F and every n (computer-assisted: public certificates checked by verify.py). Hence in models D and S: exact for every data vector and every order ⟺ δ = 0 or PF.",
+  "provenance": {
+    "class": "own",
+    "bases": []
+  },
+  "sources": [
+    {
+      "authors": "Acar, U. A.; Blelloch, G. E.; Harper, R.",
+      "title": "Selective memoization",
+      "arxiv": "1106.0447",
+      "note": "Abstract only. Credited for the general soundness principle behind statement (1) (a memo key must determine the value); not used as evidence."
+    },
+    {
+      "authors": "Givan, R.; Dean, T.; Greig, M.",
+      "year": 2003,
+      "title": "Equivalence notions and model minimization in Markov decision processes",
+      "venue": "Artificial Intelligence",
+      "doi": "10.1016/S0004-3702(02)00376-4",
+      "note": "Title only. Exact state aggregation, a related principle; listed as part of the literature search, not used as evidence."
+    }
+  ],
+  "verify": "python theorems/compressed-memo-keys-evaluation-orders/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

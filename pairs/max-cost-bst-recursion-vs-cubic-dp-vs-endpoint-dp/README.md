@@ -133,7 +133,10 @@ the trees with t = 0. Otherwise every tree, π included, is worth −∞. ∎
 The mirror image holds for anti-monotone weights with +∞ entries under min (negate, as in Corollary 1: −w is
 monotone with −∞ entries, and the min-recurrence with w is the negated max-recurrence with −w). +∞ under max is not
 covered, since it
-would create +∞ + (−∞).
+would create +∞ + (−∞). For inclusion-monotone weights with +∞ entries and no −∞ entries under max, the theorem
+note [endpoint-law-split-dependent-weights](../../theorems/endpoint-law-split-dependent-weights/) (Proposition 8)
+proves that the endpoint recurrence of (c) gives c(i, j) on every interval and that every interval has an optimal path
+tree.
 
 **Checked step by step** ([checks script](../../experiments/2026-10-07_max_cost_bst_checks.py); its DP code is
 independent of the implementations):
@@ -203,7 +206,9 @@ the adjacent-sum condition, as E′ predicts. It cannot fail for n ≤ 2, where 
 - **Real weights.** Theorem E′ is proved for real weights. Entries −∞ are covered by the extension above, which was
   also tested exhaustively (section E4) on n = 1..4 with values {−∞, 0, 1, 2}: 5083 tables, 4388 with a −∞ entry,
   the endpoint DP exact on every interval of every table; the same holds for the mirrored +∞ tables under min. +∞
-  under max is not covered.
+  under max is not covered here; for +∞ entries without −∞ entries, the theorem note
+  [endpoint-law-split-dependent-weights](../../theorems/endpoint-law-split-dependent-weights/) (Proposition 8)
+  proves that the endpoint recurrence gives c on every interval and that every interval has an optimal path tree.
 - **Controls: the precondition matters** (section C). Without it, the endpoint DP fails on many inputs.
   - *Monotone weights under MIN.* This includes the optimal-BST recurrence, where Knuth's speed-up is exact
     (proved in that entry's PROOFS.md, section 7), and the endpoint DP fails there. The

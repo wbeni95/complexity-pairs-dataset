@@ -1,0 +1,225 @@
+{
+  "id": "cayley-dickson-powering-repeated-vs-square-multiply",
+  "title": "Powering in non-associative Cayley-Dickson algebras (octonions, sedenions, dimension 32): repeated multiplication vs square-and-multiply",
+  "problem_statement": "Given m in {3, 4, 5}, an element x of the Cayley-Dickson algebra A_m over Z/pZ for the fixed odd modulus p = 2^61 - 1 (dimension 2^m: the octonions, the sedenions and the 32-dimensional algebra over Z/pZ), and an integer e >= 1, compute the power x^e, defined as the left power p_1 = x, p_(k+1) = p_k x. A_0 = Z/pZ with the identity conjugation, and A_m = A_(m-1) x A_(m-1) with (a, b)(c, d) = (ac - conj(d) b, d a + b conj(c)) and conj(a, b) = (conj(a), -b). Elements are tuples of 2^m residues in the standard basis (index 0 is the unit). A_m is not associative for m >= 3 (PROOFS.md, section 7), but it is power-associative (PROOFS.md, section 5): every bracketing of the product of e copies of x gives the same element, so any bracketing may be used to compute x^e.",
+  "input": {
+    "parameter": "n = bit length of the exponent e (e >= 1), so 2^(n-1) <= e < 2^n.",
+    "size_measure": "n bits for e, plus 2^m <= 32 residues of 61 bits for x (the dimension is bounded). Costs are counted in algebra products; one product in dimension 2^m makes exactly 4^m multiplications of residues mod p (and 4^m - 2^m additions and subtractions; PROOFS.md, section 1), each O(1) word operations, so for fixed m an algebra product is O(1)."
+  },
+  "algorithms": [
+    {
+      "name": "repeated multiplication",
+      "idea": "Start from x and multiply by x on the right e - 1 times, following the definition of the left power.",
+      "model": "classical-deterministic",
+      "pseudocode": "r = x; repeat e - 1 times: r = r * x (Cayley-Dickson product mod p); return r",
+      "time_complexity": "Theta(e) = Theta(2^n) algebra products: exactly e - 1 of them (and e - 1 >= 2^(n-1) - 1), i.e. (e - 1) 4^m multiplications of residues (PROOFS.md, sections 1 and 2); the loop control of range(e - 1) is not counted",
+      "space_complexity": "O(2^m) residues of working memory (one product holds O(2^m) residues across its m + 1 nested calls), plus the loop counter of range(e - 1), which has at most n bits (PROOFS.md, section 10)",
+      "correctness": "Invariant: after k iterations r is the left power x^(k+1); this is the definition of x^e, and cd_mul computes the product of A_m over Z/pZ (PROOFS.md, sections 2 and 6). Count: one product per iteration; one product makes exactly 4^m residue multiplications (PROOFS.md, section 1: four half-size products per doubling level, M(m) = 4 M(m-1), M(0) = 1).",
+      "implementation": "implementations/repeated.py:cd_power_repeated",
+      "harness": {
+        "v1_max_n": 9,
+        "scaling": {
+          "cost": "64*(2**n - 2)",
+          "n_values": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**3",
+            "1.5**n",
+            "2**n*n",
+            "2**n/n",
+            "3**n"
+          ],
+          "shape": {
+            "sequence": "consecutive",
+            "n_range": [
+              2,
+              14
+            ],
+            "note": "V2 family: octonions (4^m = 64), e = 2^n - 1."
+          }
+        }
+      }
+    },
+    {
+      "name": "left-to-right square-and-multiply (binary method)",
+      "idea": "Read the bits of e after the leading 1 from the most significant one; for each bit square the accumulator, and multiply it by x when the bit is 1. Power-associativity makes this correct although the algebra is not associative.",
+      "model": "classical-deterministic",
+      "pseudocode": "r = x; for each bit b of e after the leading 1, most significant first: r = r * r; if b = 1: r = r * x; return r",
+      "time_complexity": "Theta(n) algebra products: exactly floor(log2 e) + popcount(e) - 1 <= 2(n - 1) of them (n - 1 squarings and popcount(e) - 1 multiplications by x), i.e. that many times 4^m residue multiplications (PROOFS.md, section 3); reading the bits of e with bin(e) takes Theta(n) under the machine-model assumption in background (PROOFS.md, section 10)",
+      "space_complexity": "O(2^m) residues of working memory, plus the string bin(e) of n + 2 characters and its slice of n - 1 characters (PROOFS.md, section 10)",
+      "correctness": "PROOFS.md, section 5 (Lemma 2, power-associativity: span{1, x} is a commutative, associative subalgebra containing every power of x, and x^i x^j = x^(i+j)) and section 3 (Proposition S; invariant: after the bits of e of value k have been read, r = x^k; a further bit b gives r r = x^(2k) and then x^(2k) x = x^(2k+1) if b = 1; exact count). The textbook argument (associativity) does not apply, since A_m is not associative for m >= 3 (section 7).",
+      "implementation": "implementations/square_multiply.py:cd_power_square_multiply",
+      "harness": {
+        "scaling": {
+          "cost": "128*(n - 1)",
+          "n_values": [
+            16,
+            32,
+            64,
+            128,
+            256,
+            512
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "sqrt(n)",
+            "log(n)",
+            "n*log(n)",
+            "n**2"
+          ],
+          "shape": {
+            "sequence": "consecutive",
+            "n_range": [
+              2,
+              40
+            ],
+            "note": "V2 family: octonions, e = 2^n - 1, so 2(n - 1) algebra products of 64 residue multiplications."
+          }
+        }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "Repeated multiplication is linear in the VALUE of e, hence exponential, Theta(2^n), in its bit length n. Square-and-multiply needs floor(log2 e) + popcount(e) - 1 <= 2(n - 1) algebra products: Theta(n). As for modular-exponentiation-repeated-vs-square-multiply, but in an algebra that is not associative: the binary method is correct here because the Cayley-Dickson algebras are power-associative (PROOFS.md, section 5), and it is not correct in every algebra (in the closely related para-Cayley-Dickson algebras, x * y = conj(x) conj(y), it returns a wrong value already at e = 4: PROOFS.md, section 8; over R this is Remark 2(b) of the repository note theorems/para-cayley-dickson-closed-form-powers).",
+  "background": [
+    {
+      "statement": "Machine-model assumption, not proved here: Python's bin(e) runs in time linear in the bit length of e (the slice bin(e)[3:] then copies n - 1 characters). PROOFS.md, section 10, uses it for the cost of reading the bits in square-and-multiply.",
+      "source": "machine-model assumption (PROOFS.md, section 10)"
+    },
+    {
+      "statement": "The identities x + x* = 2Re(x) and x x* = x* x = ||x||^2 (Lemma 1 of this entry, proved in PROOFS.md section 4 over any commutative ring) are stated for the real Cayley-Dickson algebras of every dimension, with this doubling and conjugation.",
+      "source": "Biss, Dugger & Isaksen 2008 (Definition 2.1, Section 2, Lemma 3.6)"
+    },
+    {
+      "statement": "In a non-associative linear algebra where every element satisfies a quadratic equation, multiplication is associative for powers (stated without proof, citing Dickson 1912, section 5).",
+      "source": "Etherington 1941 (pp. 50-51)"
+    },
+    {
+      "statement": "The algebras of dimension 2^t built by the Cayley-Dickson process are quadratic algebras, x^2 - t(x)x + n(x)1 = 0, with the doubling (b1, b2)(b3, b4) = (b1 b3 + mu b4 conj(b2), conj(b1) b4 + b3 b2) over a field of characteristic not 2, which differs from the one used here in the order of the factors and the free scalar mu.",
+      "source": "Schafer 1961 lecture notes (Chapter III, equations (25)-(31))"
+    },
+    {
+      "statement": "The binary method of powering (square-and-multiply) is described in Knuth's Seminumerical Algorithms.",
+      "source": "Knuth 1997 (Section 4.6.3)"
+    }
+  ],
+  "sources": [
+    {
+      "authors": "Biss, D. K.; Dugger, D.; Isaksen, D. C.",
+      "year": 2008,
+      "title": "Large annihilators in Cayley-Dickson algebras",
+      "venue": "Communications in Algebra 36(2), 632-664",
+      "doi": "10.1080/00927870701724094",
+      "arxiv": "math/0511691",
+      "note": "Definition 2.1 (the doubling and conjugation used here, over R, every dimension), Section 2 (2Re(x) = x + x*) and Lemma 3.6 (x x* = x* x = ||x||^2) state the identities of Lemma 1 (PROOFS.md, section 4), which is proved there over any commutative ring. The paper does not discuss powering. Credit only; not used in the proofs."
+    },
+    {
+      "authors": "Etherington, I. M. H.",
+      "year": 1941,
+      "title": "Some non-associative algebras in which the multiplication of indices is commutative",
+      "venue": "Journal of the London Mathematical Society s1-16 (first series), 48-55",
+      "doi": "10.1112/jlms/s1-16.1.48",
+      "note": "Credit: pp. 50-51 state, without proof and citing Dickson (Trans. Amer. Math. Soc. 13 (1912), 59-73, section 5), that in a non-associative linear algebra where every element satisfies a quadratic equation, multiplication is associative for powers. Read in the reprint in the author's 1941 thesis (paper X), checked on the page images. Not used in the proofs."
+    },
+    {
+      "authors": "Schafer, R. D.",
+      "year": 1961,
+      "title": "An Introduction to Nonassociative Algebras (lecture notes)",
+      "venue": "Department of Mathematics, Oklahoma State University; Project Gutenberg eBook #25156",
+      "url": "https://www.gutenberg.org/ebooks/25156",
+      "note": "Credit: Chapter III, equations (25)-(31): an algebra A with 1 is quadratic if A != F1 and x^2 - t(x)x + n(x)1 = 0 for every x; the doubling (28), (b1, b2)(b3, b4) = (b1 b3 + mu b4 conj(b2), conj(b1) b4 + b3 b2) over a field of characteristic not 2, carries an involution with x + conj(x) = t(x)1 and x conj(x) = conj(x) x = n(x)1, so the algebras of dimension 2^t obtained by iterating it from F1 are quadratic. This doubling differs from the one used here in the order of the factors and the free scalar mu; power-associativity of these algebras is not stated there. Not used in the proofs."
+    },
+    {
+      "authors": "Schafer, R.",
+      "year": 1954,
+      "title": "On the algebras formed by the Cayley-Dickson process",
+      "venue": "American Journal of Mathematics 76, 435-446",
+      "doi": "10.2307/2372583",
+      "note": "Cited by Biss, Dugger and Isaksen (2008, Section 4) for basic statements of alternativity; only its bibliographic data were seen here. Not used in the proofs."
+    },
+    {
+      "authors": "Knuth, D. E.",
+      "year": 1997,
+      "title": "The Art of Computer Programming, Vol. 2: Seminumerical Algorithms (3rd ed.)",
+      "venue": "Addison-Wesley",
+      "isbn": "978-0-201-89684-8",
+      "note": "Section 4.6.3 (Evaluation of Powers): the binary method. The modular-exponentiation entry of this repository cites the same book. Credit only."
+    }
+  ],
+  "provenance": {
+    "class": "literature",
+    "bases": [
+      "Biss, D. K.; Dugger, D.; Isaksen, D. C. (2008). Large annihilators in Cayley-Dickson algebras. Communications in Algebra 36(2), 632-664, doi:10.1080/00927870701724094: Definition 2.1, Section 2 and Lemma 3.6, the identities x + x* = 2Re(x) and x x* = x* x = ||x||^2, from which power-associativity follows in a few lines (PROOFS.md, section 5).",
+      "Etherington, I. M. H. (1941). Some non-associative algebras in which the multiplication of indices is commutative. Journal of the London Mathematical Society 16, 48-55, doi:10.1112/jlms/s1-16.1.48, pp. 50-51: in a non-associative linear algebra where every element satisfies a quadratic equation, multiplication is associative for powers (stated without proof).",
+      "Schafer, R. D. (1961). An Introduction to Nonassociative Algebras, lecture notes (Project Gutenberg #25156), Chapter III, (25)-(31): the 2^t-dimensional algebras of the Cayley-Dickson process are quadratic, x^2 - t(x)x + n(x)1 = 0 (with a different doubling convention).",
+      "The binary method (Knuth, TAOCP Vol. 2, Section 4.6.3)."
+    ],
+    "note": "Credit only: every claim of the entry is proved in PROOFS.md (Lemma 1 over any commutative ring, power-associativity, correctness and exact counts of both algorithms, the non-associativity witnesses). Power-associativity of algebras in which every element satisfies a quadratic equation is stated, without proof, by Etherington (1941), and Schafer's 1961 lecture notes show that the Cayley-Dickson algebras are quadratic, under a different doubling convention; the proof here is our own and derives power-associativity from the identities of Biss, Dugger and Isaksen in a few lines. Schafer (1954) was not read."
+  },
+  "verification": {
+    "level": "V2",
+    "method": "V1: both implementations agree with each other and with an independent oracle in harness.py on bit lengths n = 1..16, 24, 32, 64, 128 and 256, 3 instances per n (repeated multiplication up to n = 9). Instances: m drawn from {3, 4, 5}; x uniformly random residues, small coordinates in -3..3, real elements, purely imaginary elements, purely imaginary elements of norm 0 mod p (x^2 = 0), x = 1 + e_1, and sparse elements with coordinates in {0, 1, p - 1}; e random of exactly n bits, all ones, or a power of two. The oracle has two tiers: for every e, x^e must equal alpha 1 + beta x where alpha + beta X = X^e mod (X^2 - tX + n) over Z/pZ (t = 2 x_0, n = sum of squares; PROOFS.md, section 5; computed with degree-1 polynomials, no Cayley-Dickson product); for e <= 40, the left powers are also recomputed from the definition with a product built from a table of basis products e_i e_j = s(i, j) e_(i xor j), written independently of the recursive product of the implementations. experiments/2026-10-07_cayley_dickson_powering_checks.py: (1) the table product equals the recursive product on random pairs for m = 0..5; (2) Lemmas 1 and 2 mod p, m = 0..5; (3) Lemma 4 with every basis product written in PROOFS.md section 7: (e_1 e_2) e_4 = e_7 = -e_1 (e_2 e_4) for m = 3, 4, 5, and x = e_1 + e_10, y = e_4: (x x) y = -2 e_4 != x (x y) = -2 e_4 - 2 e_15 for m = 4, 5; (4) random bracketings of e copies of x equal x^e for e <= 12, m = 3..5; (5) both algorithms = left power = remainder formula (e <= 64, and random 200-bit e against the remainder formula); (6) the exact counts: one product = 4^m residue multiplications (m = 0..5); 4^m (e - 1) and 4^m (floor(log2 e) + popcount(e) - 1) for e = 1..300 (m = 3) and e = 1..100 (m = 4, 5), and square-and-multiply at e = 2^n - 1 and random n-bit e for n = 16..1024; (7) the integer growth example x = 1 + e_1 over Z, both bounds 2^((e-1)/2) <= max(|alpha|, |beta|) <= 2^(e/2), e <= 200; (8) oracle control: 247 deliberately wrong outputs rejected, 32 true outputs accepted; (9) the remaining facts of PROOFS.md: the numbers of multiplications, additions and subtractions, negations and reductions in one product (m = 0..6), the four doubling rules, the digits read from bin(e) (e = 1..4096), the para-product witness mod p (m = 1..5), the recursion depth of the product (m = 0..5), the working memory of square-and-multiply (n = 64..8192), x^2 = 0 for the generator's isotropic elements. Every check line of the script starts with [PASS] or [FAIL]; the run ends with ALL CHECKS PASSED. V2 (measure 'reported'): generate_scaling gives octonions (m = 3) with CountingInt coordinates, which count every multiplication of two residues, and e = 2^n - 1; the implementations are unchanged. Repeated multiplication: exactly 64 (e - 1) = 64 (2^n - 2), fit on n = 6..11. Square-and-multiply: exactly 64 (floor(log2 e) + popcount(e) - 1) = 128 (n - 1), fit on n = 16..512. Fits and rivals: see the README table. PROOFS.md proves every claim of the entry and names the checks of each. tests/test_entry_cayley_dickson_powering.py repeats the essential checks.",
+    "artifacts": [
+      "PROOFS.md",
+      "implementations/repeated.py",
+      "implementations/square_multiply.py",
+      "harness.py",
+      "../../experiments/2026-10-07_cayley_dickson_powering_checks.py",
+      "../../tests/test_entry_cayley_dickson_powering.py"
+    ],
+    "proofs": [
+      "Lemma 1 over any commutative ring and power-associativity, x^e = alpha 1 + beta x (PROOFS.md, sections 4 and 5): written proofs.",
+      "Correctness and exact counts of both algorithms, and correctness of the reduction mod p (PROOFS.md, sections 1, 2, 3 and 6): written proofs.",
+      "Non-associativity and non-alternativity witnesses (PROOFS.md, section 7): every product written out by hand and recomputed by the checks script.",
+      "Para-product remark, integer growth, time, space, oracle and generator facts (PROOFS.md, sections 8 to 12): written proofs."
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      24,
+      32,
+      64,
+      128,
+      256
+    ],
+    "trials": 3
+  },
+  "caveats": "Bit-size view: n is the bit length of e; in the VALUE e, repeated multiplication is linear. The coordinates are taken mod the fixed 61-bit odd modulus p so that every residue multiplication is O(1) word operations; over the integers the coordinates of x^e can have Theta(e) bits (PROOFS.md, section 9: for x = 1 + e_1, x^e = (1 + i)^e, whose larger coordinate lies between 2^((e-1)/2) and 2^(e/2)), so the output alone would be exponential in n. The dimension is fixed (m <= 5); for general m both counts are multiplied by 4^m. Counted are multiplications of residues; additions, subtractions, negations and reductions mod p (Theta(4^m) per product, exact numbers in PROOFS.md section 1), loop control and reading the bits of e are not counted. That bin(e) takes time linear in n is a machine-model assumption (background). No lower bound for the problem is claimed. The proof of the binary method uses power-associativity, and the method fails for the para-product x * y = conj(x) conj(y) on the same space (PROOFS.md, section 8).",
+  "notes": "The same pair for an associative structure is modular-exponentiation-repeated-vs-square-multiply; this entry differs in the domain (a non-associative algebra of dimension 8, 16 or 32 over Z/pZ) and in the correctness argument (power-associativity instead of associativity). The power can also be computed with polynomial arithmetic only: x^e = alpha 1 + beta x with alpha + beta X = X^e mod (X^2 - tX + n) (PROOFS.md, section 5); the V1 oracle uses this.",
+  "proof": {
+    "documents": [
+      "PROOFS.md"
+    ],
+    "checks": [
+      "../../experiments/2026-10-07_cayley_dickson_powering_checks.py",
+      "../../tests/test_entry_cayley_dickson_powering.py"
+    ],
+    "audit": "RL-113"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "para-cayley-dickson-closed-form-powers",
+  "title": "Closed-form left powers in para-Cayley–Dickson algebras",
+  "statement": "Let A_0 = ℝ and A_m = A_(m−1) × A_(m−1) with (a, b)(c, d) = (ac − conj(d) b, d a + b conj(c)) and conj(a, b) = (conj(a), −b) (the real Cayley–Dickson algebras, dimension 2^m). Define the para-product x ∗ y = conj(x) conj(y) and the left powers p_1 = x, p_(k+1) = p_k ∗ x. For every m ≥ 0, every x ∈ A_m and every j ≥ 0: p_(2j+1) = n^j x and p_(2j+2) = n^j conj(x)^2, where n = n(x) is the sum of the squares of the coordinates of x; equivalently (x ∗ x) ∗ x = n(x) x. Remarks with proofs: left-to-right binary powering B(1) = x, B(2a) = B(a) ∗ B(a), B(2a+1) = B(2a) ∗ x returns p_e for every e = 2^j − 1 (j ≥ 1) and every e = 2^j − 2 (j ≥ 2), and B(4) = p_4 if and only if x^4 = n(x) conj(x)^2 (x = 1 + e_1 gives B(4) = −4, p_4 = −4 e_1); the identity (x ∗ y) ∗ x = n(x) y holds for every y ∈ span{1, x} but fails for general y in every A_m with m ≥ 4 (x = e_1 + e_10, y = 1 + e_4). Additions of the note: the binary-powering remarks and the explicit witness.",
+  "provenance": {
+    "class": "literature",
+    "bases": [
+      "Elduque, Composition algebras, arXiv:1810.09979: Theorem 3.2 with Examples 3.4 (dimension ≤ 8: the identity whose case y = x is the Theorem)",
+      "Biss–Dugger–Isaksen 2008, Comm. Algebra 36(2), doi:10.1080/00927870701724094: Definition 2.1, Section 2, Lemma 3.6 (the identities of Lemma 1, every dimension)"
+    ]
+  },
+  "sources": [
+    {
+      "authors": "Elduque, A.",
+      "year": 2018,
+      "title": "Composition algebras",
+      "arxiv": "1810.09979",
+      "note": "Credit (dimension ≤ 8): Theorem 3.2 (symmetric composition algebras are those with (x ∗ y) ∗ x = x ∗ (y ∗ x) = n(x) y) with Examples 3.4 (para-Hurwitz algebras, credited there to Okubo 1978). The note's proof does not use it."
+    },
+    {
+      "authors": "Biss, D. K.; Dugger, D.; Isaksen, D. C.",
+      "year": 2008,
+      "title": "Large annihilators in Cayley-Dickson algebras",
+      "venue": "Communications in Algebra 36(2), 632-664",
+      "doi": "10.1080/00927870701724094",
+      "arxiv": "math/0511691",
+      "note": "Credit (every dimension): Definition 2.1 (the doubling and conjugation used here), Section 2 (2Re(x) = x + x*), Lemma 3.6 (x x* = x* x = ||x||^2), the identities of the note's Lemma 1, which is proved in the note. The para-product is not considered there."
+    },
+    {
+      "authors": "Schafer, R.",
+      "year": 1954,
+      "title": "On the algebras formed by the Cayley-Dickson process",
+      "venue": "American Journal of Mathematics 76, 435-446",
+      "doi": "10.2307/2372583",
+      "note": "Cited by Biss, Dugger and Isaksen (2008, Section 4) for basic statements of alternativity; only its bibliographic data were seen here."
+    }
+  ],
+  "verify": "python theorems/para-cayley-dickson-closed-form-powers/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

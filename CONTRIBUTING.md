@@ -104,11 +104,24 @@ Every entry, and every note under `theorems/`, says whose result it is, in the o
 - **`own-extension`**: a generalization or sharpening of a cited base result that is not itself in the
   literature. It must name the base(s) in `bases`. Shown with the orange label **🟠 Own extension**.
 - **`own`**: no prior literature was found after a documented search. Shown with the orange label **🟠 Own result**.
-- **`pending: true`**: an inaccessible source might already cover the result; `pending_note` names it. Shown as
-  **⏳ Pending**. A pending result is published with the class its accessible literature supports, never as `own`.
+- **`undetermined`**: probably our own result, but a source that might already contain it could not be read.
+  Shown as **🟡⏳ Undetermined (may be our own result)**: the yellow dot means probably our own finding, the
+  hourglass means a source could not be read. It needs `pending: true`, a `pending_note` and a non-empty
+  `missing_sources` list. Its text says what it proves beyond the sources that were read, that it may be our own
+  result, and that this could not be checked.
+- **`pending: true`**: a source that could not be read (or identified) might already cover the result; `pending_note` names it.
+  Shown as **⏳ Pending** (on an `undetermined` item the hourglass is part of its label). A pending result is
+  published as `literature` when the result itself is in the literature and only a detail could not be verified,
+  or as `undetermined` when it may be our own result but a source that might contain it could not be read. It is
+  never published with an own label (`own`, `own-extension`).
+- **`missing_sources`**: the sources that could not be read, listed exactly. Each item has `authors`, `year`,
+  `title`, `venue`, a `doi` or a `url` (or both), `status` (why it could not be read, for example "no open-access
+  copy found") and `needed_for` (what reading it would decide). Required for `undetermined`; allowed only with
+  `pending: true`. The README lists every such source under "Sources we could not read".
 
-The orange labels mark the project's own results so that readers can see at once what is new here. If prior
-literature turns up later, the label is corrected in a new RESEARCH_LOG entry; the old entry is not deleted.
+The orange labels mark the project's own results so that readers can see at once what is new here; the yellow label
+marks a probable own result whose literature check could not be finished. If prior literature turns up later, the
+label is corrected in a new RESEARCH_LOG entry; the old entry is not deleted.
 Every labelled result ships with a complete proof and a deterministic check (`verify.py` or a test).
 
 ## The green check mark (✅ Proved)

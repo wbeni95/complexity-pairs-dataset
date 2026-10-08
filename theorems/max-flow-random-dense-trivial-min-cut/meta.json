@@ -1,0 +1,113 @@
+{
+  "id": "max-flow-random-dense-trivial-min-cut",
+  "title": "Trivial minimum cut on the max-flow entry's random dense networks",
+  "statement": "Model: vertices 0..n-1, s = 0, t = n-1, M = the other m = n-2 vertices; every ordered pair (u, v), u != v, is an edge independently with probability 1/2 and capacity uniform on {1..100} (the generator generate_scaling of pairs/max-flow-edmonds-karp-vs-dinic with ideal random bits). Let C be the event that c(S', M - S') > 100 min(|S'|, |M - S'|) for every nonempty proper subset S' of M. (a) Deterministic: on every network with non-negative integer capacities, a_v = c(s, v) and b_v = c(v, t) in [0, 100], that satisfies C, every s-t cut other than ({s}, V - {s}) and (V - {t}, {t}) has capacity > min(c_out(s), c_in(t)); hence the maximum flow value is min(c_out(s), c_in(t)), the minimum cuts are exactly the trivial cuts attaining it, and both implementations of the entry return it. (b) P(not C) <= B(n) = sum_{j=1}^{m-1} C(m, j) inf_{theta>0} e^{100 min(j, m-j) theta} phi(theta)^{j(m-j)}, phi(theta) = 1/2 + (1/200) sum_{c=1}^{100} e^{-theta c}; B(n) -> 0; B(n) <= 5.474e-5 at n = 40 and <= 4.876e-101 at n = 400; B(n) < 1 for every n >= 22, B(n) < 5.48e-5 and B(n) <= 1/n for every n >= 40, and B(n) < 7.6e-6 for every n >= 202 (computed in decimal arithmetic with certified rounding for 22 <= n <= 201, by a written tail bound above); for n <= 21 the computed bound is >= 1. (c) With Delta = c_out(s) - c_in(t): P(Delta = 0) <= sqrt(2/m) + e^{-0.1225 m} and P(Delta < 0) = P(Delta > 0); each trivial cut is the only minimum cut with probability between 1/2 - (sqrt(2/m) + e^{-0.1225 m})/2 - P(not C) and 1/2, so the winning trivial cut is asymptotically a fair coin.",
+  "provenance": {
+    "class": "undetermined",
+    "bases": [
+      "Karp 1979 (Tenth International Symposium on Mathematical Programming; not accessible), credited by Karp, Motwani and Nisan (1988 report, p. 5; journal text) with the almost-sure trivial minimum cut on complete graphs with i.i.d. capacities",
+      "Grimmett–Welsh 1982 (Stochastics 7(3), doi:10.1080/17442508208833219), Theorem 3.3: first-order limits of the maximum-flow value on complete graphs (undirected, or one orientation per pair); read, no trivial-cut statement",
+      "Grimmett–Suen 1982 (Stochastics 8(2), doi:10.1080/17442508208833234), Theorems 1-2: first-order limits of the maximum-flow value (one orientation per pair); read, no trivial-cut statement"
+    ],
+    "pending": true,
+    "pending_note": "Probably our own result: the sources read (Grimmett-Welsh 1982, Sections 1 and 3; Grimmett-Suen 1982 in full; Karp-Motwani-Nisan, journal text and parts of the 1988 report) do not state it for this model. Grimmett-Welsh and Grimmett-Suen give results on the flow value only (limits for undirected or one-orientation models, bounds on its mean); Karp-Motwani-Nisan's own theorems do not apply (multiple-source theorem: undirected graphs with unit capacities; single-source theorem: given source and sink capacities). Karp 1979 (Tenth International Symposium on Mathematical Programming), which Karp, Motwani and Nisan credit with the trivial minimum cut, could not be read; whether it states the result for this model (capacity 0 with probability 1/2, both orientations of every pair, random source and sink capacities) is open.",
+    "missing_sources": [
+      {
+        "authors": "Karp, R. M.",
+        "year": 1979,
+        "title": "The probabilistic analysis of combinatorial optimization algorithms",
+        "venue": "Tenth International Symposium on Mathematical Programming (cited as [Ka] by Karp, Motwani and Nisan, Mathematics of Operations Research 18(1), 71–97; the link is to that paper)",
+        "url": "https://doi.org/10.1287/moor.18.1.71",
+        "status": "Known only from its citation by Karp, Motwani and Nisan (reference [18] of their 1988 report, reference [Ka] of the journal version); no copy, publisher record or DOI of the 1979 work was found (Crossref title query, web search). The link is the DOI of the citing paper (Mathematics of Operations Research 18(1), 71-97), listed in this note's sources.",
+        "needed_for": "whether it states that the minimum cut is trivial in this model"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "authors": "Karp, R. M.; Motwani, R.; Nisan, N.",
+      "year": 1993,
+      "title": "Probabilistic analysis of network flow algorithms",
+      "venue": "Mathematics of Operations Research 18(1), 71-97",
+      "doi": "10.1287/moor.18.1.71",
+      "note": "Abstract read, and an author's copy of the journal text (dated August 9, 1995): it repeats the attribution of the 1988 report, and its single-source theorem (Theorem 4.5) assumes given source and sink capacities with a realizability condition. The 1988 technical report with the same title (University of California, Berkeley) was read at pp. 3-5, 10, 24-27 and 29; p. 5 credits Karp, Grimmett-Welsh and Grimmett-Suen with the trivial minimum cut on complete graphs with i.i.d. edge capacities."
+    },
+    {
+      "authors": "Karp, R. M.",
+      "year": 1979,
+      "title": "The probabilistic analysis of combinatorial optimization algorithms",
+      "venue": "Tenth International Symposium on Mathematical Programming",
+      "note": "Base. Not accessible; known from the citation in the report above."
+    },
+    {
+      "authors": "Grimmett, G. R.; Welsh, D. J. A.",
+      "year": 1982,
+      "title": "Flow in networks with random capacities",
+      "venue": "Stochastics 7(3), 205-229",
+      "doi": "10.1080/17442508208833219",
+      "note": "Base (flow-value limits, Theorem 3.3; undirected or one-orientation complete graphs). Sections 1 and 3 (complete graphs) read (author's copy); no trivial-cut statement."
+    },
+    {
+      "authors": "Grimmett, G. R.; Suen, W.-C. S.",
+      "year": 1982,
+      "title": "The maximal flow through a directed graph with random capacities",
+      "venue": "Stochastics 8(2), 153-159",
+      "doi": "10.1080/17442508208833234",
+      "note": "Base (flow-value limits, Theorems 1-2; one orientation per pair). Read in full (author's copy); the trivial cutsets are mentioned only to explain the limits."
+    },
+    {
+      "authors": "Ford, L. R.; Fulkerson, D. R.",
+      "year": 1956,
+      "title": "Maximal flow through a network",
+      "venue": "Canadian Journal of Mathematics 8, 399-404",
+      "doi": "10.4153/CJM-1956-045-5",
+      "note": "Credit for the max-flow min-cut theorem; the part used is proved in the note (Lemma 0). Not read for this note."
+    },
+    {
+      "authors": "Erdős, P.",
+      "year": 1945,
+      "title": "On a lemma of Littlewood and Offord",
+      "venue": "Bulletin of the American Mathematical Society 51(12), 898-902",
+      "doi": "10.1090/S0002-9904-1945-08454-7",
+      "note": "Credit for the antichain argument of part (c), which the note proves in full. Not read for this note."
+    },
+    {
+      "authors": "Sperner, E.",
+      "year": 1928,
+      "title": "Ein Satz über Untermengen einer endlichen Menge",
+      "venue": "Mathematische Zeitschrift 27, 544-548",
+      "doi": "10.1007/BF01171114",
+      "note": "Credit for A4; proved in the appendix. Not read for this note."
+    },
+    {
+      "authors": "Hoeffding, W.",
+      "year": 1963,
+      "title": "Probability inequalities for sums of bounded random variables",
+      "venue": "Journal of the American Statistical Association 58(301), 13-30",
+      "doi": "10.1080/01621459.1963.10500830",
+      "note": "Credit for A2-A3; proved in the appendix. Not read for this note."
+    },
+    {
+      "authors": "Chernoff, H.",
+      "year": 1952,
+      "title": "A measure of asymptotic efficiency for tests of a hypothesis based on the sum of observations",
+      "venue": "The Annals of Mathematical Statistics 23(4), 493-507",
+      "doi": "10.1214/aoms/1177729330",
+      "note": "Credit for A1; proved in the appendix. Not read for this note."
+    }
+  ],
+  "verify": "python theorems/max-flow-random-dense-trivial-min-cut/verify.py",
+  "proof": {
+    "documents": [
+      "README.md",
+      "../max-flow-random-dense-dinic-short-residual-paths/README.md",
+      "../../pairs/max-flow-edmonds-karp-vs-dinic/PROOFS.md"
+    ],
+    "checks": [
+      "verify.py",
+      "../max-flow-random-dense-dinic-short-residual-paths/verify.py",
+      "../../tests/test_proofs_maxflow.py"
+    ],
+    "audit": "RL-113"
+  }
+}

@@ -3,14 +3,43 @@
   "title": "Knuth's root window is exact for concave nondecreasing length weights",
   "statement": "Let N ≥ 1 and h: {1..N} → ℝ be concave and nondecreasing, 1 ≤ n ≤ N, and w(i,j) = h(j−i). For the interval recurrence c(i,i) = 0, c(i,j) = w(i,j) + min_{i<k≤j} [c(i,k−1) + c(k,j)], Knuth's restricted run (K(i,i) = i; minimise only over max(K(i,j−1), i+1) ≤ k ≤ min(K(i+1,j), j); K(i,j) = the chosen minimiser) is exact for every interval under the largest-minimiser tie rule and under the smallest-minimiser tie rule. With d = j − i, the chosen roots are K(i,j) = i + 1 + τ*(d) (largest rule) and K(i,j) = i + 1 + min(HR(d), Q − 1) (smallest rule), where τ*(d) = d − 1 − min(HR(d), Q − 1), HR(d) is the number of keys in the right subtree of the heap-shaped (complete, array-layout) tree with d keys, Q = 2^⌊log₂ k_max⌋, and k_max is the largest j ∈ {2..N} with h(j) > h(j−1) (k_max = 1 if h is constant). The value τ*(d) does not depend on N ≥ d, so the statement extends to concave nondecreasing h on {1, 2, ...} and every n.",
   "provenance": {
-    "class": "literature",
+    "class": "undetermined",
     "bases": [
       "Glassey–Karp 1976",
       "Batty–Pelling–Rogers 1982 (SIAM J. Algebraic Discrete Methods 3(1), doi:10.1137/0603002)",
       "Cleary–Fischer–St. John, arXiv:2502.12854"
     ],
     "pending": true,
-    "pending_note": "This may be an own extension of the cited results; the closest source (Batty–Pelling–Rogers 1982) was not accessible, so this could not be established."
+    "pending_note": "Undetermined (may be our own result): the window exactness, the tie rules, the trajectory and Lemmas C, F and G are not addressed by the sources that could be read, but three sources that might already contain the result could not be read (missing_sources): Batty–Pelling–Rogers 1982 (abstract only), Batty–Rogers 1982 (abstract only; its results known only from the report of a 1993 survey by Saha and Wagh) and Glassey–Karp 1976 (known only from a secondary description). Whether they contain the result could not be checked.",
+    "missing_sources": [
+      {
+        "authors": "Batty, C. J. K.; Pelling, M. J.; Rogers, D. G.",
+        "year": 1982,
+        "title": "Some recurrence relations of recursive minimization",
+        "venue": "SIAM Journal on Algebraic Discrete Methods 3(1), 13-29",
+        "doi": "10.1137/0603002",
+        "status": "Full text not accessible (closed access, no open copy found); only the abstract (Crossref record) was read, and the content is known otherwise only from the description by Chen and Chen (2003, pp. 667-669).",
+        "needed_for": "Whether it covers, beyond the optimality of the heap split for increasing concave g, non-strict monotonicity, all optimal splits, ties or Knuth's window, i.e. whether the Theorem of this note is already in the literature."
+      },
+      {
+        "authors": "Batty, C. J. K.; Rogers, D. G.",
+        "year": 1982,
+        "title": "Some maximal solutions of the generalized subadditive inequality",
+        "venue": "SIAM Journal on Algebraic Discrete Methods 3(3), 369-378",
+        "doi": "10.1137/0603038",
+        "status": "Full text not accessible (closed access); only the abstract was read, which sets up the recursion but states no result; its results are known here only from the report of a 1993 survey by Saha and Wagh (Minmax recurrences in analysis of algorithms), which lists among its results, without proof, that for increasing concave g the heap split is an optimal split.",
+        "needed_for": "Whether it treats, for concave nondecreasing g, all optimal splits, ties or Knuth's window beyond the optimality of the heap split, i.e. whether it contains the Theorem of this note."
+      },
+      {
+        "authors": "Glassey, C. R.; Karp, R. M.",
+        "year": 1976,
+        "title": "On the optimality of Huffman trees",
+        "venue": "SIAM Journal on Applied Mathematics 31(2), 368-378",
+        "doi": "10.1137/0131030",
+        "status": "Not accessible (closed access); known only from the description by Chen and Chen (2003, pp. 667-669), who cite it for the two-part case of the heap split.",
+        "needed_for": "Whether it goes beyond the optimality of the heap split for two parts and increasing concave costs, e.g. to all optimal splits, ties or Knuth's window."
+      }
+    ]
   },
   "sources": [
     {

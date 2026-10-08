@@ -47,8 +47,13 @@ each line, or read the unittest summary.
 
 ## What is not deterministic
 
-- **Wall-clock V2 fits** (`"measure": "time"`) depend on the machine and its load. They are measurements, never
-  proofs. On a busy machine a timing fit can fail; rerun it on a quiet one.
+- **Wall-clock times** depend on the machine and its load. They are measurements, never proofs.
+  - The wall-clock V2 fits (`"measure": "time"`) still decide V2 for the entries that use them, and on a busy machine
+    such a fit can fail.
+  - **Supplementary timing:** recorded runs with scaling (`python tools/check_all.py --record`, or
+    `python tools/validate.py --scaling --record`) also time every exact-count series on the same instances, and
+    store the seconds next to the counts. Exact counts are this dataset's standard; wall-clock seconds allow comparison with
+    standard benchmarks. The supplementary timing never changes a verdict. `--no-timing` skips it.
 - **Counts that depend on CPython built-ins**, such as the comparisons made by `sorted`, can differ between Python
   versions. Each recorded run in `ledger/runs/` states the Python version, the platform, the `jsonschema` version
   and the git commit it was made with.
@@ -58,6 +63,6 @@ each line, or read the unittest summary.
 ## Recorded runs
 
 `ledger/runs/*.json` holds the complete output of recorded runs: every V1 result, every V2 measurement (the values
-as well as the fits) and the shape diagnostics. To compare your own run with a recorded one, run
+as well as the fits), the shape diagnostics, and the supplementary wall-clock times of the exact-count series. To compare your own run with a recorded one, run
 `python tools/check_all.py --record` and compare the two files. RESEARCH_LOG.md states, for each recorded run,
 whether the exact-count series are identical to the previous one.

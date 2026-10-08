@@ -1,0 +1,92 @@
+{
+  "id": "first-match-prices-not-pairwise",
+  "title": "First-match prices need not be pairwise once three rules can match an item",
+  "statement": "k rules, m items; rule r matches item i or not; if r is the first rule of the order π that matches i, item i pays cost[i][r] (an item matched by no rule pays a fixed default); price(π) is the sum over the items (the price function of the pair entry first-match-rule-ordering-enumeration-vs-subset-dp; costs real here). The price has the pairwise form if price(π) = C + Σ_{x≠y} w_xy [x before y in π] for all orders π. (1) If every item is matched by at most two rules, the price has the pairwise form. (2) For k = 3 rules a, b, c and one item matched by all three with costs (1, 0, 0), price(π) = [a first] does not have the pairwise form; over the 6 orders the least-squares distance to the pairwise functions is exactly 1/3 (minimum sum of squared residuals), attained by −1/6 + ([a before b] + [a before c])/2. More generally, costs (x, y, z) on one item matched by a, b, c give a pairwise price iff x = y = z, and for every k ≥ 3 some instance is not pairwise.",
+  "provenance": {
+    "class": "undetermined",
+    "bases": [
+      "Yee–Dahan–Hauser–Orlin 2007, Marketing Science 26(4)",
+      "Schmitt–Martignon 2006, JMLR 7",
+      "Chakravarthy et al. 2008, IJCNLP"
+    ],
+    "pending": true,
+    "pending_note": "Probably our own result. The sources read on ordering a first-match rule list (Yee, Dahan, Hauser and Orlin 2007; Schmitt and Martignon 2006; Chakravarthy et al. 2008) contain special cases of the problem (0/1 and 0/w costs) and its subset dynamic program, but none of them states the results of this note, which proves them in full. Martignon and Hoffrage (2002), which might contain them, could not be read (no open-access copy found), so whether it does could not be checked.",
+    "missing_sources": [
+      {
+        "authors": "Martignon, L.; Hoffrage, U.",
+        "year": 2002,
+        "title": "Fast, frugal, and fit: Simple heuristics for paired comparison",
+        "venue": "Theory and Decision 52, 29–71",
+        "doi": "10.1023/A:1015516217425",
+        "status": "no open-access copy found",
+        "needed_for": "whether it states that the price of a cue or rule order is not a sum of pairwise terms"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "authors": "Yee, M.; Dahan, E.; Hauser, J. R.; Orlin, J.",
+      "year": 2007,
+      "title": "Greedoid-based noncompensatory inference",
+      "venue": "Marketing Science 26(4), 532-549",
+      "doi": "10.1287/mksc.1060.0213",
+      "note": "Base (credit; not used as evidence). Weighted lexicographic fitting, the 0/w-cost case of the first-match problem (§4, Algorithm 2, appendix proofs of Propositions 1-4 read). No statement about pairwise representability of the price."
+    },
+    {
+      "authors": "Schmitt, M.; Martignon, L.",
+      "year": 2006,
+      "title": "On the complexity of learning lexicographic strategies",
+      "venue": "Journal of Machine Learning Research 7, 55-83",
+      "url": "https://www.jmlr.org/papers/v7/schmitt06a.html",
+      "note": "Base (credit; not used as evidence). §1.4, §2.1-2.3 and §3 read. §2.3 (Proposition 1) compares cue orders with pairwise preferences over objects, a different statement."
+    },
+    {
+      "authors": "Chakravarthy, V.; Joshi, S.; Ramakrishnan, G.; Godbole, S.; Balakrishnan, S.",
+      "year": 2008,
+      "title": "Learning decision lists with known rules for text mining",
+      "venue": "Proceedings of the Third International Joint Conference on Natural Language Processing (IJCNLP 2008), Volume II",
+      "url": "https://aclanthology.org/I08-2118/",
+      "note": "Base (credit; not used as evidence). MaxDL, the 0/1-cost case; full text read."
+    },
+    {
+      "authors": "Yee, M.",
+      "year": 2006,
+      "title": "Inferring noncompensatory choice heuristics",
+      "venue": "PhD thesis, Massachusetts Institute of Technology",
+      "url": "https://hdl.handle.net/1721.1/36226",
+      "note": "Listed to document the literature search; not used as evidence. Contents, Chapter 3 (hardness via set cover), §4.2 (Lemma 2: only the set of preceding rules matters) and a keyword scan read; no statement on whether the price is a sum of pairwise terms."
+    },
+    {
+      "authors": "Martignon, L.; Hoffrage, U.",
+      "year": 2002,
+      "title": "Fast, frugal, and fit: Simple heuristics for paired comparison",
+      "venue": "Theory and Decision 52, 29–71",
+      "doi": "10.1023/A:1015516217425",
+      "note": "Not read (no open-access copy found); the missing source named in the provenance (closest work in the line of the bases)."
+    },
+    {
+      "authors": "Grötschel, M.; Jünger, M.; Reinelt, G.",
+      "year": 1984,
+      "title": "A cutting plane algorithm for the linear ordering problem",
+      "venue": "Operations Research 32(6), 1195-1220",
+      "doi": "10.1287/opre.32.6.1195",
+      "note": "Listed only to document the literature search; not used as evidence. The linear ordering problem, the pairwise case (Proposition 1). Abstract only."
+    },
+    {
+      "authors": "Happach, F.; Hellerstein, L.; Lidbetter, T.",
+      "title": "A general framework for approximating min sum ordering problems",
+      "arxiv": "2004.05954",
+      "note": "Listed only to document the literature search; not used as evidence. Min-sum ordering problems price by position, not by the capturing rule. Abstract and §1 only."
+    }
+  ],
+  "verify": "python theorems/first-match-prices-not-pairwise/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

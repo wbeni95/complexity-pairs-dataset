@@ -1,0 +1,164 @@
+{
+  "id": "lz77-repeat-slots-enumeration-vs-slot-dp",
+  "title": "Optimal LZ77-style parsing with k repeat-offset slots: enumeration of all parses vs dynamic programming over (position, slot contents)",
+  "problem_statement": "Given a string s = s[0..n-1] over an integer alphabet, an integer k >= 1 (the number of repeat-offset slots) and an integer REPMIN >= 1, find the minimum total cost of a parse of s. A parse is a sequence of tokens that covers s from left to right, from position 0 to position n. It carries a slot tuple R = (R[0], ..., R[k-1]) of positive integers, initially (1, ..., 1). At position i three kinds of token are allowed. (1) A literal: cost 9, advances to i + 1, R unchanged. (2) A repeat of slot j with length L: allowed if R[j] <= i, L >= REPMIN, i + L <= n and s[i+t] = s[i+t-R[j]] for 0 <= t < L (the copy may overlap the text being coded); cost 3 + j + gamma(L); advances to i + L; R becomes (R[j], R[0..j-1], R[j+1..k-1]), i.e. slot j moves to the front. (3) A new match with distance d and length L: allowed if 1 <= d <= i, L >= 2, i + L <= n and s[i+t] = s[i+t-d] for 0 <= t < L; cost 2 + gamma(L-1) + gamma(d); advances to i + L; R becomes (d, R[0..k-2]), i.e. d is pushed to the front and the last slot is dropped (equal values in several slots are allowed). Here gamma(x) = 2 floor(log2 x) + 1, the length of the Elias gamma code of x. The costs are static: they depend only on the token, never on the history. Output: the minimum total cost (an integer). The implementations return it together with their operation count.",
+  "input": {
+    "parameter": "n = |s|, the length of the string. k and REPMIN are fixed parameters of the problem family; every complexity statement is for fixed k. V1 draws k from {1, 2, 3} and REPMIN from {1, 2, 3}; the V2 family has k = 2 and REPMIN = 3.",
+    "size_measure": "n symbols (non-negative integers); the alphabet is not bounded (the V2 family uses n/3 + 2 distinct symbols)."
+  },
+  "algorithms": [
+    {
+      "name": "enumeration of all parses",
+      "idea": "Depth-first search over every token sequence from position 0 with slots (1, ..., 1); every complete parse is costed and the cheapest is kept. The match lengths ml[i][d] are precomputed once.",
+      "model": "classical-deterministic",
+      "pseudocode": "ml[i][d] = length of the longest match at position i with distance d (all 1 <= d <= i)\nbest = None; stack = [(0, (1,...,1), 0)]\nwhile stack:\n  (i, R, c) = pop()\n  if i == n: best = min(best, c); continue\n  push (i+1, R, c+9)                                   # literal\n  for j < k with R[j] <= i: for L = REPMIN .. ml[i][R[j]]: push (i+L, move_to_front(R, j), c + 3 + j + gamma(L))\n  for d = 1 .. i: for L = 2 .. ml[i][d]: push (i+L, (d) + R[0..k-2], c + 2 + gamma(L-1) + gamma(d))\nreturn best",
+      "time_complexity": "2^Theta(n log n) token evaluations in the worst case, for every fixed k >= 1 and REPMIN >= 1 (a token evaluation = one extension of a partial parse by one token, i.e. one edge of the search tree). Lower bound (PROOFS.md 6.4): on F1(m) = x_1 a b x_2 a b ... x_m a b (x_j fresh), block j >= 2 can be coded by two literals or by a new match of length 2 at any of the distances 3, 6, ..., 3(j-1), so there are at least m! parses, i.e. at least floor(n/3)! = 2^((1/3 - o(1)) n log2 n) evaluations for n >= 1 after padding with fresh symbols. Upper bound, for n >= 1 (PROOFS.md 6.5): a parse is a composition of n into token lengths (2^(n-1) choices) with at most n + k + 1 tokens of each length at each position, so there are at most 2^(n-1) (n + k + 1)^n parses; a partial parse is determined by the complete parse obtained by appending literals and by its number of tokens, so there are at most (n + 1) 2^(n-1) (n + k + 1)^n search-tree nodes. Besides the evaluations, the search does O((n + k)(E + 1)) elementary operations for E evaluations, plus Theta(n^2) for the match-length table (PROOFS.md 6.6), so its time is also 2^Theta(n log n) in the worst case. Exactly sum_{j=1}^{m} (j-1)! (j+2) = m! (1 + 3/m + O(1/m^2)) token evaluations on the V2 family (n = 3m, REPMIN = 3, any k), with exactly m! complete parses (PROOFS.md section 2).",
+      "space_complexity": "Theta(n^2) for the match-length table plus the search stack (PROOFS.md section 7): the stack holds the root, or the not yet expanded children of the nodes on the current path; that path has at most n nodes with children (their positions strictly increase within 0..n-1), and a node at position i pushes at most 1 + k(n - i) + i(n - i) <= 1 + kn + n^2/4 tokens, so at most n (1 + kn + n^2/4) + 1 = O(n^2 (n + k)) entries.",
+      "correctness": "Exhaustive (PROOFS.md section 4): every allowed token is tried at every reached state, so every parse is costed, and the minimum is returned.",
+      "implementation": "implementations/enumeration.py:lz77_slots_enumeration",
+      "harness": {
+        "v1_max_n": 8,
+        "scaling": {
+          "cost": "(n/3 + 3)*factorial(n/3 - 1)",
+          "n_values": [
+            12,
+            15,
+            18,
+            21,
+            24
+          ],
+          "measure": "reported",
+          "tolerance": 0.05,
+          "rivals": [
+            "2**n",
+            "factorial(n/3 + 1)",
+            "n*factorial(n/3)"
+          ]
+        }
+      }
+    },
+    {
+      "name": "dynamic programming over (position, slot contents)",
+      "idea": "With static costs, whether a token is allowed at position i and what it costs depend only on i and the current slot tuple R. So best[i][R], the cheapest cost of reaching position i with slots R, is computed left to right by relaxing every allowed token from every state, and the answer is the minimum over R of best[n][R]. New matches from (i, R) lead to (d, R[0..k-2]) at a cost that does not depend on R[k-1], so they are generated once per distinct (k-1)-prefix, from the cheapest state with that prefix.",
+      "model": "classical-deterministic",
+      "pseudocode": "best[0] = {(1,...,1): 0}\nfor i = 0 .. n-1:\n  groups = {}\n  for (R, c) in best[i]:\n    offer best[i+1][R] <- c + 9                                               # literal\n    for j < k with R[j] <= i: for L = REPMIN .. ml[i][R[j]]: offer best[i+L][move_to_front(R, j)] <- c + 3 + j + gamma(L)\n    groups[R[0..k-2]] = min(groups[R[0..k-2]], c)\n  for (P, c) in groups: for d with ml[i][d] >= 2: for L = 2 .. ml[i][d]: offer best[i+L][(d) + P] <- c + 2 + gamma(L-1) + gamma(d)\nreturn min over R of best[n][R]",
+      "time_complexity": "O(n^(k+2)) relaxations for every input and fixed k, plus Theta(n^2) for the match-length table (a relaxation = one candidate value offered to a successor state). Proof (PROOFS.md 6.2): a slot value is 1 or the distance d <= i - 2 of an earlier new match, so position i has at most n^k states and at most n^(k-1) prefix groups; every token at position i has length at most n - i, so a state makes at most 1 + k(n - i) relaxations and a group at most i (n - i); the total over the n positions is at most n [n^k (1 + kn) + n^(k-1) n^2] = O(n^(k+2)). Besides the relaxations the DP does O(k T + n^2) elementary operations for T relaxations (PROOFS.md 6.3), so its time is O(n^(k+2)) for fixed k and n >= 1. The bound is tight: on a^n the DP has at least sum_{i=2k+1}^{n} prod_{t=1}^{k} (i - 2t) = n^(k+1)/(k+1) - O(n^k) states and makes n^(k+2)/(k+2) + O(n^(k+1)) relaxations, and every input has at most 3 + sum_{j=1}^{n-2} j^k states, for every REPMIN >= 1 (theorems/lz77-repeat-slots-state-bounds, Theorem C; that note is labelled undetermined). Exactly (4m^3 - 15m^2 + 29m - 9)/3 relaxations on the V2 family (k = 2, REPMIN = 3, n = 3m; PROOFS.md section 3).",
+      "space_complexity": "O(n^(k+1)) states (at most 3 + sum_{j=1}^{n-2} j^k for every REPMIN >= 1, see time_complexity) plus Theta(n^2) for the match-length table (PROOFS.md section 7).",
+      "correctness": "Proof (PROOFS.md section 5). Call (i, R) a state. (1) Whether a token is allowed at (i, R), its length, its cost and the successor slot tuple depend only on (i, R) and the token, because the costs are static and the match test reads only s, i and the distance. So the parses of s are exactly the paths in the directed graph whose vertices are the states and whose arcs are the allowed tokens, from (0, (1,...,1)) to a state at position n, and the cost of a parse is the total arc cost of its path. Every arc increases the position, so the graph is acyclic and positions are a topological order. (2) Induction on i: when position i is processed, every arc into a state at position i starts at a smaller position, all of which have been processed and have offered their values; so best[i][R] is the minimum cost of a path from the start to (i, R). (3) Hence the minimum over R of best[n][R] is the minimum cost of a parse. (4) Prefix grouping: a new match (d, L) from (i, R) leads to (i + L, (d, R[0..k-2])) at cost 2 + gamma(L-1) + gamma(d), which does not depend on R[k-1]; among states with the same (k-1)-prefix, the cheapest one offers the smallest value to each such successor, so offering only from it leaves every minimum in (2) unchanged. Credit for the DP: see background (Bloom's blog posts).",
+      "implementation": "implementations/slot_dp.py:lz77_slots_dp",
+      "harness": {
+        "scaling": {
+          "cost": "4*n**3/81 - 5*n**2/9 + 29*n/9 - 3",
+          "n_values": [
+            30,
+            45,
+            60,
+            75,
+            90,
+            105,
+            120
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**2",
+            "n**4",
+            "2**(n/3)"
+          ],
+          "shape": {
+            "sequence": "consecutive",
+            "n_range": [
+              3,
+              60
+            ],
+            "step": 3,
+            "note": "n = 3m; the count is a cubic polynomial in m for every m >= 1"
+          }
+        }
+      }
+    }
+  ],
+  "pair_type": "T2",
+  "relationship": "Super-exponential -> polynomial for every fixed k: enumeration 2^Theta(n log n) token evaluations (and time) in the worst case -> DP O(n^(k+2)) relaxations (and time), tight on a^n (PROOFS.md section 6). On the V2 family F1 (n = 3m, k = 2, REPMIN = 3): sum_{j=1}^{m} (j-1)! (j+2) = Theta((n/3)!) token evaluations vs (4m^3 - 15m^2 + 29m - 9)/3 = Theta(n^3) relaxations (PROOFS.md sections 2 and 3). The exponent of the DP grows with k; the entry makes no claim for k growing with n.",
+  "sources": [
+    {
+      "authors": "Bloom, C.",
+      "year": 2015,
+      "title": "01-23-15 - LZA New Optimal Parse",
+      "venue": "cbloom rants (blog), 23 January 2015; not peer-reviewed",
+      "url": "https://cbloomrants.blogspot.com/2015/01/01-23-15-lza-new-optimal-parse.html",
+      "note": "Credit (folklore): describes the DP over (position, state) with the repeat-match offsets in the state. The post says that 'when the size of your dynamic \"state\" is small, you can do a truly optimal parse using dynamic programming. If state is of size S it simply requires a table of size N*S.', that 'as soon as you introduce even one \"repeat match\", then S is too big', and labels the nodes of his parser by '{state,pos} where \"state\" only includes the rep match offsets and a few bits similar to the LZMA \"markov chain\"'. It gives no correctness proof. Everything this entry claims is proved in PROOFS.md and checked here."
+    },
+    {
+      "authors": "Bloom, C.",
+      "year": 2011,
+      "title": "12-17-11 - LZ Optimal Parse with A Star Part 3",
+      "venue": "cbloom rants (blog), 17 December 2011; not peer-reviewed",
+      "url": "https://cbloomrants.blogspot.com/2011/12/12-17-11-lz-optimal-parse-with-star_17.html",
+      "note": "Credit: a forward optimal parser whose nodes are {Pos,State} pairs, with a general adaptive state, and a threshold early out."
+    }
+  ],
+  "verification": {
+    "level": "V2",
+    "method": "V1: the validator runs n = 0..8, 10, 12 and 14, 6 instances per size, with k in {1, 2, 3} and REPMIN in {1, 2, 3}: a^n (sometimes with one other symbol), random strings over 2-4 letters, periodic strings with substitutions, copy strings (random letters and overlapping copies of earlier substrings), words separated by fresh symbols, and the V2 family padded to length n. The enumeration runs up to n = 8, the DP on every size. check is independent of both implementations: it recomputes the optimum by a backward memoised recursion over (position, slots) with its own match test by direct character comparison (exact for n <= 24, i.e. on every V1 size), and rejects a cost above 9n or an output that is not a pair of integers. tests/test_entry_lz77_repeat_slots.py: agreement and oracle on extra seeded instances, all binary strings of length <= 7 with k = 1, 2, 3 and REPMIN = 1, 2, 3 (enumeration = DP = oracle), the match-length table against its definition (every binary string of length <= 8), the exact V2 counts against the closed forms (enumeration also for k = 1, 3; the DP's slot tuples per block), the parse counts of F1 (at least m!, exactly m! for REPMIN = 3, every k and REPMIN in 1..3, padding 0..2), the per-position state bound of the DP (REPMIN = 1, 2, 3) and its lower bound on a^n, the total state bound 3 + sum_{j=1}^{n-2} j^k (REPMIN = 1, 2, 3), the relaxation bound O(n^(k+2)) and the search-tree bound of the enumeration on every binary string of length 1..7, the maximum stack size n (1 + kn + n^2/4) + 1 of the enumeration (every binary string of length 1..8, a^n for n <= 11, or n <= 9 when k >= 2 and REPMIN = 1, F1(m) for m <= 7), the uncounted work of both algorithms, and rejection of wrong outputs. V2 (exact counts, measure 'reported'): generate_scaling gives F1(m) = x_1 a b ... x_m a b with k = 2 and REPMIN = 3; the implementations return their own counts (token evaluations, resp. relaxations), which the harness reports. Enumeration: exactly sum_{j=1}^{m} (j-1)! (j+2) (checked for m = 1..8); fitted on n = 12..24 against (n/3 + 3)(n/3 - 1)!, which equals the count up to a factor in [1, 1 + 6/((m + 3)(m - 1))]; rivals 2^n, (n/3 + 1)! and n (n/3)!. The slope fit over five sizes is a consistency check; the factorial growth rests on the exact count, which is proved. DP: exactly (4m^3 - 15m^2 + 29m - 9)/3 (checked for m = 1..40); fitted on n = 30..120 against that polynomial; rivals n^2, n^4 and 2^(n/3). The shape diagnostic runs on the DP counts for n = 3..60 (step 3). The counts are computed by the implementations themselves; no CPython built-in performs a counted operation. Proofs: PROOFS.md proves every claim of this entry (the correctness of both algorithms and of the oracle, the exact counts for every m, the bounds on every input including the uncounted work, the space bounds, the factual caveats) and names the tests and scripts that check each one.",
+    "artifacts": [
+      "PROOFS.md",
+      "implementations/enumeration.py",
+      "implementations/slot_dp.py",
+      "harness.py",
+      "../../tests/test_entry_lz77_repeat_slots.py",
+      "../../theorems/lz77-repeat-slots-state-bounds/verify.py",
+      "../../theorems/lz77-repeat-slots-exact-pruning/verify.py"
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      10,
+      12,
+      14
+    ],
+    "trials": 6
+  },
+  "caveats": "Exact counts on the V2 family (proofs: PROOFS.md sections 1-3). Enumeration: in F1(m) = x_1 a b ... x_m a b the symbols x_j occur once, so no match token covers or starts at x_j; a match starting at the b of a block has length at most 1; a match starting at the a of block j has distance 3t (t = 1..j-1) and length exactly 2, because the next symbols x_{j+1} and x_{j-t+1} differ (for j = m the match stops at the end of the string). With REPMIN = 3 no repeat is allowed. So a prefix that ends at the start of block j can be extended in j + 2 ways inside the block (x_j; the literal a or one of j - 1 new matches; then the literal b after the literal a), there are (j-1)! such prefixes, and the total is sum_j (j-1)! (j+2) = sum_{j=1}^{m} j! + 2 sum_{j=0}^{m-1} j!. Since sum_{j=0}^{N} j! <= 2 N! for N >= 1 (induction), the total lies between m! + 3(m-1)! and m! + 3(m-1)! + 6(m-2)! for m >= 3, so it is m! (1 + 3/m + O(1/m^2)) and equals (m + 3)(m - 1)! up to a factor 1 + O(1/m^2). DP: the slot tuples at the three positions of block j are the tuples (3u_0, ..., 3u_{c-1}, 1, ..., 1) with 0 <= c <= max(0, min(k, j-2)) and 1 <= u_a <= j-2-a, i.e. S(j) = sum_c (j-2)!/(j-2-c)! of them (so S(1) = S(2) = 1) (the c most recent new matches were made in blocks t_0 > t_1 > ... with u_a <= t_a - 1 <= j-2-a, and every such tuple is reached by matches in blocks j-1, j-2, ...); the new matches are relaxed once per prefix group at the a of each block, j - 1 distances with one length each, and G(j) groups (the same sum with c <= max(0, min(k - 1, j - 2))). The total sum_j 3 S(j) + sum_{j>=2} (j-1) G(j) equals (4m^3 - 15m^2 + 29m - 9)/3 for k = 2. What is counted: token evaluations of the enumeration and relaxations of the DP, i.e. one cost addition per candidate in both. Not counted: the match-length table (both algorithms build it), the scan for distances with a match of length >= 2, the k slot tests per state or node, and dictionary or stack operations; PROOFS.md 6.3 and 6.6 prove that this work is O(k T + n^2) for the DP (T relaxations) and O((n + k)(E + 1) + n^2) for the enumeration (E evaluations). The model is an abstraction with static costs. With adaptive (history-dependent) prices the DP that keeps one value per (position, slots) is not exact (counterexample in theorems/lz77-repeat-slots-exact-pruning, Proposition 6(b)). The entry makes no claim about any real compression format. The worst-case lower bound for the enumeration uses an alphabet of n/3 + O(1) symbols (PROOFS.md section 9).",
+  "notes": "Credit for the DP: see background (Bloom's blog posts of 2011 and 2015). The size of the state space and an exact (optimum-preserving) pruning rule for REPMIN >= 2 are the subject of two theorem notes, both labelled undetermined (they may be our own results beyond the folklore DP; sources that might contain them could not be read: the journal version of the dictionary-symbolwise flexible parsing paper and the full text of Langiu's Zip-case paper, because the publisher's site refused automated access, and a 2010 thesis, which is not consultable until 2050): theorems/lz77-repeat-slots-state-bounds (for every REPMIN >= 1 at most 3 + sum_{j=1}^{n-2} j^k states, attained up to lower-order terms on a^n, and n^(k+2)/(k+2) + O(n^(k+1)) relaxations in the worst case; for REPMIN >= 2 exact pruning keeps Theta(n^(k+1)) states in the worst case over unbounded alphabets) and theorems/lz77-repeat-slots-exact-pruning (the rule G3 and its generalisation G3*, for REPMIN >= 2; with REPMIN = 1 the rule fails on an explicit string). Prefix grouping of the new matches is an implementation detail of this entry; its exactness is part of the correctness proof (PROOFS.md section 5).",
+  "background": [
+    {
+      "statement": "Bloom's 2015 post states that when the dynamic 'state' of a parse is small, a truly optimal parse can be computed by dynamic programming with a table of size N*S for a state of size S, and that as soon as even one 'repeat match' is introduced, S is too big. His A* parser labels its nodes by {state,pos}, where the state includes only the repeat-match offsets and a few further bits, and discards paths that cannot be better than the current best path by more than a threshold; the higher the threshold, the more approximate (and faster) he calls the parse. The post gives no correctness proof. This entry credits the DP over (position, slot contents) to this post (folklore; not peer-reviewed), and the {Pos,State} parser with a general adaptive state to the 2011 post below.",
+      "source": "Bloom 2015 (blog post '01-23-15 - LZA New Optimal Parse')"
+    },
+    {
+      "statement": "Bloom's 2011 post describes a forward optimal parse whose nodes are {Pos,State} pairs, with a general adaptive state, stores one cheapest arrival per node, and stops exploring an arrival whose cost exceeds the best cost at the same position by more than a threshold, assuming that starting from a different state cannot help more than some amount.",
+      "source": "Bloom 2011 (blog post '12-17-11 - LZ Optimal Parse with A Star Part 3')"
+    }
+  ],
+  "provenance": {
+    "class": "literature",
+    "bases": [
+      "Bloom 2015, blog post '01-23-15 - LZA New Optimal Parse' (folklore, not peer-reviewed)"
+    ],
+    "note": "The DP itself is folklore (Bloom's blog, not peer-reviewed; see background). Its correctness proof, the bounds on every input and the exact counts on the V2 family are written out in PROOFS.md. The worst-case state and relaxation bounds it links to are in theorems/lz77-repeat-slots-state-bounds, labelled undetermined (possibly our own result; sources that might contain it could not be read: the journal version of the dictionary-symbolwise flexible parsing paper and the full text of Langiu's Zip-case paper, because the publisher's site refused automated access, and a 2010 thesis, which is not consultable until 2050)."
+  },
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "../../theorems/lz77-repeat-slots-state-bounds/README.md",
+      "../../theorems/lz77-repeat-slots-exact-pruning/README.md"
+    ],
+    "checks": [
+      "../../tests/test_entry_lz77_repeat_slots.py",
+      "../../theorems/lz77-repeat-slots-state-bounds/verify.py",
+      "../../theorems/lz77-repeat-slots-exact-pruning/verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

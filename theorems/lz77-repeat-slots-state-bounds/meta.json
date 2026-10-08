@@ -1,0 +1,88 @@
+{
+  "id": "lz77-repeat-slots-state-bounds",
+  "title": "How many states the exact DP for LZ77-style parsing with k repeat-offset slots holds, with and without exact pruning",
+  "statement": "Model as in theorems/lz77-repeat-slots-exact-pruning (literal 9; repeat of slot j with length L >= REPMIN: 3 + j + gamma(L), slot j to the front; new match with distance d <= i and length L >= 2: 2 + gamma(L-1) + gamma(d), d pushed to the front, last slot dropped; slots initially (1, ..., 1); REPMIN >= 2 except in Theorem C). Theorem C (every REPMIN >= 1; delta = 1 if REPMIN = 1, else 0): for every input of length n the forward DP over (position, slot tuple) holds at most max(1, (i-2)^k) states at position i, at most 3 + sum_{j=1}^{n-2} j^k in total, and its prefix-grouped version makes at most S_0 + sum_{i=1}^{n-1} [S_i (1 + k(n-i-1+delta)) + G_i i (n-i-1)] relaxations; on a^n at least prod_{t=1}^{k} (i-2t) states at position i (2k+1 <= i <= n), and for REPMIN = 1, 2 and n >= 1 the relaxation bound holds with equality; hence the worst case is n^(k+1)/(k+1) + O(n^k) states and n^(k+2)/(k+2) + O(n^(k+1)) relaxations for fixed k. Theorem A: with the exact pruning rule G3 (or G3*) and any comparator rule, on a^n (n >= 3) exactly one state, (1, ..., 1), is kept at every position 0..n-1, position n holds n - 2 states, the total is 2n - 2, and (REPMIN = 2) the pruned DP makes n + k(n-1)(n-2)/2 + n(n-1)(n-2)/6 relaxations. Theorems F1 (k <= 4) and F2 (every k) and Corollary W: over unbounded integer alphabets the G3-pruned DP keeps at least (n - C - 2M + 1)^(k+1)/(2^(k+1) M^k) states on explicit strings of every length n >= C + 2M (constants C, M depending on k; under G3* C + REPMIN), so exact pruning keeps Theta(n^(k+1)) states in the worst case, the order of the unpruned DP. Nothing is claimed for fixed alphabets.",
+  "provenance": {
+    "class": "undetermined",
+    "bases": [
+      "Folklore DP over (position, slot contents): Bloom 2015, blog post '01-23-15 - LZA New Optimal Parse' (not peer-reviewed)"
+    ],
+    "pending": true,
+    "pending_note": "The base is the folklore slot-content DP: Bloom's blog posts contain the DP with the repeat-match offsets in the state and the remark that its state space becomes too big once repeat matches are present (2015), and a {Pos,State} parser (2011); neither post counts the states of the DP with repeat offsets, and neither gives a proof. Beyond the sources read, this note proves the state and relaxation bounds (with and without exact pruning). Three sources that might contain them could not be read (missing_sources): the journal version of the dictionary-symbolwise flexible parsing (DSFP) paper and the full text of Langiu's Zip-case paper (the publisher's site refused automated access; the DSFP preprint was read in full and has no repeat-offset state), and the 2010 thesis 'Parsing algorithms for data compression' (University of Pisa; not consultable until 2050). Whether they contain the results could not be checked, so they may be our own result. Nothing read states these state bounds.",
+    "missing_sources": [
+      {
+        "authors": "Crochemore, M.; Giambruno, L.; Langiu, A.; Mignosi, F.; Restivo, A.",
+        "year": 2012,
+        "title": "Dictionary-symbolwise flexible parsing",
+        "venue": "Journal of Discrete Algorithms 14, 74-90",
+        "doi": "10.1016/j.jda.2011.12.021",
+        "status": "journal version not read: the publisher's site refused automated access (the HAL preprint hal-00742078, which defers part of its material to the journal version, was read in full and has no repeat-offset state)",
+        "needed_for": "whether the journal version counts or bounds the states (or relaxations) of the dynamic program over (position, repeat-offset slots), with or without exact pruning"
+      },
+      {
+        "authors": "Langiu, A.",
+        "year": 2013,
+        "title": "On parsing optimality for dictionary-based text compression—the Zip case",
+        "venue": "Journal of Discrete Algorithms 20, 65-70",
+        "doi": "10.1016/j.jda.2013.04.001",
+        "status": "full text not read: the publisher's site refused automated access (only the abstract was read)",
+        "needed_for": "whether this survey of parsing optimality for dictionary-based compression counts or bounds those states"
+      },
+      {
+        "authors": "not named in the thesis record",
+        "year": 2010,
+        "title": "Parsing Algorithms for Data Compression",
+        "venue": "PhD thesis, University of Pisa",
+        "url": "https://etd.adm.unipi.it/t/etd-05252010-115131",
+        "status": "not consultable until 2050 (the thesis record gives the release date 24 June 2050); only the abstract was read",
+        "needed_for": "whether the thesis counts or bounds the states of a dynamic program over (position, repeat-offset slots)"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "authors": "Bloom, C.",
+      "year": 2015,
+      "title": "01-23-15 - LZA New Optimal Parse",
+      "venue": "cbloom rants (blog), 23 January 2015; not peer-reviewed",
+      "url": "https://cbloomrants.blogspot.com/2015/01/01-23-15-lza-new-optimal-parse.html",
+      "note": "Credit for the base: the DP over {state, pos} with the repeat-match offsets in the state, a table of size N*S for a state space of size S, and the remark that S is too big once repeat matches are present."
+    },
+    {
+      "authors": "Bloom, C.",
+      "year": 2011,
+      "title": "12-17-11 - LZ Optimal Parse with A Star Part 3",
+      "venue": "cbloom rants (blog), 17 December 2011; not peer-reviewed",
+      "url": "https://cbloomrants.blogspot.com/2011/12/12-17-11-lz-optimal-parse-with-star_17.html",
+      "note": "Credit for the base: a forward optimal parser over {Pos,State} nodes with a general adaptive state."
+    },
+    {
+      "authors": "Crochemore, M.; Giambruno, L.; Langiu, A.; Mignosi, F.; Restivo, A.",
+      "year": 2012,
+      "title": "Dictionary-symbolwise flexible parsing",
+      "venue": "Journal of Discrete Algorithms 14, 74-90",
+      "doi": "10.1016/j.jda.2011.12.021",
+      "note": "Checked, not credited. The journal version was not read here: the publisher's site refused automated access. The preprint (https://hal.science/hal-00742078) was read in full: one cost per edge of a graph on text positions, no repeat-offset state, no pruning of states, no state counts."
+    },
+    {
+      "authors": "University of Pisa (doctoral thesis; the thesis record read names no author)",
+      "year": 2010,
+      "title": "Parsing Algorithms for Data Compression",
+      "venue": "PhD thesis, University of Pisa",
+      "url": "https://etd.adm.unipi.it/t/etd-05252010-115131",
+      "note": "Checked, not credited. The thesis record marks the thesis as not consultable until 24 June 2050; only the abstract was read (bit-optimal LZ77 parsing as a shortest-path computation in a directed acyclic graph; no mention of repeat offsets)."
+    }
+  ],
+  "verify": "python theorems/lz77-repeat-slots-state-bounds/verify.py",
+  "proof": {
+    "documents": [
+      "README.md",
+      "../lz77-repeat-slots-exact-pruning/README.md"
+    ],
+    "checks": [
+      "verify.py",
+      "../lz77-repeat-slots-exact-pruning/verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "id": "max-flow-random-dense-dinic-short-residual-paths",
+  "title": "Residual s–t distance at most 6, and Dinic in Θ(n²) reads, on the max-flow entry's random dense networks",
+  "statement": "Model: vertices 0..n-1, s = 0, t = n-1; every ordered pair is an edge independently with probability 1/2 and capacity uniform on {1..100} (generate_scaling of pairs/max-flow-edmonds-karp-vs-dinic with ideal random bits). Theorem 4 (deterministic): on every network without parallel edges and with capacities in {1..100} that satisfies the capacity events P1(k) (every middle vertex v has kappa+(v), kappa-(v) >= k, where kappa+(v) = min over feasible j of max(outdeg(v) - j, i*(j)) from the sorted in- and out-capacities of v) and P2(k+1, ceil(n/2)) (for every partition (X, L, Y) with s in X, t in Y, |X| >= k+1, |Y| >= ceil(n/2): c(X, Y - {t}) - c(L, X) > 100(n - |X|), and the mirror condition), every feasible flow has residual s-t distance <= 6 or no residual s-t path. Theorem 5: with lambda = sqrt(((n-1)/2) ln(2m/p)), k_s = ceil((42/142)(0.295(n-1) - lambda)), x = k_s + 1, h = (101/4) x(x-1) - 100n > 0, these events fail with probability <= p + 2n 2^{2n-3} exp(-2h^2/(10^4 x n)); with p = 10^-3 this is <= 0.01 for every n >= 21 437, and with p = 1/n it is <= 2/n for every n >= 21 793 (certified computation up to n = 10^6, written argument above). Proposition 6: sharper computed bounds give failure <= 0.002 + 2.6e-54 at n = 3000, 4000, 5000, 10^4, 2*10^4. Corollary 7: on the event, every Edmonds-Karp augmenting path has <= 6 arcs, Dinic makes P <= 7 BFS passes and reads <= 4E(P-1) + 2E + 6F <= 26E + 600(n-1) adjacency entries and current-arc scans; its first BFS reads 2E >= n(n-1)/2 except with probability <= 1/n (n >= 40); so for every n >= 21 793, with probability >= 1 - 3/n, n(n-1)/2 <= Dinic reads <= 26n(n-1) + 600(n-1). Theorem 8: a distance-8 variant (P <= 9, reads <= 34E + 800(n-1)) holds with probability >= 0.998 - 1.1e-49 at each of n = 350, 400, 500, 560, 600, 700, 800, 900, 1000, 1200, 1500, 2000. Proposition 9: for every n >= 21 793, with probability >= 1 - 3/n, P = 3 + 1[(s,t) is an edge] + #(phases with level[t] in {4, 5, 6}). Proposition 10: the edge (s, t) adds exactly one leading phase of length 1 (Dinic) and one leading path s -> t (Edmonds-Karp), so no value of P has probability > 1/2.",
+  "provenance": {
+    "class": "own-extension",
+    "bases": [
+      "Motwani 1994 (J. ACM 41(6), doi:10.1145/195613.195663; read in an author's copy): on random bipartite graphs, every non-maximum 0-1 flow and every non-maximal k-sub-factor (capacities integers <= k) has an augmenting path of length at most 2L + 1, L = c ln n/ln Delta (Theorem 9); no random capacities, no explicit constant, no explicit failure probabilities"
+    ]
+  },
+  "sources": [
+    {
+      "authors": "Motwani, R.",
+      "year": 1994,
+      "title": "Average-case analysis of algorithms for matchings and related problems",
+      "venue": "Journal of the ACM 41(6), 1329-1356",
+      "doi": "10.1145/195613.195663",
+      "note": "Base. Read in an author's copy (abstract, Sections 1-1.2, the k-factor section, Theorems 5-7 and 9-11); the publisher's PDF was not accessible. Based on the author's 1988 PhD dissertation, which could not be accessed."
+    },
+    {
+      "authors": "Motwani, R.",
+      "year": 1989,
+      "title": "Expanding graphs and the average-case analysis of algorithms for matchings and related problems",
+      "venue": "Proceedings of the 21st Annual ACM Symposium on Theory of Computing (STOC '89), 550-561",
+      "doi": "10.1145/73007.73060",
+      "note": "Conference version, read in an archived copy of the publisher's PDF; it defers the details of its result on random 0-1 flow instances to the final version."
+    },
+    {
+      "authors": "Karp, R. M.; Motwani, R.; Nisan, N.",
+      "year": 1993,
+      "title": "Probabilistic analysis of network flow algorithms",
+      "venue": "Mathematics of Operations Research 18(1), 71-97",
+      "doi": "10.1287/moor.18.1.71",
+      "note": "Abstract and an author's copy of the journal text read; the 1988 report version partly read. No analysis of the phases or BFS work of Edmonds-Karp or Dinic."
+    },
+    {
+      "authors": "Edmonds, J.; Karp, R. M.",
+      "year": 1972,
+      "title": "Theoretical improvements in algorithmic efficiency for network flow problems",
+      "venue": "Journal of the ACM 19(2), 248-264",
+      "doi": "10.1145/321694.321699",
+      "note": "Credit for the algorithm; Lemma 1(b) is proved in the note for the entry's code. Only the abstract and Section 2.1 were read."
+    },
+    {
+      "authors": "Dinic, E. A.",
+      "year": 1970,
+      "title": "Algorithm for solution of a problem of maximum flow in a network with power estimation",
+      "venue": "Soviet Mathematics Doklady 11, 1277-1280",
+      "note": "Credit for the algorithm; Lemma 1(c) is proved in the note for the entry's code. Not accessible."
+    }
+  ],
+  "verify": "python theorems/max-flow-random-dense-dinic-short-residual-paths/verify.py",
+  "proof": {
+    "documents": [
+      "README.md",
+      "../max-flow-random-dense-trivial-min-cut/README.md",
+      "../../pairs/max-flow-edmonds-karp-vs-dinic/PROOFS.md"
+    ],
+    "checks": [
+      "verify.py",
+      "../max-flow-random-dense-trivial-min-cut/verify.py",
+      "../../tests/test_proofs_maxflow.py"
+    ],
+    "audit": "RL-113"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "hungarian-exact-iteration-count",
+  "title": "Exact iteration count of the entry's Hungarian implementation: row-monotone worst case and rectangular counts",
+  "statement": "For the successive-shortest-augmenting-path Hungarian code of pairs/assignment-brute-vs-hungarian (rows inserted one at a time; an iteration is one pass of its inner loop, which evaluates cur = C[i0][j] - u[i0] - v[j] for every unused column j and selects the smallest index among the unused columns with minimal minv) and its rectangular form (rows 1..m, columns 1..n, m <= n): Lemma 1: on every input, the search for row i runs at most i iterations and iteration t evaluates cur exactly n - t + 1 times, so at most m(m+1)/2 iterations and m(m+1)(3n - m + 1)/6 = (n+1)m(m+1)/2 - m(m+1)(m+2)/6 evaluations. Theorem 2: on every integer (or exact rational) matrix with non-decreasing rows, the search for row i runs exactly i iterations, selecting columns 1..i-1 and then column i. Corollary 3: these matrices attain the maxima of Lemma 1 exactly (n(n+1)/2 iterations and n(n+1)(2n+1)/6 evaluations for n x n), including the entry's timing family C[i][j] = 1000 j + r, r in 0..999. Proposition 4: for m <= n with non-decreasing rows, an optimal assignment uses only the first m columns, so the square code on the m x m submatrix (m(m+1)(2m+1)/6 evaluations) replaces the full run (m(m+1)(3n - m + 1)/6). Proposition 5: adding M j to column j (columns 1..n, M > max C - min C) makes rows strictly increasing and shifts every permutation's cost by M n(n+1)/2, so any algorithm for square row-monotone inputs solves every square input with O(n^2) additional unit-cost operations. Proposition 6: on every integer (or exact rational) square matrix the square code returns the minimum assignment cost.",
+  "provenance": {
+    "class": "own-extension",
+    "bases": [
+      "Folklore: O(n) iterations per inserted row, hence O(n^3) (O(n^2 m) for rectangular inputs), for this implementation of the Hungarian method; read in the cp-algorithms article 'Hungarian algorithm for solving the assignment problem', which presents the C++ code that the entry transcribes",
+      "Edmonds-Karp 1972 (J. ACM 19(2), doi:10.1145/321694.321699), abstract: O(n^3) for the n x n assignment problem; no per-row or exact iteration counts"
+    ]
+  },
+  "sources": [
+    {
+      "authors": "Kuhn, H. W.",
+      "year": 1955,
+      "title": "The Hungarian method for the assignment problem",
+      "venue": "Naval Research Logistics Quarterly 2, 83-97",
+      "doi": "10.1002/nav.3800020109",
+      "note": "Credit, as in the entry. Not accessible."
+    },
+    {
+      "authors": "Munkres, J.",
+      "year": 1957,
+      "title": "Algorithms for the assignment and transportation problems",
+      "venue": "Journal of the Society for Industrial and Applied Mathematics 5(1), 32-38",
+      "doi": "10.1137/0105003",
+      "note": "Credit, as in the entry. Not accessible."
+    },
+    {
+      "authors": "Edmonds, J.; Karp, R. M.",
+      "year": 1972,
+      "title": "Theoretical improvements in algorithmic efficiency for network flow problems",
+      "venue": "Journal of the ACM 19(2), 248-264",
+      "doi": "10.1145/321694.321699",
+      "note": "Base: the O(n^3) bound for the n x n assignment problem (abstract); Theorem 6: 'If all the capacities are integers, then the computation terminates after at most f*(t, s) flow augmentations.' Abstract and Section 2.1 read (archived copy of the publisher's PDF). No per-row or exact iteration counts."
+    },
+    {
+      "authors": "Tomizawa, N.",
+      "year": 1971,
+      "title": "On some techniques useful for solution of transportation network problems",
+      "venue": "Networks 1(2), 173-194",
+      "doi": "10.1002/net.3230010206",
+      "note": "Credit, as in the entry. Not accessible."
+    },
+    {
+      "authors": "cp-algorithms contributors",
+      "title": "Hungarian algorithm for solving the assignment problem",
+      "venue": "cp-algorithms (translated from e-maxx.ru)",
+      "url": "https://cp-algorithms.com/graph/hungarian-algorithm.html",
+      "note": "Base: the only source read that states the per-row bound for this implementation. Presents the C++ code that the entry transcribes (developed by Andrey Lopatin, per the article), 'Each row is processed in time O(n^2), since only O(n) potential recalculations could occur', O(n^3), and O(n^2 m) for rectangular inputs. The passages on the O(n^3) algorithm and the implementation were read."
+    }
+  ],
+  "verify": "python theorems/hungarian-exact-iteration-count/verify.py",
+  "proof": {
+    "documents": [
+      "README.md"
+    ],
+    "checks": [
+      "verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}

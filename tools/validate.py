@@ -18,6 +18,10 @@ What it checks (see START_HERE.txt section 3 for the level definitions):
            compared with the claimed cost; printed with -v, stored with --record.
            Informational only: it never changes a V2 verdict (methods/shape.py,
            notes/v2-shape-diagnostic.md)
+  timing   with --record, every exact-count series (measure 'reported') is also
+           timed on the same instances, and the wall-clock seconds are stored
+           next to the counts as supplementary data. Informational only: it
+           runs after the V2 verdicts and never changes one (--no-timing skips it)
   V3       verification.proofs must cite at least one complexity proof
 
 Levels are cumulative: an entry claiming V2 must also pass V1.
@@ -265,7 +269,8 @@ def fit_slope(xs: list[float], ys: list[float]) -> float:
     return sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sxx
 
 
-def run_v2(entry: dict, entry_dir: Path, verbose: bool, rec: dict | None = None, shape: bool = True) -> list[str]:
+def run_v2(entry: dict, entry_dir: Path, verbose: bool, rec: dict | None = None, shape: bool = True,
+           timing: bool = False) -> list[str]:
     errors = []
     measurements = rec.setdefault("v2", []) if rec is not None else []
     pending_shape = []  # (alg, fn, sc, measurement): the informational shape diagnostic runs after the loop
@@ -376,7 +381,32 @@ def run_v2(entry: dict, entry_dir: Path, verbose: bool, rec: dict | None = None,
             m["shape"] = res
             if verbose:
                 print(f"      shape {alg['name']}: {shape_line(res)}")
+    # Supplementary wall-clock timing of the exact-count series (informational only; the industry-standard view of
+    # the same runs). Like the shape diagnostic it runs after every V2 measurement of this entry, so it cannot
+    # influence them, and it never touches `errors` or `ok`. The exact counts stay the evidence.
+    if timing and rec is not None:
+        for alg, fn, sc, m in pending_shape:
+            if m["measure"] == "reported":
+                m["timing"] = supplementary_timing(entry, gen, alg, fn, sc)
     return errors
+
+
+def supplementary_timing(entry: dict, gen, alg: dict, fn, sc: dict) -> dict:
+    """Wall-clock seconds per call on the V2 instances of an exact-count series (the same seeds as the counts).
+    Informational; never raises."""
+    try:
+        values = []
+        for n in sc["n_values"]:
+            vals = []
+            for k in range(sc.get("samples", 1)):
+                rng = random.Random(f"{entry['id']}|v2|{n}" + (f"|{k}" if k else ""))
+                inst = gen(n, rng)
+                random.seed(f"{entry['id']}|v2|{n}|{k}|{alg['name']}")
+                vals.append(time_call(fn, inst))
+            values.append(sum(vals) / len(vals))
+        return {"informational": True, "unit": "seconds", "n_values": list(sc["n_values"]), "values": values}
+    except Exception as e:  # noqa: BLE001 -- informational: report the failure, never fail the entry
+        return {"informational": True, "error": f"{type(e).__name__}: {e}"}
 
 
 def run_shape(entry: dict, harness, gen, alg: dict, fn, sc: dict, m: dict) -> dict:
@@ -484,17 +514,32 @@ def tag_consistency(entry: dict) -> list[str]:
     return errors
 
 
+PENDING_CLASSES = ("literature", "undetermined")  # the only classes a pending result may be published with
+
+
 def provenance_errors(prov: dict | None) -> list[str]:
-    """Rules the schema cannot express: an own extension names its base, a pending flag explains itself."""
+    """Provenance rules for entries and theorem notes: an own extension names its base, a pending flag explains
+    itself and never comes with an own label, and an undetermined result lists the sources that could not be read."""
     if not prov:
         return []
     errors = []
-    if prov["class"] == "own-extension" and not prov.get("bases"):
+    cls = prov.get("class")
+    if cls == "own-extension" and not prov.get("bases"):
         errors.append("provenance: class 'own-extension' needs at least one entry in 'bases'")
     if prov.get("pending") and not prov.get("pending_note"):
         errors.append("provenance: 'pending' needs a 'pending_note' that names the unchecked source")
     if prov.get("pending_note") and not prov.get("pending"):
         errors.append("provenance: 'pending_note' given but 'pending' is not true")
+    if prov.get("pending") and cls not in PENDING_CLASSES:
+        errors.append("provenance: a pending result is published as 'literature' or 'undetermined', "
+                      "never as an own result")
+    if cls == "undetermined":
+        lacking = [k for k in ("pending", "pending_note", "missing_sources") if not prov.get(k)]
+        if lacking:
+            errors.append("provenance: class 'undetermined' needs 'pending': true, a 'pending_note' and a non-empty "
+                          f"'missing_sources' (lacking: {', '.join(lacking)})")
+    if "missing_sources" in prov and not prov.get("pending"):
+        errors.append("provenance: 'missing_sources' given but 'pending' is not true")
     return errors
 
 
@@ -619,7 +664,9 @@ def validate_entry(entry_dir: Path, validator, args, recorder: list | None = Non
             try:
                 # the informational shape diagnostic runs only when someone will see it (-v or --record)
                 want_shape = not getattr(args, "no_shape", False) and (args.verbose or recorder is not None)
-                v2_errors = run_v2(entry, entry_dir, args.verbose, rec, shape=want_shape)
+                # supplementary wall-clock timing of exact counts: recorded runs only, never a verdict
+                want_timing = not getattr(args, "no_timing", False) and recorder is not None
+                v2_errors = run_v2(entry, entry_dir, args.verbose, rec, shape=want_shape, timing=want_timing)
             except Exception as e:  # noqa: BLE001
                 v2_errors = [f"V2: crashed: {type(e).__name__}: {e}"]
             if not v2_errors:
@@ -673,6 +720,12 @@ def run_metadata(args) -> dict:
         "timing_parameters": {"min_sample_s": MIN_SAMPLE_S, "repeats": REPEATS,
                               "statistic": "per n: best of `repeats` samples, each the mean over a loop lasting >= min_sample_s"},
         "shape_diagnostic": _shape_metadata(args),
+        "supplementary_timing": {
+            "enabled": bool(getattr(args, "scaling", False)) and not getattr(args, "no_timing", False),
+            "informational": True,
+            "applies_to": "every V2 series with measure='reported', on the same instances as the counts",
+            "statistic": "as timing_parameters",
+        },
     }
 
 
@@ -712,6 +765,8 @@ def main(argv=None) -> int:
     ap.add_argument("-v", "--verbose", action="store_true", help="print every scaling measurement")
     ap.add_argument("--no-shape", action="store_true",
                     help="skip the informational exact shape diagnostic (otherwise run with -v or --record)")
+    ap.add_argument("--no-timing", action="store_true",
+                    help="skip the supplementary wall-clock timing of exact-count series (otherwise run with --record)")
     ap.add_argument("--record", action="store_true",
                     help="write every result and measurement to ledger/runs/<UTC timestamp>.json")
     args = ap.parse_args(argv)

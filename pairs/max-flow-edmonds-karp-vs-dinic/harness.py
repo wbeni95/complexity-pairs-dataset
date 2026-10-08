@@ -7,7 +7,11 @@ generate() mixes: random digraphs of density 0.15, 0.4 or 1.0 with capacities fr
 and networks in which t is unreachable (flow 0). s and t are random distinct vertices.
 
 generate_scaling() returns random dense digraphs G(n, 0.5) with capacities from [1, 100], s = 0, t = n - 1.
-It is NOT a worst-case family for either algorithm (see entry.json: the entry stays at V1).
+Both implementations run in O(n^3) time on every instance (PROOFS.md, section 6(d)), so along its instances
+Dinic's O(V^2 E) is not attained as V -> infinity and Edmonds-Karp's O(V E^2) not as E -> infinity (see
+entry.json: the entry stays at V1). PROOFS.md,
+section 10 proves a separation between the two on this family (with probability at least 1 - 5/n for every
+n >= 21793, under an ideal-random-bits assumption).
 
 The oracle is independent of both implementations: for n <= 14 it enumerates every s-t cut (all vertex
 sets containing s and not t) and compares the output with the minimum cut capacity (max-flow min-cut

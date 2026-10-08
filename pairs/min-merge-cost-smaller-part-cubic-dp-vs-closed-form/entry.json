@@ -1,0 +1,157 @@
+{
+  "id": "min-merge-cost-smaller-part-cubic-dp-vs-closed-form",
+  "title": "Merging adjacent piles at the cost of the smaller part (min sum of min(L, R)): cubic interval DP vs the closed form S - max s",
+  "problem_statement": "Given n >= 0 and n + 1 non-negative numbers s_0, ..., s_n (pile sizes in a row; integers or rationals in the implementations), merge the row into a single pile by n merges, each of which joins two adjacent piles of sizes L (left) and R (right) into one pile of size L + R at the cost min(L, R). Compute the smallest possible total cost over all merge orders. Equivalently: the minimum, over all full binary trees whose leaves are s_0, ..., s_n in this order, of the sum over the internal nodes of min(L, R), where L and R are the total sizes of the node's left and right subtree. n = 0 gives 0. With S(x, y) = s_x + ... + s_y this is c(0, n) for c(i, i) = 0, c(i, j) = min_{i<k<=j} [min(S(i, k-1), S(k, j)) + c(i, k-1) + c(k, j)].",
+  "input": {
+    "parameter": "n = number of merges (the row has n + 1 piles).",
+    "size_measure": "n + 1 non-negative numbers. Complexities count comparisons of two size-derived values (the comparison model of the entry); additions and subtractions are counted separately in the caveats."
+  },
+  "algorithms": [
+    {
+      "name": "cubic interval DP (every split)",
+      "idea": "Fill c(i, j) for the rows of piles i..j in order of increasing length; every row tries every split k, i.e. every choice of the blocks i..k-1 and k..j joined by its last merge.",
+      "model": "classical-deterministic",
+      "pseudocode": "prefix sums P; c[i][i] = 0; for L = 1..n, for i = 0..n-L: j = i + L; c[i][j] = min over i < k <= j of (min(P[k] - P[i], P[j+1] - P[k]) + c[i][k-1] + c[k][j]); return c[0][n]",
+      "time_complexity": "Theta(n^3) on every input: n(n+1)(n+2)/6 candidate splits; exactly n(n+1)(2n+1)/6 comparisons, namely n(n+1)(n+2)/6 inside the merge costs min(L, R) plus (n+1)n(n-1)/6 between candidate values (PROOFS.md, sections 1 and 5)",
+      "space_complexity": "Theta(n^2): the (n + 1) x (n + 1) table c and n + 2 prefix sums (PROOFS.md, section 5)",
+      "correctness": "The merge trees of the row i..j whose last merge joins i..k-1 and k..j are exactly the pairs (merge tree of i..k-1, merge tree of k..j), and such a tree costs min(S(i, k-1), S(k, j)) plus the costs of the two subtrees; induction on j - i. Correct for any sizes. Count, read off the code: a row of length L tries L splits, with one comparison inside each merge cost and L - 1 comparisons between candidates; sum_{L=1..n} (n - L + 1)(2L - 1) = n(n+1)(2n+1)/6, of which (n+1)n(n-1)/6 are between candidates. Proof: PROOFS.md, sections 1 and 3.",
+      "implementation": "implementations/cubic_dp.py:merge_min_smaller_cubic",
+      "harness": {
+        "scaling": {
+          "cost": "n*(n+1)*(2*n+1)/6",
+          "n_values": [
+            16,
+            32,
+            64,
+            128
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "n**2",
+            "n**2*log(n)",
+            "n**3/log(n)",
+            "n**3*log(n)",
+            "n**4"
+          ],
+          "shape": {
+            "sequence": "consecutive",
+            "n_range": [
+              1,
+              20
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "closed form S - max s",
+      "idea": "For non-negative sizes the minimum total cost is the total size minus the largest pile: start a caterpillar at a largest pile and add the neighbouring piles one at a time; each added pile is no larger than the block it joins, so it pays its own size, and no merge tree can do better (Proposition, README).",
+      "model": "classical-deterministic",
+      "pseudocode": "total = s_0; largest = s_0; for t = 1..n: total = total + s_t; if s_t > largest: largest = s_t; return total - largest",
+      "time_complexity": "Theta(n) on every input: exactly n comparisons (the running maximum), n additions and one subtraction, and one pass over the slice sizes[1:] (PROOFS.md, sections 2 and 5)",
+      "space_complexity": "O(n) besides the input: the loop runs over the slice sizes[1:], which CPython builds as a new tuple of n references; otherwise O(1) words (total, largest, the loop variable) (PROOFS.md, section 5)",
+      "correctness": "Proposition (README, with proof): for s_0, ..., s_n >= 0 and every row i..j, c(i, j) = S(i, j) - max(s_i, ..., s_j). Lower bound by induction over the last merge: if it joins blocks of sizes L, R whose largest piles are m_L >= m_R (else mirror), then m_R <= R (a largest pile of a block of non-negative sizes is at most the block's sum) and m_R <= m_L <= L, so m_R <= min(L, R), and the cost is at least min(L, R) + (L - m_L) + (R - m_R) >= L + R - m_L. Upper bound: in the caterpillar from a largest pile, every added pile s joins a block of size at least max s >= s and costs min(block, s) = s, so the total is S - max s. Without the precondition the formula can fail: sizes (-1, 0, 0) give the optimum -2 and the formula -1. Proof: README, section 'The closed form'; the code computes S(0, n) - max s by a loop invariant (PROOFS.md, section 4).",
+      "implementation": "implementations/closed_form.py:merge_min_smaller_closed_form",
+      "harness": {
+        "scaling": {
+          "cost": "n",
+          "n_values": [
+            16,
+            64,
+            256,
+            1024,
+            4096
+          ],
+          "measure": "reported",
+          "tolerance": 0.02,
+          "rivals": [
+            "sqrt(n)",
+            "log(n)",
+            "n*log(n)",
+            "n**2"
+          ],
+          "shape": {
+            "sequence": "consecutive",
+            "n_range": [
+              1,
+              30
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "pair_type": "T3",
+  "relationship": "The cubic interval DP tries all splits of every row, Theta(n^3); for non-negative sizes the closed form S - max s (Proposition, README) answers in Theta(n). Exact comparison counts on every input: n(n+1)(2n+1)/6 vs n (each merge cost min(L, R) counted as one comparison; counting only the comparisons between candidate values, the DP makes (n+1)n(n-1)/6). The closed form also gives an endpoint law (every row has a minimising split at one of its ends), so the endpoint DP is exact here too; the rotation conditions of the split-dependent endpoint law (theorems/endpoint-law-split-dependent-weights) fail for this merge cost on some non-negative sizes, so that note does not give the law for all non-negative sizes (README, with the computations). Proofs: PROOFS.md and the README.",
+  "sources": [
+    {
+      "authors": "Qian, J.; Wang, C. A.",
+      "year": 2004,
+      "title": "Maximum weight triangulation of a special convex polygon",
+      "venue": "20th European Workshop on Computational Geometry (EWCG 2004), Seville",
+      "url": "http://hdl.handle.net/11441/55702",
+      "note": "Credit: Lemma 1 (in a semi-circled convex polygon, one of the two extreme edges belongs to a maximum weight triangulation), an endpoint law for Euclidean chord weights; the entry max-cost-bst-recursion-vs-cubic-dp-vs-endpoint-dp writes its exchange argument out for inclusion-monotone interval weights (Theorem E'). This entry's merge cost depends on the split. The content of Lemma 1 is background."
+    }
+  ],
+  "provenance": {
+    "class": "own",
+    "note": "Elementary. No statement of the closed form was found in the literature checked (README, section 'Literature checked'). This is a statement about that search, not a claim of priority."
+  },
+  "verification": {
+    "level": "V2",
+    "method": "V1: the validator runs n = 0..10, 12, 16, 25, 40, 70 with 12 instances per n from 12 families of non-negative sizes (bits, small values with many ties, all zero, constant, wide values up to 10^6, one heavy pile, geometric, ramps, sparse, valley, peak, exact rationals). check() is an oracle written separately from the implementations: for n <= 9 it enumerates every merge tree (Catalan(n) trees) and costs it from direct sums; for 10 <= n <= 150 it checks an exact certificate (an explicit caterpillar from a largest pile, costed from direct sums, as the upper bound, and the table B(a, b) = S(a, b) - max(s_a..s_b), accepted only if B(a, b) <= min(S(a, k-1), S(k, b)) + B(a, k-1) + B(k, b) for every split, which bounds every merge tree from below by induction). On every V1 instance check() certified both outputs: it returned True (the validator itself rejects an output only when check() returns False, and requires the implementations to agree), and tests/test_entry_merge_smaller.py asserts True on the whole V1 battery (the validator's seeds, 16 sizes x 12 trials). tests/test_entry_merge_smaller.py: exhaustive equality of the cubic DP, the closed form and the tree enumeration on every size vector with n <= 4 and sizes 0..4, n = 5 and sizes 0..3, and n = 6 and sizes 0..2 (10 188 vectors), with the closed form and an endpoint minimiser in every row of every vector; the exact comparison and arithmetic counts (cubic n = 0..40; closed form n = 0..199, 1000, 4096), each for all 11 integer families; the candidate-only counts (one seeded family per n, n = 0..30); the failures of the mirrored rotation conditions; the table sizes and the size of the numbers (PROOFS.md sections 5 and 6); the endpoint DP on the exhaustive set; the counterexamples of the caveats. V2 (measure 'reported'): the exact number of comparisons of two size-derived values made by the unchanged implementations, counted by the harness's CountingInt number type; generate_scaling draws one of the 11 integer families, and the counts depend on n only. Cost expressions are the exact closed forms: cubic DP n(n+1)(2n+1)/6 (n = 16..128), closed form n (n = 16..4096); rivals cubic n^2, n^2 log n, n^3/log n, n^3 log n, n^4; closed form sqrt(n), log n, n log n, n^2. No counted comparison happens inside a CPython built-in. PROOFS.md proves every claim of the entry (exact counts, correctness, time and space, the size of the numbers, the oracle, the caveats) and names the checks and ranges of each proof.",
+    "artifacts": [
+      "PROOFS.md",
+      "implementations/cubic_dp.py",
+      "implementations/closed_form.py",
+      "harness.py",
+      "../../tests/test_entry_merge_smaller.py"
+    ],
+    "proofs": [
+      "PROOFS.md: every claim of the entry (exact counts: sections 1-2; correctness of the cubic DP: 3; the closed form, its code and the endpoint law: 4; time and space: 5; size of the numbers: 6; the V1 oracle: 7; caveats and controls: 8), with the checks and ranges of each proof.",
+      "Closed form c(i, j) = S(i, j) - max(s_i..s_j) for sizes >= 0, and the endpoint law derived from it: README, sections 'The closed form' and 'The endpoint law' (written proofs; not machine-checked)."
+    ]
+  },
+  "test_harness": {
+    "module": "harness.py",
+    "v1_sizes": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      12,
+      16,
+      25,
+      40,
+      70
+    ],
+    "trials": 12
+  },
+  "caveats": "The closed form needs non-negative sizes; the cubic DP is correct for any sizes. With a negative size the formula can fail: sizes (-1, 0, 0) (n = 2) have the optimum -2 and the formula gives -1. The direction matters: maximising the same total (max sum of min(L, R)) is a different problem, where neither the closed form nor the endpoint rule applies (sizes (1, 1, 1, 1): maximum 4, best caterpillar 3). What is counted: every comparison of two size-derived values, including the one inside each merge cost min(L, R) (the comparison model); the closed form makes n comparisons. Additions and subtractions (exact, checked by the tests): (n + 1) + 2n(n+1)(n+2)/3 for the cubic DP (n + 1 for the prefix sums, 4 for each of the n(n+1)(n+2)/6 candidate splits) and n + 1 for the closed form (n additions, one subtraction); index arithmetic is not counted. No lower bound is claimed. Exact arithmetic is assumed; for sizes >= 0 every number the cubic DP computes lies between 0 and n times the total size (PROOFS.md, section 6).",
+  "notes": "The cubic DP is correct for every merge cost; the closed form uses the specific cost min(L, R). The endpoint law holds here (every row has a minimising split at one of its ends), but it is derived from the closed form: the min forms of Theorem 1 and Corollary 2 of theorems/endpoint-law-split-dependent-weights need the conditions RS3 and RS3w for -w, and both fail for this merge cost on some non-negative sizes (README, with the computations). Relatives: max-merge-cost-larger-part-cubic-dp-vs-endpoint-dp (merge cost max(L, R), maximised) and max-merge-imbalance-cubic-dp-vs-endpoint-dp (merge cost |L - R|, maximised).",
+  "background": [
+    {
+      "statement": "In a semi-circled convex polygon, one of the two extreme edges belongs to a maximum weight triangulation; the exchange argument of the proof uses only that nested chords are shorter.",
+      "source": "Qian & Wang 2004 (EWCG 2004, Seville), Lemma 1"
+    }
+  ],
+  "proof": {
+    "documents": [
+      "PROOFS.md",
+      "README.md"
+    ],
+    "checks": [
+      "../../tests/test_entry_merge_smaller.py",
+      "../../theorems/endpoint-law-split-dependent-weights/verify.py"
+    ],
+    "audit": "RL-113"
+  }
+}
