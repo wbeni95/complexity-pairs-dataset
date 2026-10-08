@@ -16,6 +16,11 @@ Sections (deterministic):
 
 Run from the repository root:  .venv/Scripts/python.exe experiments/2026-10-06i_aho_corasick.py
 RESULT (2026-10-06, CPython 3.14.2): see the report; every section prints its totals.
+
+Check lines start with [PASS] or [FAIL] (section 1: every line; section 2: the summary; section 3: every line, whose
+check is "comparisons <= 3 (N + L)"; section 4: the summary); the run ends with ALL CHECKS PASSED (exit code 0) or
+lists the failed checks (exit code 1). The verdict tallies and the count series with its SHA-256 (section 5) are
+reported, not checked.
 """
 from __future__ import annotations
 
@@ -45,6 +50,26 @@ NA = _load(E / "implementations" / "naive.py", "ac_naive").count_occurrences_nai
 KM = _load(E / "implementations" / "kmp_each.py", "ac_kmp").count_occurrences_kmp_each
 AC = _load(E / "implementations" / "aho_corasick.py", "ac_ac").count_occurrences_aho_corasick
 ALGS = (("naive", NA), ("kmp_each", KM), ("aho_corasick", AC))
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 FORMS = {
     "naive": (1, lambda n: n * (n + 1) * (3 * n * n - 2 * n + 2) // 6),
@@ -79,15 +104,17 @@ def section1():
         held = [n for n in ns if n >= lo and n not in {d[0] for d in diffs}]
         bad = [d for d in diffs if d[0] >= lo]
         ok &= not bad
-        print(f"  {name}: closed form holds for n = {held[0]}..{held[-1]} ({len(held)} values); "
-              f"differs below n = {lo}: {[d for d in diffs if d[0] < lo]}; differs at n >= {lo}: {bad}")
+        span = f"{held[0]}..{held[-1]}" if held else "none of the sizes"   # held is empty if the form fails everywhere
+        check_line(not bad, f"  {name}: closed form holds for n = {span} ({len(held)} values); "
+                            f"differs below n = {lo}: {[d for d in diffs if d[0] < lo]}; differs at n >= {lo}: {bad}")
     for n in (2, 5, 10, 50):
         text, patterns = H.scaling_strings(n)
         build = counted(AC, ("", patterns))
         total = scaling_count(AC, n)
-        ok &= build == n * n + n - 4 and total - build == 3 * n * n - n + 1
-        print(f"  Aho-Corasick n={n}: build {build} (n^2 + n - 4 = {n * n + n - 4}), scan {total - build} "
-              f"(3n^2 - n + 1 = {3 * n * n - n + 1})")
+        line_ok = build == n * n + n - 4 and total - build == 3 * n * n - n + 1
+        ok &= line_ok
+        check_line(line_ok, f"  Aho-Corasick n={n}: build {build} (n^2 + n - 4 = {n * n + n - 4}), scan {total - build} "
+                            f"(3n^2 - n + 1 = {3 * n * n - n + 1})")
     return ok
 
 
@@ -105,8 +132,8 @@ def section2():
             if len(set(outs)) != 1 or not all(H.check(inst, o) for o in outs):
                 fails += 1
                 print(f"  FAIL n={n} t={t}: {inst} {outs}")
-    print(f"  {runs} implementation runs on {runs // 3} instances ({nonzero} with at least one occurrence); failures: {fails}")
-    return fails == 0
+    return check_line(fails == 0, f"  {runs} implementation runs on {runs // 3} instances ({nonzero} with at least one "
+                                  f"occurrence); failures: {fails}")
 
 
 def section3():
@@ -118,8 +145,8 @@ def section3():
         occ = sum(AC((text, patterns)))
         c = counted(AC, (text, patterns))
         length = n * n + n * (n + 1) // 2
-        print(f"  n={n}: text {n * n}, total pattern length {n * (n + 1) // 2}, occurrences {occ}, "
-              f"Aho-Corasick comparisons {c} ({c / length:.3f} per character of input)")
+        check_line(c <= 3 * length, f"  n={n}: text {n * n}, total pattern length {n * (n + 1) // 2}, occurrences {occ}, "
+                                    f"Aho-Corasick comparisons {c} ({c / length:.3f} per character of input)")
         ok &= c <= 3 * length
     return ok
 
@@ -155,9 +182,9 @@ def section4():
     accepted = sum(v for (k, verdict), v in stats.items() if k != "correct" and verdict is True)
     for key in sorted(stats, key=str):
         print(f"  {key}: {stats[key]}")
-    print(f"  wrong outputs: {rejected} rejected, {accepted} accepted; correct outputs: {stats[('correct', True)]} "
-          f"accepted, {stats[('correct', False)]} rejected")
-    return accepted == 0 and stats[("correct", False)] == 0
+    return check_line(accepted == 0 and stats[("correct", False)] == 0,
+                      f"  wrong outputs: {rejected} rejected, {accepted} accepted; correct outputs: "
+                      f"{stats[('correct', True)]} accepted, {stats[('correct', False)]} rejected")
 
 
 def section5():
@@ -177,4 +204,4 @@ if __name__ == "__main__":
         if not only or name in only:
             results[name] = fn()
     print(f"\nsections passed: {results}  [{time.time() - t0:.1f}s]")
-    sys.exit(0 if all(results.values()) else 1)
+    finish_checks()

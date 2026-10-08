@@ -46,6 +46,20 @@ Sections
 
 Deterministic (fixed seed strings). Run from the repository root:
     PYTHONIOENCODING=utf-8 python experiments/2026-10-07_max_cost_bst_checks.py [--sections E1,E2,...] [--json OUT]
+
+The tallies are printed as dictionaries. After each section, one line per check starts with [PASS] or [FAIL]:
+E1, E2, E4 (endpoint optimum and exact endpoint DP on every table; no interior optimum under strict monotonicity),
+E3 (the proof's procedure succeeds in every case), E5 (precondition, endpoint law and endpoint DP on every family
+instance; the harness's local test equals the definition), B (adjacent-sum condition equals monotonicity; exact
+endpoint DP on every monotone instance; no interior maximiser under strict adjacent sums; the signed example), C
+(exhaustive n = 3 BST scope, values -2..2: 8831 of the 78125 instances fail, all outside the precondition, 383 with
+negative frequencies only in q and 383 only in p, and p = (0, -1, 0), q = 0 is the only failure with total absolute
+frequency 1, as published), O (every implementation output on the V1 battery accepted; every true value accepted and
+every wrong value rejected; the certificate tier valid and tight; outside the precondition no true value rejected, no
+wrong value accepted and every wrong value with n <= 10 rejected), N (every count equals its closed form). The run
+ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1); with --sections, only the chosen
+sections are checked. The other tallies (interior maximisers, separability, the other controls of section C, the
+battery composition, the digest and the validator's V2 fits) are reported, not checked.
 """
 from __future__ import annotations
 
@@ -85,6 +99,27 @@ ENTRY_JSON = json.loads((ENTRY / "entry.json").read_text(encoding="utf-8"))
 
 def say(*parts):
     print(*parts, flush=True)
+
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 
 # ------------------------------------------------------------------------------------------------
@@ -245,6 +280,14 @@ def section_E1():
         tot.update(r)
         say("E1", out[-1])
     say("E1 totals", dict(tot))
+    check_line(tot["max_endpoint_optimum_every_interval"] == tot["max_endpoint_dp_equal_every_interval"] == tot["tables"],
+               f"E1: max form with w: an endpoint optimum and an exact endpoint DP in every interval of all "
+               f"{tot['tables']} monotone tables")
+    check_line(tot["min_neg_endpoint_optimum_every_interval"] == tot["min_neg_endpoint_dp_equal_every_interval"]
+               == tot["tables"], f"E1: min form with -w: an endpoint optimum and an exact endpoint DP in every interval "
+                                 f"of all {tot['tables']} tables")
+    check_line(tot["strictly_monotone_without_interior_maximiser"] == tot["strictly_monotone"],
+               f"E1: none of the {tot['strictly_monotone']} strictly monotone tables has an interior maximiser")
     return {"scopes": out, "totals": dict(tot)}
 
 
@@ -264,6 +307,11 @@ def section_E2():
         tot.update(r)
         say("E2", out[-1])
     say("E2 totals", dict(tot))
+    check_line(tot["max_no_interior_maximiser"] == tot["max_endpoint_dp_equal_every_interval"] == tot["strict_tables"]
+               and tot["min_neg_no_interior_minimiser"] == tot["min_neg_endpoint_dp_equal_every_interval"]
+               == tot["strict_tables"],
+               f"E2: no interior optimum and an exact endpoint DP on all {tot['strict_tables']} strictly monotone tables, "
+               f"max form with w and min form with -w")
     return {"scopes": out, "totals": dict(tot)}
 
 
@@ -370,6 +418,8 @@ def section_E3():
         rot_tot.update(rot)
         say("E3", out[-1])
     say("E3 totals", dict(tot), "rotations needed:", dict(sorted(rot_tot.items())))
+    check_line(tot["cases"] > 0 and tot["ok"] == tot["cases"],
+               f"E3: the proof's procedure succeeds in all {tot['cases']} cases (optimal trees with an interior root)")
     return {"scopes": out, "totals": dict(tot), "rotations": dict(sorted(rot_tot.items()))}
 
 
@@ -396,6 +446,11 @@ def section_E4():
             r["endpoint_dp_equal_every_interval"] += eq
     out = {k: dict(v) for k, v in out.items()}
     say("E4", out)
+    for key, label in (("minus_inf_under_max", "-inf entries under max"), ("plus_inf_under_min", "+inf entries under min")):
+        r = out[key]
+        check_line(r["endpoint_optimum_every_interval"] == r["endpoint_dp_equal_every_interval"] == r["tables"],
+                   f"E4: {label}: an endpoint optimum and an exact endpoint DP in every interval of all {r['tables']} "
+                   f"tables")
     return out
 
 
@@ -452,6 +507,14 @@ def section_E5():
     say("E5 totals", dict(tot))
     say("E5 separability (n >= 3)", by_cat)
     say("E5 local test", dict(loc))
+    check_line(tot["precondition_holds"] == tot["small_instances"] + tot["large_instances"],
+               f"E5: the precondition holds on all {tot['small_instances'] + tot['large_instances']} family instances")
+    check_line(tot["small_endpoint_optimum_every_interval"] == tot["small_endpoint_dp_equal_every_interval"]
+               == tot["small_instances"] and tot["large_endpoint_dp_equal_every_interval"] == tot["large_instances"],
+               f"E5: an endpoint optimum and an exact endpoint DP in every interval of all {tot['small_instances']} "
+               f"instances with n <= 14; an exact endpoint DP on all {tot['large_instances']} with n = 15..60")
+    check_line(loc["harness_local_test_equals_definition"] == loc["tables"],
+               f"E5: the harness's O(n^2) local test equals the O(n^4) definition on all {loc['tables']} tables")
     return res
 
 
@@ -495,12 +558,22 @@ def section_B():
         strict["strict_local_inequalities"] += is_monotone_local(w, n, strict=True)
         strict["no_interior_maximiser"] += interior == 0
     say("B strict adjacent sums (p = 0, q in {1,2}, n = 3..6; p in {1,2}, q in {0,1}, n = 3, 4)", dict(strict))
+    check_line(tot["adjacent_sum_condition_equals_definition"] == tot["instances"],
+               f"B: the adjacent-sum condition equals monotonicity by the definition on all {tot['instances']} instances")
+    check_line(tot["monotone_endpoint_dp_exact_every_interval"] == tot["monotone"],
+               f"B: an exact endpoint DP in every interval of all {tot['monotone']} monotone instances")
+    check_line(strict["strict_local_inequalities"] == strict["no_interior_maximiser"] == strict["instances"],
+               f"B: strict adjacent sums: strict local inequalities and no interior maximiser on all "
+               f"{strict['instances']} instances")
     p, q = (1, -1, 1), (0, 1, 1, 0)
     w = bst_w(p, q)
     c, opt = full_dp(w, 3, True)
     example = {"p": p, "q": q, "adjacent_sum_condition": bst_adjacent_sums(p, q), "optimum": c[0][3],
                "endpoint_dp": endpoint_dp(w, 3, True)[0][3], "optimal_roots_of_(0,3)": opt[0][3]}
     say("B example with a negative frequency", example)
+    check_line(example["adjacent_sum_condition"] and example["endpoint_dp"] == example["optimum"],
+               "B: the example p = (1, -1, 1), q = (0, 1, 1, 0) satisfies the adjacent-sum condition and the endpoint "
+               "DP gives the maximum")
     return {"scopes": out, "totals": dict(tot), "strict": dict(strict), "example": example}
 
 
@@ -564,7 +637,8 @@ def section_C():
     say("C n = 3 tables 0..2", out["n3_tables_0_2"])
     # the optimal BST (min) with p = (1, 1, 1), q = 0: w(i, j) = j - i
     w = bst_w((1, 1, 1), (0, 0, 0, 0))
-    assert all(w[i][j] == j - i for i in range(4) for j in range(i + 1, 4))
+    check_line(all(w[i][j] == j - i for i in range(4) for j in range(i + 1, 4)),
+               "C: p = (1, 1, 1), q = 0 gives w(i, j) = j - i")
     c, opt = full_dp(w, 3, False)
     out["optimal_bst_p111"] = {"minimum": c[0][3], "minimising_roots_of_(0,3)": opt[0][3],
                                "endpoint_dp_min": endpoint_dp(w, 3, False)[0][3]}
@@ -595,6 +669,20 @@ def section_C():
                                                    "endpoint_dp": endpoint_dp(w, 3, True)[0][3],
                                                    "adjacent_sum_condition": bst_adjacent_sums(p, q)})
     say("C BST n = 3, values -2..2", out["bst_n3_values_-2_2"])
+    check_line(cnt["failures_outside_the_precondition"] == cnt["failures"],
+               f"C: BST n = 3, values -2..2: all {cnt['failures']} failures of the endpoint DP lie outside the "
+               f"precondition")
+    check_line(cnt["instances"] == 78125 and cnt["failures"] == 8831,
+               f"C: BST n = 3, values -2..2: {cnt['failures']} of the {cnt['instances']} instances fail (published: "
+               f"8831 of 78125)")
+    check_line(cnt["failures_with_p_nonnegative"] == 383 and cnt["failures_with_q_nonnegative"] == 383,
+               f"C: BST n = 3, values -2..2: failures with negative frequencies only in q (p >= 0) "
+               f"{cnt['failures_with_p_nonnegative']}, only in p (q >= 0) {cnt['failures_with_q_nonnegative']} "
+               f"(published: 383 and 383)")
+    at_min = out["bst_n3_values_-2_2"]["failures_at_that_total"]
+    check_line(l1_min == 1 and at_min == [{"p": (0, -1, 0), "q": (0, 0, 0, 0), "optimum": -1, "endpoint_dp": -2}],
+               f"C: BST n = 3, values -2..2: failures with the smallest total absolute frequency {l1_min}: {at_min} "
+               f"(published: only p = (0, -1, 0), q = (0, 0, 0, 0), maximum -1, endpoint DP -2)")
     for ex in out["bst_examples"]:
         say("C BST example", ex)
     rng = random.Random("mcb-checks|C|bst-signed")
@@ -757,6 +845,7 @@ def section_O():
     res = {}
     # O1: the validator's V1 battery (seeds "<id>|v1|<n>|<trial>")
     comp = {"category": Counter(), "family": Counter(), "tier": Counter(), "verdicts": Counter()}
+    redraw_bad = 0
     for n in th["v1_sizes"]:
         for trial in range(th.get("trials", 3)):
             seed = f"{ENTRY_JSON['id']}|v1|{n}|{trial}"
@@ -764,7 +853,7 @@ def section_O():
             r2 = random.Random(seed)  # re-draw to read the family name
             cat_list = (H.FAMILIES, H.GENERAL_FAMILIES, H.MIN_FAMILIES)[r2.randrange(3)]
             fam = cat_list[r2.randrange(len(cat_list))]
-            assert H.instance_of(fam, n, r2) == inst
+            redraw_bad += H.instance_of(fam, n, r2) != inst
             comp["category"][category(inst)] += 1
             comp["family"][fam] += 1
             comp["tier"]["enumeration" if n <= H.BRUTE_MAX_N else "certificate" if n <= H.CERT_MAX_N else "none"] += 1
@@ -776,6 +865,10 @@ def section_O():
     res["O1_battery"]["instances"] = sum(comp["category"].values())
     res["O1_battery"]["families_present"] = len(comp["family"])
     say("O1 V1 battery", {k: v for k, v in res["O1_battery"].items() if k != "family"})
+    check_line(redraw_bad == 0, f"O1: re-drawing the family reproduces every battery instance ({redraw_bad} differ)")
+    check_line(all(k.endswith(":True") for k in comp["verdicts"]),
+               f"O1: every implementation output on the V1 battery is accepted (verdicts {dict(comp['verdicts'])}; "
+               f"published: all 408 of each DP and all 264 of the recursion)")
     # O2: wrong values on the battery plus 40 extra seeds per size, and on every family at 15 sizes x 3 seeds
     st_a, st_b = new_stats(), new_stats()
     rng = random.Random("mcb-checks|O2|wrong-a")
@@ -803,6 +896,12 @@ def section_O():
     say("O2 true value", res["O2_wrong_values"]["true_value"])
     say("O2 wrong values by category", res["O2_wrong_values"]["wrong_by_category"])
     say("O2 wrong values by kind", res["O2_wrong_values"]["wrong_by_kind"])
+    tv_all = res["O2_wrong_values"]["true_value"]["all"]
+    wr_all = res["O2_wrong_values"]["wrong_by_category"]["all"]
+    check_line(tv_all.get("True", 0) == sum(tv_all.values()) and wr_all.get("rejected", 0) == wr_all.get("presented", 0),
+               f"O2: true values accepted {tv_all.get('True', 0)} of {sum(tv_all.values())}; wrong values rejected "
+               f"{wr_all.get('rejected', 0)} of {wr_all.get('presented', 0)} (accepted {wr_all.get('accepted', 0)}, "
+               f"undecided {wr_all.get('undecided', 0)})")
     # O3: the certificate tier
     small, large = Counter(), Counter()
     for fam in H.ALL_FAMILIES:
@@ -830,6 +929,10 @@ def section_O():
             ns.append(n)
     res["O3_certificate"] = {"small": dict(small), "large": dict(large), "large_n_range": [min(ns), max(ns)]}
     say("O3 certificate", res["O3_certificate"])
+    check_line(small["valid_and_tight_equal_enumeration"] == small["enumeration_equals_reference"] == small["instances"]
+               and large["valid_and_tight_equal_reference"] == large["instances"],
+               f"O3: the certificate is valid and tight and equals the reference on all {small['instances']} small and "
+               f"{large['instances']} large instances")
     # O4: outside the precondition
     rng = random.Random("mcb-checks|O4")
 
@@ -866,6 +969,13 @@ def section_O():
     res["O4_outside_precondition"] = {"per_input_class": outside, "totals": dict(tot)}
     say("O4 outside the precondition", outside)
     say("O4 totals", dict(tot))
+    true_rejected = sum(v for k, v in tot.items() if k.endswith("_true_value_False"))
+    wrong_accepted = sum(v for k, v in tot.items() if k.endswith("_endpoint_wrong_judged_True"))
+    check_line(true_rejected == 0 and wrong_accepted == 0
+               and tot["enumeration_endpoint_wrong_judged_False"] == tot["enumeration_endpoint_wrong"],
+               f"O4: outside the precondition, true values rejected {true_rejected}, wrong endpoint values accepted "
+               f"{wrong_accepted}; wrong endpoint values with n <= 10 rejected "
+               f"{tot['enumeration_endpoint_wrong_judged_False']} of {tot['enumeration_endpoint_wrong']}")
     return res
 
 
@@ -942,6 +1052,9 @@ def section_N():
            "comparisons_identical_across_families_forms_directions": identical, "series_sha256": digest,
            "python": sys.version.split()[0]}
     say("N counts", res)
+    check_line(mism == 0 and identical, f"N: every count equals its closed form ({res['runs_total']} runs, {mism} "
+                                        f"mismatches); comparisons identical across families, forms and directions: "
+                                        f"{identical}")
     say("N recursion comparisons n = 0..12:", [closed("recursion", n, "table")[0] for n in range(13)])
     say("N recursion calls n = 0..12:", [sorted(calls[n]) for n in range(13)])
     # the validator's own V2 run (alphas, rivals, shape diagnostic)
@@ -992,6 +1105,7 @@ def main():
     say("total seconds", out["total_seconds"])
     if args.json:
         Path(args.json).write_text(json.dumps(out, indent=1, default=str), encoding="utf-8")
+    finish_checks()
 
 
 if __name__ == "__main__":

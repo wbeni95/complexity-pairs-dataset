@@ -20,6 +20,11 @@ What it checks (deterministic; no timing):
 Run from the repository root:  .venv/Scripts/python.exe experiments/2026-10-06f_entries_boolean_matmul.py
 RESULT (2026-10-06): counts exact; oracle control accepts all correct and rejects all wrong outputs; both
 negative controls fail on most instances (tallies printed and copied into the report).
+
+Check lines (1, Strassen == schoolbook on the control instances, 2 with every kind tested at least once and the
+published totals 240 correct and 906 wrong, 3 with the published tallies 25 of 40 and 33 of 40) start with [PASS] or
+[FAIL]; the run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The fits (4) are
+reported, not checked.
 """
 import importlib.util
 import math
@@ -43,6 +48,26 @@ def load(path, name):
 H = load(ENTRY / "harness.py", "bmm_harness")
 N = load(ENTRY / "implementations" / "naive.py", "bmm_naive")
 S = load(ENTRY / "implementations" / "strassen_over_integers.py", "bmm_strassen")
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 
 def fit_slope(xs, ys):
@@ -102,17 +127,21 @@ def main():
     ns = [16, 32, 64, 128]
     naive = {n: count(N.bmm_naive, n) for n in ns + [17, 40]}
     stras = {n: count(S.bmm_strassen, n) for n in ns + [17, 40]}
-    print("1. schoolbook = n^3:", all(naive[n] == n ** 3 for n in naive), {n: naive[n] for n in ns})
-    print("   Strassen = 7^(log2(n/16)) 16^3:", all(stras[n] == 7 ** (n.bit_length() - 5) * 16 ** 3 for n in ns),
-          {n: stras[n] for n in ns}, "| padded n = 17, 40:", stras[17], stras[40])
+    ok = all(naive[n] == n ** 3 for n in naive)
+    check_line(ok, "1. schoolbook = n^3:", ok, {n: naive[n] for n in ns})
+    ok = all(stras[n] == 7 ** (n.bit_length() - 5) * 16 ** 3 for n in ns)
+    check_line(ok, "   Strassen = 7^(log2(n/16)) 16^3:", ok,
+               {n: stras[n] for n in ns}, "| padded n = 17, 40:", stras[17], stras[40])
 
     kinds = ("correct", "flip", "count", "transp", "order", "shape")
     tally = {k: [0, 0] for k in kinds}
+    strassen_differs = []
     for n in list(range(1, 21)) + [24, 31, 33, 40]:
         for t in range(10):
             A, B = H.generate(n, random.Random(f"bmm-control|{n}|{t}"))
             C = N.bmm_naive((A, B))
-            assert C == S.bmm_strassen((A, B))
+            if C != S.bmm_strassen((A, B)):
+                strassen_differs.append((n, t))
             tally["correct"][0] += 1
             tally["correct"][1] += H.check((A, B), C) is True
             rng = random.Random(f"bmm-flip|{n}|{t}")
@@ -131,8 +160,12 @@ def main():
             for kind, w in wrongs:
                 tally[kind][0] += 1
                 tally[kind][1] += H.check((A, B), w) is False
-    ok = tally["correct"][0] == tally["correct"][1] and all(t[0] == t[1] for k, t in tally.items() if k != "correct")
-    print("2. oracle control [tested, rejected; correct: tested, accepted]:", tally, "-> all as expected:", ok)
+    check_line(not strassen_differs, "   Strassen == schoolbook on every control instance (n = 1..20, 24, 31, 33, 40):",
+               not strassen_differs if not strassen_differs else f"False, differs at (n, t) = {strassen_differs[:5]}")
+    ok = tally["correct"][0] == tally["correct"][1] and all(t[0] == t[1] and t[0] > 0 for k, t in tally.items()
+                                                             if k != "correct")
+    ok = ok and tally["correct"][0] == 240 and sum(t[0] for k, t in tally.items() if k != "correct") == 906
+    check_line(ok, "2. oracle control [tested, rejected; correct: tested, accepted]:", tally, "-> all as expected:", ok)
 
     for label, cls in (("OR/OR/AND", OrAnd), ("XOR/XOR/AND (GF(2))", Gf2)):
         wrong = total = 0
@@ -144,7 +177,9 @@ def main():
                 out = S.bmm_strassen((Aw, Bw))
                 total += 1
                 wrong += H.check((A, B), out) is False
-        print(f"3. negative control, Strassen code on Booleans with {label}: wrong on {wrong} of {total} instances")
+        published = {"OR/OR/AND": 25, "XOR/XOR/AND (GF(2))": 33}[label]
+        check_line(wrong == published and total == 40,
+                   f"3. negative control, Strassen code on Booleans with {label}: wrong on {wrong} of {total} instances")
 
     vn = [naive[n] for n in ns]
     vs = [stras[n] for n in ns]
@@ -154,6 +189,7 @@ def main():
     print("   Strassen vs n^log2(7):", round(alpha(lambda n: n ** math.log2(7), ns, vs), 4),
           "| rival n^3:", round(alpha(lambda n: n ** 3, ns, vs), 4),
           "| rival n^2:", round(alpha(lambda n: n ** 2, ns, vs), 4))
+    finish_checks()
 
 
 if __name__ == "__main__":

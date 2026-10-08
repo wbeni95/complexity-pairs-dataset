@@ -17,6 +17,13 @@
 Deterministic (fixed seeds). Run from the repository root:
     PYTHONIOENCODING=utf-8 python experiments/2026-10-07_deutsch_jozsa_checks.py
 Outcome: recorded in research/2026-10-07_quantum_entries.md (section "Deutsch-Jozsa").
+
+Check lines start with [PASS] or [FAIL]: in 1, no wrong answer, maximum 2^(n-1) + 1, attained exactly on the
+generate_scaling set; in 2, both floating-point deviations at most 1e-12 (the tolerance of the exactness checks,
+delta=1e-12, in tests/test_proofs_query.py); in 3, the unchanged dj_randomized (its K set to k, its random module
+replaced by the seeded generator) never misclassifies a constant function. The run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks
+(exit code 1). The sampled error rates and means with their z-scores (3, 4) are reported, not checked; the exact
+values are checked in tests/test_proofs_query.py.
 """
 import importlib.util
 import itertools
@@ -42,6 +49,28 @@ def load(rel, name):
 
 harness = load("harness.py", "dj_harness")
 dj_classical = load("implementations/classical.py", "dj_classical").dj_classical
+dj_rand_mod = load("implementations/randomized.py", "dj_randomized")
+FLOAT_TOL = 1e-12
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 
 def promise_inputs(n):
@@ -73,9 +102,11 @@ for n in range(1, 5):
         elif q == worst:
             argmax.append(table)
     adversarial = {harness.generate_scaling(n, random.Random(s))[1] for s in range(200)}
-    print(f"   n={n}: {count} promise inputs, {wrong} wrong answers; max queries {worst} "
-          f"(2^(n-1)+1 = {2 ** (n - 1) + 1}); attained on {len(argmax)} inputs; "
-          f"equal to the generate_scaling set: {set(argmax) == adversarial}")
+    same_set = set(argmax) == adversarial
+    check_line(wrong == 0 and worst == 2 ** (n - 1) + 1 and same_set,
+               f"   n={n}: {count} promise inputs, {wrong} wrong answers; max queries {worst} "
+               f"(2^(n-1)+1 = {2 ** (n - 1) + 1}); attained on {len(argmax)} inputs; "
+               f"equal to the generate_scaling set: {same_set}")
 
 print("2. Quantum exactness: P(outcome 0)")
 dev_const = dev_bal = 0.0
@@ -94,28 +125,34 @@ for n in range(5, 11):
         dev_bal = max(dev_bal, p_zero(tuple(values), n))
     for c in (0, 1):
         dev_const = max(dev_const, abs(1 - p_zero((c,) * (1 << n), n)))
-print(f"   max |1 - P(0)| over constant functions: {dev_const:.3e}; max P(0) over balanced functions: {dev_bal:.3e}")
+check_line(dev_const <= FLOAT_TOL and dev_bal <= FLOAT_TOL,
+           f"   max |1 - P(0)| over constant functions: {dev_const:.3e}; max P(0) over balanced functions: {dev_bal:.3e}")
 
 print("3. Randomized algorithm with k queries: error rate on random balanced functions vs 2^(1-k)")
 for k in (1, 2, 3, 4, 6, 8):
     rng = random.Random(1000 + k)
     trials, errors, const_errors = 20000, 0, 0
-    for i in range(trials):
-        n = 6
-        inst = harness.generate(n, rng)
-        while len(set(inst[1])) == 1:
+    # the unchanged dj_randomized with K = k; its module-level `random` is replaced by rng, which it calls exactly
+    # k times per run (rng.randrange(1 << n)), as the earlier inline simulation did
+    saved = dj_rand_mod.K, dj_rand_mod.random
+    dj_rand_mod.K, dj_rand_mod.random = k, rng
+    try:
+        for i in range(trials):
+            n = 6
             inst = harness.generate(n, rng)
-        o = Oracle(inst[1])
-        answers = {o(rng.randrange(1 << n)) for _ in range(k)}
-        errors += len(answers) == 1
-        c = (rng.randrange(2),) * (1 << n)
-        o = Oracle(c)
-        const_errors += len({o(rng.randrange(1 << n)) for _ in range(k)}) > 1
+            while len(set(inst[1])) == 1:
+                inst = harness.generate(n, rng)
+            errors += dj_rand_mod.dj_randomized(inst)[0] == "constant"
+            c = (rng.randrange(2),) * (1 << n)
+            const_errors += dj_rand_mod.dj_randomized((n, c))[0] != "constant"
+    finally:
+        dj_rand_mod.K, dj_rand_mod.random = saved
     p = 2 ** (1 - k)
     se = math.sqrt(p * (1 - p) / trials) if 0 < p < 1 else 0
     z = (errors / trials - p) / se if se else float("nan")
-    print(f"   k={k}: error rate {errors / trials:.5f} vs exact {p:.5f} ({trials} balanced instances), "
-          f"z = {z:+.2f}; constant functions misclassified: {const_errors}")
+    check_line(const_errors == 0,
+               f"   k={k}: error rate {errors / trials:.5f} vs exact {p:.5f} ({trials} balanced instances), "
+               f"z = {z:+.2f}; constant functions misclassified: {const_errors}")
 
 print("4. Deterministic algorithm on random balanced functions: mean queries vs 1 + N/(N/2+1)")
 for n in (2, 4, 6, 8, 10, 12):
@@ -130,3 +167,5 @@ for n in (2, 4, 6, 8, 10, 12):
     exact = 1 + N / (N / 2 + 1)
     print(f"   n={n}: mean {mean:.4f} +- {se:.4f} ({len(qs)} instances), exact {exact:.4f}, z = {(mean - exact) / se:+.2f}; "
           f"worst case would be {N // 2 + 1}")
+
+finish_checks()

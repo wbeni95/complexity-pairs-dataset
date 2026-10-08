@@ -30,6 +30,12 @@ Questions and results (all from running this script; deterministic, no timing in
    exhaustive search, n <= 12 (16), the BFS pair of implication paths x ~> NOT x ~> x, n > 12 (10) (tallied in a
    console run with the same seeds). Negative controls (None for a satisfiable formula; the negated satisfying assignment
    when it is not satisfying; the all-true and all-false assignments for an unsatisfiable formula): 0 accepted.
+
+Check lines start with [PASS] or [FAIL]: every n and the summary of 1, the mismatches and the construction probe
+(12 counted operations per clause) of 2, the core-first lines of 4 (exactly 24 * 2^n), and the V1 audit of 5 (check()
+returns True for every output of both implementations; every negative control rejected). The run ends with ALL CHECKS
+PASSED (exit code 0) or lists the failed checks (exit code 1). The fits (3), the random-padding near-miss and the
+SAT/UNSAT composition are reported, not checked.
 """
 from __future__ import annotations
 
@@ -52,6 +58,26 @@ B_NAME = "Aspvall-Plass-Tarjan (implication graph + Tarjan SCC)"
 A = V.load_callable(entry_dir, Hlp.algorithm(entry, A_NAME)["implementation"])
 B = V.load_callable(entry_dir, Hlp.algorithm(entry, B_NAME)["implementation"])
 
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
 
 def counting_instance(n, clauses):
     """Like harness.generate_scaling, but for arbitrary clauses: CountingLit literals, counter reset."""
@@ -71,9 +97,11 @@ def main():
     ok = True
     for n in range(3, 17):
         c, out = count(A, lambda: H.generate_scaling(n, None))
-        ok &= (c == 3 * (n + 7) * 2 ** n + 12) and out is None
-        print(f"   n={n:2d}: {c}  closed form {3 * (n + 7) * 2 ** n + 12}  {'=' if c == 3 * (n + 7) * 2 ** n + 12 else 'MISMATCH'}")
-    print(f"   all equal: {ok}")
+        line_ok = (c == 3 * (n + 7) * 2 ** n + 12) and out is None
+        ok &= line_ok
+        check_line(line_ok, f"   n={n:2d}: {c}  closed form {3 * (n + 7) * 2 ** n + 12}  "
+                            f"{'=' if c == 3 * (n + 7) * 2 ** n + 12 else 'MISMATCH'}")
+    check_line(ok, f"   all equal: {ok}")
 
     print("2. SCC on W_n: measured vs 49(n+2)")
     ns = list(range(3, 301)) + [500, 1000, 2000, 4000, 8000, 16000, 32000]
@@ -82,7 +110,7 @@ def main():
         c, out = count(B, lambda: H.generate_scaling(n, None))
         if c != 49 * (n + 2) or out is not None:
             bad.append((n, c))
-    print(f"   checked {len(ns)} values of n; mismatches: {bad}")
+    check_line(not bad, f"   checked {len(ns)} values of n; mismatches: {bad}")
     # construction part alone: 14 per clause
     n = 1000
     inst = H.generate_scaling(n, None)
@@ -91,8 +119,9 @@ def main():
         a = (abs(cl[0]) - 1) * 2 + (cl[0] < 0)
         b = (abs(cl[-1]) - 1) * 2 + (cl[-1] < 0)
         a ^ 1, b ^ 1
-    print(f"   construction-only probe (same operations as two_sat_scc's loop minus list indexing), n=1000:"
-          f" {H.reported_cost(None)} ops for m = {len(clauses)} clauses (12 per clause; + 2 list indexings = 14)")
+    check_line(H.reported_cost(None) == 12 * len(clauses),
+               f"   construction-only probe (same operations as two_sat_scc's loop minus list indexing), n=1000:"
+               f" {H.reported_cost(None)} ops for m = {len(clauses)} clauses (12 per clause; + 2 list indexings = 14)")
 
     print("3. fits on the declared n_values (validator functions)")
     for name in (A_NAME, B_NAME):
@@ -125,7 +154,7 @@ def main():
         fam = H._family(n)
         star, chain = fam[:n - 1], fam[n + 3:]
         c, out = count(A, lambda: counting_instance(n, core + star + chain))
-        print(f"   core first (then star, chain), n={n}: {c} = {c / 2 ** n:g} * 2^n")
+        check_line(c == 24 * 2 ** n, f"   core first (then star, chain), n={n}: {c} = {c / 2 ** n:g} * 2^n")
 
     print("5. V1 audit (validator seeds)")
     th = entry["test_harness"]
@@ -133,6 +162,7 @@ def main():
     tally = {}
     none_verdicts = 0
     neg_fail = 0
+    not_true = []
     for n in th["v1_sizes"]:
         for trial in range(th["trials"]):
             rng = random.Random(f"{ENTRY}|v1|{n}|{trial}")
@@ -143,7 +173,8 @@ def main():
                 v = H.check(inst, o)
                 if v is None:
                     none_verdicts += 1
-                assert v is True, (n, trial, o)
+                if v is not True:
+                    not_true.append((n, trial, v))
             sat = outb is not None
             t = tally.setdefault(n, [0, 0])
             t[0 if sat else 1] += 1
@@ -157,9 +188,12 @@ def main():
                 if H.check(inst, w) is not False:
                     neg_fail += 1
     print(f"   per n [SAT, UNSAT]: {tally}")
-    print(f"   check() returned None: {none_verdicts} times; negative controls not rejected: {neg_fail}")
+    check_line(not not_true and neg_fail == 0,
+               f"   check() returned None: {none_verdicts} times; negative controls not rejected: {neg_fail}"
+               + (f" | FAIL: check() not True at (n, trial, verdict) {not_true[:5]}" if not_true else ""))
 
 
 if __name__ == "__main__":
     sys.setrecursionlimit(1000)   # the SCC implementation is iterative; the default limit is kept
     main()
+    finish_checks()

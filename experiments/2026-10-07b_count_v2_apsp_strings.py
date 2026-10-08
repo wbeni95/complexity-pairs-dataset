@@ -26,14 +26,39 @@ Outcome (run 2026-10-06 local date, Python 3.14.2; deterministic, identical on r
     n^2 log n 0.9281. KMP exactly 3n + 2m - 6 (= 4n - 6 here) at n = 3000..300000, alpha 1.0001; rivals
     n log n 0.9105, n^2 0.5000, n / log n 1.1091.
   Written to entry.json: the existing n_values, tolerance 0.03.
+
+Check lines (answers unchanged, exact counts) start with [PASS] or [FAIL]; the run ends with ALL CHECKS PASSED
+(exit code 0) or lists the failed checks (exit code 1). The fits, rivals and slopes are reported, not checked.
 """
 import importlib.util
 import random
+import sys
 from pathlib import Path
 
 _s = importlib.util.spec_from_file_location("cv2h", Path(__file__).resolve().parent / "2026-10-07b_count_v2_helpers.py")
 H = importlib.util.module_from_spec(_s)
 _s.loader.exec_module(H)
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
 
 AP = "all-pairs-shortest-paths-bellman-ford-vs-floyd-warshall"
 SM = "string-matching-naive-vs-kmp"
@@ -59,18 +84,21 @@ for name in (BF, FW):
     for n in (5, 12, 20):
         inst = ap_h.generate_scaling(n, random.Random(f"check|{n}"))
         plain = tuple(tuple(unwrap(w) for w in row) for row in inst)
-        print(f"  {name}, n={n}: equal = {unwrap(fn(inst)) == fn(plain)}")
+        eq = unwrap(fn(inst)) == fn(plain)
+        check_line(eq, f"  {name}, n={n}: equal = {eq}")
 
 print("\n== APSP: Bellman-Ford x n (claim n**2 * (n-1)**2) ==")
 ns = [8, 10, 13, 16, 20, 25, 32, 40]
 v = H.counts(AP, BF, ns, 1)
-print("  exactly n^2 (n-1)^2:", all(int(c) == n * n * (n - 1) ** 2 for n, c in zip(ns, v)))
+ok = all(int(c) == n * n * (n - 1) ** 2 for n, c in zip(ns, v))
+check_line(ok, "  exactly n^2 (n-1)^2:", ok)
 H.report("tol=0.03", ns, v, "n**2 * (n-1)**2", ["n**3", "n**4*log(n)"], 0.03)
 
 print("\n== APSP: Floyd-Warshall (claim n**3) ==")
 for ns in ([16, 32, 48, 64, 96, 128], [32, 48, 64, 96, 128, 160, 200]):
     v = H.counts(AP, FW, ns, 1)
-    print("  exactly n^3 - n:", all(int(c) == n ** 3 - n for n, c in zip(ns, v)))
+    ok = all(int(c) == n ** 3 - n for n, c in zip(ns, v))
+    check_line(ok, "  exactly n^3 - n:", ok)
     H.report("tol=0.03", ns, v, "n**3", ["n**2 * (n-1)**2", "n**2.5", "n**3*log(n)"], 0.03)
 
 sm_dir, sm_entry, sm_h = H.entry_and_harness(SM)
@@ -80,7 +108,8 @@ for name in (NA, KMP):
     for n in (6, 50, 301):
         t, p = sm_h.generate_scaling(n, random.Random(0))
         ts, ps = "".join(c.c for c in t), "".join(c.c for c in p)
-        print(f"  {name}, n={n}: tuple answer {fn((t, p))}, str answer {fn((ts, ps))}")
+        a_tuple, a_str = fn((t, p)), fn((ts, ps))
+        check_line(a_tuple == a_str, f"  {name}, n={n}: tuple answer {a_tuple}, str answer {a_str}")
     rng = random.Random(7)
     agree = True
     for trial in range(200):
@@ -88,17 +117,21 @@ for name in (NA, KMP):
         ts = "".join(rng.choice("ab") for _ in range(n))
         ps = "".join(rng.choice("ab") for _ in range(rng.randint(1, 5)))
         agree &= fn((tuple(sm_h.CountingChar(c) for c in ts), tuple(sm_h.CountingChar(c) for c in ps))) == fn((ts, ps))
-    print(f"  {name}: 200 random small (text, pattern) pairs, tuple answers == str answers: {agree}")
+    check_line(agree, f"  {name}: 200 random small (text, pattern) pairs, tuple answers == str answers: {agree}")
 
 print("\n== strings: naive (claim n**2) ==")
 ns = [200, 400, 800, 1600, 3200]
 v = H.counts(SM, NA, ns, 1)
-print("  exactly (n - m + 1) m:", all(int(c) == (n - n // 2 + 1) * (n // 2) for n, c in zip(ns, v)))
+ok = all(int(c) == (n - n // 2 + 1) * (n // 2) for n, c in zip(ns, v))
+check_line(ok, "  exactly (n - m + 1) m:", ok)
 H.report("tol=0.03", ns, v, "n**2", ["n", "n*log(n)", "n**2*log(n)"], 0.03)
 
 print("\n== strings: KMP (claim n) ==")
 ns = [3000, 10000, 30000, 100000, 300000]
 v = H.counts(SM, KMP, ns, 1)
-print("  exactly 3n + 2m - 6:", all(int(c) == 3 * n + 2 * (n // 2) - 6 for n, c in zip(ns, v)), [int(c) for c in v])
+ok = all(int(c) == 3 * n + 2 * (n // 2) - 6 for n, c in zip(ns, v))
+check_line(ok, "  exactly 3n + 2m - 6:", ok, [int(c) for c in v])
 H.report("tol=0.03", ns, v, "n", ["n*log(n)", "n**2", "n/log(n)"], 0.03)
+
+finish_checks()
 

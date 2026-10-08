@@ -13,7 +13,9 @@ proofs, and are not replayed here (`python tools/check_all.py` runs them; see RE
   python tools/replay_proofs.py SLUG ...     # only these items (folder names)
   python tools/replay_proofs.py --list       # print the commands without running them
 
-Every command runs with PYTHONHASHSEED=0. Exit code 0 only if every command exits 0.
+Every command runs with PYTHONHASHSEED=0. A command passes only if it exits 0 AND its output (stdout and stderr) has
+no line starting with "[FAIL]" (the prefix every check script gives a failed check); a command that exits 0 with such
+a line is reported as "FAIL (output contains [FAIL] lines)". Exit code 0 only if every command passes.
 """
 from __future__ import annotations
 
@@ -49,6 +51,23 @@ def command_for(check_file: Path) -> tuple[str, ...]:
     if rel.parts[0] == "tests" and rel.name.startswith("test_") and rel.suffix == ".py":
         return ("-m", "unittest", ".".join(rel.with_suffix("").parts))
     return (rel.as_posix(),)
+
+
+FAIL_PREFIX = "[FAIL]"
+
+
+def fail_lines(output: str) -> list[str]:
+    """The lines of a command's output that start with [FAIL] (a failed check reported by a check script)."""
+    return [line for line in output.splitlines() if line.startswith(FAIL_PREFIX)]
+
+
+def verdict(returncode: int, output: str) -> tuple[bool, str]:
+    """(passed, reason). A command passes only if it exits 0 and prints no line starting with [FAIL]."""
+    if returncode != 0:
+        return False, f"FAIL (exit code {returncode})"
+    if fail_lines(output):
+        return False, "FAIL (output contains [FAIL] lines)"
+    return True, "PASS"
 
 
 def commands_for(item: dict) -> list[tuple[str, ...]]:
@@ -92,13 +111,14 @@ def main(argv=None) -> int:
         t0 = time.perf_counter()
         res = subprocess.run([sys.executable, *cmd], cwd=REPO, env=env, capture_output=True, text=True,
                              encoding="utf-8", errors="replace")
-        ok = res.returncode == 0
-        print(f"[{'PASS' if ok else 'FAIL'}] ({i}/{len(plan)}) python {' '.join(cmd)}  [{time.perf_counter() - t0:.1f}s]",
-              flush=True)
+        output = res.stdout + res.stderr
+        ok, reason = verdict(res.returncode, output)
+        print(f"[{'PASS' if ok else 'FAIL'}] ({i}/{len(plan)}) python {' '.join(cmd)}  [{time.perf_counter() - t0:.1f}s]"
+              + ("" if ok else f"  {reason}"), flush=True)
         if not ok:
             failed_cmds.add(cmd)
-            tail = (res.stdout + res.stderr).strip().splitlines()[-15:]
-            print("    " + "\n    ".join(tail))
+            shown = fail_lines(output)[:15] if res.returncode == 0 else output.strip().splitlines()[-15:]
+            print("    " + "\n    ".join(shown))
 
     bad_items = sorted({slug for cmd in failed_cmds for slug in plan[cmd]})
     print(f"\n{len(plan) - len(failed_cmds)}/{len(plan)} commands passed; "

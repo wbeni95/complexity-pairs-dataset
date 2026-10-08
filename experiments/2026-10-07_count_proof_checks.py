@@ -14,7 +14,8 @@ deterministic.
 
 Usage (repository root):  python experiments/2026-10-07_count_proof_checks.py [group ...]
         groups: strings algebra subsets sat graphs bst query   (default: all)
-Output: one line per check, "[group] OK|MISMATCH label: checked range"; then a summary. Exit code 0 iff no mismatch.
+Output: one line per check, "[PASS] [group] OK label: checked range" or "[FAIL] [group] MISMATCH label: ..."; then a
+summary. Exit code 0 (and ALL CHECKS PASSED) iff no mismatch; an exception in a check also ends the run with exit 1.
 Each PROOFS.md cites its checks by group and label.
 """
 from __future__ import annotations
@@ -59,7 +60,8 @@ def make_record(group):
     def record(label, sizes, mismatches):
         status = "OK" if not mismatches else "MISMATCH"
         shown = "; ".join(f"{c}: counted {a} vs {e}" for c, a, e in mismatches[:6])
-        print(f"[{group}] {status:8s} {label}: {sizes}" + (f" | {shown}" if mismatches else ""), flush=True)
+        print(f"[{'PASS' if not mismatches else 'FAIL'}] [{group}] {status:8s} {label}: {sizes}"
+              + (f" | {shown}" if mismatches else ""), flush=True)
         RESULTS.append((group, label, status))
     return record
 
@@ -1984,10 +1986,12 @@ def _make_bst():
                     ma.append(((n, fam), add, (35 * 3 ** (n - 2) - 3) / 2))
                 if n == 1 and add != 4:
                     ma.append(((n, fam), add, 4))
+                if n == 0 and add != 0:
+                    ma.append(((n, fam), add, 0))
         record("OBST recursion: 3^n calls, (3^(n-1)-1)/2 comparisons (n>=1, 0 at n=0) on every family and signed values",
                "n = 0..9, the ten V1 families + 2 signed kinds, 1 instance each", mc)
-        record("OBST recursion additions (35*3^(n-2)-3)/2 (n>=2; 4 at n=1)",
-               "same runs (n = 1..9)", ma)
+        record("OBST recursion additions (35*3^(n-2)-3)/2 (n>=2; 4 at n=1; 0 at n=0)",
+               "same runs (n = 0..9)", ma)
 
 
     def obst_cubic(record):
@@ -2840,7 +2844,10 @@ def main(argv):
           f"{time.perf_counter() - t0:.1f} s")
     for g, label, _ in bad:
         print(f"  MISMATCH: [{g}] {label}")
-    return 1 if bad else 0
+    if bad:
+        return 1
+    print("ALL CHECKS PASSED")
+    return 0
 
 
 if __name__ == "__main__":

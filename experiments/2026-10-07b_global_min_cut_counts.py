@@ -46,10 +46,18 @@ Result (console run 2026-10-07, CPython, Windows 11; every number is an exact co
      instances each at n = 30 and 40.
  Q4  negative controls on the 84 battery instances with n >= 2: check() rejects "answer + 1" on 84/84, "minimum
      weighted degree" (only single-vertex cuts) on 28/84, "Stoer-Wagner first phase only" on 34/84.
+
+Check lines start with [PASS] or [FAIL]: Q1 (closed forms, reported cost = additions + comparisons, weight
+independence, and the per-phase formulas of Stoer-Wagner: in the phase on k vertices (k-1)(k-2)/2 key additions,
+k - 2 merge additions, (k-1)(k-2)/2 selection comparisons and 1 comparison with the best cut except in the first
+phase, every counted operation attributed to its source line), the Q3 battery numbers and oracle cross-checks, and
+the Q4 rejection counts (84/84, 28/84, 34/84). The run ends with ALL CHECKS PASSED (exit code 0) or lists the failed
+checks (exit code 1). The Q2 fits are reported, not checked.
 """
 from __future__ import annotations
 
 import importlib.util
+import inspect
 import random
 import sys
 from math import comb
@@ -65,51 +73,142 @@ entry_dir, entry, harness = H.entry_and_harness(ENTRY)
 brute = H.V.load_callable(entry_dir, "implementations/brute_force.py:min_cut_brute_force")
 sw = H.V.load_callable(entry_dir, "implementations/stoer_wagner.py:min_cut_stoer_wagner")
 
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
 
 def brute_forms(n):
+    """(additions, comparisons, whether the sum equals its closed form n (n-1) 2^(n-3))."""
     adds = sum(comb(n - 1, k) * k * (n - k) for k in range(1, n))
-    assert adds == n * (n - 1) * 2 ** (n - 3) if n >= 3 else adds * 2 == n * (n - 1) * 2 ** (n - 2)
-    return adds, 2 ** (n - 1) - 2
+    identity = adds == n * (n - 1) * 2 ** (n - 3) if n >= 3 else adds * 2 == n * (n - 1) * 2 ** (n - 2)
+    return adds, 2 ** (n - 1) - 2, identity
 
 
 def sw_forms(n):
-    assert (n - 1) * (n - 2) * (n + 3) % 6 == 0 and n * (n - 1) * (n - 2) % 6 == 0
-    return (n - 1) * (n - 2) * (n + 3) // 6, n * (n - 1) * (n - 2) // 6 + n - 2
+    """(additions, comparisons, whether both numerators are divisible by 6)."""
+    divisible = (n - 1) * (n - 2) * (n + 3) % 6 == 0 and n * (n - 1) * (n - 2) % 6 == 0
+    return (n - 1) * (n - 2) * (n + 3) // 6, n * (n - 1) * (n - 2) // 6 + n - 2, divisible
+
+
+REPORTED_BAD = []   # runs where reported_cost differs from additions + comparisons
 
 
 def measured(fn, n, seed):
     inst = harness.generate_scaling(n, random.Random(seed))
     out = fn(inst)
     adds, cmps = harness.counters()
-    assert harness.reported_cost(out) == adds + cmps
+    if harness.reported_cost(out) != adds + cmps:
+        REPORTED_BAD.append((fn.__name__, n, seed))
     plain = tuple(tuple(int(x) for x in r) for r in inst)
     return adds, cmps, int(out), plain
 
 
 print("Q1: exact counts vs closed forms")
+bad = []
 for n in range(2, 15):
     a, c, out, plain = measured(brute, n, f"q1|{n}")
-    fa, fc = brute_forms(n)
-    assert (a, c) == (fa, fc), (n, a, c, fa, fc)
-    assert fa + fc == ((n * n - n + 4) * 2 ** n - 16) // 8
-    assert harness.check(plain, out)
-print("  brute force: additions and comparisons equal the closed forms for n = 2..14")
+    fa, fc, identity = brute_forms(n)
+    if not ((a, c) == (fa, fc) and identity and fa + fc == ((n * n - n + 4) * 2 ** n - 16) // 8
+            and harness.check(plain, out)):
+        bad.append((n, a, c, fa, fc))
+check_line(not bad, "  brute force: additions and comparisons equal the closed forms for n = 2..14"
+           + (f"; FAILS at (n, adds, cmps, formula adds, formula cmps) = {bad[:5]}" if bad else ""))
+bad = []
 for n in list(range(2, 41)) + [48, 64, 96, 128, 192, 256]:
     a, c, out, plain = measured(sw, n, f"q1|{n}")
-    fa, fc = sw_forms(n)
-    assert (a, c) == (fa, fc), (n, a, c, fa, fc)
-    assert fa + fc == (n - 2) * (2 * n * n + n + 3) // 6
-    if n <= 24:
-        assert harness.check(plain, out)
-print("  Stoer-Wagner: additions and comparisons equal the closed forms for n = 2..40, 48, 64, 96, 128, 192, 256")
+    fa, fc, divisible = sw_forms(n)
+    if not ((a, c) == (fa, fc) and divisible and fa + fc == (n - 2) * (2 * n * n + n + 3) // 6
+            and (n > 24 or harness.check(plain, out))):
+        bad.append((n, a, c, fa, fc))
+check_line(not bad, "  Stoer-Wagner: additions and comparisons equal the closed forms for n = 2..40, 48, 64, 96, 128, "
+           "192, 256" + (f"; FAILS at (n, adds, cmps, formula adds, formula cmps) = {bad[:5]}" if bad else ""))
 # weight-independence of the counts: different weights, same n -> same counts
+bad = []
 for n in (5, 9, 12):
     s1 = measured(brute, n, "w1")[:2]
     s2 = measured(brute, n, "w2")[:2]
     t1 = measured(sw, 3 * n, "w1")[:2]
     t2 = measured(sw, 3 * n, "w2")[:2]
-    assert s1 == s2 and t1 == t2
-print("  counts do not depend on the weights (checked at brute n = 5, 9, 12 and SW n = 15, 27, 36)")
+    if not (s1 == s2 and t1 == t2):
+        bad.append(n)
+check_line(not bad, "  counts do not depend on the weights (checked at brute n = 5, 9, 12 and SW n = 15, 27, 36)"
+           + (f"; FAILS at n = {bad}" if bad else ""))
+check_line(not REPORTED_BAD, f"  reported cost == additions + comparisons on every run above: {not REPORTED_BAD}"
+           + (f" {REPORTED_BAD[:5]}" if REPORTED_BAD else ""))
+
+# Per-phase formulas: every counted operation of the unchanged Stoer-Wagner code is attributed, at run time, to its
+# source line (key update, merge, selection, best-cut comparison) and to the phase, identified by k = the number of
+# active vertices (t is already removed when the merge runs, so k = len(active) + 1 there).
+_src, _start = inspect.getsourcelines(sw)
+
+
+def _line_of(marker):
+    hits = [_start + i for i, s in enumerate(_src) if marker in s]
+    if len(hits) != 1:
+        raise RuntimeError(f"source marker {marker!r} found {len(hits)} times")
+    return hits[0]
+
+
+L_KEY, L_MERGE = _line_of("key[v] = key[v] + G[sel][v]"), _line_of("G[s][v] = G[s][v] + G[t][v]")
+L_SEL, L_BEST = _line_of("if key[v] > key[sel]:"), _line_of("cut_of_phase < best")
+CW = harness.CountingWeight
+_orig = {name: CW.__dict__[name] for name in ("__add__", "__radd__", "__lt__", "__le__", "__gt__", "__ge__")}
+_tally = {}
+
+
+def _attributed(name):
+    orig = _orig[name]
+
+    def wrapper(self, other):
+        f = sys._getframe(1)
+        k = len(f.f_locals["active"]) if f.f_code is sw.__code__ else None
+        line = f.f_lineno if k is not None else None
+        if line == L_MERGE:
+            k += 1
+        key = (line, k)
+        _tally[key] = _tally.get(key, 0) + 1
+        return orig(self, other)
+    return wrapper
+
+
+bad = []
+for name in _orig:
+    setattr(CW, name, _attributed(name))
+try:
+    for n in list(range(2, 41)) + [48, 64, 96, 128, 192, 256]:
+        _tally.clear()
+        sw(harness.generate_scaling(n, random.Random(f"q1|{n}")))
+        want = {}
+        for k in range(2, n + 1):
+            for line, cnt in ((L_KEY, (k - 1) * (k - 2) // 2), (L_MERGE, k - 2), (L_SEL, (k - 1) * (k - 2) // 2),
+                              (L_BEST, 0 if k == n else 1)):
+                if cnt:
+                    want[(line, k)] = cnt
+        if _tally != want:
+            bad.append(n)
+finally:
+    for name, f in _orig.items():
+        setattr(CW, name, f)
+check_line(not bad, "  Stoer-Wagner per phase on k vertices: (k-1)(k-2)/2 key additions, k-2 merge additions, "
+           "(k-1)(k-2)/2 selection comparisons, 1 best-cut comparison (none in the first phase); no other counted "
+           "operation; n = 2..40, 48, 64, 96, 128, 192, 256" + (f"; FAILS at n = {bad}" if bad else ""))
 
 print("\nQ2: alphas at candidate n_values (validator seeds, validator fit)")
 TOL = 0.03
@@ -127,7 +226,7 @@ for name, (fn, nsets, cost, rivals) in cands.items():
 print("\nQ3: V1 battery composition (validator seeds) and oracle cross-checks")
 th = entry["test_harness"]
 fam_seen = {}
-zero_cut = zero_entries = total = 0
+zero_cut = zero_entries = total = with_two = 0
 for n in th["v1_sizes"]:
     for trial in range(th.get("trials", 3)):
         rng = random.Random(f"{ENTRY}|v1|{n}|{trial}")
@@ -136,11 +235,15 @@ for n in th["v1_sizes"]:
         total += 1
         fam_seen[fam] = fam_seen.get(fam, 0) + 1
         if n >= 2:
+            with_two += 1
             ans = sw(inst)
             zero_cut += ans == 0
             zero_entries += any(inst[u][v] == 0 for u in range(n) for v in range(u + 1, n))
-print(f"  {total} instances; family counts {dict(sorted(fam_seen.items()))}; "
-      f"min cut 0 in {zero_cut}; some off-diagonal zero entry in {zero_entries}")
+check_line((total, dict(sorted(fam_seen.items())), with_two, zero_cut, zero_entries)
+           == (96, {0: 16, 1: 11, 2: 27, 3: 16, 4: 12, 5: 14}, 84, 47, 79),
+           f"  {total} instances; family counts {dict(sorted(fam_seen.items()))}; "
+           f"min cut 0 in {zero_cut}; some off-diagonal zero entry in {zero_entries} (instances with n >= 2: "
+           f"{with_two}; published: 96 instances, families 16/11/27/16/12/14, min cut 0 in 47 of 84, 79)")
 rng = random.Random("q3-extra")
 agree = 0
 for i in range(300):
@@ -148,14 +251,17 @@ for i in range(300):
     inst = harness.generate(n, rng)
     b, s = brute(inst), sw(inst)
     f, e = harness._min_cut_by_flows([list(r) for r in inst]), harness._min_cut_by_subsets([list(r) for r in inst])
-    assert b == s == f == e, (inst, b, s, f, e)
-    agree += 1
-print(f"  extra: {agree}/300 random instances (n = 2..10): brute = Stoer-Wagner = max-flow oracle = subset oracle")
+    agree += b == s == f == e
+check_line(agree == 300,
+           f"  extra: {agree}/300 random instances (n = 2..10): brute = Stoer-Wagner = max-flow oracle = subset oracle")
+bad = []
 for n in (30, 40):
     for k in range(3):
         inst = harness.generate(n, random.Random(f"q3-large|{n}|{k}"))
-        assert sw(inst) == harness._min_cut_by_flows([list(r) for r in inst])
-print("  extra: Stoer-Wagner = max-flow oracle on 3 instances each at n = 30, 40")
+        if sw(inst) != harness._min_cut_by_flows([list(r) for r in inst]):
+            bad.append((n, k))
+check_line(not bad, "  extra: Stoer-Wagner = max-flow oracle on 3 instances each at n = 30, 40"
+           + (f"; FAILS at (n, k) = {bad}" if bad else ""))
 
 print("\nQ4: negative controls on the V1 battery instances with n >= 2 (does check() reject wrong answers?)")
 
@@ -186,4 +292,9 @@ for n in th["v1_sizes"]:
             battery.append(harness.generate(n, random.Random(f"{ENTRY}|v1|{n}|{trial}")))
 for name, fn in mutants.items():
     caught = sum(harness.check(W, fn(W)) is False for W in battery)
-    print(f"  mutant '{name}': rejected by check() on {caught}/{len(battery)} battery instances")
+    line = f"  mutant '{name}': rejected by check() on {caught}/{len(battery)} battery instances"
+    published = {"answer + 1": 84, "min weighted degree": 28, "first phase only": 34}[name]
+    # "answer + 1" is wrong on every instance by construction; the published counts are 84/84, 28/84, 34/84
+    check_line(len(battery) == 84 and caught == published, line + f" (published: {published}/84)")
+
+finish_checks()

@@ -77,7 +77,7 @@ scaling 1 (`n_inv = pow(1, P - 2, P) = 1` is plain, `a[0]` is input-derived): 2,
 
 **Check.** `experiments/2026-10-06c_ntt_counts.py` (n = 2^3..2^15). `experiments/2026-10-07_closed_form_checks.py`,
 group `algebra`, line "NTT 3n log2 n + 5n (n=2^k)": n = 2, 4, 8, …, 16384 (n = 1 reported as outside the domain
-with count 2, and n = 3, 5, 6, 7, 100 as non-powers of two). `experiments/2026-10-07_count_proof_checks.py`, group
+with count 2, and n = 3, 5, 6, 7, 100 as non-powers of two); line "NTT n=1: 2": n = 1. `experiments/2026-10-07_count_proof_checks.py`, group
 `algebra`, line "NTT split: forward n log2 n each, pointwise 2n, inverse (log2 n + 1) n + 2n; butterfly twiddles
 plain": n = 2, 4, …, 4096.
 
@@ -195,7 +195,8 @@ exponents below p, O(log p) = O(1) multiplications for the fixed p. The pointwis
 stored value is reduced mod p (`% P` after each sum, difference and product), so it is below p; before the reduction a
 sum u + v is below 2p and a product below p².
 
-**Check.** (a) `experiments/2026-10-07_count_proof_checks.py` (planted zeros, section 1). (b) `tests/test_proofs_ntt.py`,
+**Check.** (a) `experiments/2026-10-07_count_proof_checks.py`, group `algebra`, line "poly schoolbook nnz(A) * n
+with planted zero coefficients": n = 1..40, 3 seeded inputs per n (planted zeros, section 1). (b) `tests/test_proofs_ntt.py`,
 `SizeTests`: the module's `_ntt` wrapped by a spy (code unchanged), n = 1..300, 1000, 1025: exactly three calls, each on
 N entries, with 2n − 1 ≤ N ≤ 4n − 3; and the number of executions of the butterfly line `u = a[k]` of the unchanged
 `_ntt`, counted with `sys.settrace`, equals (3/2) N log₂ N for n = 1..64, 300, 1000; the exact counts of section 2 on
@@ -220,5 +221,7 @@ from 2 to 1 (up to the log factor): T3.
 
 **Proof.** (a) Section 2. (b) Sections 1, 2 and 8.
 
-**Check.** (a) `experiments/2026-10-06c_ntt_counts.py` (probe part) and `experiments/2026-10-07_count_proof_checks.py`.
+**Check.** (a) `experiments/2026-10-06c_ntt_counts.py` (probe part) and `experiments/2026-10-07_count_proof_checks.py`,
+group `algebra`, line "NTT split: forward n log2 n each, pointwise 2n, inverse (log2 n + 1) n + 2n; butterfly twiddles
+plain": n = 2, 4, …, 4096.
 (b) The V2 fits.

@@ -19,6 +19,11 @@ What it checks (deterministic; no timing):
 Run from the repository root:  .venv/Scripts/python.exe experiments/2026-10-06f_entries_horn_sat.py
 RESULT (2026-10-06): all closed forms hold; oracle control accepts all correct outputs and rejects all wrong ones
 (tallies printed); see the report for the numbers.
+
+Check lines (1, 2, 3, unit propagation == brute force on the control instances, 4 with every wrong kind tested at
+least once) start with [PASS] or [FAIL]; the
+run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The counts at the V2 sizes,
+the tallies and the fits (5) are reported, not checked.
 """
 import importlib.util
 import math
@@ -43,6 +48,26 @@ H = load(ENTRY / "harness.py", "horn_harness")
 B = load(ENTRY / "implementations" / "brute_force.py", "horn_brute")
 U = load(ENTRY / "implementations" / "unit_propagation.py", "horn_up")
 
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
 
 def fit_slope(xs, ys):
     mx, my = sum(xs) / len(xs), sum(ys) / len(ys)
@@ -63,13 +88,15 @@ def main():
     # 1. brute-force closed form
     E = lambda n: (2 * n + 13) * 2 ** (n - 2) - 2 * n - 4  # noqa: E731
     brute = {n: count(B.horn_sat_brute_force, n) for n in range(3, 17)}
-    print("1. brute force = 6 E(n) for n = 3..16:", all(brute[n] == 6 * E(n) for n in brute))
+    ok = all(brute[n] == 6 * E(n) for n in brute)
+    check_line(ok, "1. brute force = 6 E(n) for n = 3..16:", ok)
     print("   counts at V2 sizes:", {n: brute[n] for n in (8, 10, 12, 14, 16)})
 
     # 2. unit propagation closed form
     ns_up = list(range(3, 301)) + [1000, 2000, 4000, 8000, 16000, 32000]
     up = {n: count(U.horn_sat_unit_propagation, n) for n in ns_up}
-    print("2. unit propagation = 12n - 7 for n = 3..300 and V2 sizes:", all(up[n] == 12 * n - 7 for n in ns_up))
+    ok = all(up[n] == 12 * n - 7 for n in ns_up)
+    check_line(ok, "2. unit propagation = 12n - 7 for n = 3..300 and V2 sizes:", ok)
     print("   counts at V2 sizes:", {n: up[n] for n in (1000, 2000, 4000, 8000, 16000, 32000)})
 
     # 3. naive chaining passes on H_n (plain integers)
@@ -87,16 +114,19 @@ def main():
                     true[heads[0]] = True
                     changed = True
         return p
-    print("3. naive chaining passes on H_n (n: passes):", {n: passes(n) for n in (5, 10, 50, 200)},
-          "== n for n = 3..200:", all(passes(n) == n for n in range(3, 201)))
+    shown = {n: passes(n) for n in (5, 10, 50, 200)}
+    ok = all(passes(n) == n for n in range(3, 201))
+    check_line(ok, "3. naive chaining passes on H_n (n: passes):", shown, "== n for n = 3..200:", ok)
 
     # 4. oracle control
     tally = {k: [0, 0] for k in ("correct", "flip", "larger", "none", "allfalse", "short")}  # [tested, rejected]
+    up_differs = []
     for n in range(0, 13):
         for t in range(80):
             inst = H.generate(n, random.Random(f"horn-control|{n}|{t}"))
             out = U.horn_sat_unit_propagation(inst)
-            assert out == B.horn_sat_brute_force(inst)
+            if out != B.horn_sat_brute_force(inst):
+                up_differs.append((n, t))
             tally["correct"][0] += 1
             tally["correct"][1] += H.check(inst, out) is not True
             nn, clauses = inst
@@ -119,9 +149,12 @@ def main():
             for kind, w in wrongs:
                 tally[kind][0] += 1
                 tally[kind][1] += H.check(inst, w) is False
+    check_line(not up_differs, "   unit propagation == brute force on every control instance (n = 0..12, 80 each):",
+               not up_differs if not up_differs else f"False, differs at (n, t) = {up_differs[:5]}")
     print("4. oracle control [tested, rejected]:", tally)
-    print("   correct outputs all accepted:", tally["correct"][1] == 0,
-          "| every wrong output rejected:", all(t[0] == t[1] for k, t in tally.items() if k != "correct"))
+    acc_ok = tally["correct"][1] == 0
+    rej_ok = all(t[0] == t[1] and t[0] > 0 for k, t in tally.items() if k != "correct")
+    check_line(acc_ok and rej_ok, "   correct outputs all accepted:", acc_ok, "| every wrong output rejected:", rej_ok)
 
     # 5. fits
     nb = [8, 10, 12, 14, 16]
@@ -137,6 +170,7 @@ def main():
     for name, c in [("12n - 7 (claim)", lambda n: 12 * n - 7), ("n log n (rival)", lambda n: n * math.log(n)),
                     ("n^2 (rival)", lambda n: n * n), ("n (bare, info)", lambda n: n)]:
         print(f"   {name}: alpha = {alpha(c, nu, vu):.4f}")
+    finish_checks()
 
 
 if __name__ == "__main__":

@@ -150,7 +150,9 @@ s = 16 · 2^k with s/2 < n ≤ s. Each internal call does Θ(s²) list work (sli
 4.5 s² additions, and each leaf Θ(1); so the total is Θ(P + A) = Θ(7^k) by (b), and the padding costs Θ(s²) = O(7^k).
 With 7^k = (s/16)^(log₂ 7) and n ≤ s < 2n this is Θ(n^(log₂ 7)).
 
-**Check.** (a) `experiments/2026-10-07_closed_form_checks.py` (multiplications, section 1). (b)
+**Check.** (a) `experiments/2026-10-07_closed_form_checks.py`, group `algebra`, lines "matmul Strassen
+7^log2(n/16)*16^3" (n = 16, 32, 64, 128, 256) and "matmul Strassen n<=16: n(s^2-(s-n)^2), s=2^ceil(log2 n) (padded
+schoolbook)" (n = 0..16) (the multiplications, section 1). (b)
 `tests/test_proofs_strassen.py`, `AdditionCountTests`: an instrumented integer counting +, − and × on the unchanged
 code of both entries, n = 16, 32, 64, 128 (k = 0..3): additions 5632 · 7^k − 1536 · 4^k and multiplications
 4096 · 7^k exactly. (c) The V2 fits on exact multiplication counts.

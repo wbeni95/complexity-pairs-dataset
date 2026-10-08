@@ -59,8 +59,9 @@ k!·k(k + 1)/3 + k!·k + k! − 1 = k!(k + 1)(k + 3)/3 − 1. At k = 0 the singl
 formula also gives. At k = 1 the single order makes 1 truth test and 1 addition, 2, while the formula gives 5/3.
 
 **Check.** `experiments/2026-10-07_first_match_checks.py` (k = 2..8). `experiments/2026-10-07_closed_form_checks.py`,
-group `expdp`, line "FM enumeration k!(k+1)(k+3)/3-1": k = 0..8 (includes the V2 sizes k = 4..8; k = 1 reported as
-outside the domain with count 2); line "FM enumeration per kind: truth k!k(k+1)/3, add k!k, compare k!-1": k = 2..8.
+group `expdp`, line "FM enumeration k!(k+1)(k+3)/3-1": k = 0 and 2..8 (includes the V2 sizes k = 4..8; k = 1 reported
+as outside the domain with count 2); line "FM enumeration per kind: truth k!k(k+1)/3, add k!k, compare k!-1": k = 0
+and 2..8.
 
 ## 2. Subset DP: 3k² + (7k − 2)·2^(k−1) + 2 on the V2 family
 
@@ -102,8 +103,8 @@ total 3k² + 3k·2^k + k·2^(k−1) − 2^k + 2 = 3k² + (7k − 2)·2^(k−1) +
 and `best[0] + base` adds two plain zeros: 0.
 
 **Check.** `experiments/2026-10-07_first_match_checks.py` (k = 2..18). `experiments/2026-10-07_closed_form_checks.py`,
-group `expdp`, line "FM DP 3k^2+(7k-2)2^(k-1)+2": k = 0..18 (includes the V2 sizes k = 6..14; k = 0 reported as
-outside the domain with count 0); line "FM DP per kind: truth k^2+k2^k, bit k^2+k2^k, add k^2+k2^k+1, compare
+group `expdp`, line "FM DP 3k^2+(7k-2)2^(k-1)+2": k = 1..18 (includes the V2 sizes k = 6..14; k = 0 reported as
+outside the domain with count 0); line "FM DP 0 at k=0": k = 0; line "FM DP per kind: truth k^2+k2^k, bit k^2+k2^k, add k^2+k2^k+1, compare
 k2^(k-1)-2^k+1": k = 1..14. `experiments/2026-10-07_count_proof_checks.py`, group `subsets`, line "first match DP:
 components (build, capture, gain, transition, final)": k = 1..12.
 

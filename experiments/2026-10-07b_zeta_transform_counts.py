@@ -12,6 +12,10 @@ Deterministic. Outcome (console run 2026-10-07, CPython 3.14):
   - naive on n = 4..11: alpha 1.0000 vs 3^n; n*2^n 1.3153, 4^n 0.7925, n*3^n 0.8856, 2^n 1.585;
   - Yates on n = 4,6,..,16: alpha 1.0000 vs n*2^n; 2^n 1.1612, n^2*2^n 0.8772, 3^n 0.7327, n log n 2^n 0.9362.
   So tolerance 0.02 (alpha is exactly 1; smallest rival gap 0.0638). The validator reproduced these values.
+
+Check lines (every n: both counts equal their closed forms and the outputs agree; the summary) start with [PASS] or
+[FAIL]; the run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The alphas are
+reported, not checked.
 """
 import importlib.util
 import math
@@ -37,6 +41,26 @@ H = load(ENTRY / "harness.py", "zeta_harness")
 NAIVE = load(ENTRY / "implementations" / "naive.py", "zeta_naive").zeta_naive
 YATES = load(ENTRY / "implementations" / "yates.py", "zeta_yates").zeta_yates
 
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
 
 def counted(fn, n):
     inst = H.generate_scaling(n, random.Random(f"zetaexp|{n}"))
@@ -55,10 +79,11 @@ def main():
         cn, on, plain = counted(NAIVE, n)
         cy, oy, _ = counted(YATES, n)
         same = on == oy == NAIVE(plain) == YATES(plain)
-        ok &= cn == 3 ** n and cy == n * 2 ** (n - 1) if n else cn == 1 and cy == 0
-        ok &= same
-        print(f"n={n:2d} naive={cn:>8d} (3^n={3 ** n:>8d})  yates={cy:>7d} (n*2^(n-1)={n * 2 ** n // 2:>7d})  same={same}")
-    print("all closed forms and outputs match:", ok)
+        line_ok = (cn == 3 ** n and cy == n * 2 ** (n - 1) if n else cn == 1 and cy == 0) and same
+        ok &= line_ok
+        check_line(line_ok, f"n={n:2d} naive={cn:>8d} (3^n={3 ** n:>8d})  yates={cy:>7d} "
+                            f"(n*2^(n-1)={n * 2 ** n // 2:>7d})  same={same}")
+    check_line(ok, "all closed forms and outputs match:", ok)
 
     ns = [4, 5, 6, 7, 8, 9, 10, 11]
     print("naive alphas on", ns, alphas(ns, [3 ** n for n in ns], {
@@ -68,6 +93,7 @@ def main():
     print("yates alphas on", ns, alphas(ns, [n * 2 ** (n - 1) for n in ns], {
         "n*2**n (claim)": lambda n: n * 2 ** n, "2**n": lambda n: 2 ** n, "n**2*2**n": lambda n: n * n * 2 ** n,
         "3**n": lambda n: 3 ** n, "n*log(n)*2**n": lambda n: n * math.log(n) * 2 ** n}))
+    finish_checks()
 
 
 if __name__ == "__main__":

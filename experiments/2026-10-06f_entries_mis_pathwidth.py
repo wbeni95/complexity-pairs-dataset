@@ -29,6 +29,13 @@ Result (console, 2026-10-06, CPython 3.14.2; about 5 s):
     Other forms: n^1.5 8^n 0.9453 (rejected); plain n for the DP 1.0013 (fits).
  6. DP additions at n = 20, k = 1..8: 58, 97, 195, 352, 647, 1159, 2066, 3645 (all equal to the formula).
  7. Square king's grids k = n = 2..10: DP additions 7, 25, 64, 152, 333, 701, 1425, 2827, 5496.
+
+Check lines start with [PASS] or [FAIL]: 1 and 2 (0 failures, 0 different optimal sets, 48 + 300 compared
+instances), 3 (3393 wrong outputs on 330 instances all rejected, 0 undecided, 0 accepted; 510 correct outputs all
+accepted), the count lines of 4 (random instances with positive weights, and the king k = 3 family against
+both formulas and the stated comparison counts), and every line of 6 (DP additions against the formula). The run ends with ALL CHECKS PASSED (exit
+code 0) or lists the failed checks (exit code 1). The battery composition, the tie counts, the zero-weight deviations,
+the fits (5) and the square grids (7) are reported, not checked.
 """
 from __future__ import annotations
 
@@ -58,6 +65,26 @@ BF = load(ENTRY / "implementations" / "brute_force.py", "mis_bf").mwis_brute_for
 DP = load(ENTRY / "implementations" / "column_dp.py", "mis_dp").mwis_column_dp
 V = load(REPO / "tools" / "validate.py", "mis_validate")
 BF_MAX_N = 5
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 
 def states_of(k):
@@ -115,16 +142,18 @@ def section1():
     for n, (ks, kinds, lo, hi) in per_n.items():
         print(f"   n={n:2d}: k in {ks}; diagonals {kinds}; optimum {lo}..{hi}")
     total = sum(len(range(th['trials'])) for _ in th["v1_sizes"])
-    print(f"   instances {total}, implementation runs {runs}, compared {compared}; different optimal sets with equal "
-          f"value {differ}; failures {fails}")
+    check_line(fails == 0 and differ == 0 and compared == 48,
+               f"   instances {total}, implementation runs {runs}, compared {compared}; different optimal "
+               f"sets with equal value {differ}; failures {fails}")
 
 
 def section2():
     print("2. Extended battery")
     f1, d1, _, c1, _ = battery(range(0, 6), 50, "mis-extended|{n}|{trial}")
     f2, _, _, _, _ = battery(range(6, 61, 6), 30, "mis-extended|{n}|{trial}")
-    print(f"   n = 0..5: 300 instances, both algorithms + check, different optimal sets {d1}, failures {f1}")
-    print(f"   n = 6..60 step 6: 300 instances, DP + check, failures {f2}")
+    check_line(f1 == 0 and d1 == 0 and c1 == 300,
+               f"   n = 0..5: 300 instances, both algorithms + check, different optimal sets {d1}, failures {f1}")
+    check_line(f2 == 0, f"   n = 6..60 step 6: 300 instances, DP + check, failures {f2}")
 
 
 def neighbours_of(inst, v):
@@ -193,9 +222,13 @@ def section3():
                 t["rejected" if v is False else "None" if v is None else "accepted"] += 1
     for name, t in tallies.items():
         print(f"   wrong output '{name}': {t}")
-    print(f"   instances {instances}; wrong outputs: rejected {sum(t['rejected'] for t in tallies.values())}, "
-          f"undecided {sum(t['None'] for t in tallies.values())}, accepted {sum(t['accepted'] for t in tallies.values())}")
-    print(f"   correct outputs (DP on all, exhaustive search on n <= 5): {correct}")
+    accepted = sum(t['accepted'] for t in tallies.values())
+    rejected = sum(t['rejected'] for t in tallies.values())
+    undecided = sum(t['None'] for t in tallies.values())
+    check_line(accepted == 0 and undecided == 0 and instances == 330 and rejected == 3393,
+               f"   instances {instances}; wrong outputs: rejected {rejected}, undecided {undecided}, accepted {accepted}")
+    check_line(correct == {"True": 510, "None": 0, "False": 0},
+               f"   correct outputs (DP on all, exhaustive search on n <= 5): {correct}")
 
 
 def counted(fn, inst):
@@ -236,10 +269,10 @@ def section4():
                 wz = tuple(tuple(H.CountingInt(0 if rng.random() < 0.5 else 1) for _ in range(n)) for _ in range(k))
                 _, adds_z, _ = counted(DP, (k, n, wz, d))
                 zero_dev.append(n * p_k(k) + (n - 1) * len(states_of(k)) - adds_z)
-    print(f"   exhaustive search: count == N 2^(N-1) on {checked_bf} random instances (N <= 15, zero weights "
-          f"included): {ok_bf}")
-    print(f"   column DP, positive weights: count == n P_k + (n-1) F_(k+2) and value == oracle on {checked_dp} "
-          f"instances (n = 1, 4, ..., 40, k = 1..6, all diagonal patterns): {ok_dp}")
+    check_line(ok_bf, f"   exhaustive search: count == N 2^(N-1) on {checked_bf} random instances (N <= 15, zero weights "
+                      f"included): {ok_bf}")
+    check_line(ok_dp, f"   column DP, positive weights: count == n P_k + (n-1) F_(k+2) and value == oracle on {checked_dp} "
+                      f"instances (n = 1, 4, ..., 40, k = 1..6, all diagonal patterns): {ok_dp}")
     print(f"   column DP, weights in {{0, 1}}: uncounted additions (formula - count): min {min(zero_dev)}, "
           f"max {max(zero_dev)}, nonzero in {sum(1 for x in zero_dev if x)} of {len(zero_dev)}")
     rows = []
@@ -248,8 +281,11 @@ def section4():
         _, a_dp, c_dp = counted(DP, H.generate_scaling(n, random.Random(f"{ENTRY_ID}|v2|{n}")))
         rows.append((n, a_bf, 3 * n * 2 ** (3 * n - 1), c_bf, a_dp, 10 * n - 5, c_dp))
     for r in rows:
-        print(f"   king k=3 n={r[0]}: exhaustive adds {r[1]} (formula {r[2]}), comparisons {r[3]}; "
-              f"DP adds {r[4]} (formula {r[5]}), comparisons {r[6]}")
+        # comparisons (not part of the count): exhaustive search 4, 10, 34, 92, 268, 746 (one per non-empty
+        # independent set), DP 6n - 2, as stated in the outcome above
+        check_line(r[1] == r[2] and r[4] == r[5] and r[3] == [4, 10, 34, 92, 268, 746][r[0] - 1] and r[6] == 6 * r[0] - 2,
+                   f"   king k=3 n={r[0]}: exhaustive adds {r[1]} (formula {r[2]}), comparisons {r[3]}; "
+                   f"DP adds {r[4]} (formula {r[5]}), comparisons {r[6]}")
 
 
 def section5():
@@ -280,10 +316,11 @@ def section6():
         states = states_of(k)
         compat = sum(1 for s in states for t in states if not ((t | (t << 1) | (t >> 1)) & s))
         _, adds, comps = counted(DP, H.king_instance(k, n, random.Random(f"mis-k|{k}")))
-        print(f"   k={k}: states F_(k+2) = {len(states)}, P_k = {p_k(k)}, DP additions {adds} "
-              f"(formula {n * p_k(k) + (n - 1) * len(states)}), comparisons {comps}, compatibility tests "
-              f"{(n - 1) * len(states) ** 2}, compatible king pairs per column {compat}; exhaustive search would "
-              f"need N 2^(N-1) = {k * n * 2 ** (k * n - 1):.3e} additions")
+        check_line(adds == n * p_k(k) + (n - 1) * len(states),
+                   f"   k={k}: states F_(k+2) = {len(states)}, P_k = {p_k(k)}, DP additions {adds} "
+                   f"(formula {n * p_k(k) + (n - 1) * len(states)}), comparisons {comps}, compatibility tests "
+                   f"{(n - 1) * len(states) ** 2}, compatible king pairs per column {compat}; exhaustive search "
+                   f"would need N 2^(N-1) = {k * n * 2 ** (k * n - 1):.3e} additions")
 
 
 def section7():
@@ -302,3 +339,4 @@ if __name__ == "__main__":
         print("priority not changed:", exc)
     for sec in (section1, section2, section3, section4, section5, section6, section7):
         sec()
+    finish_checks()

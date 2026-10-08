@@ -62,14 +62,15 @@ pair computes `dy * dy` (1 count) for the test `dy * dy >= best`; if the loop do
 the recursion (64000 → 32000 → 16000 → 8000 → 4000 → 2000 → 1000 → 500 → 250 → 125 → 62, 63 → …).
 
 **Check.** At the V2 sizes n = 1000, 2000, 4000, 8000, 16000, 32000, 64000:
-`experiments/2026-10-07b_count_v2_closest_pair.py` (totals). `experiments/2026-10-07_closed_form_checks.py`, group
+`experiments/2026-10-07b_count_v2_closest_pair.py` (totals, checked equal to the values listed in `entry.json`).
+`experiments/2026-10-07_closed_form_checks.py`, group
 `sorting`, lines "closest pair D&C strip filter S(n)=n+S(fl)+S(cl), S(2)=S(3)=0" and "closest pair D&C base cases:
 2 products per pair in leaves": n = 2..39 and the V2 sizes (it prints S(64000) = 955392).
 `experiments/2026-10-07_count_proof_checks.py`, group `algebra`, line "closest pair D&C strip scan = examined pairs
 + 2 x non-breaking pairs": n = 2..60 and n = 1000, 4000.
 
 The divide-and-conquer totals listed in `entry.json` (14523, …, 1436363) are measured values of one seeded instance
-per size; the strip scan depends on the input and has no closed form.
+per size (the script above reproduces them exactly); the strip scan depends on the input and has no closed form.
 
 ## 3. All pairs: correctness, Θ(n²) time, O(1) extra space
 

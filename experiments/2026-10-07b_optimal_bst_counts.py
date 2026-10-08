@@ -48,6 +48,11 @@ Part 3: recursion n = 5..11: 3^n 1.0015, 2^n 1.5874, 4^n 0.7937, 4^n/n^1.5 0.923
         Tolerance 0.04 chosen: the claims are within 0.0103 of 1 (and every Part-2 family within 0.013), the
         nearest declared rival is 0.077 away (4^n/n^1.5 for the recursion).
 Part 4: 0 monotonicity violations.
+
+Check lines (every Part 1 line, the Part 1 mismatch count, the Part 4 violation count, the Part 2 families zero =
+n(n-1)/2 and heavy_ends = (n-1)^2) start with [PASS] or [FAIL];
+the run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The additions, the other
+Part 2 families and Part 3 are reported, not checked.
 """
 import importlib.util
 import math
@@ -70,6 +75,26 @@ H = load(ENTRY / "harness.py", "obst_harness")
 REC = load(ENTRY / "implementations" / "recursion.py", "obst_rec").obst_recursive
 CUB = load(ENTRY / "implementations" / "cubic_dp.py", "obst_cub").obst_cubic
 KNU = load(ENTRY / "implementations" / "knuth.py", "obst_knu").obst_knuth
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 
 def counting(inst):
@@ -146,8 +171,8 @@ def part1():
             ok = calls == 3 ** n and comps == want_c and val == CUB(inst)
             bad += not ok
             if fam == "small":
-                print(f"  recursion n={n:2d}: calls={calls} (3^n={3 ** n}), comparisons={comps} "
-                      f"((3^(n-1)-1)/2={want_c}), additions={adds}  {'ok' if ok else 'MISMATCH'}")
+                check_line(ok, f"  recursion n={n:2d}: calls={calls} (3^n={3 ** n}), comparisons={comps} "
+                               f"((3^(n-1)-1)/2={want_c}), additions={adds}  {'ok' if ok else 'MISMATCH'}")
     # cubic DP and Knuth on all V1 families
     mono_viol = 0
     for fam in H.FAMILIES:
@@ -166,16 +191,17 @@ def part1():
                     if not (r[i][j - 1] <= r[i][j] <= r[i + 1][j]):
                         mono_viol += 1
             if n in (10, 40):
-                print(f"  {fam:10s} n={n:2d}: cubic comps={c1} (C(n+1,3)={(n + 1) * n * (n - 1) // 6}), adds={a1}; "
-                      f"knuth comps={c2} (telescoped={want_knuth}), adds={a2}  {'ok' if ok else 'MISMATCH'}")
+                check_line(ok, f"  {fam:10s} n={n:2d}: cubic comps={c1} (C(n+1,3)={(n + 1) * n * (n - 1) // 6}), "
+                               f"adds={a1}; knuth comps={c2} (telescoped={want_knuth}), adds={a2}  "
+                               f"{'ok' if ok else 'MISMATCH'}")
     for n in (48, 64, 96, 128):
         inst = H._heavy_ends(n, random.Random(f"he|{n}"), int)
         v2, c2, a2 = run_counted(KNU, inst)
         ok = c2 == (n - 1) ** 2
         bad += not ok
-        print(f"  heavy_ends n={n}: knuth comps={c2} ((n-1)^2={(n - 1) ** 2})  {'ok' if ok else 'MISMATCH'}")
-    print(f"  mismatches: {bad}")
-    print(f"Part 4: monotonicity violations of the largest-optimal-root table: {mono_viol}")
+        check_line(ok, f"  heavy_ends n={n}: knuth comps={c2} ((n-1)^2={(n - 1) ** 2})  {'ok' if ok else 'MISMATCH'}")
+    check_line(bad == 0, f"  mismatches: {bad}")
+    check_line(mono_viol == 0, f"Part 4: monotonicity violations of the largest-optimal-root table: {mono_viol}")
 
 
 def part2():
@@ -190,7 +216,12 @@ def part2():
             vals.append(run_counted(KNU, inst)[1])
         ratios = ", ".join(f"{v / n ** 2:.4f}" for n, v in zip(ns, vals))
         al = ", ".join(f"{k}: {alpha(ns, vals, f):.3f}" for k, f in rivals.items())
-        print(f"  {fam:10s} counts={vals}  count/n^2=[{ratios}]  alpha {al}")
+        line = f"  {fam:10s} counts={vals}  count/n^2=[{ratios}]  alpha {al}"
+        exact = {"zero": lambda n: n * (n - 1) // 2, "heavy_ends": lambda n: (n - 1) ** 2}.get(fam)
+        if exact:                           # stated exactly in the outcome above: n(n-1)/2 and (n-1)^2
+            check_line(vals == [exact(n) for n in ns], line)
+        else:
+            print(line)
 
 
 def part3():
@@ -216,3 +247,4 @@ if __name__ == "__main__":
     part1()
     part2()
     part3()
+    finish_checks()

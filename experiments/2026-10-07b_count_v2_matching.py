@@ -20,11 +20,16 @@ Outcome (run 2026-10-06 local date, Python 3.14.2; deterministic, identical on r
   * HK, k = 4..15: 4572 ... 3116527 scans (1.0153-1.0501 E sqrt V); alpha 1.0041 vs n^2.5; rivals n^2
     1.2551, n^3 0.8367 (rejected); diagnostic 0.9360 / 1.0828 (resolved).
   Written to entry.json: the existing n_values, tolerance 0.03.
+
+Check lines (harness counts equal the copies' counts; HK phases k + 1) start with [PASS] or [FAIL]; the run ends
+with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The ratios, fits, rivals and slopes
+are reported, not checked.
 """
 import ast
 import importlib.util
 import types
 import math
+import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -41,6 +46,26 @@ _mod = ast.Module(body=[n for n in _tree.body if isinstance(n, ast.FunctionDef)
 _ns = {}
 exec(compile(_mod, "2026-10-07_bipartite_matching_counts.py", "exec"), _ns)
 C = types.SimpleNamespace(**_ns)
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 EID = "bipartite-matching-kuhn-vs-hopcroft-karp"
 KUHN = "Kuhn's augmenting paths (one DFS per left vertex)"
@@ -66,14 +91,15 @@ for k, n, v in zip(ks_k, k_ns, kc):
     size, scans = C.kuhn_counts(harness.adversarial(k))
     ok &= scans == int(v)
     E = 2 * k ** 4 + k * k
-    print(f"  Kuhn k={k} V={n}: harness {int(v)}, copy {scans}, /(V E) = {v / (n * E):.4f}")
+    check_line(scans == int(v), f"  Kuhn k={k} V={n}: harness {int(v)}, copy {scans}, /(V E) = {v / (n * E):.4f}")
 for k, n, v in zip(ks_h, h_ns, hc):
     size, scans, phases = C.hk_counts(harness.adversarial(k))
     ok &= scans == int(v)
     E = 2 * k ** 4 + k * k
-    print(f"  HK   k={k} V={n}: harness {int(v)}, copy {scans}, phases {phases} (k+1 = {k + 1}), "
-          f"/(E sqrt V) = {v / (E * math.sqrt(n)):.4f}")
-print("  all equal:", ok)
+    check_line(scans == int(v) and phases == k + 1,
+               f"  HK   k={k} V={n}: harness {int(v)}, copy {scans}, phases {phases} (k+1 = {k + 1}), "
+               f"/(E sqrt V) = {v / (E * math.sqrt(n)):.4f}")
+check_line(ok, "  all equal:", ok)
 
 print("\n== Kuhn (claim n**3) ==")
 for tol in (0.05, 0.03):
@@ -83,4 +109,6 @@ H.report("k=5..11 tol=0.03", k_ns[2:], kc[2:], "n**3", ["n**2.5"], 0.03)
 print("\n== Hopcroft-Karp (claim n**2.5) ==")
 for tol in (0.05, 0.03):
     H.report(f"k=4..15 tol={tol}", h_ns, hc, "n**2.5", ["n**2", "n**3"], tol)
+
+finish_checks()
 

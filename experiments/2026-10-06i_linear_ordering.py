@@ -11,6 +11,10 @@ Sections (deterministic):
 
 Run from the repository root:  .venv/Scripts/python.exe experiments/2026-10-06i_linear_ordering.py
 RESULT (2026-10-06, CPython 3.14.2): see the report; every section prints its totals.
+
+Check lines start with [PASS] or [FAIL] (section 1: every count line and the summary; sections 2 and 3: the summary
+line; in 3 every wrong output rejected (2460), none accepted or undecided, every correct output accepted (212)); the run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The verdict tallies
+and the count series with its SHA-256 (section 4) are reported, not checked.
 """
 from __future__ import annotations
 
@@ -41,6 +45,26 @@ H = _load(E / "harness.py", "lop_harness")
 EN = _load(E / "implementations" / "enumeration.py", "lop_enum").linear_ordering_enumeration
 DP = _load(E / "implementations" / "subset_dp.py", "lop_dp").linear_ordering_subset_dp
 
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
 
 def closed_enum(n):
     return math.factorial(n) * (n * (n - 1) // 2 + 1) - 1
@@ -63,12 +87,11 @@ def section1():
         if n <= 8:
             cs = {count(EN, n, f"s{j}|{n}") for j in range(3)}
             ok &= cs == {closed_enum(n)}
-            print(f"  enumeration n={n}: {sorted(cs)} (closed form {closed_enum(n)})")
+            check_line(cs == {closed_enum(n)}, f"  enumeration n={n}: {sorted(cs)} (closed form {closed_enum(n)})")
         cs = {count(DP, n, f"s{j}|{n}") for j in range(3 if n <= 12 else 1)}
         ok &= cs == {closed_dp(n)}
-        print(f"  subset DP   n={n}: {sorted(cs)} (closed form {closed_dp(n)})")
-    print(f"  closed forms hold on every n and seed tried: {ok}")
-    return ok
+        check_line(cs == {closed_dp(n)}, f"  subset DP   n={n}: {sorted(cs)} (closed form {closed_dp(n)})")
+    return check_line(ok, f"  closed forms hold on every n and seed tried: {ok}")
 
 
 def section2():
@@ -87,8 +110,8 @@ def section2():
                 v = H.check(w, o)
                 verdicts[(n <= H.BB_EXACT_UP_TO, v)] += 1
                 fails += v is False
-    print(f"  {runs} implementation runs; verdicts (n <= 8 exact?, verdict): {dict(verdicts)}; failures: {fails}")
-    return fails == 0
+    return check_line(fails == 0,
+                      f"  {runs} implementation runs; verdicts (n <= 8 exact?, verdict): {dict(verdicts)}; failures: {fails}")
 
 
 def section3():
@@ -126,9 +149,11 @@ def section3():
     undecided = sum(v for (k, verdict), v in stats.items() if k != "correct" and verdict is None)
     for key in sorted(stats, key=str):
         print(f"  {key}: {stats[key]}")
-    print(f"  wrong outputs: {rejected} rejected, {accepted} accepted, {undecided} undecided; correct outputs: "
-          f"{stats[('correct', True)]} accepted, {stats[('correct', None)]} undecided, {stats[('correct', False)]} rejected")
-    return accepted == 0 and stats[("correct", False)] == 0
+    return check_line(accepted == 0 and undecided == 0 and stats[("correct", None)] == 0
+                      and stats[("correct", False)] == 0 and rejected == 2460 and stats[("correct", True)] == 212,
+                      f"  wrong outputs: {rejected} rejected, {accepted} accepted, {undecided} undecided; correct outputs: "
+                      f"{stats[('correct', True)]} accepted, {stats[('correct', None)]} undecided, "
+                      f"{stats[('correct', False)]} rejected")
 
 
 def section4():
@@ -148,4 +173,4 @@ if __name__ == "__main__":
         if not only or name in only:
             results[name] = fn()
     print(f"\nsections passed: {results}  [{time.time() - t0:.1f}s]")
-    sys.exit(0 if all(results.values()) else 1)
+    finish_checks()

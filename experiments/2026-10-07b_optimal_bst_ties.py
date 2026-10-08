@@ -36,9 +36,16 @@ range, r[i][j-1] <= r[i+1][j-1] <= r[i+1][j] by induction, so no range is empty;
 gives, for ANY optimal root k' of (i, j-1) and any k < k', c_k'(i, j) <= c_k(i, j) (symmetrically for the upper
 end), so the range always contains an optimal root of (i, j). What does fail is mixing tie rules in a table of
 roots chosen from the full optimal sets (the mixed table above); Knuth's algorithm never builds such a table.
+
+Check lines start with [PASS] or [FAIL]: the entry's knuth.py and every variant correct with non-empty ranges (main
+and part2), the largest-root and smallest-root tables monotone and the mixed table non-monotone on exactly 3417 of
+the 6006 instances, the published count (main), and the oracle control (part3: 168 checked instances, 24 returning
+None, value + 1 rejected on all 156 with n >= 1). The run ends with ALL CHECKS PASSED
+(exit code 0) or lists the failed checks (exit code 1). The tie count is reported, not checked.
 """
 import importlib.util
 import random
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -55,6 +62,26 @@ def load(path, name):
 H = load(ENTRY / "harness.py", "obst_harness_t")
 CUB = load(ENTRY / "implementations" / "cubic_dp.py", "obst_cub_t").obst_cubic
 KNU = load(ENTRY / "implementations" / "knuth.py", "obst_knu_t").obst_knuth
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 
 class EmptyRange(Exception):
@@ -155,11 +182,13 @@ def main():
                 tmix = [[None if x is None else (max(x) if i % 2 == 0 else min(x)) for x in row] for i, row in enumerate(R)]
                 mono_mixed += not monotone(tmix, n)
     print(f"instances: {total} (with at least one tied interval: {ties})")
-    print(f"entry's knuth.py wrong values: {impl_wrong}")
+    check_line(impl_wrong == 0, f"entry's knuth.py wrong values: {impl_wrong}")
     for rule, st in stats.items():
-        print(f"variant {rule:6s}: wrong values {st['wrong']}, empty root ranges {st['empty']}")
-    print(f"non-monotone largest-root tables: {mono_max}; non-monotone smallest-root tables: {mono_min}; "
-          f"non-monotone mixed tables (largest for even i, smallest for odd i): {mono_mixed}")
+        check_line(st["wrong"] == 0 and st["empty"] == 0,
+                   f"variant {rule:6s}: wrong values {st['wrong']}, empty root ranges {st['empty']}")
+    check_line(mono_max == 0 and mono_min == 0 and mono_mixed == 3417 and total == 6006,
+               f"non-monotone largest-root tables: {mono_max}; non-monotone smallest-root tables: {mono_min}; "
+               f"non-monotone mixed tables (largest for even i, smallest for odd i): {mono_mixed}")
     if first_bad:
         fam, n, s, inst, val, ref = first_bad
         print(f"first wrong value: family {fam}, n={n}, seed {s}, p={inst[0]}, q={inst[1]}: "
@@ -189,7 +218,8 @@ def part2():
                         bad[name][1] += 1
                     elif v != ref:
                         bad[name][0] += 1
-    print(f"part2: {total} instances; [wrong values, empty ranges] per rule: {bad}")
+    check_line(all(v == [0, 0] for v in bad.values()),
+               f"part2: {total} instances; [wrong values, empty ranges] per rule: {bad}")
 
 
 def generic_variant(inst, choose):
@@ -222,7 +252,7 @@ def part3():
     import json
     e = json.load(open(ENTRY / "entry.json", encoding="utf-8"))
     th = e["test_harness"]
-    accepted = rejected_wrong = none = checked = 0
+    accepted = rejected_wrong = none = checked = checked_n1 = 0
     for n in th["v1_sizes"]:
         for trial in range(th["trials"]):
             inst = H.generate(n, random.Random(f"{e['id']}|v1|{n}|{trial}"))
@@ -234,12 +264,16 @@ def part3():
             checked += 1
             accepted += verdict is True
             if n >= 1:
+                checked_n1 += 1
                 rejected_wrong += H.check(inst, val + 1) is False
-    print(f"part3: oracle accepted {accepted}/{checked} checked V1 instances ({none} returned None); "
-          f"value + 1 rejected on {rejected_wrong} (all checked instances with n >= 1)")
+    check_line(accepted == checked and rejected_wrong == checked_n1 and (checked, none, checked_n1) == (168, 24, 156),
+               f"part3: oracle accepted {accepted}/{checked} checked V1 instances ({none} returned None); "
+               f"value + 1 rejected on {rejected_wrong} (all checked instances with n >= 1)"
+               + ("" if rejected_wrong == checked_n1 else f" | FAIL: {checked_n1} checked instances with n >= 1"))
 
 
 if __name__ == "__main__":
     main()
     part2()
     part3()
+    finish_checks()

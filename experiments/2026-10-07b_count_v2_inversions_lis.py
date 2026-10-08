@@ -29,9 +29,14 @@ Outcome (run 2026-10-06 local date, Python 3.14.2; deterministic, identical on r
     alpha 1.0120; rivals n 1.1055, n log^2 n 0.9331, n^2 0.5527.
   Written to entry.json: inversions as measured; LIS subset n = 12..18, DP n = 100..1600, patience
   n = 10000..300000; all tolerance 0.03.
+
+Check lines (exact counts and closed forms; merge-sort counts within the merge bounds) start with [PASS] or [FAIL];
+the run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The ratios, spreads,
+fits, rivals and slopes are reported, not checked.
 """
 import importlib.util
 import math
+import sys
 from pathlib import Path
 
 _s = importlib.util.spec_from_file_location("cv2h", Path(__file__).resolve().parent / "2026-10-07b_count_v2_helpers.py")
@@ -40,6 +45,26 @@ _s.loader.exec_module(H)
 
 INV = "inversion-counting-quadratic-vs-merge"
 LIS = "longest-increasing-subsequence"
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 
 def topdown_merge_bounds(n):
@@ -54,7 +79,8 @@ def topdown_merge_bounds(n):
 print("== inversions: all pairs (claim n**2) ==")
 ns = [250, 500, 750, 1000, 1500, 2000]
 v = H.counts(INV, "all pairs", ns, 1)
-print("  exactly n(n-1)/2:", all(int(c) == n * (n - 1) // 2 for n, c in zip(ns, v)))
+ok = all(int(c) == n * (n - 1) // 2 for n, c in zip(ns, v))
+check_line(ok, "  exactly n(n-1)/2:", ok)
 H.report("tol=0.03", ns, v, "n**2", ["n*log(n)", "n**2*log(n)"], 0.03)
 
 print("\n== inversions: merge-sort counting (claim n*log(n)) ==")
@@ -62,15 +88,18 @@ ns = [2000, 4000, 8000, 16000, 32000, 64000]
 per = H.counts(INV, "merge-sort counting", ns, 3, per_sample=True)
 for n, c in zip(ns, per):
     lo, hi = topdown_merge_bounds(n)
-    print(f"  n={n}: samples {c}, within bounds [{lo}, {hi}]: {all(lo <= x <= hi for x in c)}, "
-          f"(n log2 n - c0)/n = {(n * math.log2(n) - c[0]) / n:.4f}, spread/mean = {(max(c) - min(c)) / (sum(c) / 3):.1e}")
+    within = all(lo <= x <= hi for x in c)
+    check_line(within, f"  n={n}: samples {c}, within bounds [{lo}, {hi}]: {within}, "
+                       f"(n log2 n - c0)/n = {(n * math.log2(n) - c[0]) / n:.4f}, "
+                       f"spread/mean = {(max(c) - min(c)) / (sum(c) / 3):.1e}")
 v = [c[0] for c in per]
 H.report("samples=1 tol=0.03", ns, v, "n * log(n)", ["n", "n*log(n)**2", "n**2"], 0.03)
 
 print("\n== LIS: subset enumeration (claim 2**n * n) ==")
 for ns in ([10, 11, 12, 13, 14, 15, 16],):
     v = H.counts(LIS, "subset enumeration", ns, 1)
-    print("  closed form n 2^(n-1) - 2^n + 1:", all(int(c) == n * 2 ** (n - 1) - 2 ** n + 1 for n, c in zip(ns, v)))
+    ok = all(int(c) == n * 2 ** (n - 1) - 2 ** n + 1 for n, c in zip(ns, v))
+    check_line(ok, "  closed form n 2^(n-1) - 2^n + 1:", ok)
     H.report("tol=0.03", ns, v, "2**n * n", ["2**n", "2**n * n**2"], 0.03)
 # The closed form is exact, so other ranges can be evaluated without running the enumeration:
 for ns in ([12, 13, 14, 15, 16, 17, 18], [14, 15, 16, 17, 18, 19, 20]):
@@ -80,15 +109,19 @@ for ns in ([12, 13, 14, 15, 16, 17, 18], [14, 15, 16, 17, 18, 19, 20]):
 print("\n== LIS: quadratic DP (claim n**2) ==")
 ns = [100, 200, 400, 800, 1600]
 v = H.counts(LIS, "quadratic dynamic programming", ns, 1)
-print("  exactly n(n-1)/2:", all(int(c) == n * (n - 1) // 2 for n, c in zip(ns, v)))
+ok = all(int(c) == n * (n - 1) // 2 for n, c in zip(ns, v))
+check_line(ok, "  exactly n(n-1)/2:", ok)
 H.report("tol=0.03", ns, v, "n**2", ["n*log(n)", "n**2*log(n)"], 0.03)
 
 print("\n== LIS: patience sorting (claim n*log(n)) ==")
 for ns in ([1000, 3000, 10000, 30000, 100000], [10000, 30000, 100000, 300000]):
     v = H.counts(LIS, "patience sorting with binary search", ns, 1)
     cf = [sum(int(math.log2(j)) for j in range(2, n + 1)) for n in ns]
-    print("  closed form sum floor(log2 j):", [int(c) for c in v] == cf)
+    ok = [int(c) for c in v] == cf
+    check_line(ok, "  closed form sum floor(log2 j):", ok)
     for n, c in zip(ns, v):
         print(f"    n={n}: {int(c)}, (n log2 n - c)/n = {(n * math.log2(n) - c) / n:.4f}")
     H.report("tol=0.03", ns, v, "n*log(n)", ["n", "n*log(n)**2", "n**2"], 0.03)
+
+finish_checks()
 

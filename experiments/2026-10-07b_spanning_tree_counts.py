@@ -48,6 +48,12 @@ Failed / rejected options (kept for the record):
   generate_scaling immediately before the implementation; rejected as fragile. The enumeration is therefore timed.
 - Claiming n^3 for Kirchhoff (alpha 1.041 over the same n) instead of (n-1)^3: works with tolerance 0.06, but then
   the log-factor diagnostic is not resolved. (n-1)^3 is the cube of the reduced matrix dimension, the natural size.
+
+Check lines start with [PASS] or [FAIL]: the failure counts of 1 and 2, the agreement counts of 3 and 4, the row
+swaps of 5, the K_n mismatches and every random-graph line of 6 (count equal to the closed form; answer 0 after 0
+counted operations with vertex 0 isolated), every line and the total of 8. The run ends with ALL CHECKS PASSED (exit
+code 0) or lists the failed checks (exit code 1); in 4 also the published 326 matrices with a row swap and 328
+singular ones (so the swap path of Bareiss is exercised). The battery composition, the V2 points, the fits (7) and the enumeration model (9) are reported, not checked.
 """
 from __future__ import annotations
 
@@ -100,6 +106,27 @@ def oracle_rule(A) -> str:
     return "del-contr" if m <= 24 else "fractions"
 
 
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
+
 def section(title: str):
     print(f"\n=== {title} ===")
 
@@ -122,7 +149,7 @@ def part1_v1_battery():
             rules.append(oracle_rule(A))
             answers.append(b)
         print(f"n={n:2d} kinds={kinds}\n     rules={rules}\n     answers={answers}")
-    print(f"failures: {bad}")
+    check_line(bad == 0, f"failures: {bad}")
 
 
 def part2_extended():
@@ -137,7 +164,7 @@ def part2_extended():
                 ok = ok and enum_count(A) == b
             bad += not ok
             total += 1
-    print(f"instances: {total}, failures: {bad}")
+    check_line(bad == 0, f"instances: {total}, failures: {bad}")
 
 
 def part3_oracles_agree():
@@ -159,7 +186,7 @@ def part3_oracles_agree():
         dc = H._deletion_contraction(frozenset(range(n)), edges)
         agree += dc == H._cofactor_fractions(A)
         done += 1
-    print(f"graphs: {done}, agree: {agree}")
+    check_line(agree == done, f"graphs: {done}, agree: {agree}")
 
 
 class SwapSpy(list):
@@ -198,7 +225,8 @@ def part4_general_matrices():
         agree += d == ref
         with_swaps += SwapSpy.swaps > 0
         singular += ref == 0
-    print(f"matrices: 600, agree: {agree}, with at least one row swap: {with_swaps}, singular: {singular}")
+    check_line(agree == 600 and (with_swaps, singular) == (326, 328),
+               f"matrices: 600, agree: {agree}, with at least one row swap: {with_swaps}, singular: {singular}")
 
 
 def reduced_laplacian(A):
@@ -220,7 +248,7 @@ def part5_laplacians_never_swap():
         swaps += SwapSpy.swaps
         graphs += 1
         disconnected += not H._connected(A)
-    print(f"graphs: {graphs} ({disconnected} disconnected), row swaps: {swaps}")
+    check_line(swaps == 0, f"graphs: {graphs} ({disconnected} disconnected), row swaps: {swaps}")
 
 
 def counted(A_plain):
@@ -238,7 +266,8 @@ def part6_counts():
         ans, c = counted(complete(n))
         if c != closed_form(n) or ans != n ** max(n - 2, 0):
             mismatches.append(n)
-    print(f"K_n, n = 1..70 and 128: count == (n-2)(n-1)(2n-3)/2 and answer == n^(n-2); mismatches: {mismatches}")
+    check_line(not mismatches,
+               f"K_n, n = 1..70 and 128: count == (n-2)(n-1)(2n-3)/2 and answer == n^(n-2); mismatches: {mismatches}")
     for n in (16, 32, 64):
         rng = random.Random(f"st-connected|{n}")
         W = [[0] * n for _ in range(n)]
@@ -251,8 +280,9 @@ def part6_counts():
         for v in range(n - 1):  # isolate vertex 0: disconnected
             Wd[0][v + 1] = Wd[v + 1][0] = 0
         ansd, cd = counted(tuple(map(tuple, Wd)))
-        print(f"n={n}: connected G(n,0.3)+path count {c} (closed form {closed_form(n)}), tau has "
-              f"{ans.bit_length()} bits; vertex 0 isolated: answer {ansd}, count {cd}")
+        check_line(c == closed_form(n) and ansd == 0 and cd == 0,
+                   f"n={n}: connected G(n,0.3)+path count {c} (closed form {closed_form(n)}), tau has "
+                   f"{ans.bit_length()} bits; vertex 0 isolated: answer {ansd}, count {cd}")
     vals = [counted(complete(n))[1] for n in (16, 32, 64, 128)]
     print(f"V2 points n = 16, 32, 64, 128: {vals}")
 
@@ -313,10 +343,10 @@ def part8_bits():
             bound_entry, bound_any = n ** (n - 1), 2 * n ** (2 * (n - 1))
             good = MaxTrack.stored < bound_entry and MaxTrack.biggest < bound_any
             ok = ok and good
-            print(f"n={n:3d} {label:10s}: largest entry {MaxTrack.stored.bit_length():5d} bits (bound n^(n-1): "
-                  f"{bound_entry.bit_length()}), largest intermediate {MaxTrack.biggest.bit_length():5d} bits "
-                  f"(bound 2n^(2(n-1)): {bound_any.bit_length()}) {'ok' if good else 'VIOLATED'}")
-    print(f"all within bounds: {ok}")
+            check_line(good, f"n={n:3d} {label:10s}: largest entry {MaxTrack.stored.bit_length():5d} bits (bound n^(n-1): "
+                             f"{bound_entry.bit_length()}), largest intermediate {MaxTrack.biggest.bit_length():5d} bits "
+                             f"(bound 2n^(2(n-1)): {bound_any.bit_length()}) {'ok' if good else 'VIOLATED'}")
+    check_line(ok, f"all within bounds: {ok}")
 
 
 def part9_enumeration_model():
@@ -341,3 +371,4 @@ if __name__ == "__main__":
     part7_fits()
     part8_bits()
     part9_enumeration_model()
+    finish_checks()

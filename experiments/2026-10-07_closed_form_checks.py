@@ -10,7 +10,9 @@ run time (wrappers installed in memory around the harness counter methods; no fi
 
 Usage:  python experiments/2026-10-07_closed_form_checks.py [group ...]
         groups: strings sorting algebra expdp query extra   (default: all)
-Output: one line per (formula, size range) with the mismatches; a summary per group; exit code 0.
+Output: one line per (formula, size range) with the mismatches, prefixed [PASS] or [FAIL]; INFO lines (reported, not
+checked); a summary. A size inside the stated domain whose count cannot be measured (an exception) is a mismatch.
+Exit code 0 (and ALL CHECKS PASSED) iff no mismatch inside the stated domain, 1 otherwise.
 """
 from __future__ import annotations
 
@@ -74,7 +76,7 @@ def record(group, label, ns, mism, domain_note, extra=""):
     detail = f"sizes {compact(ns)}" + (f" | {shown}" if mism else "") + (f" | {domain_note}" if domain_note else "") \
         + (f" | {extra}" if extra else "")
     RESULTS.append((group, label, status, detail))
-    print(f"[{group}] {status:8s} {label}: {detail}", flush=True)
+    print(f"[{'PASS' if not mism else 'FAIL'}] [{group}] {status:8s} {label}: {detail}", flush=True)
 
 
 def compact(ns):
@@ -86,13 +88,17 @@ def compact(ns):
 
 def check(group, eid, impl, label, formula, ns, domain=lambda n: True, gen=None, cost=None):
     """Compare the measured count with formula(n) for every n; mismatches inside the claimed domain are failures,
-    mismatches outside it are reported as such (they mark where the closed form stops holding)."""
+    mismatches outside it are reported as such (they mark where the closed form stops holding). A size whose count
+    cannot be measured (an exception) is a failure inside the domain and a note outside it."""
     mism_in, mism_out, errors = [], [], []
     for n in ns:
         try:
             a = measure(eid, impl, n, gen=gen, cost=cost)
         except Exception as ex:  # noqa: BLE001 -- e.g. a generator that is undefined at this n
-            errors.append(f"n={n}: {type(ex).__name__}")
+            if domain(n):
+                mism_in.append((n, f"not measurable ({type(ex).__name__}: {ex})", "a count"))
+            else:
+                errors.append(f"n={n}: {type(ex).__name__}")
             continue
         try:
             f = formula(n)
@@ -102,7 +108,7 @@ def check(group, eid, impl, label, formula, ns, domain=lambda n: True, gen=None,
             (mism_in if domain(n) else mism_out).append((n, a, f))
     note = []
     if mism_out:
-        note.append("outside the domain: " + "; ".join(f"n={n}: {a} vs {f}" for n, a, f in mism_out[:6]))
+        note.append("outside the domain: " + "; ".join(f"n={n}: {a} vs {f}" for n, a, f in mism_out))
     if errors:
         note.append("not measurable: " + ", ".join(errors[:6]))
     record(group, label, ns, mism_in, " / ".join(note))
@@ -461,6 +467,7 @@ def group_algebra():
           lambda n: 3 * n * ilog2(n) + 5 * n if is_pow2(n) else F(-1),
           [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 3, 5, 6, 7, 100],
           domain=lambda n: is_pow2(n) and n >= 2)
+    check(g, E, "implementations/ntt.py:polymul_ntt", "NTT n=1: 2", lambda n: 2, [1])
 
     E = "or-convolution-naive-vs-zeta-mobius"
     check(g, E, "implementations/naive.py:or_convolution_naive", "OR naive 2*4^n", lambda n: 2 * 4 ** n,
@@ -499,6 +506,8 @@ def group_expdp():
     E = "hamiltonian-cycle-count-enumeration-vs-inclusion-exclusion"
     check(g, E, "implementations/enumeration.py:count_hamiltonian_cycles_enumeration", "Ham enumeration n!",
           lambda n: math.factorial(n), list(range(0, 11)), domain=lambda n: n >= 2)
+    check(g, E, "implementations/enumeration.py:count_hamiltonian_cycles_enumeration", "Ham enumeration 0 for n<=1",
+          lambda n: 0, [0, 1])
     check(g, E, "implementations/inclusion_exclusion.py:count_hamiltonian_cycles_inclusion_exclusion",
           "Ham IE n(n-1)(n+2)2^(n-2)+2^(n-1)-1", lambda n: n * (n - 1) * (n + 2) * P2(n - 2) + P2(n - 1) - 1,
           list(range(0, 14)), domain=lambda n: n >= 1)
@@ -528,13 +537,14 @@ def group_expdp():
     E = "first-match-rule-ordering-enumeration-vs-subset-dp"
     check(g, E, "implementations/enumeration.py:first_match_order_enumeration", "FM enumeration k!(k+1)(k+3)/3-1",
           lambda k: F(math.factorial(k) * (k + 1) * (k + 3), 3) - 1, list(range(0, 9)),
-          domain=lambda k: k >= 2)
+          domain=lambda k: k != 1)
     kinds_check(g, E, "implementations/enumeration.py:first_match_order_enumeration",
                 "FM enumeration per kind: truth k!k(k+1)/3, add k!k, compare k!-1",
                 {"truth": lambda k: F(math.factorial(k) * k * (k + 1), 3), "add": lambda k: math.factorial(k) * k,
-                 "compare": lambda k: math.factorial(k) - 1}, list(range(2, 9)))
+                 "compare": lambda k: math.factorial(k) - 1}, list(range(0, 9)), domain=lambda k: k != 1)
     check(g, E, "implementations/subset_dp.py:first_match_order_subset_dp", "FM DP 3k^2+(7k-2)2^(k-1)+2",
           lambda k: 3 * k * k + (7 * k - 2) * P2(k - 1) + 2, list(range(0, 19)), domain=lambda k: k >= 1)
+    check(g, E, "implementations/subset_dp.py:first_match_order_subset_dp", "FM DP 0 at k=0", lambda k: 0, [0])
     kinds_check(g, E, "implementations/subset_dp.py:first_match_order_subset_dp",
                 "FM DP per kind: truth k^2+k2^k, bit k^2+k2^k, add k^2+k2^k+1, compare k2^(k-1)-2^k+1",
                 {"truth": lambda k: k * k + k * 2 ** k, "bit": lambda k: k * k + k * 2 ** k,
@@ -620,12 +630,14 @@ def group_expdp():
           lambda n: (2 * n + 1) * (2 ** (n + 1) - 2), list(range(0, 17)), domain=lambda n: n >= 1)
     check(g, E, "implementations/gaussian_elimination.py:xor_sat_gauss", "XOR-SAT Gauss n(n^2+6n-4)/3",
           lambda n: F(n * (n * n + 6 * n - 4), 3), list(range(0, 129)) + [200, 256], domain=lambda n: n >= 1)
+    check(g, E, "implementations/gaussian_elimination.py:xor_sat_gauss", "XOR-SAT Gauss 1 at n=0", lambda n: 1, [0])
 
     E = "max-weight-independent-set-grid-enumeration-vs-path-decomposition-dp"
     check(g, E, "implementations/brute_force.py:mwis_brute_force", "MIS brute N2^(N-1), N=3n",
           lambda n: 3 * n * P2(3 * n - 1), list(range(0, 7)))
     check(g, E, "implementations/column_dp.py:mwis_column_dp", "MIS DP 10n-5", lambda n: 10 * n - 5,
           list(range(0, 60)) + [100, 200, 400, 800, 1600, 3200], domain=lambda n: n >= 1)
+    check(g, E, "implementations/column_dp.py:mwis_column_dp", "MIS DP 0 at n=0", lambda n: 0, [0])
     h = harness_of(E)
     mism = []
     for n in range(1, 60):
@@ -1101,6 +1113,9 @@ def main(argv):
           f"inside the stated domain, {sum(r[2] == 'INFO' for r in RESULTS)} info; {time.perf_counter() - t0:.1f} s")
     for r in bad:
         print("  MISMATCH:", r[1], "|", r[3])
+    if bad:
+        return 1
+    print("ALL CHECKS PASSED")
     return 0
 
 

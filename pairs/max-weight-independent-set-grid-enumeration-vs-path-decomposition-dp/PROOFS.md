@@ -78,9 +78,10 @@ entry for t = 0 of the previous row is plain and maximal, i.e. iff that entry is
 (best_{c−1}(s) ≥ w_{c−1}(s), and best_{c−1}(0) is the maximum of the row before). By induction on c, the addition for
 (c, 0) goes uncounted iff columns 0..c − 1 have only zero weights. ∎ For positive weights z = 0.
 
-**Check.** `experiments/2026-10-06f_entries_mis_pathwidth.py` (420 random instances, n = 1..40, k = 1..6, positive weights,
-and the V2 family). `experiments/2026-10-07_closed_form_checks.py`, group `expdp`, line "MIS DP 10n-5": n = 1..59 and the V2 sizes n = 100, 200, 400, 800, 1600, 3200 (n = 0 reported as
-outside the domain with count 0); line "MIS DP general k: nP_k+(n-1)F_{k+2} (k=1..8, king's graph)": k = 1..8,
+**Check.** `experiments/2026-10-06f_entries_mis_pathwidth.py` (420 random instances, n = 1, 4, …, 40, k = 1..6, positive
+weights, and the V2 family). `experiments/2026-10-07_closed_form_checks.py`, group `expdp`, line "MIS DP 10n-5": n = 1..59
+and the V2 sizes n = 100, 200, 400, 800, 1600, 3200 (n = 0 reported as outside the domain with count 0); line "MIS DP 0
+at n=0": n = 0; line "MIS DP general k: nP_k+(n-1)F_{k+2} (k=1..8, king's graph)": k = 1..8,
 n = 1, 2, 3, 7, 20 (it prints the values 58, 97, 195, 352, 647, 1159, 2066, 3645 for n = 20 listed in `entry.json`).
 `experiments/2026-10-07_count_proof_checks.py`, group `sat`, line "MIS DP nP_k+(n-1)F_{k+2} on random diagonal
 patterns, positive weights": k = 1..6, n = 1..12, 2 seeded instances each. `tests/test_proofs_mwis.py`, class

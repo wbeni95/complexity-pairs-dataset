@@ -30,10 +30,15 @@ Outcome (run 2026-10-06, Python 3.14.2; the same counts under 3.12.10 via 2026-1
      a third of the tolerance, so the exact form was not needed; it is stated in the entry text instead).
   (A first draft of this docstring, written before the run, guessed alpha 1.022 for the leading term on the
   old n; the run gave 1.0073. The guess was replaced by the measured value.)
+
+Check lines (every min() line of 1: one __lt__ call per argument after the first; 2; both lines of 3) start with
+[PASS] or [FAIL]; the run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The
+ratios and the fits (4) are reported, not checked.
 """
 import importlib.util
 import math
 import random
+import sys
 from pathlib import Path
 
 _s = importlib.util.spec_from_file_location("cv2h", Path(__file__).resolve().parent / "2026-10-07b_count_v2_helpers.py")
@@ -46,11 +51,32 @@ naive = H.V.load_callable(entry_dir, "implementations/naive_scan.py:rmq_naive")
 sparse = H.V.load_callable(entry_dir, "implementations/sparse_table.py:rmq_sparse_table")
 CK = harness.CountingKey
 
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
 # 1. min() and __lt__
 for args in [(CK(3), CK(5)), (CK(5), CK(3)), (CK(4), CK(4)), (CK(1), CK(2), CK(0))]:
     harness._comparisons = 0
     m = min(*args)
-    print(f"min of {[a.v for a in args]} -> {m.v}; comparisons counted = {harness._comparisons}")
+    check_line(harness._comparisons == len(args) - 1,
+               f"min of {[a.v for a in args]} -> {m.v}; comparisons counted = {harness._comparisons}")
 
 
 def unwrap(t):
@@ -58,19 +84,23 @@ def unwrap(t):
 
 
 # 2. answers unchanged
+differs = []
 for n in [1, 2, 3, 7, 50, 300, 1000]:
     vals, qs = harness._scaling_draws(n, random.Random(f"rmq-eq|{n}"))
     cvals = tuple(CK(x) for x in vals)
     for fn in (naive, sparse):
-        assert unwrap(fn((cvals, qs))) == fn((vals, qs)), (n, fn.__name__)
+        if unwrap(fn((cvals, qs))) != fn((vals, qs)):
+            differs.append((n, fn.__name__))
 rng = random.Random("rmq-eq-random")
 for t in range(300):
     n = rng.randrange(1, 60)
     vals, qs = harness.generate(n, rng)
     cvals = tuple(CK(x) for x in vals)
     for fn in (naive, sparse):
-        assert unwrap(fn((cvals, qs))) == fn((vals, qs)), (t, n, fn.__name__)
-print("answers on CountingKey values == answers on plain ints: OK (7 scaling + 300 random instances)")
+        if unwrap(fn((cvals, qs))) != fn((vals, qs)):
+            differs.append((t, n, fn.__name__))
+check_line(not differs, "answers on CountingKey values == answers on plain ints: "
+           + ("OK" if not differs else f"DIFFER at {differs[:5]}") + " (7 scaling + 300 random instances)")
 
 
 # 3. closed forms from the instance alone
@@ -90,17 +120,23 @@ def measured(fn, n):
     return harness.reported_cost(fn(inst)), inst
 
 
+bad = []
 for n in [50, 200, 400, 600, 800, 1200, 1600, 2400, 3200]:
     c, inst = measured(naive, n)
-    assert c == scan_closed(inst[1]), n
-print("scan count == sum(r - l): OK at n = 50..3200")
+    if c != scan_closed(inst[1]):
+        bad.append(n)
+check_line(not bad, "scan count == sum(r - l): " + ("OK" if not bad else f"MISMATCH at n = {bad}") + " at n = 50..3200")
+bad = []
 for n in [10, 100, 1000, 2000, 4000, 8000, 16000, 64000, 128000] + [1 << k for k in range(11, 18)]:
     c, inst = measured(sparse, n)
-    assert c == sparse_closed(n), (n, c, sparse_closed(n))
+    if c != sparse_closed(n):
+        bad.append((n, c, sparse_closed(n)))
     if n & (n - 1) == 0:
         K = n.bit_length() - 1
-        assert c == n * K - n + K + 2
-print("sparse count == sum_j (n - 2^j + 1) + n: OK (9 non-powers of two, 2^11..2^17; = n log2 n - n + log2 n + 2 on powers of two)")
+        if c != n * K - n + K + 2:
+            bad.append((n, c, n * K - n + K + 2))
+check_line(not bad, "sparse count == sum_j (n - 2^j + 1) + n: " + ("OK" if not bad else f"MISMATCH {bad[:5]}")
+           + " (9 non-powers of two, 2^11..2^17; = n log2 n - n + log2 n + 2 on powers of two)")
 
 # 4. fits
 TOL = 0.03
@@ -118,3 +154,5 @@ vals_p2 = H.counts(E, "sparse table", ns_p2)
 H.report("sparse table, powers of two, leading term", ns_p2, vals_p2, "n*log(n)", ["n", "n*log(n)**2", "n**2"], TOL)
 H.report("sparse table, powers of two, exact form", ns_p2, vals_p2, "n*log2(n) - n + log2(n) + 2",
          ["n", "n*log(n)**2", "n**2"], TOL)
+
+finish_checks()

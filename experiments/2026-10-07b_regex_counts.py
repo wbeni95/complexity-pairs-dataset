@@ -17,6 +17,10 @@ Deterministic. Outcome (console run 2026-10-07, CPython 3.14):
     The entry uses n = 8..128 instead, where the validator gives 0.981 (smaller lower-order effect).
   NEAR-MISS: at tolerance 0.06 the validator's log-factor diagnostic for backtracking was NOT resolved
   (1.044 against n 2^n / log n); the entry uses 0.035, which exceeds the exact deviation 0.026 and resolves it.
+
+Check lines (the closed forms and the answer True of all three matchers over the whole table, n = 0..16, 24, 32,
+48, 64; the battery) start with [PASS] or [FAIL]; the run ends with ALL CHECKS PASSED (exit code 0) or lists the
+failed checks (exit code 1). The table rows and the alphas are reported.
 """
 import importlib.util
 import math
@@ -44,6 +48,26 @@ BT = load(ENTRY / "implementations" / "backtracking.py", "rx_bt").match_backtrac
 MEMO = load(ENTRY / "implementations" / "memoized.py", "rx_memo").match_memoized
 TH = load(ENTRY / "implementations" / "thompson.py", "rx_th").match_thompson
 
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
 
 def count(fn, n):
     inst = H.generate_scaling(n, random.Random(0))
@@ -67,11 +91,11 @@ def main():
         ok &= cb == fb and cm == n * (n + 1) and ct == n * (n + 1) and ob is om is ot is True
         print(f"{n:2d} {cb:>13d} {fb:>16d} {cm:>10d} {ct:>9d} {n * (n + 1):>7d}  {ob} {om} {ot}")
     for n in (24, 32, 48, 64):
-        cm, _ = count(MEMO, n)
-        ct, _ = count(TH, n)
-        ok &= cm == ct == n * (n + 1)
+        cm, om = count(MEMO, n)
+        ct, ot = count(TH, n)
+        ok &= cm == ct == n * (n + 1) and om is True and ot is True
         print(f"{n:2d} {'-':>13s} {'-':>16s} {cm:>10d} {ct:>9d} {n * (n + 1):>7d}")
-    print("closed forms hold:", ok)
+    check_line(ok, "closed forms hold:", ok)
 
     # Random battery against re.fullmatch (sizes as in V1; harness.generate).
     dis, total, trues = 0, 0, 0
@@ -85,7 +109,7 @@ def main():
             if any(o != ref for o in outs):
                 dis += 1
                 print("DISAGREE", inst, ref, outs)
-    print(f"battery: {dis} disagreements in {total} instances ({trues} matches)")
+    check_line(dis == 0, f"battery: {dis} disagreements in {total} instances ({trues} matches)")
 
     ns = [4, 6, 8, 10, 12, 14, 16]
     print("backtracking alphas on", ns, alphas(ns, [(n + 2) * 2 ** n // 2 - 1 for n in ns], {
@@ -95,6 +119,7 @@ def main():
     print("thompson/memo alphas on", ns, alphas(ns, [n * (n + 1) for n in ns], {
         "n**2 (claim)": lambda n: n * n, "n": lambda n: n, "n**3": lambda n: n ** 3,
         "n**2*log(n)": lambda n: n * n * math.log(n), "2**n": lambda n: 2 ** n}))
+    finish_checks()
 
 
 if __name__ == "__main__":

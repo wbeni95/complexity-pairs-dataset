@@ -218,7 +218,7 @@ comparisons plus 1 (section 3 (c)). Total 2n + 4 · n(n − 1)/2 + (comparisons)
 (35*3^(n-2)-3)/2 (n>=2), cubic n(n+1)(n+2)/6+3n(n+1)/2-n, Knuth cmp+2n^2": recursion n = 2..11 and cubic DP
 n = 0..11 on the scaling family (V2 seeds), Knuth n = 0..40 and 128 on all ten V1 families.
 `experiments/2026-10-07_count_proof_checks.py`, group `bst`, line "OBST recursion additions (35*3^(n-2)-3)/2
-(n>=2; 4 at n=1)": n = 1..9; line "OBST cubic DP: comparisons (n+1)n(n-1)/6, additions n(n+1)(n+2)/6+3n(n+1)/2-n,
+(n>=2; 4 at n=1; 0 at n=0)": n = 0..9; line "OBST cubic DP: comparisons (n+1)n(n-1)/6, additions n(n+1)(n+2)/6+3n(n+1)/2-n,
 candidate roots n(n+1)(n+2)/6": n = 0..30; line "Knuth additions = comparisons + 2n^2": n = 0..40, 3 instances
 each; all on the ten V1 families and two kinds of signed values.
 

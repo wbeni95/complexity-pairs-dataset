@@ -40,6 +40,8 @@ addition counts through `__radd__`, later both operands are `CountingInt`. So se
 
 **Check.** `experiments/2026-10-07b_zeta_transform_counts.py` (n = 0..12). `experiments/2026-10-07_closed_form_checks.py`,
 group `algebra`, line "zeta naive 3^n": n = 0..11 (includes the V2 sizes n = 4..11).
+`experiments/2026-10-07_count_proof_checks.py`, group `subsets`, line "OR and XOR convolution, zeta: counts per
+operation kind": zeta naive n = 0..11 (exactly 3^n additions and no other counted operation).
 
 ## 2. Yates' method: n · 2^(n−1) additions
 
@@ -52,6 +54,8 @@ one, initially and after each update). Total n · 2^(n−1).
 
 **Check.** `experiments/2026-10-07b_zeta_transform_counts.py` (n = 0..12). `experiments/2026-10-07_closed_form_checks.py`,
 group `algebra`, line "Yates n2^(n-1)": n = 0..16 (includes the V2 sizes n = 4, 6, …, 16).
+`experiments/2026-10-07_count_proof_checks.py`, group `subsets`, line "OR and XOR convolution, zeta: counts per
+operation kind": Yates n = 0..12 (exactly n 2^(n-1) additions and no other counted operation).
 
 ## 3. Correctness of the submask enumeration
 

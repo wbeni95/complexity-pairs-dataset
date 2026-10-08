@@ -26,10 +26,15 @@ Outcome (run 2026-10-06 local date, Python 3.14.2; deterministic, identical on r
     n log^2 n 0.9017, n^2 0.5527; per-sample alpha 0.9933 / 0.9949 / 0.9949 over three seeded samples.
     INFO: comparison counts (incl. CPython's sorted()/min()) give alpha 1.0072; S(n) alone 1.0091.
   Written to entry.json: the existing n_values, tolerance 0.03, samples 1, multiplications only.
+
+Check lines (answers unchanged, brute force exactly n(n-1), the divide-and-conquer totals at n = 1000..64000
+equal to the values listed in entry.json) start with [PASS] or [FAIL]; the run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The
+divide-and-conquer split, the comparison counts, the fits and the sample spreads are reported, not checked.
 """
 import importlib.util
 import math
 import random
+import sys
 from pathlib import Path
 
 _s = importlib.util.spec_from_file_location("cv2h", Path(__file__).resolve().parent / "2026-10-07b_count_v2_helpers.py")
@@ -39,6 +44,30 @@ _s.loader.exec_module(H)
 EID = "closest-pair-brute-vs-divide-conquer"
 BR, DC = "all pairs", "Shamos-Hoey divide and conquer"
 edir, entry, h = H.entry_and_harness(EID)
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
+
+# divide-and-conquer multiplication totals listed in pairs/closest-pair-brute-vs-divide-conquer/entry.json
+DC_TOTALS = [14523, 31335, 68047, 147196, 314573, 674959, 1436363]
 
 
 def S(n):
@@ -62,12 +91,13 @@ for name in (BR, DC):
         plain = tuple((p[0].v, p[1].v) for p in inst)
         out = fn(inst)
         ok &= out.v == fn(plain)
-    print(f"  {name}: equal on n = 2, 3, 4, 7, 50, 300: {ok}")
+    check_line(ok, f"  {name}: equal on n = 2, 3, 4, 7, 50, 300: {ok}")
 
 print("\n== brute force (claim n**2) ==")
 ns = [125, 250, 500, 1000, 2000]
 v = H.counts(EID, BR, ns, 1)
-print("  exactly n(n-1):", all(int(c) == n * (n - 1) for n, c in zip(ns, v)))
+ok = all(int(c) == n * (n - 1) for n, c in zip(ns, v))
+check_line(ok, "  exactly n(n-1):", ok)
 H.report("tol=0.03", ns, v, "n**2", ["n*log(n)", "n**2*log(n)"], 0.03)
 
 print("\n== divide and conquer (claim n * log(n)) ==")
@@ -84,7 +114,9 @@ for ns in ([1000, 2000, 4000, 8000, 16000, 32000, 64000],):
         comps.append(h._comparisons)
         print(f"  n={n}: mults {c} = strip filter {S(n)} + base {B(n)} + strip scan {c - S(n) - B(n)}; "
               f"/(n log2 n) = {c / (n * math.log2(n)):.4f}; comparisons (info) {h._comparisons}")
-    assert vals == H.counts(EID, DC, ns, 1), "helper and inline counts differ"
+    got = [int(c) for c in vals]
+    check_line(got == DC_TOTALS, f"  divide-and-conquer totals at n = {ns[0]}..{ns[-1]}: {got} (listed in entry.json: "
+                                 f"{DC_TOTALS})")
     H.report("mults, tol=0.03", ns, vals, "n * log(n)", ["n", "n*log(n)**2", "n**2"], 0.03)
     H.report("INFO comparisons, tol=0.03", ns, comps, "n * log(n)", ["n", "n*log(n)**2", "n**2"], 0.03)
     sv = [S(n) for n in ns]
@@ -99,4 +131,6 @@ for k in range(3):
           f"vs n log^2 n = {H.alpha(ns, vk, 'n*log(n)**2'):.4f}")
 for n, p in zip(ns, per):
     print(f"  n={n}: {p}, spread/mean = {(max(p) - min(p)) / (sum(p) / 3):.4f}")
+
+finish_checks()
 

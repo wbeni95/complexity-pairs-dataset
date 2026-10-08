@@ -15,6 +15,10 @@ Deterministic (seeded instances, exact counts). Outcome of the run on 2026-10-07
     n^2*2^n 0.8577, 4^n 0.5810; n log n 2^n 0.9175, n/log n 2^n 1.0682.
   Hence tolerance 0.05 in the entry: 4x the FWHT's exact deviation, below every rival gap (smallest 0.0682).
   The validator (scratch venv with jsonschema 4.26, see the report) printed the same values rounded to 3 decimals.
+
+Check lines (every n: the count equals its closed form and the outputs agree; the summary) start with [PASS] or
+[FAIL]; the run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The alphas are
+reported, not checked.
 """
 import importlib.util
 import math
@@ -39,6 +43,26 @@ def load(path, name):
 H = load(ENTRY / "harness.py", "xor_harness")
 NAIVE = load(ENTRY / "implementations" / "naive.py", "xor_naive").xor_convolution_naive
 FWHT = load(ENTRY / "implementations" / "fwht.py", "xor_fwht").xor_convolution_fwht
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 
 def counted(fn, n):
@@ -65,14 +89,14 @@ def main():
         cnt, out, plain = counted(NAIVE, n)
         same = out == NAIVE(plain) == FWHT(plain)
         ok &= cnt == 2 * 4 ** n and same
-        print(f"  {n:2d} {cnt:>10d} {2 * 4 ** n:>10d} {same}")
+        check_line(cnt == 2 * 4 ** n and same, f"  {n:2d} {cnt:>10d} {2 * 4 ** n:>10d} {same}")
     print("FWHT: n, count, (3n+2)*2^n, same output as plain ints")
     for n in range(0, 15):
         cnt, out, plain = counted(FWHT, n)
         same = out == FWHT(plain) and (n > 9 or out == NAIVE(plain))
         ok &= cnt == (3 * n + 2) * 2 ** n and same
-        print(f"  {n:2d} {cnt:>10d} {(3 * n + 2) * 2 ** n:>10d} {same}")
-    print("all closed forms and outputs match:", ok)
+        check_line(cnt == (3 * n + 2) * 2 ** n and same, f"  {n:2d} {cnt:>10d} {(3 * n + 2) * 2 ** n:>10d} {same}")
+    check_line(ok, "all closed forms and outputs match:", ok)
 
     ns_naive = [3, 4, 5, 6, 7, 8, 9]
     a = alphas(ns_naive, [2 * 4 ** n for n in ns_naive],
@@ -86,6 +110,7 @@ def main():
                 "n**2*2**n": lambda n: n * n * 2 ** n, "4**n": lambda n: 4 ** n,
                 "n*log(n)*2**n": lambda n: n * math.log(n) * 2 ** n, "n/log(n)*2**n": lambda n: n / math.log(n) * 2 ** n})
     print("FWHT alphas on", ns_fast, {k: round(v, 4) for k, v in a.items()})
+    finish_checks()
 
 
 if __name__ == "__main__":

@@ -42,7 +42,7 @@ alignment and both sides are 0.
 `experiments/2026-10-07_closed_form_checks.py`, group `strings`, line "KMP-entry naive (n-m+1)m, m=n//2":
 n = 0..40 and the V2 sizes (n = 1 reported as outside the domain). `experiments/2026-10-07_count_proof_checks.py`,
 group `strings`, line "naive (n-m+1)m on a^n, a^(m-1)b": m = 1..30, n = m − 1..m + 40; line
-"naive <= (n-m+1)m": 3000 seeded random pairs, n = 0..60, m = 1..12.
+"naive <= (n-m+1)m (n >= m)": 3000 seeded random pairs, n = 0..60, m = 1..12.
 
 ## 2. KMP failure table: 3m − 6
 
@@ -117,7 +117,7 @@ later one (`a != b` true, q = fail[0] = 0, then `a == a`): 2n in all. The entry'
 **Check.** At the V2 sizes n = 3000, 10000, 30000, 100000, 300000:
 `experiments/2026-10-07b_count_v2_apsp_strings.py`. `experiments/2026-10-07_closed_form_checks.py`, group
 `strings`, lines "KMP 3n+2m-6, m=n//2" and "KMP 4n-6-[n odd] (corrected form, n>=6)": n = 0..40 and the V2 sizes
-(n ≤ 5 reported as outside the domain); line "KMP small-n forms: n (n<=3), 2n (n=4,5)": n = 0..40.
+(n = 0, 1, 3, 4, 5 reported as outside the domain; n = 2 lies outside it too, but its count matches the form); line "KMP small-n forms: n (n<=3), 2n (n=4,5)": n = 0..40.
 
 ## Conventions for sections 5 to 11
 

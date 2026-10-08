@@ -1383,3 +1383,57 @@ Ledger: [ledger/runs/20261007T190448Z.json](ledger/runs/20261007T190448Z.json). 
   - The 49 wall-clock series are recorded. They depend on the machine and are not compared.
 - **Unit tests:** 746 OK. **Citations:** 244 identifiers, 0 problems. **Index:** up to date.
 - **Replay:** `python tools/replay_proofs.py` passed 163 of 163 commands, and fully replayed all 64 marked items.
+
+### RL-110 · CORRECTED · Checks behind the check mark that could not fail, and published results no check decided
+**Defect 1: checks that could exit 0 after a failure.** `tools/replay_proofs.py` and the CI "proofs" job judge a check by its exit code. In the previous commit, 29 of the 39 non-unittest check scripts listed in `proof` fields could exit 0 after a failed check. For those scripts, a replay PASS did not show that their printed checks had passed.
+- The worst case was `experiments/2026-10-07_closed_form_checks.py`, which serves 36 items. Its `main()` always returned 0, and an exception at a size inside the stated domain was reported as OK with a "not measurable" note.
+- On the published state no check of this script failed, and every not-measurable size lies outside its domain, so none of its results changes.
+
+**Defect 2: published results that no listed check decided.** For 26 groups of results, the published texts attribute them to a listed check script or state them as part of a proved claim, but no listed check decided them. The script only printed them, decided something weaker, or in one case (below) used an invalid bound. Examples:
+- counts at special sizes: NTT at n = 1, the Hamiltonian enumeration at n ≤ 1, XOR-SAT Gaussian elimination at n = 0;
+- listed measured values: sorting, closest pair;
+- oracle-control totals, "0 undecided" conditions, and negative-control counts.
+
+The invalid bound: the merge-sort lower bound n/2·log₂ n, stated in a check script and made a check while defect 1 was being fixed, is not valid for this merge sort (4932 < 4982.9 on sorted input at n = 1000). It is replaced by the sum, over all merges, of the smaller part's size.
+
+**Corrections:**
+- **Exit codes.** Every listed check script now prints each check as a `[PASS]` / `[FAIL]` line and exits 1 if any check fails.
+  - Apart from the corrected merge-sort bound, no checked value, range, seed or instance was changed. The closest-pair self-comparison was replaced by the published totals.
+  - Ranges were extended only where the published text already claimed the sizes.
+- **Results now decided by a check.** Each of the 26 groups is now decided by a check line, or the text is corrected (for example "measured, not checked"). Values that depend on CPython built-ins are pinned per Python version only where the text scopes them so.
+- **Text corrections:**
+  - the 3XOR trie ratios (3.246, 3.112, 3.050 are what the current code reproduces);
+  - the NTT butterfly counts (80 / 14 336 / 151 552 at n = 8, 512, 4096, plus the 2n scalings);
+  - "(4 at n = 1)" in 3XOR, which belongs to the total;
+  - several citations of check groups.
+- **Hardening:**
+  - per-kind tallies now require that each kind occurs;
+  - set sizes are pinned;
+  - the Deutsch–Jozsa constant-function check now runs the unchanged randomized implementation;
+  - the spanning-tree no-swap check has a positive control.
+- **Tooling:**
+  - `tools/replay_proofs.py` also fails a command whose output contains a line starting with `[FAIL]`.
+  - A new test, `tests/test_check_scripts_can_fail.py`, requires an exit that can be non-zero on each listed check script's main path. It is a lint, not a proof.
+
+**Evidence:**
+- For every listed check script, at least one deliberately broken copy was run, and one for each item corrected under defect 2. Each exits 1 with a `[FAIL]` line naming the broken check.
+- Where the same break could be applied to the previous state, it usually passed unnoticed there, or failed only with a traceback and no `[FAIL]` line.
+- All 39 scripts exit 0 with no `[FAIL]` line under Python 3.12.10 and 3.14.2, and under two hash seeds.
+  - Between the interpreters, the outputs differ only in version strings, in reported comparison counts that involve CPython's `sorted()` and `min()`, and in the Kruskal totals, which are checked against each version's published series.
+  - Between the hash seeds the outputs are identical.
+
+### RL-111 · VERIFIED · Recorded run of the errata (RL-110)
+Ledger: [ledger/runs/20261008T021841Z.json](ledger/runs/20261008T021841Z.json). The run's `git_commit` field names the previous commit (`adede95`, dirty). The run used the tree of this commit; after the run, only `RESEARCH_LOG.md` changed (this entry, and the final wording of RL-110).
+- **Command:** `python tools/check_all.py --record --sources`, on CPython 3.14.2 with jsonschema 4.26.0 and PYTHONHASHSEED=0.
+- **Result:** 74/74 entries pass. V1 covered 63 entries, 4892 instances and 10504 implementation runs.
+- **V2:**
+  - 135 measurements, all passing: 86 exact counts and 49 wall-clock;
+  - 196 of 196 rivals rejected;
+  - the log factor resolved in 74 fits.
+- **Shape diagnostic:** 50 MATCH, 6 UNDETERMINED, 0 MISMATCH, 79 SKIPPED.
+- **Stability against RL-109:**
+  - All 86 exact-count series are identical to run 20261007T190448Z, value by value.
+  - So are the V1 instance and run counts, and every level.
+  - The errata changed check scripts and texts only; no measured number changed.
+- **Unit tests:** 763 OK. **Citations:** 244 identifiers, 0 problems. **Index:** up to date.
+- **Replay:** `python tools/replay_proofs.py` passed 163 of 163 commands, and fully replayed all 64 marked items, now judging every check by its exit code and its `[FAIL]` lines.

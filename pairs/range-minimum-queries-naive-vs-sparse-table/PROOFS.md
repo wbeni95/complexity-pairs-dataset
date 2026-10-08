@@ -46,7 +46,8 @@ one comparison. Each of the q = n queries then evaluates `a <= b` once on two ta
 For n = 2^K: Σ_{j=1..K}(n + 1) − Σ_{j=1..K} 2^j = K(n + 1) − (2^(K+1) − 2) = Kn + K − 2n + 2, and adding n gives
 n log₂n − n + log₂n + 2. (At n = 1, K = 0: no level is built, one query, 1 = 0 − 1 + 0 + 2.)
 
-**Check.** `experiments/2026-10-06c_rmq_counts.py` (the V2 sizes n = 2000, 4000, …, 128000).
+**Check.** `experiments/2026-10-06c_rmq_counts.py` (the V2 sizes n = 2000, 4000, 8000, 16000, 64000, 128000, plus
+n = 10, 100, 1000 and 2^11..2^17; the V2 size 32000 is checked by the next line).
 `experiments/2026-10-07_closed_form_checks.py`, group `sorting`, line "RMQ sparse table sum_{j=1..K}(n-2^j+1)+n":
 n = 1..69 and the V2 sizes 2000, 4000, 8000, 16000, 32000, 64000, 128000; line "RMQ sparse n log2 n - n + log2 n + 2
 (n=2^K)": n = 1, 2, 4, 8, 16, 32, 64, 128, 1024 (and n = 3, 5, 6, 7, 2000 reported as outside the power-of-two

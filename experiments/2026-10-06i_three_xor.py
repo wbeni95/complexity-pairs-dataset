@@ -23,12 +23,19 @@ What it checks (deterministic; no timing; standard library only, so it runs unde
 Run from anywhere. RESULT (2026-10-06, CPython 3.14.2 and 3.12.10, identical output apart from the version line):
   a. every count equals its closed form, in total and per kind (all triples n = 1..512, trie n = 1..2048); three
      other shuffles give identical counts; the trie has n leaves and n - 1 branching nodes; line events per counted
-     operation at n = 16, 32, 64: all triples 2.229, 2.103, 2.049; trie 3.089, 3.031, 3.009.
+     operation at n = 16, 32, 64: all triples 2.229, 2.103, 2.049; trie 3.246, 3.112, 3.050 (rerun 2026-10-08
+     under both interpreters with the current, iterative trie; the earlier recursive trie gave 3.089, 3.031, 3.009).
   b. 525 instances (248 yes, 277 no): 0 disagreements, 0 check failures; trie alone at n = 300, 600: 20 instances
      (14 yes), 0 failures; validator V1 battery: 160 instances, 79 yes, 81 no, both answers at 15 of 20 sizes.
   c. 2977 wrong outputs on 360 instances: 2977 rejected, 0 accepted, 0 undecided; 720 correct outputs: 720 accepted.
   d. SHA-256 d38397740dfacbacb07d2e12ffba034a4ed2b6b3f1bdcdf411e23343080ef9cb under both interpreters; fits against
      the closed forms alpha = 1.000000; bare leading terms n**3: 1.000311 (all triples), n**2: 0.996615 (trie).
+
+Check lines start with [PASS] or [FAIL]: the closed-form, shuffle and tree-shape lines of a, the two agreement lines
+of b and the V1 battery split (160 instances, 79 yes, 81 no, both answers at 15 of the 17 sizes n >= 3, not at
+n = 4 and n = 300), every kind of c (exactly the 13 kinds), and its total (2977 wrong outputs on 360 instances, all
+rejected). The run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The counts at
+the V2 sizes, the bookkeeping ratios and part d (series, fits, SHA-256) are reported, not checked.
 """
 import hashlib
 import importlib.util
@@ -83,6 +90,26 @@ def kinds_trie(n):
 
 CLOSED = {"all": closed_all, "trie": closed_trie}
 
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
 
 def count(key, n, inst_seed, alg_seed):
     """One count with the validator's seeding scheme; returns (total, per-kind counts, output)."""
@@ -116,11 +143,12 @@ def part_a(series):
             ok_total &= total == closed(n)
             ok_kinds &= per == kinds(n)
             ok_out &= out is None
-        print(f"   {key}: n = 1..{hi} (powers of two): total == closed form: {ok_total}; per kind: {ok_kinds}; "
-              f"answer None: {ok_out}")
+        check_line(ok_total and ok_kinds and ok_out,
+                   f"   {key}: n = 1..{hi} (powers of two): total == closed form: {ok_total}; per kind: {ok_kinds}; "
+                   f"answer None: {ok_out}")
         same = all(count(key, n, f"txor-shuffle|{n}|{s}", f"txor-shuffle|{n}|{s}|alg")[0] == series[(key, n)]
                    for n in powers(1, 256) for s in range(3))
-        print(f"   {key}: identical counts for 3 other shuffles at every n = 1..256: {same}")
+        check_line(same, f"   {key}: identical counts for 3 other shuffles at every n = 1..256: {same}")
     print("   trie at V2 sizes:", {n: series[("trie", n)] for n in ALG["trie"]["harness"]["scaling"]["n_values"]})
     print("   all  at V2 sizes:", {n: series[("all", n)] for n in ALG["all"]["harness"]["scaling"]["n_values"]})
 
@@ -138,7 +166,7 @@ def part_a(series):
                 branching += 1
                 stack.extend(node[1:])
         shape_ok &= (leaf_count, branching, len(leaves)) == (n, n - 1, n)
-    print(f"   trie of the V2 family has n leaves and n - 1 branching nodes for n = 1..1024: {shape_ok}")
+    check_line(shape_ok, f"   trie of the V2 family has n leaves and n - 1 branching nodes for n = 1..1024: {shape_ok}")
 
     files = {str(ENTRY / "implementations" / "all_triples.py"), str(ENTRY / "implementations" / "patricia_trie.py")}
     for key in ("all", "trie"):
@@ -177,8 +205,8 @@ def part_b():
             yes += a is not None
             disagree += not H.equal(a, b)
             fail += (H.check(inst, a) is not True) + (H.check(inst, b) is not True)
-    print(f"   both implementations: {inst_count} instances ({yes} yes, {inst_count - yes} no): "
-          f"{disagree} disagreements, {fail} check failures")
+    check_line(disagree == 0 and fail == 0, f"   both implementations: {inst_count} instances ({yes} yes, "
+                                            f"{inst_count - yes} no): {disagree} disagreements, {fail} check failures")
     big = big_yes = big_fail = 0
     for n in (300, 600):
         for t in range(10):
@@ -187,7 +215,8 @@ def part_b():
             big += 1
             big_yes += b is not None
             big_fail += H.check(inst, b) is not True
-    print(f"   Patricia trie alone, n = 300, 600: {big} instances ({big_yes} yes): {big_fail} check failures")
+    check_line(big_fail == 0, f"   Patricia trie alone, n = 300, 600: {big} instances ({big_yes} yes): {big_fail} check "
+                              f"failures")
 
     th = SPEC["test_harness"]
     split, kinds_seen = {}, {}
@@ -200,8 +229,11 @@ def part_b():
     total_yes = sum(s[0] for s in split.values())
     total = sum(s[0] + s[1] for s in split.values())
     both = [n for n, (y, no) in split.items() if y and no]
-    print(f"   validator V1 battery: {total} instances, {total_yes} yes, {total - total_yes} no; "
-          f"(yes, no) per n: {split}; both answers at n = {both}")
+    from_three = [n for n in th["v1_sizes"] if n >= 3]
+    check_line((total, total_yes) == (160, 79) and len(from_three) == 17
+               and both == [n for n in from_three if n not in (4, 300)],
+               f"   validator V1 battery: {total} instances, {total_yes} yes, {total - total_yes} no; "
+               f"(yes, no) per n: {split}; both answers at n = {both}")
 
 
 # ------------------------------------------------------------------------------------------------------------
@@ -271,13 +303,18 @@ def part_c():
         if n >= 4:
             present("wrong_arity", inst, (0, 1, 2, 3), False)
     total_wrong = {"presented": 0, "rejected": 0, "accepted": 0, "undecided": 0}
+    kinds = {"bool", "bool_trap", "correct", "float", "negative_alias", "none_on_yes_instance", "nonzero_xor",
+             "out_of_range", "repeated_index_zero_xor", "str", "triple_on_no_instance", "unsorted", "wrong_arity"}
+    check_line(set(tally) == kinds, f"   kinds presented: {len(tally)} (expected the 13 kinds {sorted(kinds)})")
     for kind, t in sorted(tally.items()):
-        print(f"   {kind}: presented {t['presented']}, rejected {t['rejected']}, accepted {t['accepted']}, "
-              f"undecided {t['undecided']}, as expected {t['as_expected']}")
+        check_line(t["as_expected"] == t["presented"],
+                   f"   {kind}: presented {t['presented']}, rejected {t['rejected']}, accepted {t['accepted']}, "
+                   f"undecided {t['undecided']}, as expected {t['as_expected']}")
         if kind != "correct":
             for key in total_wrong:
                 total_wrong[key] += t[key]
-    print(f"   wrong outputs in total: {total_wrong} on {len(instances)} instances")
+    check_line(total_wrong["rejected"] == total_wrong["presented"] == 2977 and len(instances) == 360,
+               f"   wrong outputs in total: {total_wrong} on {len(instances)} instances")
 
 
 # ------------------------------------------------------------------------------------------------------------
@@ -315,6 +352,7 @@ def main():
     part_b()
     part_c()
     part_d(series)
+    finish_checks()
 
 
 if __name__ == "__main__":

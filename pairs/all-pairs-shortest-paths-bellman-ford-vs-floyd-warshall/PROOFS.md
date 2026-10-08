@@ -44,7 +44,7 @@ plain 0 of the source, or a `CountingWeight`). With m = n(n − 1) the count is 
 **Check.** `experiments/2026-10-07b_count_v2_apsp_strings.py` (the V2 sizes n = 8, 10, 13, 16, 20, 25, 32, 40).
 `experiments/2026-10-07_closed_form_checks.py`, group `expdp`, line "Bellman-Ford n^2(n-1)^2": n = 0..20, 25, 32, 40.
 `experiments/2026-10-07_count_proof_checks.py`, group `graphs`, line "APSP relaxation steps: Bellman-Ford n(n-1)m,
-Floyd-Warshall n^3 on random digraphs": n = 0..14, 3 seeded digraphs per n with densities 0.1 to 1.0.
+Floyd-Warshall n^3 on random digraphs": n = 0..14, 3 seeded digraphs per n with densities 0.1, 0.5 and 1.0.
 
 ## 2. Floyd–Warshall: n³ relaxation steps, n³ − n counted on the complete digraph
 

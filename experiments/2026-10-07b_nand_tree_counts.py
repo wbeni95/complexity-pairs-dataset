@@ -23,6 +23,11 @@ Deterministic (all seeds fixed). Outcome (console run 2026-10-07, CPython 3.14):
     same means, so the reproduction of its seeding is exact.
   - alpha over 40 alternative seed sets: mean 0.9972, sd 0.0047, min 0.9889, max 1.0078 -> tolerance 0.05 is
     about 10 sd; the 2^h rival stays 0.25 away.
+
+The check line (left-first reads exactly 2^h leaves) starts with [PASS] or [FAIL]; the run ends with ALL CHECKS PASSED
+(exit code 0) or lists the failed checks (exit code 1). The exact expectations, the sampled means with their z-scores
+and the fits are reported, not checked (the exact expectations of the unchanged randomized implementation are checked
+in experiments/2026-10-07_query_proof_checks.py, group nand).
 """
 import importlib.util
 import math
@@ -51,6 +56,26 @@ H = load(ENTRY / "harness.py", "nand_harness")
 LEFT = load(ENTRY / "implementations" / "left_first.py", "nand_left").nand_tree_left_first
 RAND = load(ENTRY / "implementations" / "random_order.py", "nand_rand").nand_tree_random_order
 
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
 
 def exact(hmax):
     E0, E1, V0, V1 = [1.0], [1.0], [0.0], [0.0]
@@ -76,7 +101,8 @@ def main():
     E0, E1, V0, V1 = exact(20)
     print("left-first reads on the right-zero reluctant input (root 1):")
     print("  ", [(h, H.reported_cost(LEFT(H.generate_scaling(h, None)))) for h in range(0, 13)])
-    print("  all equal 2^h:", all(H.reported_cost(LEFT(H.generate_scaling(h, None))) == 2 ** h for h in range(0, 17)))
+    ok = all(H.reported_cost(LEFT(H.generate_scaling(h, None))) == 2 ** h for h in range(0, 17))
+    check_line(ok, "  all equal 2^h:", ok)
 
     print("exact E1(h), sd/mean, and E1(h)/lambda^h:")
     for h in range(0, 21, 2):
@@ -103,6 +129,7 @@ def main():
     m = sum(alphas) / len(alphas)
     sd = math.sqrt(sum((a - m) ** 2 for a in alphas) / (len(alphas) - 1))
     print(f"alpha over 40 alternative seed sets: mean {m:.4f}, sd {sd:.4f}, min {min(alphas):.4f}, max {max(alphas):.4f}")
+    finish_checks()
 
 
 if __name__ == "__main__":

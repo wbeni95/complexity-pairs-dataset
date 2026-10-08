@@ -50,6 +50,15 @@ Notes from building it:
   matrix up to row and column signs, so it is not an independent control (kept, with the equality printed).
 - In the first run, the oracle-control row for the signed determinant seemed to be missing; it was only cut off
   when the output was viewed with head/tail. The full output has it (12 presented, 0 accepted).
+
+Check lines start with [PASS] or [FAIL]: the failure counts of 1, 2, 3 and 7 with the instance counts the entry
+states (280 instances and 240 enumeration runs; 1225 + 384 extended; 350 brute-force and 112 permanent instances),
+the sign and pattern counts of 4 (3456 unit squares), 5 (|det K| == answer on all 480; the published negative
+controls: det K < 0 on 39, the sign never differing within a shape, the always-negative shapes, |unsigned det| wrong
+on 286 and on all 29 ladders), every tally line and the totals of 6 (1334 wrong, 270 correct), the random-draw lines
+of 7 (297 non-zero answers with the closed-form count, 53 with a row swap), and every line and the total of 9. The
+run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The battery composition, the
+gauge-equivalent signing, the count tables and the fits (8) are reported, not checked.
 """
 from __future__ import annotations
 
@@ -90,6 +99,27 @@ LUC = [2, 1]
 for _ in range(200):
     FIB.append(FIB[-1] + FIB[-2])
     LUC.append(LUC[-1] + LUC[-2])
+
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 
 def section(title: str):
@@ -298,8 +328,9 @@ def part1_v1_battery():
             odd_nontrivial += (n % 2 == 1 and min(a, b) >= 2)
             row.append(f"{kind}:{a}x{b}={k if k < 10**6 else '~2^%d' % k.bit_length()}")
         print(f"n={n:3d}  " + "  ".join(row))
-    print(f"instances: {instances}, enumeration runs: {enum_runs} (n <= {cap}), Kasteleyn runs: {instances}, "
-          f"failures: {bad}")
+    check_line(bad == 0 and instances == 280 and enum_runs == 240,
+               f"instances: {instances}, enumeration runs: {enum_runs} (n <= {cap}), Kasteleyn runs: "
+               f"{instances}, failures: {bad}")
     print(f"kinds: {kinds}")
     print(f"answers: {answers}; shapes with both sides >= 2: {proper}; odd N with both sides >= 2: {odd_nontrivial}")
 
@@ -314,7 +345,8 @@ def part2_extended():
             ok = H.check(inst, k) is True and enum_count(inst) == k
             bad += not ok
             total += 1
-    print(f"n = 0..48, 25 instances each: {total} instances, enumeration == Kasteleyn == check: failures {bad}")
+    check_line(bad == 0 and total == 1225,
+               f"n = 0..48, 25 instances each: {total} instances, enumeration == Kasteleyn == check: failures {bad}")
     bad = total = 0
     for n in range(49, 145):
         for t in range(4):
@@ -322,7 +354,8 @@ def part2_extended():
             ok = H.check(inst, kasteleyn(inst)) is True
             bad += not ok
             total += 1
-    print(f"n = 49..144, 4 instances each: {total} instances, Kasteleyn == check: failures {bad}")
+    check_line(bad == 0 and total == 384,
+               f"n = 49..144, 4 instances each: {total} instances, Kasteleyn == check: failures {bad}")
 
 
 def part3_oracle_selfchecks():
@@ -331,12 +364,12 @@ def part3_oracle_selfchecks():
     for m in range(1, 41):
         bad += oracle(*unit(m, 2)) != FIB[m + 1]
         bad += oracle(*unit(2, m)) != FIB[m + 1]
-    print(f"(a) unit ladders m x 2 and 2 x m, m = 1..40: DP == F(m+1) (Fibonacci): failures {bad} of 80")
+    check_line(bad == 0, f"(a) unit ladders m x 2 and 2 x m, m = 1..40: DP == F(m+1) (Fibonacci): failures {bad} of 80")
     bad = 0
     for n in range(0, 61):
         bad += oracle(*unit(1, n)) != (1 if n % 2 == 0 else 0)
         bad += oracle(*unit(n, 1)) != (1 if n % 2 == 0 else 0)
-    print(f"    unit paths 1 x n and n x 1, n = 0..60: DP == [n even]: failures {bad} of 122")
+    check_line(bad == 0, f"    unit paths 1 x n and n x 1, n = 0..60: DP == [n even]: failures {bad} of 122")
     rng = random.Random("ppm-bruteforce")
     bad = total = 0
     shapes = [(a, b) for a in range(1, 13) for b in range(1, 13) if a * b <= 12]
@@ -345,22 +378,23 @@ def part3_oracle_selfchecks():
             inst = (a, b, H._matrix(a, b, lambda: rng.randint(0, 3)))
             bad += oracle(*inst) != brute_force_edges(*inst)
             total += 1
-    print(f"(b) DP == brute force over (N/2)-edge subsets, all {len(shapes)} shapes with N <= 12, weights 0..3: "
-          f"{total} instances, failures {bad}")
+    check_line(bad == 0 and len(shapes) == 35 and total == 350,
+               f"(b) DP == brute force over (N/2)-edge subsets, all {len(shapes)} shapes with N <= 12, "
+               f"weights 0..3: {total} instances, failures {bad}")
     bad = total = 0
     for t in range(200):
         n = rng.randint(1, 40)
         inst = H.generate(n, random.Random(f"ppm-transpose|{t}"))
         bad += oracle(*inst) != oracle(*transpose(*inst))
         total += 1
-    print(f"(c) DP(instance) == DP(transposed instance): {total} instances, failures {bad}")
+    check_line(bad == 0, f"(c) DP(instance) == DP(transposed instance): {total} instances, failures {bad}")
     bad = total = 0
     for a in range(1, 11):
         for b in range(1, 11):
             bad += oracle(*unit(a, b)) != round(cosine_product(a, b))
             total += 1
-    print(f"(d) unit rectangles a, b = 1..10: DP == round(cosine product): failures {bad} of {total}; "
-          f"8 x 8 = {oracle(*unit(8, 8))}, 10 x 10 = {oracle(*unit(10, 10))}")
+    check_line(bad == 0, f"(d) unit rectangles a, b = 1..10: DP == round(cosine product): failures {bad} of {total}; "
+                         f"8 x 8 = {oracle(*unit(8, 8))}, 10 x 10 = {oracle(*unit(10, 10))}")
     bad = total = 0
     for t in range(150):
         n = rng.choice([2, 4, 6, 8, 9, 10, 12, 14, 15, 16])
@@ -370,7 +404,9 @@ def part3_oracle_selfchecks():
             continue
         bad += permanent(unsigned_biadjacency(a, b, W)) != oracle(*inst)
         total += 1
-    print(f"(e) permanent of the black x white weight matrix == DP (even N <= 16): {total} instances, failures {bad}")
+    check_line(bad == 0 and total == 112,
+               f"(e) permanent of the black x white weight matrix == DP (even N <= 16): {total} instances, "
+               f"failures {bad}")
 
 
 def part4_signing():
@@ -401,13 +437,14 @@ def part4_signing():
                 for y in white:
                     on_edge = (min(x, y), max(x, y)) in edges
                     pattern_bad += (K[bi[x]][wi[y]] != 0) != on_edge
-    print(f"unit grids a, b = 2..12 with a*b even: {squares} unit squares, sign product != -1: {bad}; "
-          f"non-zero pattern of K != grid edges: {pattern_bad} entries")
+    check_line(bad == 0 and pattern_bad == 0 and squares == 3456,
+               f"unit grids a, b = 2..12 with a*b even: {squares} unit squares, sign product != -1: {bad}; "
+               f"non-zero pattern of K != grid edges: {pattern_bad} entries")
 
 
 def part5_negative_controls():
     section("5. Negative controls: the signs do real work")
-    unsigned_bad = signed_neg = wrong_sign_bad = gauge_equal = total = 0
+    unsigned_bad = signed_neg = wrong_sign_bad = gauge_equal = total = det_bad = 0
     first_unsigned = None
     signs_by_shape = {}
     for n in range(2, 49, 2):
@@ -429,21 +466,25 @@ def part5_negative_controls():
                     first_unsigned = (describe(inst), ans, du)
             wrong_sign_bad += abs(dw) != ans
             gauge_equal += abs(dw) == abs(du)
-            assert abs(dk) == ans
-    print(f"{total} instances (even n = 2..48, 20 each): |det K| == answer in all")
+            det_bad += abs(dk) != ans
+    check_line(det_bad == 0 and total == 480, f"{total} instances (even n = 2..48, 20 each): |det K| == answer in all"
+               + ("" if det_bad == 0 else f" | FAIL: differs on {det_bad}"))
     negative_shapes = sorted(s for s, v in signs_by_shape.items() if v == {False})
     mixed = sorted(s for s, v in signs_by_shape.items() if len(v) > 1)
-    print(f"  det K < 0 (the absolute value is needed): {signed_neg}; shapes with a non-zero det: "
-          f"{len(signs_by_shape)}, shapes whose sign differs between instances: {len(mixed)} {mixed}; "
-          f"always-negative shapes: {negative_shapes}")
-    print(f"  |det| of the UNSIGNED black x white matrix != answer: {unsigned_bad}; first: {first_unsigned}")
+    check_line(signed_neg == 39 and not mixed and negative_shapes == [(2, 3), (2, 7), (2, 11), (2, 15), (2, 19),
+                                                                      (2, 23), (6, 3), (6, 7), (10, 3), (14, 3)],
+               f"  det K < 0 (the absolute value is needed): {signed_neg}; shapes with a non-zero det: "
+               f"{len(signs_by_shape)}, shapes whose sign differs between instances: {len(mixed)} {mixed}; "
+               f"always-negative shapes: {negative_shapes}")
+    check_line(unsigned_bad == 286,
+               f"  |det| of the UNSIGNED black x white matrix != answer: {unsigned_bad}; first: {first_unsigned}")
     print(f"  |det| with -1 on EVERY vertical edge (square products +1) != answer: {wrong_sign_bad}; "
           f"equal to |unsigned det| in {gauge_equal} of {total} (gauge-equivalent: scale black rows and white "
           f"columns of grid row r by (-1)^r)")
     B = unsigned_biadjacency(*unit(2, 2))
     print(f"  2 x 2 unit grid: unsigned matrix {B}, det {det_fraction(B)}, answer {oracle(*unit(2, 2))}")
     ladder_bad = sum(abs(det_fraction(unsigned_biadjacency(*unit(m, 2)))) != FIB[m + 1] for m in range(2, 31))
-    print(f"  unit m x 2 ladders, m = 2..30: |unsigned det| != F(m+1) for {ladder_bad} of 29")
+    check_line(ladder_bad == 29, f"  unit m x 2 ladders, m = 2..30: |unsigned det| != F(m+1) for {ladder_bad} of 29")
 
 
 def part6_oracle_control():
@@ -482,11 +523,13 @@ def part6_oracle_control():
             if full != ans:
                 record("unit-weight count ignoring W (where != answer)", H.check(inst, full) is True, False)
     for name, (presented, accepted, wrong) in tallies.items():
-        print(f"  {name:48s} presented {presented:4d}  accepted {accepted:4d}  wrong verdicts {wrong}")
+        check_line(wrong == 0, f"  {name:48s} presented {presented:4d}  accepted {accepted:4d}  wrong verdicts {wrong}")
     wrong_presented = sum(p for name, (p, _, _) in tallies.items() if not name.startswith("correct"))
     wrong_accepted = sum(acc for name, (_, acc, _) in tallies.items() if not name.startswith("correct"))
-    print(f"total wrong outputs presented {wrong_presented}, accepted {wrong_accepted}; correct outputs "
-          f"presented {tallies['correct answer (int)'][0]}, accepted {tallies['correct answer (int)'][1]}")
+    check_line(wrong_accepted == 0 and tallies['correct answer (int)'][0] == tallies['correct answer (int)'][1]
+               and wrong_presented == 1334 and tallies['correct answer (int)'][0] == 270,
+               f"total wrong outputs presented {wrong_presented}, accepted {wrong_accepted}; correct outputs "
+               f"presented {tallies['correct answer (int)'][0]}, accepted {tallies['correct answer (int)'][1]}")
 
 
 def part7_counts():
@@ -496,8 +539,8 @@ def part7_counts():
         inst = H.generate_scaling(n, None)
         r = enum_count(inst)
         bad += H.reported_cost(r) != enum_ladder_closed_form(n) or int(r) != FIB[n // 2 + 1]
-    print(f"enumeration on the (n/2) x 2 ladder, n = 2..60 even: count == L(n/2+2) - 3 and answer == F(n/2+1): "
-          f"failures {bad} of 30")
+    check_line(bad == 0, f"enumeration on the (n/2) x 2 ladder, n = 2..60 even: count == L(n/2+2) - 3 and answer == "
+                         f"F(n/2+1): failures {bad} of 30")
     print("  n=16..52 step 4: " + ", ".join(f"{n}: {enum_ladder_closed_form(n)}" for n in range(16, 53, 4)))
     bad = 0
     rows = []
@@ -510,16 +553,16 @@ def part7_counts():
         bad += c != enum_wide_ladder_closed_form(m)
         if m in (8, 12, 16, 20, 24):
             rows.append(f"m={m}: 2 x m {c} vs m x 2 {enum_ladder_closed_form(2 * m)}")
-    print(f"enumeration on the 2 x m ladder (row-major), m = 1..24: count == F(m+3) - 2 + ((m-1)F(m) + 2mF(m-1))/5: "
-          f"failures {bad} of 24")
+    check_line(bad == 0, f"enumeration on the 2 x m ladder (row-major), m = 1..24: count == F(m+3) - 2 + "
+                         f"((m-1)F(m) + 2mF(m-1))/5: failures {bad} of 24")
     print("  " + "; ".join(rows))
     bad = 0
     for n in list(range(2, 121, 2)) + [256]:
         inst = H.generate_scaling(n, None)
         r = kasteleyn(inst)
         bad += H.reported_cost(r) != kasteleyn_closed_form(n) or int(r) != FIB[n // 2 + 1]
-    print(f"Kasteleyn on the (n/2) x 2 ladder, n = 2..120 even and 256: count == (n-2)n(n-1)/8 and answer == "
-          f"F(n/2+1): failures {bad} of 61")
+    check_line(bad == 0, f"Kasteleyn on the (n/2) x 2 ladder, n = 2..120 even and 256: count == (n-2)n(n-1)/8 and "
+                         f"answer == F(n/2+1): failures {bad} of 61")
     print("  n = 16, 32, 64, 128, 256: " + ", ".join(str(kasteleyn_closed_form(n)) for n in (16, 32, 64, 128, 256)))
     same = differ = swaps = zero = zero_le = 0
     zero_examples = []
@@ -544,9 +587,11 @@ def part7_counts():
             zero_le += c <= kasteleyn_closed_form(a * b)
             if len(zero_examples) < 4:
                 zero_examples.append(f"{a}x{b}: {c} of {kasteleyn_closed_form(a * b)}")
-    print(f"Kasteleyn on random even-N instances of all kinds and shapes (N <= 64): non-zero answers {same + differ}, "
-          f"count == (N-2)N(N-1)/8 in {same}, different in {differ}; {swaps} of them needed a row swap")
-    print(f"  zero answers: {zero}, count <= closed form in {zero_le}; e.g. {zero_examples}")
+    check_line(differ == 0 and same == 297 and swaps == 53,
+               f"Kasteleyn on random even-N instances of all kinds and shapes (N <= 64): non-zero answers "
+                            f"{same + differ}, count == (N-2)N(N-1)/8 in {same}, different in {differ}; {swaps} of them "
+                            f"needed a row swap")
+    check_line(zero_le == zero, f"  zero answers: {zero}, count <= closed form in {zero_le}; e.g. {zero_examples}")
 
 
 def part8_fits():
@@ -659,10 +704,11 @@ def part9_bits():
         inter_bound = 1 + 2 * stored_bound
         sb = BitTracker.max_stored.bit_length()
         ib = BitTracker.max_intermediate.bit_length()
-        violations += BitTracker.max_stored > (2 * wmax) ** m or BitTracker.max_intermediate > 2 * (2 * wmax) ** (2 * m)
-        print(f"  {a}x{b} w_max={wmax}: answer {int(out).bit_length()} bits; stored max {sb} bits "
-              f"(bound {stored_bound:.1f}); before division max {ib} bits (bound {inter_bound:.1f})")
-    print(f"bound violations: {violations}")
+        case_bad = BitTracker.max_stored > (2 * wmax) ** m or BitTracker.max_intermediate > 2 * (2 * wmax) ** (2 * m)
+        violations += case_bad
+        check_line(not case_bad, f"  {a}x{b} w_max={wmax}: answer {int(out).bit_length()} bits; stored max {sb} bits "
+                                 f"(bound {stored_bound:.1f}); before division max {ib} bits (bound {inter_bound:.1f})")
+    check_line(violations == 0, f"bound violations: {violations}")
 
 
 def main():
@@ -680,6 +726,7 @@ def main():
     part7_counts()
     part8_fits()
     part9_bits()
+    finish_checks()
 
 
 if __name__ == "__main__":

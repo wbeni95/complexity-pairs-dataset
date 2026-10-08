@@ -26,6 +26,11 @@ Result (console, 2026-10-07, CPython 3.14.2; about 10 s):
     39314 orders: reduced cost == backward-arc weight in all.
  4. 25741 (instance, order) pairs: first-match cost == constant + forward linear-ordering weight in all.
  5. Wrong outputs: 2515 rejected, 0 accepted, 0 undecided. Correct outputs: 216 accepted, 0 undecided, 0 rejected.
+
+Check lines start with [PASS] or [FAIL] (section 1: every count line with k >= 2 and the summary; sections 2-5: the
+summary line; in 5 every wrong output rejected (2515), none accepted or undecided, every correct output accepted
+(216)). The run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The k = 1
+count lines (outside the domain of the closed forms), the per-kind splits and the verdict tallies are reported.
 """
 from __future__ import annotations
 
@@ -56,6 +61,26 @@ H = _load(E / "harness.py", "fm_harness")
 EN = _load(E / "implementations" / "enumeration.py", "fm_enum").first_match_order_enumeration
 DP = _load(E / "implementations" / "subset_dp.py", "fm_dp").first_match_order_subset_dp
 
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
 
 def closed_enum(k):
     return math.factorial(k) * (k + 1) * (k + 3) // 3 - 1
@@ -78,18 +103,20 @@ def section1():
         c, kinds = count(EN, k)
         ok = c == closed_enum(k)
         bad += (not ok) and k >= 2
-        print(f"  enumeration k={k}: {c} (closed form {closed_enum(k)}) {'OK' if ok else 'differs'} {kinds}")
+        line = f"  enumeration k={k}: {c} (closed form {closed_enum(k)}) {'OK' if ok else 'differs'} {kinds}"
+        check_line(ok, line) if k >= 2 else print(line)
     for k in range(1, 19):
         c, kinds = count(DP, k)
         ok = c == closed_dp(k)
         bad += (not ok) and k >= 2
-        print(f"  subset DP   k={k}: {c} (closed form {closed_dp(k)}) {'OK' if ok else 'differs'} {kinds}")
+        line = f"  subset DP   k={k}: {c} (closed form {closed_dp(k)}) {'OK' if ok else 'differs'} {kinds}"
+        check_line(ok, line) if k >= 2 else print(line)
     # the counts do not depend on the costs drawn: other seeds give the same counts
     same = all(count(DP, k, f"other{j}")[0] == closed_dp(k) for k in (5, 9) for j in range(3))
     same &= all(count(EN, k, f"other{j}")[0] == closed_enum(k) for k in (5, 7) for j in range(3))
-    print(f"  closed forms hold for k >= 2 (k = 1 is degenerate: one item matched by one rule): {bad == 0}; "
-          f"independent of the drawn costs: {same}")
-    return bad == 0 and same
+    return check_line(bad == 0 and same,
+                      f"  closed forms hold for k >= 2 (k = 1 is degenerate: one item matched by one rule): {bad == 0}; "
+                      f"independent of the drawn costs: {same}")
 
 
 def section2():
@@ -113,8 +140,8 @@ def section2():
                 v = H.check(inst, o)
                 verdicts[(k <= H.BB_EXACT_UP_TO, v)] += 1
                 fails += v is False
-    print(f"  {runs} implementation runs; verdicts (k <= 7 exact?, verdict): {dict(verdicts)}; failures: {fails}")
-    return fails == 0
+    return check_line(fails == 0,
+                      f"  {runs} implementation runs; verdicts (k <= 7 exact?, verdict): {dict(verdicts)}; failures: {fails}")
 
 
 def _acyclic(n, arcs):
@@ -170,9 +197,9 @@ def section3():
             backward = sum(w for u, v, w in arcs if pos[v] < pos[u])
             order_checks += 1
             order_bad += H.order_cost(inst, order) != backward
-    print(f"  {graphs} digraphs (n = 2..6, <= 14 arcs): optimum == brute-force minimum FAS weight in all but {mism}; "
-          f"{order_checks} orders: reduced cost == backward-arc weight in all but {order_bad}")
-    return mism == 0 and order_bad == 0
+    return check_line(mism == 0 and order_bad == 0,
+                      f"  {graphs} digraphs (n = 2..6, <= 14 arcs): optimum == brute-force minimum FAS weight in all but "
+                      f"{mism}; {order_checks} orders: reduced cost == backward-arc weight in all but {order_bad}")
 
 
 def section4():
@@ -205,8 +232,8 @@ def section4():
             lop = const + sum(W[order[p]][order[q]] for p in range(k) for q in range(p + 1, k))
             checked += 1
             bad += lop != H.order_cost(inst, order)
-    print(f"  {checked} (instance, order) pairs: first-match cost == constant + forward LOP weight in all but {bad}")
-    return bad == 0
+    return check_line(bad == 0,
+                      f"  {checked} (instance, order) pairs: first-match cost == constant + forward LOP weight in all but {bad}")
 
 
 def section5():
@@ -262,10 +289,11 @@ def section5():
     undecided = sum(v for (name, verdict), v in stats.items() if name != "correct" and verdict is None)
     for key in sorted(stats, key=str):
         print(f"  {key}: {stats[key]}")
-    print(f"  wrong outputs: {rejected} rejected, {accepted} accepted, {undecided} undecided; "
-          f"correct outputs: {stats[('correct', True)]} accepted, {stats[('correct', None)]} undecided, "
-          f"{stats[('correct', False)]} rejected")
-    return accepted == 0 and stats[("correct", False)] == 0
+    return check_line(accepted == 0 and undecided == 0 and stats[("correct", None)] == 0
+                      and stats[("correct", False)] == 0 and rejected == 2515 and stats[("correct", True)] == 216,
+                      f"  wrong outputs: {rejected} rejected, {accepted} accepted, {undecided} undecided; "
+                      f"correct outputs: {stats[('correct', True)]} accepted, {stats[('correct', None)]} undecided, "
+                      f"{stats[('correct', False)]} rejected")
 
 
 if __name__ == "__main__":
@@ -276,4 +304,4 @@ if __name__ == "__main__":
         if not only or name in only:
             results[name] = fn()
     print(f"\nsections passed: {results}  [{time.time() - t0:.1f}s]")
-    sys.exit(0 if all(results.values()) else 1)
+    finish_checks()

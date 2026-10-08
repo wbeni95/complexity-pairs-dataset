@@ -72,7 +72,8 @@ and the consistency loop tests the single b once.
 
 **Check.** `experiments/2026-10-06f_entries_xor_sat.py` (n = 1..200 and the V2 sizes). `experiments/2026-10-07_closed_form_checks.py`,
 group `expdp`, line "XOR-SAT Gauss n(n^2+6n-4)/3": n = 1..128, 200, 256 (includes the V2 sizes n = 16, 24, 32, 48,
-64, 96, 128; n = 0 reported as outside the domain with count 1). `experiments/2026-10-07_count_proof_checks.py`,
+64, 96, 128; n = 0 reported as outside the domain with count 1); line "XOR-SAT Gauss 1 at n=0": n = 0.
+`experiments/2026-10-07_count_proof_checks.py`,
 group `sat`, line "XOR-SAT Gauss: tests n(n+1)/2, XORs (n-1)n(2n+5)/6, back substitution n(n-1)": n = 1..60.
 
 ## Conventions for sections 3 to 7

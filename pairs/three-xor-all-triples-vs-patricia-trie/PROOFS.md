@@ -44,8 +44,8 @@ shuffles each.
 ## 2. Patricia trie on the V2 family: 7n² + 2n log₂n − 3n
 
 **Statement.** For every n = 2^(w−1) (w ≥ 1) and every shuffle, `three_xor_patricia_trie` on the V2 family makes
-exactly 7n² + 2n log₂n − 3n counted operations: n² XORs, n log₂n + n(n − 1) ANDs, as many truth tests, and 4n² − n
-comparisons (4 at n = 1). The trie has n leaves and n − 1 branching nodes; each round makes 2n − 1 node visits and
+exactly 7n² + 2n log₂n − 3n counted operations (4 at n = 1): n² XORs, n log₂n + n(n − 1) ANDs, as many truth tests,
+and 4n² − n comparisons. The trie has n leaves and n − 1 branching nodes; each round makes 2n − 1 node visits and
 2n − 1 merge steps (uncounted loop work stated in the caveats).
 
 **Proof.** *Zero scan.* `values[i] == 0` for each i: n comparisons; no value is 0, so `zeros` is empty and

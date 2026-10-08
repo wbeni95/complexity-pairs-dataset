@@ -38,7 +38,8 @@ Then `complete and adj[prev][0]` evaluates to the entry `adj[prev][0]` (complete
 the `if` tests: 1 more truth test. No other operation touches an entry. Total n · (n − 1)! = n!.
 
 **Check.** `experiments/2026-10-07_closed_form_checks.py`, group `expdp`, line "Ham enumeration n!": n = 0..10
-(includes the V2 sizes n = 5..10; n = 0, 1 reported as outside the domain with count 0).
+(includes the V2 sizes n = 5..10; n = 0, 1 reported as outside the domain with count 0); line "Ham enumeration 0 for
+n<=1": n = 0, 1.
 `experiments/2026-10-07_count_proof_checks.py`, group `subsets`, line "Hamiltonian enumeration: (n-1)! orders on
 random digraphs, truth tests only": n = 2..8, 3 seeded random digraphs per n.
 

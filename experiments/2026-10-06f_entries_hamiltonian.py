@@ -36,6 +36,13 @@ Result (console, 2026-10-06, CPython 3.14.2; about 35 s):
  9. True for n = 3..16.
 Two earlier generator versions gave answer 0 on 8 and then 7 of the validator's 8 instances at n = 2 (seed luck);
 the generator now draws the 2-cycle with probability 1/2 as its first random number (5 of 8 have answer 1).
+
+Check lines start with [PASS] or [FAIL]: 1 and 2 (0 failures; 109 of the 112 validator instances judged exactly,
+3 by necessary conditions only; 400 extended instances, 388 judged exactly), 3 (39 graphs, 0 mismatches), 4 (3535
+wrong outputs on 410 instances: 3471 rejected, 64 undecided, all at n = 11..14, 0 accepted; correct outputs 398
+accepted, 12 undecided, 0 rejected), every line of 5, the counts in 6 (both dynamic programmes equal to their K_n counts, the enumeration's smaller), and
+9. The run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The battery
+composition, the fits (7) and the memory table (8) are reported, not checked.
 """
 from __future__ import annotations
 
@@ -64,6 +71,26 @@ EN = load(ENTRY / "implementations" / "enumeration.py", "ham_en").count_hamilton
 IE = load(ENTRY / "implementations" / "inclusion_exclusion.py", "ham_ie").count_hamiltonian_cycles_inclusion_exclusion
 HK = load(ENTRY / "implementations" / "held_karp_counting.py", "ham_hk").count_hamiltonian_cycles_held_karp
 V = load(REPO / "tools" / "validate.py", "ham_validate")
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 ALGS = (("enumeration", EN, 9), ("inclusion-exclusion", IE, 12), ("Held-Karp counting", HK, None))
 
@@ -113,7 +140,8 @@ def section1():
         none += k_none
         judged += sum(rules.values()) - k_none
         print(f"   n={n:2d}: answers {lo}..{hi}; rules {dict(sorted(rules.items()))}")
-    print(f"   instances {judged + none}: exactly judged {judged}, only necessary conditions {none}; failures {fails}")
+    check_line(fails == 0 and (judged, none) == (109, 3),
+               f"   instances {judged + none}: exactly judged {judged}, only necessary conditions {none}; failures {fails}")
 
 
 def section2():
@@ -121,7 +149,8 @@ def section2():
     fails, per_n = run_battery(range(3, 13), 40, "ham-extended|{n}|{trial}")
     total = sum(sum(r.values()) for r, _, _ in per_n.values())
     none = sum(r.get("no exact rule", 0) for r, _, _ in per_n.values())
-    print(f"   instances {total} (exactly judged {total - none}); failures {fails}")
+    check_line(fails == 0 and (total, total - none) == (400, 388),
+               f"   instances {total} (exactly judged {total - none}); failures {fails}")
 
 
 def section3():
@@ -155,7 +184,7 @@ def section3():
         bad += not ok
         if name.startswith(("K_{", "Petersen")) or len(inst) in (3, 9):
             print(f"   {name}: formula {formula}, DFS {dfs}, implementations {outs}, check rule {cf}")
-    print(f"   {len(rows)} graphs, mismatches {bad}")
+    check_line(bad == 0 and len(rows) == 39, f"   {len(rows)} graphs, mismatches {bad}")
 
 
 def wrong_outputs(inst, true):
@@ -199,8 +228,9 @@ def section4():
     acc = sum(t["accepted"] for t in tallies.values())
     rej = sum(t["rejected"] for t in tallies.values())
     non = sum(t["None"] for t in tallies.values())
-    print(f"   wrong outputs: rejected {rej}, undecided (None) {non}, accepted {acc}")
-    print(f"   correct outputs: {correct}")
+    check_line(acc == 0 and (instances, rej, non) == (410, 3471, 64) and all(11 <= k <= 14 for k in undecided_n),
+               f"   wrong outputs: rejected {rej}, undecided (None) {non}, accepted {acc}")
+    check_line(correct == {"True": 398, "None": 12, "False": 0}, f"   correct outputs: {correct}")
 
 
 def counts_on(fn, inst):
@@ -217,7 +247,8 @@ def section5():
             ans, split, total = counts_on(fn, H.generate_scaling(n, None))
             ok &= total == FORMS[name](n) and ans == math.factorial(n - 1)
         last = split
-        print(f"   {name}: n = 2..{top}: count == closed form and answer == (n-1)! for all n: {ok}; split at n={top}: {last}")
+        check_line(ok, f"   {name}: n = 2..{top}: count == closed form and answer == (n-1)! for all n: {ok}; "
+                       f"split at n={top}: {last}")
 
 
 def section6():
@@ -228,13 +259,18 @@ def section6():
             a = H.generate(n, rng)
             inst = tuple(tuple(H.CountingInt(x) for x in row) for row in a)
             line = []
+            dp_same = True          # the two dynamic programmes are input-oblivious; the enumeration counts less
             for name, fn, cap in ALGS:
                 if cap is not None and n > cap:
                     continue
                 H.reset_counter()
                 ans, _, total = counts_on(fn, inst)
                 line.append(f"{name} {total} (K_n: {FORMS[name](n)})")
-            print(f"   n={n} trial {trial} answer {ans}: " + "; ".join(line))
+                if name != "enumeration":
+                    dp_same &= total == FORMS[name](n)
+                else:
+                    dp_same &= total < FORMS[name](n)
+            check_line(dp_same, f"   n={n} trial {trial} answer {ans}: " + "; ".join(line))
 
 
 def section7():
@@ -291,7 +327,7 @@ def section9():
                 if (mask >> b) & 1:
                     tests += m
         ok &= tests == m * m * (2 ** (m - 1) - 1)
-    print(f"   inner-loop membership tests == (n-1)^2 (2^(n-2) - 1) for n = 3..16: {ok}")
+    check_line(ok, f"   inner-loop membership tests == (n-1)^2 (2^(n-2) - 1) for n = 3..16: {ok}")
 
 
 if __name__ == "__main__":
@@ -302,3 +338,4 @@ if __name__ == "__main__":
         print("priority not changed:", exc)
     for sec in (section1, section2, section3, section4, section5, section6, section7, section8, section9):
         sec()
+    finish_checks()

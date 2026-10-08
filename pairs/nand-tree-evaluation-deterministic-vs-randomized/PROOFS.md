@@ -116,8 +116,9 @@ in rational arithmetic, on every input for h = 0..3 obeys the case formulas, is 
 with equality exactly on the reluctant inputs, and the maximum over all inputs is R0(h)); `test_closed_form` (R0, R1
 from the recursion against the closed form and the bounds, h = 0..60). Group `nand` of the experiment script: the
 same exact expectations on every input of height 4 (65536 inputs, from the case formulas) and on the reluctant inputs
-of height 4 under every coin sequence of the unchanged implementation. Existing:
-`experiments/2026-10-07b_nand_tree_counts.py` (sample means of the validator-seeded runs against R1(h)).
+of height 4 under every coin sequence of the unchanged implementation. Measured, not checked:
+`experiments/2026-10-07b_nand_tree_counts.py` prints the sample means of the validator-seeded runs and their z-scores
+against R1(h).
 
 ## 5. The remaining statements
 

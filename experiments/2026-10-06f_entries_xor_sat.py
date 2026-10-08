@@ -20,6 +20,10 @@ What it checks (deterministic; no timing):
 Run from the repository root:  .venv/Scripts/python.exe experiments/2026-10-06f_entries_xor_sat.py
 RESULT (2026-10-06): both closed forms hold; every correct output accepted and every wrong output rejected in both
 size ranges (tallies printed and copied into the report).
+
+Check lines (1, 2, Gaussian elimination == brute force on the control instances with n <= 12, 3 with every kind
+tested at least once) start with [PASS] or [FAIL]; the run ends with ALL CHECKS PASSED (exit code 0) or lists the failed checks (exit code 1). The counts at the
+V2 sizes and the fits (4) are reported, not checked.
 """
 import importlib.util
 import math
@@ -44,6 +48,26 @@ H = load(ENTRY / "harness.py", "xor_harness")
 B = load(ENTRY / "implementations" / "brute_force.py", "xor_brute")
 G = load(ENTRY / "implementations" / "gaussian_elimination.py", "xor_gauss")
 
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
+
 
 def fit_slope(xs, ys):
     mx, my = sum(xs) / len(xs), sum(ys) / len(ys)
@@ -67,12 +91,13 @@ def is_solution(rows, n, x):
 def control(ns, label, per_size):
     kinds = ("correct", "plus1", "double", "half", "zero", "claimsat", "badwit", "nowit")
     tally = {k: [0, 0] for k in kinds}                        # [tested, rejected (correct: accepted)]
+    gauss_differs = []
     for n in ns:
         for t in range(per_size):
             inst = H.generate(n, random.Random(f"xor-control|{n}|{t}"))
             out = G.xor_sat_gauss(inst)
-            if n <= 12:
-                assert H.equal(out, B.xor_sat_brute_force(inst))
+            if n <= 12 and not H.equal(out, B.xor_sat_brute_force(inst)):
+                gauss_differs.append((n, t))
             nn, rows = inst
             tally["correct"][0] += 1
             tally["correct"][1] += H.check(inst, out) is True
@@ -92,19 +117,25 @@ def control(ns, label, per_size):
             for kind, wout in wrongs:
                 tally[kind][0] += 1
                 tally[kind][1] += H.check(inst, wout) is False
-    ok = tally["correct"][0] == tally["correct"][1] and all(t[0] == t[1] for k, t in tally.items() if k != "correct")
-    print(f"3. oracle control, {label} [tested, rejected; for 'correct': tested, accepted]: {tally}  -> all as expected: {ok}")
+    if any(n <= 12 for n in ns):
+        check_line(not gauss_differs, f"   Gaussian elimination == brute force on the control instances with n <= 12, "
+                                      f"{label}: " + ("True" if not gauss_differs else f"False, differs at (n, t) = "
+                                                                                        f"{gauss_differs[:5]}"))
+    ok = tally["correct"][0] == tally["correct"][1] and all(t[0] == t[1] and t[0] > 0 for k, t in tally.items()
+                                                             if k != "correct")
+    check_line(ok, f"3. oracle control, {label} [tested, rejected; for 'correct': tested, accepted]: {tally}  "
+                   f"-> all as expected: {ok}")
 
 
 def main():
     brute = {n: count(B.xor_sat_brute_force, n) for n in range(1, 17)}
-    print("1. brute force = (2n+1)(2^(n+1)-2) for n = 1..16:",
-          all(brute[n] == (2 * n + 1) * (2 ** (n + 1) - 2) for n in brute))
+    ok = all(brute[n] == (2 * n + 1) * (2 ** (n + 1) - 2) for n in brute)
+    check_line(ok, "1. brute force = (2n+1)(2^(n+1)-2) for n = 1..16:", ok)
     print("   counts at V2 sizes:", {n: brute[n] for n in (8, 10, 12, 14, 16)})
     ng = list(range(1, 201)) + [256]
     gauss = {n: count(G.xor_sat_gauss, n) for n in ng}
-    print("2. Gaussian elimination = n(n^2+6n-4)/3 for n = 1..200 and 256:",
-          all(3 * gauss[n] == n * (n * n + 6 * n - 4) for n in ng))
+    ok = all(3 * gauss[n] == n * (n * n + 6 * n - 4) for n in ng)
+    check_line(ok, "2. Gaussian elimination = n(n^2+6n-4)/3 for n = 1..200 and 256:", ok)
     print("   counts at V2 sizes:", {n: gauss[n] for n in (16, 24, 32, 48, 64, 96, 128)})
 
     control(range(0, 11), "n = 0..10 (exhaustive count active)", 60)
@@ -123,6 +154,7 @@ def main():
     for name, c in [("n(n^2+6n-4) (claim)", lambda n: n * (n * n + 6 * n - 4)), ("n^2 (rival)", lambda n: n * n),
                     ("n^4 (rival)", lambda n: n ** 4), ("n^3 (bare, info)", lambda n: n ** 3)]:
         print(f"   {name}: alpha = {alpha(c, nG, vG):.4f}")
+    finish_checks()
 
 
 if __name__ == "__main__":

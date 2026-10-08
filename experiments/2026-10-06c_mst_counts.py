@@ -35,10 +35,16 @@ Outcome (run 2026-10-06 under Python 3.14.2, and repeated under 3.12.10):
      n**2*log(n) 0.9181, n**3 0.6710 rejected. Enumeration vs n*C: 0.9954 (vs exact form 1.0000); rivals C 1.0652,
      n**2*C 0.9340, n**(n-2) 1.2104 rejected. CHOSEN: unchanged n_values and the existing leading-term cost
      expressions for all three.
+
+Check lines (1 the packed key; 2 answers unchanged; 3 every breakdown row, the decomposition, and the Kruskal
+totals against the published series of the running CPython version, 3.14 or 3.12, since sorted()'s comparison count
+depends on the version; 4 Prim and every enumeration line) start with [PASS] or [FAIL]; the run ends with ALL CHECKS PASSED (exit code 0) or lists the failed
+checks (exit code 1). The breakdown header, the ratios and the fits (5) are reported, not checked.
 """
 import importlib.util
 import math
 import random
+import sys
 from pathlib import Path
 
 _s = importlib.util.spec_from_file_location("cv2h", Path(__file__).resolve().parent / "2026-10-07b_count_v2_helpers.py")
@@ -51,6 +57,26 @@ brute = H.V.load_callable(entry_dir, "implementations/brute_force.py:mst_brute")
 kruskal = H.V.load_callable(entry_dir, "implementations/kruskal.py:mst_kruskal")
 prim = H.V.load_callable(entry_dir, "implementations/prim.py:mst_prim")
 CW = harness.CountingWeight
+
+FAILED = []
+
+
+def check_line(ok, *parts):
+    """Print one check line with a [PASS] or [FAIL] prefix and remember the failures."""
+    print("[PASS]" if ok else "[FAIL]", *parts, flush=True)
+    if not ok:
+        FAILED.append(" ".join(str(p) for p in parts).strip())
+    return ok
+
+
+def finish_checks():
+    """End of the run: ALL CHECKS PASSED (exit code 0), or the failed checks and exit code 1."""
+    if FAILED:
+        print(f"FAILED: {len(FAILED)} check(s):")
+        for label in FAILED:
+            print(f"  {label}")
+        sys.exit(1)
+    print("ALL CHECKS PASSED")
 
 
 def plain(x):
@@ -65,21 +91,26 @@ def wrap(W):
 W = harness._scaling_draws(5, random.Random("mst-key"))
 cw = wrap(W)
 key = cw[1][3] * 25 + 1 * 5 + 3
-print("type of the packed key built from a CountingWeight:", type(key).__name__, "value", key.v,
-      "== plain", W[1][3] * 25 + 1 * 5 + 3)
+check_line(isinstance(key, CW) and key.v == W[1][3] * 25 + 1 * 5 + 3,
+           "type of the packed key built from a CountingWeight:", type(key).__name__, "value", key.v,
+           "== plain", W[1][3] * 25 + 1 * 5 + 3)
 
 # 2. answers unchanged
 rng = random.Random("mst-eq")
+differs = []
 for t in range(200):
     n = rng.randrange(1, 8)
     Wg = harness.generate(n, rng)
     for fn in (brute, kruskal, prim):
-        assert plain(fn(wrap(Wg))) == fn(Wg), (t, n, fn.__name__)
+        if plain(fn(wrap(Wg))) != fn(Wg):
+            differs.append((t, n, fn.__name__))
 for n in [20, 50, 100, 200]:
     Ws = harness._scaling_draws(n, random.Random(f"mst-eq|{n}"))
     for fn in (kruskal, prim):
-        assert plain(fn(wrap(Ws))) == fn(Ws), (n, fn.__name__)
-print("MST weights on CountingWeight matrices == on plain ints: OK (200 random n <= 7, 4 scaling n = 20..200)")
+        if plain(fn(wrap(Ws))) != fn(Ws):
+            differs.append((n, fn.__name__))
+check_line(not differs, "MST weights on CountingWeight matrices == on plain ints: "
+           + ("OK" if not differs else f"DIFFER at {differs[:5]}") + " (200 random n <= 7, 4 scaling n = 20..200)")
 
 
 # 3. Kruskal breakdown
@@ -154,6 +185,8 @@ def scanned_keys(Wp):
 
 print("\nKruskal breakdown on the validator's scaling instances:")
 print(f"{'n':>5} {'m':>7} {'total':>9} {'cmp':>9} {'add':>7} {'mul':>7} {'divmod':>6} {'sortcmp(indep)':>14} {'scanned':>7} {'total/(m log2 m)':>16}")
+rows_ok = True
+kruskal_totals = []
 for n in [50, 100, 200, 400, 800]:
     Wp = harness._scaling_draws(n, random.Random(f"{E}|v2|{n}"))
     m = n * (n - 1) // 2
@@ -167,23 +200,37 @@ for n in [50, 100, 200, 400, 800]:
     SortKey.c = 0
     sorted(SortKey(Wp[u][v] * nn + u * n + v) for u in range(n) for v in range(u + 1, n))
     s = scanned_keys(Wp)
-    assert c["add"] == 2 * m and c["mul"] == m and c["cmp"] == SortKey.c and c["divmod"] == s
-    assert total == sum(c.values()) == 3 * m + SortKey.c + s
-    print(f"{n:5d} {m:7d} {total:9d} {c['cmp']:9d} {c['add']:7d} {c['mul']:7d} {c['divmod']:6d} {SortKey.c:14d} {s:7d} "
-          f"{total / (m * math.log2(m)):16.4f}")
-print("Kruskal total == 3m + sort comparisons + scanned keys: OK")
+    row_ok = (c["add"] == 2 * m and c["mul"] == m and c["cmp"] == SortKey.c and c["divmod"] == s
+              and total == sum(c.values()) == 3 * m + SortKey.c + s)
+    rows_ok &= row_ok
+    kruskal_totals.append(total)
+    check_line(row_ok, f"{n:5d} {m:7d} {total:9d} {c['cmp']:9d} {c['add']:7d} {c['mul']:7d} {c['divmod']:6d} "
+                       f"{SortKey.c:14d} {s:7d} {total / (m * math.log2(m)):16.4f}")
+check_line(rows_ok, "Kruskal total == 3m + sort comparisons + scanned keys: " + ("OK" if rows_ok else "MISMATCH"))
+# published Kruskal totals (n = 50..800): entry.json for 3.14.2, this docstring for 3.12.10
+KRUSKAL_SERIES = {(3, 14): [14811, 69526, 319007, 1438399, 6400007], (3, 12): [14766, 69346, 318302, 1435596, 6388918]}
+_ver = sys.version_info[:2]
+if _ver in KRUSKAL_SERIES:
+    check_line(kruskal_totals == KRUSKAL_SERIES[_ver], f"Kruskal totals under Python {_ver[0]}.{_ver[1]}: "
+               f"{kruskal_totals} (published: {KRUSKAL_SERIES[_ver]})")
+else:
+    print(f"Kruskal totals under Python {_ver[0]}.{_ver[1]}: {kruskal_totals} (no published series for this version; "
+          f"not checked)")
 
 # 4. Prim and enumeration closed forms
+bad = []
 for n in [2, 3, 10, 50, 100, 200, 400, 800]:
     inst = harness.generate_scaling(n, random.Random(f"{E}|v2|{n}"))
-    assert harness.reported_cost(prim(inst)) == (n - 1) ** 2, n
-print("Prim count == (n-1)^2 for n = 2, 3, 10, 50..800")
+    if harness.reported_cost(prim(inst)) != (n - 1) ** 2:
+        bad.append(n)
+check_line(not bad, "Prim count == (n-1)^2 for n = 2, 3, 10, 50..800" + (f"; FAILS at n = {bad}" if bad else ""))
 for n in [2, 3, 4, 5, 6, 7]:
     m = n * (n - 1) // 2
     inst = harness.generate_scaling(n, random.Random(f"{E}|v2|{n}"))
     c = harness.reported_cost(brute(inst))
-    assert c == (n - 1) * math.comb(m, n - 1) + n ** (n - 2) - 1, (n, c)
-    print(f"  enumeration n={n}: count {c} = (n-1) C(m, n-1) + n^(n-2) - 1 = {n - 1}*{math.comb(m, n - 1)} + {n ** (n - 2)} - 1")
+    check_line(c == (n - 1) * math.comb(m, n - 1) + n ** (n - 2) - 1,
+               f"  enumeration n={n}: count {c} = (n-1) C(m, n-1) + n^(n-2) - 1 = {n - 1}*{math.comb(m, n - 1)} + "
+               f"{n ** (n - 2)} - 1")
 
 # 5. fits
 TOL = 0.03
@@ -200,3 +247,5 @@ for ns in ([4, 5, 6, 7],):
     H.report("enumeration vs exact form", ns, vals, f"(n-1) * {C} + n**(n-2) - 1",
              [C, f"n**2 * {C}", "n**(n-2)"], TOL)
     H.report("enumeration vs n*C", ns, vals, f"n * {C}", [C, f"n**2 * {C}"], TOL)
+
+finish_checks()
