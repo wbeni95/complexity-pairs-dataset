@@ -17,7 +17,8 @@ identifiers:
 license:
   - Apache-2.0
   - CC-BY-4.0
-version: "0.2.0"
+version: "0.3.0"
+date-released: "2026-10-08"
 keywords:
   - computational complexity
   - algorithms
@@ -28,14 +29,16 @@ keywords:
   - quantum query complexity
   - matrix multiplication
 abstract: >-
-  An open, machine-readable dataset of complexity pairs: computational problems for which two or more
-  correct algorithms of different asymptotic cost are recorded. Every entry carries an explicit
-  verification level that is enforced by the included validator: V1 for implementations that agree with
-  each other on a test battery (and with an independent oracle where the harness defines one), and V2 for
-  measured growth (wall-clock time or exact operation counts) that fits the claimed cost and rejects declared
-  rival costs. Proofs of correctness and cost are part of an entry only where the entry gives them. Results,
-  refutations, corrections and null results are documented in a research log, and recorded validation runs
-  store every measured value.
+  An open, machine-readable dataset of complexity pairs (computational problems for which two or more correct
+  algorithms of different asymptotic cost are recorded) and of proved theorem notes. Every entry carries an explicit
+  verification level enforced by the included validator: V1 for implementations that agree with each other on a
+  test battery (and with an independent oracle where the harness defines one), and V2 for measured growth (an exact
+  operation count, or wall-clock time where no count is used yet) that fits the claimed cost and rejects declared
+  rival costs; recorded runs also store wall-clock time next to every exact count. Items marked Proved carry the project's own written proof of every claim and deterministic
+  checks that anyone can replay with one command (tools/replay_proofs.py); every check exits non-zero on failure.
+  Provenance labels mark own results, own extensions, and results whose provenance is undetermined because a source
+  that might contain them could not be read; those sources are listed. Results, refutations, corrections and null
+  results are documented in a research log, and recorded validation runs store every measured value.
   Nearly all of the code, entries and documentation were written by an AI system (Claude, by Anthropic) under
   the author's direction; the author is responsible for the content, and the README section "How this project
   is made" describes the roles.
