@@ -1646,3 +1646,19 @@ notes' code.
 
 **Checks:** the five `verify.py` scripts print 6, 18, 5, 10 and 14 [PASS] lines and exit 0, with identical output
 under PYTHONHASHSEED 0 and 12345. Every tamper copy (13) exits 1 with a [FAIL] line naming the changed fact.
+
+## 2026-10-11
+
+### RL-120 · DECISION · Front page lists notable results; the Mertens bounds are published in a separate repository
+**Change:** the front page has a new section, "Notable results", placed after the release note.
+- **What qualifies:** results that improve the best previously published bound for a well-studied quantity.
+- **Order:** newest first. The table stays open while it is short; older rows move into a collapsible part once it grows.
+
+**Rows:**
+- **2026-10-11, Mertens function:** lim sup M(x)/√x > 1.92036 and lim inf M(x)/√x < −1.92053. The previous best were 1.826054 and −1.837625 (Hurst, 2018).
+  - It is published as its own repository, [mertens-function-bounds](https://github.com/wbeni95/mertens-function-bounds) ([doi:10.5281/zenodo.23298194](https://doi.org/10.5281/zenodo.23298194)), because it belongs to number theory rather than to this dataset. Its proof, verifiers and evidence live there.
+  - That package has two verifiers on different software, a validation guide, and timestamped evidence of a timed run.
+  - Two independent reviews were done by AI agents. It has not yet been peer reviewed.
+- **2026-10-08, the tensor P₂:** 26 ≤ border rank ≤ rank ≤ 29 in characteristic 0 (RL-119). The previous bounds were 15 (conciseness) and 31 (Flavi–Jelisiejew–Michałek, 2025).
+
+**Checks:** the front-page tests (18) and the CI-selection tests pass, and `tools/build_index.py --check` reports the generated blocks fresh.
