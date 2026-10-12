@@ -1662,3 +1662,10 @@ under PYTHONHASHSEED 0 and 12345. Every tamper copy (13) exits 1 with a [FAIL] l
 - **2026-10-08, the tensor P₂:** 26 ≤ border rank ≤ rank ≤ 29 in characteristic 0 (RL-119). The previous bounds were 15 (conciseness) and 31 (Flavi–Jelisiejew–Michałek, 2025).
 
 **Checks:** the front-page tests (18) and the CI-selection tests pass, and `tools/build_index.py --check` reports the generated blocks fresh.
+
+### RL-121 · DECISION · One standing review-status sentence instead of per-result reviewer lists
+**Change:** the section "How this project is made" now ends with a standing statement: unless a result is published in a peer-reviewed venue, its proofs have been checked only by the verification scripts and by AI agents; no human has reviewed them, and the owner does not count himself as a reviewer.
+- **Why:** the earlier wording ("the independent reviews were done by AI agents; none has been peer reviewed yet") was accurate, but did not say that no human has checked the proofs. A single standing sentence states this for every present and future result, so no per-result list of reviewers is kept.
+- **Also:** the same sentence was added to the README of the separate repository [mertens-function-bounds](https://github.com/wbeni95/mertens-function-bounds).
+
+**Checks:** the front-page tests and `tools/build_index.py --check` pass.

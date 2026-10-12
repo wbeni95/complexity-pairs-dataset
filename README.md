@@ -401,6 +401,9 @@ tests, the recorded runs in [ledger/runs/](ledger/runs/) and the citation checks
 Numbers that were not re-checked are labelled *agent report*. The research log records every error, the AI's included.
 In the log, *the owner* is Benjamin Weisz, *the maintainer* is the AI assistant and *agents* are AI sub-agents (RL-078).
 
+**Review status.** Unless a result is published in a peer-reviewed venue, its proofs have been checked only by the
+verification scripts and by AI agents; no human has reviewed them, and the owner does not count himself as a reviewer.
+
 ## Quick start
 
 [REPRODUCING.md](REPRODUCING.md) explains the pinned environment, how to replay every check, and which results are deterministic.
