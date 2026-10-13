@@ -23,6 +23,19 @@ numbers: a time/memory trade-off between the two exponential algorithms. All thr
 whether a Hamiltonian cycle exists is NP-complete (Karp 1972; cited background), and a graph is Hamiltonian iff the
 count is positive, so a polynomial-time counting algorithm would imply P = NP.
 
+**Background (cited): the Jerrum–Snir lower bound.** Jerrum and Snir (J. ACM 1982, §4.4,
+display on p. 890) consider straight-line programs that use only + and × with non-negative constants. They prove
+that every such program computing the Hamiltonian-circuit polynomial needs at least (n−1)[(n−2)·2ⁿ⁻³ + 1]
+multiplications (n ≥ 3), and that a Hamiltonian-path recursion attains this (pp. 890–891).
+- The Held–Karp counting DP is such a program in the n(n−1) arc entries. Its exact multiplication count
+  (PROOFS.md §3) is this number.
+- So it is multiplication-optimal among these programs that compute the polynomial, or equivalently that are correct
+  for all non-negative integer arc weights (PROOFS.md §11).
+- Nothing is claimed for programs that need to be correct only on 0/1 matrices, the input domain of this entry, nor
+  for programs that subtract, divide or branch.
+- Inclusion–exclusion subtracts, so the bound does not apply to it. It uses n(n−1)(n+2)·2ⁿ⁻³ multiplications
+  (PROOFS.md §2), more than the bound anyway.
+
 **Verification.**
 - *V1:* the validator runs n = 0..12 and 14, 8 instances per size (112 instances, 296 implementation runs, 104
   instances on which at least two implementations are compared). The instances are random digraphs and undirected
@@ -80,8 +93,10 @@ expressions (RL-062).
 **Proofs.** [PROOFS.md](PROOFS.md) proves the exact operation counts of this entry for all sizes of their domains,
 from the code, and names the scripts and sizes that check each count. It also proves the correctness of the three
 algorithms (and what the DPs compute with integer weights), the undirected convention, the space and integer-size
-bounds, and the closed forms and bounds the oracle uses;
+bounds, and the closed forms and bounds the oracle uses. Section 11 compares the Held–Karp count with the
+Jerrum–Snir bound;
 [tests/test_proofs_hamiltonian.py](../../tests/test_proofs_hamiltonian.py) checks them on stated ranges.
 
 **Sources.** Kohn, Gottlieb & Kohn, ACM '77. Karp, Oper. Res. Lett. 1982. Bax, IPL 1993. Held & Karp, J. SIAM
-1962. Bellman, J. ACM 1962. Karp 1972 (NP-completeness of Hamiltonian cycle).
+1962. Bellman, J. ACM 1962. Karp 1972 (NP-completeness of Hamiltonian cycle). Jerrum & Snir, J. ACM 1982 (monotone
+lower bound).

@@ -1,0 +1,141 @@
+GF(2) schemes <2,5,6;47> x3 and <3,5,5;58> x6: verification, invariant, comparison with public schemes
+[PASS] own <2,5,6>: 3 files: 3 found
+[PASS] 2x5x6_rank47_1.json: keys, header, 47 distinct terms without zero factor, verify, verify_explicit, products strings: keys True, header True, terms True, verify True, verify_explicit True, products True
+[PASS] 2x5x6_rank47_2.json: keys, header, 47 distinct terms without zero factor, verify, verify_explicit, products strings: keys True, header True, terms True, verify True, verify_explicit True, products True
+[PASS] 2x5x6_rank47_3.json: keys, header, 47 distinct terms without zero factor, verify, verify_explicit, products strings: keys True, header True, terms True, verify True, verify_explicit True, products True
+[PASS] own <3,5,5>: 6 files: 6 found
+[PASS] 3x5x5_rank58_1.json: keys, header, 58 distinct terms without zero factor, verify, verify_explicit, products strings: keys True, header True, terms True, verify True, verify_explicit True, products True
+[PASS] 3x5x5_rank58_2.json: keys, header, 58 distinct terms without zero factor, verify, verify_explicit, products strings: keys True, header True, terms True, verify True, verify_explicit True, products True
+[PASS] 3x5x5_rank58_3.json: keys, header, 58 distinct terms without zero factor, verify, verify_explicit, products strings: keys True, header True, terms True, verify True, verify_explicit True, products True
+[PASS] 3x5x5_rank58_4.json: keys, header, 58 distinct terms without zero factor, verify, verify_explicit, products strings: keys True, header True, terms True, verify True, verify_explicit True, products True
+[PASS] 3x5x5_rank58_5.json: keys, header, 58 distinct terms without zero factor, verify, verify_explicit, products strings: keys True, header True, terms True, verify True, verify_explicit True, products True
+[PASS] 3x5x5_rank58_6.json: keys, header, 58 distinct terms without zero factor, verify, verify_explicit, products strings: keys True, header True, terms True, verify True, verify_explicit True, products True
+== format maps
+[PASS] the six words send (n,m,p) to its permutations, and a word other than id fixes (n,m,p) iff two of n, m, p are equal: 216 formats with entries 1..6
+[PASS] words fixing (2,5,6): only id; words fixing (3,5,5): id and t: (2,5,6): ['id'], (3,5,5): ['id', 't']
+[PASS] every word maps the standard algorithm of (2,5,6) and of (3,5,5) to a valid scheme of the image format (both verifiers): 12 images
+[PASS] every word maps each of the nine schemes to a valid scheme of the image format (verify): 54 images
+== invariance of kappa under G
+[PASS] <2,5,6>: 30 random sandwiches per scheme: every image is valid and has the same kappa: 0 failures
+[PASS] <3,5,5>: 30 random sandwiches per scheme and the self-map t: every image is valid and has the same kappa: 0 failures
+== negative controls
+[PASS] control: a one-bit change in a scheme is rejected by both verifiers: verify False, verify_explicit False
+[PASS] control: U -> P U alone (P != I, no compensation) maps the standard algorithm to an invalid scheme: 2 of 2 formats rejected
+[PASS] control: the unsymmetrised <3,5,5> multiset changes under t for some of the six schemes (the symmetrised key is needed): 6 of 6
+[PASS] cache directory lies outside the repository
+== public representations (pinned files, read from the cache)
+[PASS] pub01: SHA-256 equals the pin: 2x5x6_m47_5ec0a82ac73bd3bfcc87c60784674ec9d83c136c_Z.json
+[PASS] pub01: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 47 distinct non-zero terms, oriented by id, both verifiers; kappa and term set equal the recorded ones: published format (2, 5, 6), rank 47, denominators [1], digest d3d174ecd43968e9
+[PASS] pub02: SHA-256 equals the pin: 2x5x6_m47_66ab3aeb9f74d7da872f7af3eb496edad7068432_Q.json
+[PASS] pub02: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 47 distinct non-zero terms, oriented by id, both verifiers; kappa and term set equal the recorded ones: published format (2, 5, 6), rank 47, denominators [1, 3, 5, 7, 9, 11, 15, 25, 35, 55], digest 2846122de30ba0bf
+[PASS] pub03: SHA-256 equals the pin: 2x5x6_m47_cr181_fv63_cn332_ZT_reduced.json
+[PASS] pub03: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 47 distinct non-zero terms, oriented by id, both verifiers; kappa and term set equal the recorded ones: published format (2, 5, 6), rank 47, denominators [1], digest f11c063440604d3c
+[PASS] pub04: SHA-256 equals the pin: 2x5x6_m47_mod0.json
+[PASS] pub04: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 47 distinct non-zero terms, oriented by id, both verifiers; kappa and term set equal the recorded ones: published format (2, 5, 6), rank 47, denominators [1], digest f11c063440604d3c
+[PASS] pub05: SHA-256 equals the pin: 2x5x6_tensor.mpl
+[PASS] pub05: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 47 distinct non-zero terms, oriented by id, both verifiers; kappa and term set equal the recorded ones: published format (2, 5, 6), rank 47, denominators [1], digest f11c063440604d3c
+[PASS] pub06: SHA-256 equals the pin: 2x5x6-r47-alphaevolve-7387644.json
+[PASS] pub06: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 47 distinct non-zero terms, oriented by id, both verifiers; kappa and term set equal the recorded ones: published format (2, 5, 6), rank 47, denominators [1], digest f11c063440604d3c
+[PASS] pub07: SHA-256 equals the pin: 2x5x6-r47-perminov_cr181_fv63_cn332_ZT_reduced-413a41d.json
+[PASS] pub07: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 47 distinct non-zero terms, oriented by id, both verifiers; kappa and term set equal the recorded ones: published format (2, 5, 6), rank 47, denominators [1], digest f11c063440604d3c
+[PASS] pub08: SHA-256 equals the pin: 2x5x6-r47-perminov_serbase_Q-087c8a7.json
+[PASS] pub08: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 47 distinct non-zero terms, oriented by id, both verifiers; kappa and term set equal the recorded ones: published format (2, 5, 6), rank 47, denominators [1, 3, 5, 7, 9, 11, 15, 25, 35, 55], digest 2846122de30ba0bf
+[PASS] pub09: SHA-256 equals the pin: 2x5x6-r47-perminov_serbase_Z-5962adf.json
+[PASS] pub09: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 47 distinct non-zero terms, oriented by id, both verifiers; kappa and term set equal the recorded ones: published format (2, 5, 6), rank 47, denominators [1], digest d3d174ecd43968e9
+[PASS] pub10: SHA-256 equals the pin: 2x6x5-r47-derived-999879e.json
+[PASS] pub10: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 47 distinct non-zero terms, oriented by t, both verifiers; kappa and term set equal the recorded ones: published format (2, 6, 5), rank 47, denominators [1], digest f11c063440604d3c
+[PASS] pub11: SHA-256 equals the pin: mathematical_results.ipynb
+[PASS] pub11: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 47 distinct non-zero terms, oriented by id, both verifiers; kappa and term set equal the recorded ones: published format (2, 5, 6), rank 47, denominators [1], digest f11c063440604d3c
+[PASS] pub12: SHA-256 equals the pin: 3x5x5_m58_506f8f6eb3be5c9dc28e5ed69a03660f55b50fc2_ZT.json
+[PASS] pub12: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 015cdcbc61b41f1c
+[PASS] pub13: SHA-256 equals the pin: 3x5x5_m58_ZT.json
+[PASS] pub13: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 1f5b8256995447ad
+[PASS] pub14: SHA-256 equals the pin: 3x5x5_m58_c351_ZT.json
+[PASS] pub14: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 8e9b1a61b6a1e6f0
+[PASS] pub15: SHA-256 equals the pin: 3x5x5_m58_c351_ZT.m
+[PASS] pub15: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 8e9b1a61b6a1e6f0
+[PASS] pub16: SHA-256 equals the pin: 3x5x5_m58_cr221_cn357_ZT_reduced.json
+[PASS] pub16: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest a2f27f9414010593
+[PASS] pub17: SHA-256 equals the pin: 3x5x5_m58_e3fdc8efb89aac032c6eb9901d691bef1a0f61db_ZT.json
+[PASS] pub17: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 72dc819e18c3564c
+[PASS] pub18: SHA-256 equals the pin: 3x5x5_tensor.mpl
+[PASS] pub18: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest a2f27f9414010593
+[PASS] pub19: SHA-256 equals the pin: 355-58-mod0.exp
+[PASS] pub19: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 5954aefb140af604
+[PASS] pub20: SHA-256 equals the pin: 355-58-mod0.m
+[PASS] pub20: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 5954aefb140af604
+[PASS] pub21: SHA-256 equals the pin: Moosbauer-355-58-mod0.exp
+[PASS] pub21: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 5954aefb140af604
+[PASS] pub22: SHA-256 equals the pin: Moosbauer-355-58-mod0.m
+[PASS] pub22: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 5954aefb140af604
+[PASS] pub23: SHA-256 equals the pin: 3x5x5-r58-alphatensor_F2-84728a0.json
+[PASS] pub23: valid over GF(2) only in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 580a5b771ab98791
+[PASS] control pub23: the GF(2)-only representation fails the exact validation over Q in both readings: exact readings []
+[PASS] pub24: SHA-256 equals the pin: 3x5x5-r58-alphatensor_Z-263818a.json
+[PASS] pub24: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 1f5b8256995447ad
+[PASS] pub25: SHA-256 equals the pin: 3x5x5-r58-flips_mod0-e8c5fec.json
+[PASS] pub25: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 5954aefb140af604
+[PASS] pub26: SHA-256 equals the pin: 3x5x5-r58-perminov_c351_ZT-093b3cc.json
+[PASS] pub26: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 8e9b1a61b6a1e6f0
+[PASS] pub27: SHA-256 equals the pin: 3x5x5-r58-perminov_cr221_cn357_ZT_reduced-f890d6a.json
+[PASS] pub27: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest a2f27f9414010593
+[PASS] pub28: SHA-256 equals the pin: 3x5x5-r58-perminov_serbase_ZT-c249478.json
+[PASS] pub28: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 015cdcbc61b41f1c
+[PASS] pub29: SHA-256 equals the pin: 3x5x5-r58-perminov_serbase_ZT-ef75e42.json
+[PASS] pub29: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 72dc819e18c3564c
+[PASS] pub30: SHA-256 equals the pin: 5x3x5-r58-derived-72507fc.json
+[PASS] pub30: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by c+tcc, both verifiers; kappa and term set equal the recorded ones: published format (5, 3, 5), rank 58, denominators [1], digest 1f5b8256995447ad
+[PASS] pub31: SHA-256 equals the pin: 5x5x3-r58-derived-e1f0adb.json
+[PASS] pub31: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by cc+tc, both verifiers; kappa and term set equal the recorded ones: published format (5, 5, 3), rank 58, denominators [1], digest 1f5b8256995447ad
+[PASS] pub32: SHA-256 equals the pin: factorizations_f2.npz
+[PASS] pub32: valid over GF(2) only in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 580a5b771ab98791
+[PASS] control pub32: the GF(2)-only representation fails the exact validation over Q in both readings: exact readings []
+[PASS] pub33: SHA-256 equals the pin: factorizations_r.npz
+[PASS] pub33: valid exactly over Q in exactly one reading of the third factor (ki), reduced mod 2 to 58 distinct non-zero terms, oriented by id+t, both verifiers; kappa and term set equal the recorded ones: published format (3, 5, 5), rank 58, denominators [1], digest 1f5b8256995447ad
+[PASS] control: a copy with one changed byte fails its SHA-256 pin
+[PASS] all 33 pinned representations were read and classified: 33 of 33
+[PASS] primary copy of pub05: fmm.univ-lille.fr .../2x5x6_tensor.mpl.bz2 has its pinned SHA-256 and its content (decompressed) is byte-identical to pub05
+[PASS] primary copy of pub18: fmm.univ-lille.fr .../3x5x5_tensor.mpl.bz2 has its pinned SHA-256 and its content (decompressed) is byte-identical to pub18
+[PASS] primary copy of pub19: raw.githubusercontent.com .../355-58-mod0.exp has its pinned SHA-256 and its content is byte-identical to pub19
+== <2,5,6>: public classes (computed from the pinned files)
+   class 1: kappa {(1,1,1):18, (1,2,1):1, (1,3,1):6, (1,4,1):7, (1,5,1):2, (2,2,2):9, (2,4,2):4}
+      2 representation(s): pub01 pub09; distinct GF(2) term sets: 1 (d3d174ecd43968e9)
+   class 2: kappa {(1,1,1):17, (1,2,1):3, (1,3,1):6, (1,4,1):7, (1,5,1):1, (2,2,2):9, (2,4,2):4}
+      2 representation(s): pub02 pub08; distinct GF(2) term sets: 1 (2846122de30ba0bf)
+   class 3: kappa {(1,1,1):18, (1,2,1):4, (1,3,1):8, (1,4,1):4, (2,2,2):11, (2,4,2):2}
+      7 representation(s): pub03 pub04 pub05 pub06 pub07 pub10 pub11; distinct GF(2) term sets: 1 (f11c063440604d3c)
+   11 public representations, 3 distinct kappa, 3 distinct GF(2) term sets
+   2x5x6_rank47_1.json: kappa {(1,1,1):19, (1,1,2):1, (1,2,1):4, (1,3,1):6, (1,4,1):3, (1,5,1):1, (2,2,2):11, (2,4,2):2}
+   2x5x6_rank47_2.json: kappa {(1,1,1):16, (1,2,1):2, (1,3,1):6, (1,4,1):8, (1,5,1):2, (2,2,2):9, (2,4,2):4}
+   2x5x6_rank47_3.json: kappa {(1,1,1):17, (1,2,1):1, (1,3,1):5, (1,4,1):8, (1,5,1):3, (2,2,2):9, (2,4,2):4}
+[PASS] <2,5,6>: no own kappa equals a public kappa (computed from the pinned files): 3 own x 3 public classes, 0 coincidences
+[PASS] <2,5,6>: the 3 own kappa are pairwise different: 3 distinct
+[PASS] control <2,5,6>: with one own kappa planted among the public ones the comparison reports it: 1 coincidence
+== <3,5,5>: public classes (computed from the pinned files)
+   class 1: kappa {(1,1,1):16, (1,1,2):1, (1,2,2):4, (2,1,1):11, (2,2,2):13, (3,1,1):9, (3,2,2):3, (4,1,1):1}
+      2 representation(s): pub12 pub28; distinct GF(2) term sets: 1 (015cdcbc61b41f1c)
+   class 2: kappa {(1,1,1):5, (1,1,2):2, (1,1,3):10, (1,2,2):2, (2,1,1):10, (2,1,2):7, (2,1,3):2, (2,2,2):16, (3,1,1):4}
+      5 representation(s): pub13 pub24 pub30 pub31 pub33; distinct GF(2) term sets: 1 (1f5b8256995447ad)
+   class 3: kappa {(1,1,1):5, (1,1,2):2, (1,1,3):10, (1,2,2):2, (2,1,1):14, (2,1,2):4, (2,1,3):2, (2,2,2):16, (3,1,1):3}
+      3 representation(s): pub14 pub15 pub26; distinct GF(2) term sets: 1 (8e9b1a61b6a1e6f0)
+   class 4: kappa {(1,1,1):7, (1,1,2):2, (1,1,3):10, (2,1,1):14, (2,1,2):4, (2,1,3):2, (2,2,2):17, (4,1,1):2}
+      3 representation(s): pub16 pub18 pub27; distinct GF(2) term sets: 1 (a2f27f9414010593)
+   class 5: kappa {(1,1,1):15, (1,1,2):1, (1,2,2):5, (2,1,1):11, (2,2,2):12, (3,1,1):7, (3,1,2):2, (4,1,1):2, (4,2,2):3}
+      2 representation(s): pub17 pub29; distinct GF(2) term sets: 1 (72dc819e18c3564c)
+   class 6: kappa {(1,1,1):4, (1,1,2):4, (1,1,3):10, (1,2,2):1, (1,2,3):1, (2,1,1):10, (2,1,2):6, (2,1,3):2, (2,2,2):16, (3,1,1):4}
+      5 representation(s): pub19 pub20 pub21 pub22 pub25; distinct GF(2) term sets: 1 (5954aefb140af604)
+   class 7: kappa {(1,1,1):4, (1,1,2):4, (1,1,3):10, (1,2,2):1, (1,2,3):1, (2,1,1):6, (2,1,2):4, (2,1,3):4, (2,2,2):17, (3,1,1):5, (3,1,2):1, (4,1,1):1}
+      2 representation(s): pub23 pub32; distinct GF(2) term sets: 1 (580a5b771ab98791)
+   22 public representations, 7 distinct kappa, 7 distinct GF(2) term sets
+   3x5x5_rank58_1.json: kappa {(1,1,1):4, (1,1,2):6, (1,1,3):7, (1,2,3):2, (1,3,3):1, (2,1,1):6, (2,1,2):3, (2,1,3):2, (2,2,2):10, (2,2,3):3, (3,1,1):3, (3,1,2):4, (3,1,3):2, (3,2,2):3, (4,1,1):2}
+   3x5x5_rank58_2.json: kappa {(1,1,1):3, (1,1,2):6, (1,1,3):12, (2,1,1):6, (2,1,2):3, (2,1,3):2, (2,2,2):12, (2,2,3):3, (2,3,3):1, (3,1,1):5, (3,1,2):5}
+   3x5x5_rank58_3.json: kappa {(1,1,1):1, (1,1,2):5, (1,1,3):9, (1,2,3):2, (2,1,1):5, (2,1,2):4, (2,1,3):2, (2,2,2):9, (2,2,3):3, (3,1,1):7, (3,1,2):4, (3,1,3):1, (3,2,2):4, (4,1,1):2}
+   3x5x5_rank58_4.json: kappa {(1,1,1):7, (1,1,2):4, (1,1,3):9, (1,2,3):1, (2,1,1):5, (2,1,2):4, (2,1,3):1, (2,2,2):12, (2,2,3):4, (3,1,1):4, (3,1,2):4, (3,1,3):1, (4,1,1):1, (4,1,2):1}
+   3x5x5_rank58_5.json: kappa {(1,1,2):4, (1,1,3):9, (1,2,3):3, (1,3,3):1, (2,1,1):5, (2,1,2):5, (2,1,3):1, (2,2,2):9, (2,2,3):2, (3,1,1):7, (3,1,2):5, (3,1,3):1, (3,2,2):4, (4,1,1):2}
+   3x5x5_rank58_6.json: kappa {(1,1,1):4, (1,1,2):8, (1,1,3):8, (1,2,3):1, (2,1,1):6, (2,1,3):3, (2,2,2):12, (2,2,3):2, (2,3,3):1, (3,1,1):4, (3,1,2):7, (3,1,3):1, (3,2,3):1}
+[PASS] <3,5,5>: no own kappa equals a public kappa (computed from the pinned files): 6 own x 7 public classes, 0 coincidences
+[PASS] <3,5,5>: the 6 own kappa are pairwise different: 6 distinct
+[PASS] control <3,5,5>: with one own kappa planted among the public ones the comparison reports it: 1 coincidence
+
+work: exact_tensor_builds=59, files_parsed=33, format_map_images=66, readings_tried=59, sandwich_images=270, sha256_checks=36, verify=413, verify_explicit=83
+ALL CHECKS PASSED

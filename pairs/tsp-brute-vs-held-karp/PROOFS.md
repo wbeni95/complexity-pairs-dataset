@@ -4,8 +4,10 @@ This file proves every claim that this entry makes about its problem and its two
 `README.md` and the docstrings of the code): correctness of both, the exact counts and Θ bounds for time and space,
 and the factorial-to-exponential improvement (T8). The statement in the entry's `background` field (NP-completeness
 of the Hamiltonian circuit problem, and that P vs NP is open) is cited and is not proved; §4 proves the one-line reduction
-that turns it into the NP-hardness of this problem, on which the T6 tag rests. Each section ends with the
-deterministic checks of its computable facts; a check covers only the inputs it states.
+that turns it into the NP-hardness of this problem, on which the T6 tag rests. The Jerrum–Snir lower bound in
+`background` is also cited, not proved; §5 proves the exact number of additions of Held–Karp and the step from the
+cited bound to this entry's integer inputs (Lemma 6). Each section ends with the deterministic checks of its
+computable facts; a check covers only the inputs it states.
 
 **Notation and cost model.** W is an n × n matrix of non-negative integers (W[i][i] is never used). A *tour* is a
 cyclic order of the n cities; its length is the sum of W[u][v] over its n consecutive pairs (u, v), including the
@@ -108,6 +110,100 @@ is ours (Lemma 4); only the NP-completeness and the openness of P vs NP are back
 4096 graphs), the optimum of the 1/2 instance is n exactly when a Hamiltonian circuit exists (found by brute force over
 cyclic orders).
 
+## 5. Additions of weights; optimality among (min, +) straight-line programs (background)
+
+**Theorem 5 (number of additions).** Let n ≥ 2 and m = n − 1. On every input, `tsp_held_karp` performs:
+- exactly m(m − 1)2^(m−2) additions in the line `c = base + wj[k + 1]`;
+- exactly m additions in the closing `min(best[full][j] + W[j + 1][0] for j in range(m))`.
+
+These are all its additions whose operands are weights or sums of weights, m(m − 1)2^(m−2) + m in total. With
+m = n − 1 the total is (n − 1)(n − 2)2^(n−3) + (n − 1) = (n − 1)[(n − 2)2^(n−3) + 1].
+
+*Proof.* As in the proof of Theorem 3, for each non-empty S exactly the |S| members j pass the test, and for each of
+them the loop over k runs m times. In |S| of these iterations k ∈ S and the loop continues; in the other m − |S| the
+addition runs once.
+- So the line runs Σ_{S≠∅} |S|(m − |S|) times. This sum counts the triples (S, j, k) with j ∈ S and k ∉ S.
+- For each of the m(m − 1) ordered pairs (j, k) with j ≠ k there are 2^(m−2) such sets S: j together with any subset
+  of the other m − 2 cities. Hence the line runs m(m − 1)2^(m−2) times.
+- The closing expression adds once for each of the m values of j.
+- The other additions in the function (`j + 1`, `k + 1` in indices) act on plain integer indices. ∎
+
+**The DP as a (min, +) straight-line program.** Take the n(n − 1) off-diagonal entries as inputs.
+- Every value in the table is an entry, the constant +∞ (`math.inf`), or a sum or minimum of earlier values. The
+  statement `if c < best[T][k]: best[T][k] = c` sets best[T][k] to min(best[T][k], c), and the closing `min(...)` is
+  a minimum of m sums.
+- The test `row[j] == math.inf` never skips a member of S (Theorem 2). The tests `S >> j & 1` and `S >> k & 1`
+  depend only on indices.
+- So the same sequence of min and + operations runs on every input. This is a straight-line program over the
+  semiring M = (ℝ ∪ {+∞}, min, +), and its +-nodes are the additions of Theorem 5. By Theorem 2 it outputs the
+  minimum tour length on every matrix of non-negative integers.
+
+**Cited (background, not proved here).** M. Jerrum and M. Snir, *Some exact complexity results for straight-line
+computations over semirings*, J. ACM 29(3) (1982) 874–897, doi:10.1145/322326.322341.
+- *Semirings* (§2.1, p. 876): M = (ℝ ∪ {+∞}, min, +, +∞, 0), and M⁺, its restriction to the non-negative reals and
+  +∞.
+- *Model* (§2.2, p. 877): a computation is a fan-in-2 circuit (a directed acyclic graph with one output node). Its
+  inputs are constants of the semiring and the indeterminates. Its internal nodes are labelled ⊕ or ⊗, which over M
+  and M⁺ are min and +. The ⊗-complexity counts the + nodes only.
+- *Bound* (§4.4, unnumbered display on p. 890): for n ≥ 3, every computation of the Hamiltonian-circuit polynomial
+  HC_{n×n} = Σ_{σ cyclic} x_{1σ(1)} ⋯ x_{nσ(n)} has ⊗-complexity at least (n − 1)[(n − 2)2^(n−3) + 1], over R, M
+  and M⁺. Over M⁺ the value of HC_{n×n} is the length of a shortest Hamiltonian circuit, the TSP optimum (p. 889).
+  The bound is attainable (pp. 890–891).
+- *From the polynomial to the function:* Corollary 2.7(i) (M, linear polynomials) and Corollary 2.10(ii) (M⁺,
+  linear homogeneous polynomials) make the bound valid for every computation of the polynomial function.
+  HC_{n×n} is linear (no variable twice in a monomial) and homogeneous.
+- *Branching* (§5.2, pp. 893–894): branching can make (min, +) computations exponentially shorter, so all
+  statements here are about straight-line programs only.
+
+**Lemma 6 (integer weights suffice).** Let N = n(n − 1). Let Γ be a straight-line program over M whose inputs are
+the N off-diagonal entries and constants in ℝ ∪ {+∞}, and which outputs the minimum tour length HC(x) for every
+x ∈ ℕ^N. Let Γ′ be Γ with every finite constant replaced by 0. Then Γ′ outputs HC(x) for every x ∈ (M⁺)^N, and Γ′
+has as many + nodes as Γ.
+
+*Proof.*
+1. *Node functions.* For finite inputs x ∈ ℝ^N, each node α of Γ computes f_α(x) = min_{t∈T_α}(a_t + ⟨e_t, x⟩),
+   and the same node of Γ′ computes g_α(x) = min_{t∈T_α}⟨e_t, x⟩. Here T_α is a finite set of terms (empty means
+   the value +∞), a_t is real and e_t ∈ ℕ^N. The proof is by induction over the nodes:
+   - an entry x_uv gives the single term (0, unit vector);
+   - a finite constant a gives the term (a, 0) in Γ and (0, 0) in Γ′;
+   - the constant +∞ gives T = ∅ in both programs;
+   - a min node takes the union of the two term sets;
+   - a + node takes all sums of one term from each side, because + distributes over min.
+2. *Scaling.* Let x ∈ ℕ^N and let f, g be the functions of the output node. For every integer s ≥ 1, sx ∈ ℕ^N, so
+   f(sx) = HC(sx) = s·HC(x). (HC is a minimum of sums of n entries.) So HC(x) = f(sx)/s = min_t(a_t/s + ⟨e_t, x⟩)
+   for every s. As s → ∞ the right side tends to g(x), so HC(x) = g(x). T is not empty, because HC(x) is finite.
+3. *Real inputs.* g and HC are minima of finitely many linear forms with non-negative integer coefficients. So both
+   are continuous on ℝ^N_{≥0} and positively homogeneous.
+   - For x ∈ ℚ^N_{≥0}, choose an integer q ≥ 1 with qx ∈ ℕ^N. Then g(x) = g(qx)/q = HC(qx)/q = HC(x).
+   - By density and continuity, g = HC on ℝ^N_{≥0}.
+4. *Entries +∞.* The formula of step 1 for g also holds on (M⁺)^N, with ⟨e_t, x⟩ = +∞ when e_t is positive at an
+   infinite entry; the same induction shows it. HC has the same form.
+   - Replace the infinite entries of x by a real s ≥ 0 and let s → ∞.
+   - A term that contains an infinite entry (with coefficient ≥ 1) tends to +∞, and the other terms do not change.
+   - So g and HC at the modified input, which are equal by step 3, tend to their values at x. Hence g(x) = HC(x).
+5. Replacing constants changes no node of the graph, so Γ′ has the same + nodes as Γ. ∎
+
+**Corollary 7.** Let n ≥ 3. Every (min, +) straight-line program with constants in ℝ ∪ {+∞} that outputs the minimum
+tour length for every n × n matrix of non-negative integers (off-diagonal entries independent) has at least
+(n − 1)[(n − 2)2^(n−3) + 1] additions. The Held–Karp DP of this entry has exactly that many (Theorem 5), so it is
+addition-optimal among these programs.
+
+*Proof.* By Lemma 6, Γ′ is a computation over M⁺ of the polynomial function of HC_{n×n}, with as many + nodes as
+Γ. By the cited bound (with Corollary 2.10(ii) of Jerrum–Snir), it has at least (n − 1)[(n − 2)2^(n−3) + 1] of them. ∎
+
+*Not claimed:*
+- programs with branching (Jerrum–Snir §5.2) or with subtraction, which is not a (min, +) operation;
+- symmetric inputs: for symmetric matrices the minimum tour length is a polynomial in n(n − 1)/2 variables, and the
+  bound does not apply as stated;
+- running time: only additions are counted.
+
+**Check.** `tests/test_proofs_tsp.py`, `test_held_karp_additions`:
+- the line `c = base + wj[k + 1]` runs m(m − 1)2^(m−2) times (trace hook), n = 2..9;
+- with weights of an `int` subclass that counts the additions it takes part in, the DP makes exactly
+  m(m − 1)2^(m−2) + m of them and returns the minimum tour length, n = 2..9, 3 matrices per n (fixed random
+  generator);
+- the identity of Theorem 5 for n = 3..400.
+
 ## Claim map
 
 | Claim (location) | Proof |
@@ -117,3 +213,5 @@ cyclic orders).
 | Held–Karp Θ(n² 2ⁿ) time, Θ(n 2ⁿ) space | Theorem 3 |
 | factorial → single exponential (T8, `relationship`, README, `notes`) | §3 |
 | NP-hardness via Hamiltonian circuit (T6, `relationship`, README) | §4 with the background item |
+| Held–Karp makes exactly (n − 1)[(n − 2)2^(n−3) + 1] additions of weights (README) | Theorem 5 |
+| no (min, +) straight-line program correct on all non-negative integer matrices uses fewer additions (README) | Lemma 6 and Corollary 7, with the Jerrum–Snir background item |

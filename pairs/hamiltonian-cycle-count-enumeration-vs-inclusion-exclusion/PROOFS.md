@@ -4,11 +4,14 @@ This file proves the claims that this entry makes about its problem and its thre
 `README.md`, the docstrings of the code and the harness). Sections 1 to 3 prove the exact operation counts, for
 every size of their domain, from the code in this folder. Sections 4 to 10 prove the other claims: correctness of
 the three algorithms (also with integer arc weights), the undirected convention, space and integer sizes, the
-time/memory trade-off, and the facts used by the V1 oracle. Each proof is followed by the deterministic scripts
-that check it and the sizes they check it on. A check covers only those sizes; the proofs cover the whole domain.
+time/memory trade-off, and the facts used by the V1 oracle. Section 11 compares the Held–Karp count with a cited
+lower bound (Jerrum–Snir 1982) and proves the steps that are ours. Each proof is followed by the deterministic
+scripts that check it and the sizes they check it on. A check covers only those sizes; the proofs cover the whole
+domain.
 
 The statements listed under `background` in `entry.json` (NP-completeness of the Hamiltonian cycle problems, the
-history of inclusion–exclusion counting and of the Held–Karp recurrence) are cited, not proved here.
+history of inclusion–exclusion counting and of the Held–Karp recurrence, the Jerrum–Snir lower bound) are cited,
+not proved here.
 
 ## Counting convention
 
@@ -220,3 +223,77 @@ budget trick shows the count finishes within it on 28 seeded digraphs, and the b
 necessary conditions on 36 seeded digraphs and 36 undirected graphs with n = 3..8.
 `experiments/2026-10-06f_entries_hamiltonian.py` §3 compares every closed form with the exhaustive depth-first
 count on 39 graphs.
+
+## 11. Background: the Held–Karp count meets the Jerrum–Snir lower bound
+
+**Cited (background, not proved here).** M. Jerrum and M. Snir, *Some exact complexity results for straight-line
+computations over semirings*, J. ACM 29(3) (1982) 874–897, doi:10.1145/322326.322341.
+- *Model* (§2.2, p. 877). A computation in a semiring S is a directed acyclic graph with one output node. Its input
+  nodes are labelled by elements of S (constants) or by indeterminates; every other node has in-degree 2 and is
+  labelled ⊕ or ⊗. Its ⊗-complexity is the number of ⊗-nodes. Over R = (ℝ≥0, +, ·) (§2.1, p. 876) this is a
+  straight-line program (fan-in-2 circuit) that uses + and × with non-negative real constants. It allows no
+  subtraction, no division, no negative constants and no branching.
+- *Bound* (§4.4, unnumbered display on p. 890). The Hamiltonian-circuit polynomial is
+  HC_{n×n} = Σ_{σ ∈ C(n)} x_{1σ(1)} x_{2σ(2)} ⋯ x_{nσ(n)}, where C(n) is the set of cyclic permutations of
+  {1, …, n}. For n ≥ 3 every computation of it over R has ⊗-complexity at least (n − 1)[(n − 2)2^(n−3) + 1].
+  The paper adds: "Again this bound is valid for R, M, and M⁺, and is attainable" (p. 890).
+- *Attainment* (pp. 890–891; our paraphrase, in the paper's notation). The recursion p_{1,∅,j} = x_{1j},
+  p_{1,I,j} = Σ_{i∈I} p_{1,I∖{i},i} x_{ij} (Hamiltonian paths from node 1 through the set I to node j) uses
+  (n − 1)(n − 2)2^(n−3) multiplications for all paths, and n − 1 more close the circuit.
+
+**11.1 The DP is such a program and computes HC_{n×n}.** Run `count_hamiltonian_cycles_held_karp` on an
+indeterminate x_uv for each arc u → v (u ≠ v); vertex 0 of the code is node 1 of the paper, vertex v is node v + 1.
+- Every operation on entries is + or ×. The only constant is 0, the initial value of `acc` and `total`. Nothing
+  branches on an entry (section 3).
+- The induction of section 6 holds verbatim in the polynomial ring. So paths[S][v] is the sum, over the directed
+  paths from 0 through exactly {0} ∪ S that end at v, of the product of their arc variables. The returned value is
+  the sum over the directed Hamiltonian cycles of the product of their n arc variables. That is HC_{n×n}: the cyclic
+  permutation σ is the cycle u → σ(u).
+- Its multiplications are exactly the counted multiplications of section 3, and
+  (n − 1)(n − 2)2^(n−3) + (n − 1) = (n − 1)[(n − 2)2^(n−3) + 1] (take out the factor n − 1).
+- This number also equals the paper's count Σ_{r=1}^{n−2} r(n − 1)C(n − 2, r) + (n − 1), because
+  Σ_r r·C(N, r) = N·2^(N−1) with N = n − 2.
+
+**11.2 Lemma (two equivalent correctness conditions).** Let Γ be a straight-line program over R whose inputs are the
+N = n(n − 1) arc entries and non-negative constants.
+- By induction over its nodes, Γ computes a polynomial p_Γ with non-negative real coefficients, and its output on a
+  weight matrix a is p_Γ(a).
+- The weighted cycle sum of a is HC_{n×n}(a), the sum over the directed Hamiltonian cycles of the product of their
+  arc entries.
+
+Then p_Γ = HC_{n×n} if and only if Γ outputs the weighted cycle sum for every matrix with non-negative integer
+entries.
+
+*Proof.* "Only if" is substitution. For "if", the polynomial q = p_Γ − HC_{n×n} ∈ ℝ[x_1, …, x_N] vanishes on ℕ^N.
+Such a polynomial is zero, by induction on N:
+- for N = 1, a non-zero polynomial has finitely many roots;
+- for N > 1, write q = Σ_k q_k(x_1, …, x_{N−1}) x_N^k. For each fixed point of ℕ^{N−1}, the polynomial in x_N
+  vanishes on ℕ, so all its coefficients are 0. So every q_k vanishes on ℕ^{N−1}, and q_k = 0 by induction. ∎
+
+By sections 5.3 and 6, the Held–Karp DP outputs the weighted cycle sum for every integer matrix, so it satisfies
+both conditions.
+
+**11.3 Consequence.** Let n ≥ 3. Consider straight-line programs over R (+ and ×, non-negative constants) that
+compute the polynomial HC_{n×n}, or equivalently (11.2) that output the weighted cycle sum for every non-negative
+integer weight matrix. By the cited bound, none of them uses fewer than (n − 1)[(n − 2)2^(n−3) + 1]
+multiplications. The Held–Karp counting DP of this entry uses exactly that many (11.1), so it is
+multiplication-optimal among them.
+
+*Not claimed:*
+- **Programs that need to be correct only on 0/1 matrices,** the input domain of this entry. On {0,1}^N we have
+  x² = x, so a polynomial other than HC_{n×n} can agree with it on every 0/1 matrix. The paper's argument does not
+  cover such programs.
+- **Programs with subtraction, division, negative constants or branching.** Inclusion–exclusion subtracts, so the
+  bound does not apply to it. It uses n(n − 1)(n + 2)2^(n−3) multiplications (section 2), more than the bound
+  anyway: the difference is (n − 1)[(n² + n + 2)2^(n−3) − 1] > 0 for n ≥ 3.
+- **Symmetric inputs.** The statement is about programs in the n(n − 1) independent arc entries. For symmetric
+  matrices (x_uv = x_vu) the polynomial has n(n − 1)/2 variables, and the bound does not apply as stated.
+- **Running time.** The bound counts multiplications only.
+
+**Check.** `tests/test_proofs_hamiltonian.py`, class `JerrumSnirBackground`:
+- the multiplication tally (`CountingInt`) of the Held–Karp DP equals the paper's count, computed term by term, and
+  the factored bound. This holds on K_n (`generate_scaling`) and on 3 random 0/1 digraphs per n (fixed random
+  generators), n = 3..12; the bound plus one is never met (control);
+- on symbolic entries (a small polynomial type), the DP returns exactly HC_{n×n}, n = 3..6: the (n − 1)! cycle
+  monomials, each with coefficient 1;
+- the identities of 11.1 and the positive difference of 11.3 hold for n = 3..400.

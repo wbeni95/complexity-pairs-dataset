@@ -71,6 +71,14 @@
       "title": "The Python Standard Library: itertools.permutations",
       "url": "https://docs.python.org/3/library/itertools.html",
       "note": "Background only (machine-model assumption). Read on 2026-10-07: the permutation tuples are emitted in lexicographic order of the input positions, and the documentation gives roughly equivalent Python code (indices and cycles)."
+    },
+    {
+      "authors": "Jerrum, M.; Snir, M.",
+      "year": 1982,
+      "title": "Some exact complexity results for straight-line computations over semirings",
+      "venue": "Journal of the ACM 29(3), 874-897",
+      "doi": "10.1145/322326.322341",
+      "note": "Background only: sections 2.1-2.2 (semirings M and M+, model of computation, pp. 876-877), section 4.4 (lower bound for the Hamiltonian-circuit polynomial, unnumbered display on p. 890; attainable, pp. 890-891), Corollaries 2.7 and 2.10 (polynomial functions), section 5.2 (branching). Read in the authors' copy (snir.cs.illinois.edu/listed/J7.pdf) on 2026-10-12 and 2026-10-13."
     }
   ],
   "verification": {
@@ -102,6 +110,10 @@
     {
       "statement": "Machine-model assumption of this entry: itertools.permutations on r items behaves as its documented equivalent code (indices and cycles), at O(1) per elementary step of that code, and yields each permutation exactly once (in lexicographic order of positions). By PROOFS.md, Lemma 0, this is O(r) work per tuple amortised; a single step can take Theta(r^2).",
       "source": "Python Software Foundation, Python documentation: itertools.permutations (documented equivalent code), read 2026-10-07"
+    },
+    {
+      "statement": "(min, +) lower bound: over the semirings M = (reals with +infinity, min, +) and M+ (its non-negative part), every straight-line program that uses min and + (constants allowed, no branching) and computes the Hamiltonian-circuit polynomial HC_{n x n}, whose value over M+ is the optimal tour length, needs at least (n-1)[(n-2)2^(n-3) + 1] additions (n >= 3); the bound is attainable and holds also for programs computing the polynomial function. PROOFS.md section 5 shows that Held-Karp makes exactly this many additions of weights and transfers the bound to this entry's non-negative integer inputs (Lemma 6, own).",
+      "source": "Jerrum & Snir 1982, section 4.4 (display on p. 890), with Corollaries 2.7 and 2.10"
     }
   ],
   "proof": {

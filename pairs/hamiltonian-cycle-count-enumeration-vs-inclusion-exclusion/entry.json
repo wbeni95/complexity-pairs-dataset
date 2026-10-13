@@ -161,6 +161,14 @@
       "venue": "The Python Standard Library documentation, Python 3.14",
       "url": "https://docs.python.org/3.14/library/itertools.html#itertools.permutations",
       "note": "Background only: the documented behaviour (successive permutations, lexicographic order, n!/(n - r)! of them) and the 'roughly equivalent' Python code, read on 2026-10-07."
+    },
+    {
+      "authors": "Jerrum, M.; Snir, M.",
+      "year": 1982,
+      "title": "Some exact complexity results for straight-line computations over semirings",
+      "venue": "Journal of the ACM 29(3), 874-897",
+      "doi": "10.1145/322326.322341",
+      "note": "Background only: section 2.2 (model of computation, p. 877) and section 4.4 (lower bound for the Hamiltonian-circuit polynomial, unnumbered display on p. 890; attaining recursion and its count, pp. 890-891). Read in the authors' copy (snir.cs.illinois.edu/listed/J7.pdf) on 2026-10-12 and 2026-10-13."
     }
   ],
   "verification": {
@@ -203,7 +211,8 @@
     {"statement": "Deciding whether a directed or an undirected graph has a Hamiltonian cycle is NP-complete, so a polynomial-time counting algorithm would imply P = NP. This is the reason for the primary tag T6.", "source": "Karp 1972"},
     {"statement": "Inclusion-exclusion counting of Hamiltonian cycles goes back to Kohn, Gottlieb & Kohn, Karp, and Bax.", "source": "Kohn, Gottlieb & Kohn 1977; Karp 1982; Bax 1993"},
     {"statement": "The Held-Karp counting DP uses the subset recurrence of Bellman and of Held & Karp for the travelling salesman problem, with (min, +) replaced by (+, *).", "source": "Bellman 1962; Held & Karp 1962"},
-    {"statement": "Machine-model assumption of this entry: CPython's itertools.permutations(range(n)) behaves as its documented 'roughly equivalent' Python code. It yields every permutation of range(n) exactly once, as n-tuples in lexicographic order (documented behaviour); it does O(n * n!) work in total over the n! permutations, that is amortised O(n) per permutation, while a single step can take Theta(n^2); and it keeps O(n) words of state. pairs/permanent-naive-vs-ryser/PROOFS.md section 0.1 proves the two cost properties for the documented code; that the C implementation has the same costs is assumed, not proved.", "source": "Python Software Foundation 2026, itertools documentation: permutations, description and 'roughly equivalent' code"}
+    {"statement": "Machine-model assumption of this entry: CPython's itertools.permutations(range(n)) behaves as its documented 'roughly equivalent' Python code. It yields every permutation of range(n) exactly once, as n-tuples in lexicographic order (documented behaviour); it does O(n * n!) work in total over the n! permutations, that is amortised O(n) per permutation, while a single step can take Theta(n^2); and it keeps O(n) words of state. pairs/permanent-naive-vs-ryser/PROOFS.md section 0.1 proves the two cost properties for the documented code; that the C implementation has the same costs is assumed, not proved.", "source": "Python Software Foundation 2026, itertools documentation: permutations, description and 'roughly equivalent' code"},
+    {"statement": "Monotone lower bound: every straight-line program over the non-negative reals that uses + and * with non-negative constants (no subtraction, division or branching) and computes the Hamiltonian-circuit polynomial HC_{n x n} needs at least (n-1)[(n-2)2^(n-3) + 1] multiplications (n >= 3); a Hamiltonian-path recursion attains this. PROOFS.md section 11 shows that the Held-Karp count of this entry equals the bound, and what follows for this entry (nothing for programs that need to be correct only on 0/1 matrices).", "source": "Jerrum & Snir 1982, section 4.4 (display on p. 890; attaining recursion pp. 890-891)"}
   ],
   "proof": {
     "documents": [

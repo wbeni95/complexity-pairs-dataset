@@ -1,10 +1,11 @@
 """Deterministic checks for pairs/hamiltonian-cycle-count-enumeration-vs-inclusion-exclusion/PROOFS.md,
-sections 4-10 (a few seconds; the exact counts of sections 1-3 are checked by the scripts named there).
+sections 4-11 (a few seconds; the exact counts of sections 1-3 are checked by the scripts named there).
 
 Ranges: the three algorithms against an independent count over successor permutations, on every digraph with
 n <= 4 (random diagonal bits) and on seeded digraphs n = 5..7 (sections 4-6); integer arc weights, n <= 6 (5.3);
 undirected graphs, n = 3..7 (7); integer sizes on complete digraphs, n <= 8 (8); the oracle's closed forms, the
-depth-first node bound and the necessary conditions, n <= 9 (10); tracemalloc peaks (8).
+depth-first node bound and the necessary conditions, n <= 9 (10); tracemalloc peaks (8); the Held-Karp
+multiplication count against the Jerrum-Snir bound, n = 3..12, and the DP on symbolic entries, n = 3..6 (11).
 """
 import importlib.util
 import itertools
@@ -226,6 +227,80 @@ class WorkingMemory(unittest.TestCase):
         for n in range(4, 11):
             g = tup(H.complete_digraph(n))
             self.assertLessEqual(self._peak(IE, g), 4096 + 256 * n, n)    # no growth with 2^n
+
+
+class _Poly:
+    """Polynomials with integer coefficients in the arc variables x_uv: {sorted tuple of arcs: coefficient}."""
+    __slots__ = ("t",)
+
+    def __init__(self, t):
+        self.t = t
+
+    def __add__(self, o):
+        if isinstance(o, int):
+            if o != 0:
+                raise ValueError("only the constant 0 is expected")
+            return self
+        d = dict(self.t)
+        for k, v in o.t.items():
+            d[k] = d.get(k, 0) + v
+        return _Poly({k: v for k, v in d.items() if v})
+
+    __radd__ = __add__
+
+    def __mul__(self, o):
+        d = {}
+        for k1, v1 in self.t.items():
+            for k2, v2 in o.t.items():
+                k = tuple(sorted(k1 + k2))
+                d[k] = d.get(k, 0) + v1 * v2
+        return _Poly({k: v for k, v in d.items() if v})
+
+
+def js82_count(n):
+    """Jerrum-Snir (1982) p. 891: sum_{r=1}^{n-2} r (n-1) C(n-2, r) multiplications for all paths, n-1 to close."""
+    return sum(r * (n - 1) * math.comb(n - 2, r) for r in range(1, n - 1)) + (n - 1)
+
+
+def js82_bound(n):
+    """Jerrum-Snir (1982) section 4.4, display on p. 890: (n-1)[(n-2)2^(n-3) + 1], n >= 3."""
+    return (n - 1) * ((n - 2) * 2 ** (n - 3) + 1)
+
+
+class JerrumSnirBackground(unittest.TestCase):
+    # PROOFS.md section 11.
+    def test_multiplications_equal_the_bound(self):
+        for n in range(3, 13):
+            inputs = [H.generate_scaling(n, None)]
+            for t in range(3):
+                a = random_digraph(n, random.Random(f"proofs-ham-js|{n}|{t}"), 0.5)
+                inputs.append(tuple(tuple(H.CountingInt(x) for x in row) for row in a))
+            for inst in inputs:
+                H.reset_counter()
+                HK(inst)
+                mul = H._ops["mul"]
+                self.assertEqual(mul, js82_count(n), n)
+                self.assertEqual(mul, js82_bound(n), n)
+                self.assertNotEqual(mul, js82_bound(n) + 1, n)            # control
+
+    def test_symbolic_entries_give_the_hamiltonian_circuit_polynomial(self):
+        for n in range(3, 7):
+            # the diagonal is None: reading it would raise
+            x = tuple(tuple(None if u == v else _Poly({((u, v),): 1}) for v in range(n)) for u in range(n))
+            want = {}
+            for order in itertools.permutations(range(1, n)):
+                cyc = (0,) + order
+                want[tuple(sorted((cyc[i], cyc[(i + 1) % n]) for i in range(n)))] = 1
+            self.assertEqual(len(want), math.factorial(n - 1))
+            self.assertEqual(HK(x).t, want, n)
+
+    def test_identities(self):
+        for n in range(3, 401):
+            self.assertEqual(js82_count(n), js82_bound(n))
+            self.assertEqual(js82_bound(n), (n - 1) * (n - 2) * 2 ** (n - 3) + (n - 1))
+            ie_mul = n * (n - 1) * (n + 2) * 2 ** (n - 3)                 # section 2
+            self.assertEqual(ie_mul - js82_bound(n), (n - 1) * ((n * n + n + 2) * 2 ** (n - 3) - 1))
+            self.assertGreater(ie_mul - js82_bound(n), 0)
 
 
 if __name__ == "__main__":

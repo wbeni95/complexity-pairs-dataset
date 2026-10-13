@@ -2,6 +2,7 @@
 
 Runs the unchanged implementations with in-memory instrumentation only (trace hooks counting line executions and
 reading the table at return). Fixed seeds and stated ranges; deterministic.
+Section 5 also uses weights of an int subclass that counts the additions it takes part in.
 """
 import importlib.util
 import inspect
@@ -49,6 +50,22 @@ def count_lines(func, arg, lines, on_return=None):
     finally:
         sys.settrace(None)
     return result, counts
+
+
+class AddCount(int):
+    """An int that counts every addition it takes part in (PROOFS.md section 5); int(other) refuses math.inf."""
+    count = 0
+
+    def __add__(self, other):
+        AddCount.count += 1
+        return AddCount(int(self) + int(other))
+
+    __radd__ = __add__
+
+
+def relaxations(m):
+    """m(m-1)2^(m-2): executions of the relaxation addition (PROOFS.md Theorem 5); 0 for m = 1."""
+    return m * (m - 1) * 2 ** (m - 2) if m >= 2 else 0
 
 
 def path_oracle(W):
@@ -155,6 +172,23 @@ class TSPProofs(unittest.TestCase):
             want = path_oracle(W)
             self.assertEqual(HK(W), want)
             self.assertEqual(BRUTE(W), want)
+
+    def test_held_karp_additions(self):
+        # PROOFS.md section 5, Theorem 5: m(m-1)2^(m-2) relaxation additions plus m closing additions.
+        rline = line_of(HK, "c = base + wj[k + 1]")
+        rng = random.Random(4)
+        for n in range(2, 10):
+            m = n - 1
+            for _ in range(3):
+                W = HARNESS.generate(n, rng)
+                result, counts = count_lines(HK, W, [rline])
+                self.assertEqual(counts[rline], relaxations(m), n)
+                AddCount.count = 0
+                self.assertEqual(HK(tuple(tuple(AddCount(x) for x in row) for row in W)), result, n)
+                self.assertEqual(AddCount.count, relaxations(m) + m, n)
+        for n in range(3, 401):
+            m = n - 1
+            self.assertEqual(relaxations(m) + m, (n - 1) * ((n - 2) * 2 ** (n - 3) + 1), n)
 
     def test_reduction(self):
         for n in (2, 3, 4):
