@@ -18,6 +18,7 @@ data.
 > the remaining small tripartitioning tensors, a lower bound on the group size in Pratt's construction for affine maps, nine GF(2)
 > matrix multiplication schemes inequivalent to the 33 public ones we compared, the Jerrum–Snir lower bound behind
 > both Held–Karp entries, and a third algorithm for first-match rule ordering.
+> [doi:10.5281/zenodo.23330577](https://doi.org/10.5281/zenodo.23330577)
 
 ## Notable results
 
@@ -27,7 +28,7 @@ reviewed yet.
 
 | Date | Result | Best published before | Where |
 |---|---|---|---|
-| 2026-10-13 | Balanced tripartitioning tensor P₃ (84 × 84 × 84): border rank ≥ 150 over ℂ and in characteristic 0 or ≤ 31; with the published upper bound, 150 ≤ border rank ≤ rank ≤ 247 over ℂ | 84 (flattening; Björklund–Kaski–Koana–Nederlof, 2026) | [border rank ≥ 150](theorems/tripartition-tensor-p3-border-rank-at-least-150) |
+| 2026-10-13 | Balanced tripartitioning tensor P₃ (84 × 84 × 84): border rank ≥ 150 over ℂ and in characteristic 0 or ≤ 31; with the published upper bound, 150 ≤ border rank ≤ rank ≤ 247 over ℂ | 84 (flattening; Björklund–Kaski–Koana–Nederlof, 2026) | [border rank ≥ 150](theorems/tripartition-tensor-p3-border-rank-at-least-150), [doi:10.5281/zenodo.23330577](https://doi.org/10.5281/zenodo.23330577) |
 | 2026-10-11 | Mertens function: lim sup M(x)/√x > 1.92036 and lim inf M(x)/√x < −1.92053, unconditionally | 1.826054 and −1.837625 (Hurst, 2018) | separate repository [mertens-function-bounds](https://github.com/wbeni95/mertens-function-bounds), [doi:10.5281/zenodo.23298194](https://doi.org/10.5281/zenodo.23298194) |
 | 2026-10-08 | Balanced tripartitioning tensor P₂ (15 × 15 × 15): 26 ≤ border rank ≤ rank ≤ 29 in characteristic 0 | 15 (conciseness) and 31 (Flavi–Jelisiejew–Michałek, 2025) | [rank ≤ 29](theorems/tripartition-tensor-p2-rank-at-most-29), [border rank ≥ 26](theorems/tripartition-tensor-p2-border-rank-at-least-26), [doi:10.5281/zenodo.23240382](https://doi.org/10.5281/zenodo.23240382) |
 
@@ -478,7 +479,7 @@ If you use the dataset or its tools, please cite it. GitHub's "Cite this reposit
   year         = {2026},
   howpublished = {\url{https://github.com/wbeni95/complexity-pairs-dataset}},
   doi          = {10.5281/zenodo.23184028},
-  note         = {Version 0.4.0, doi:10.5281/zenodo.23240382}
+  note         = {Version 0.5.0, doi:10.5281/zenodo.23330577}
 }
 ```
 
