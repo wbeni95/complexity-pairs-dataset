@@ -1804,3 +1804,31 @@ The Lille catalogue's two files and the flips repository's file are byte-identic
   - the identity holds for n ≤ 400.
 - `tools/replay_proofs.py` for both entries: 9/9 commands pass. `tools/validate.py`: both OK. `tools/check_sources.py`: 11 identifiers, 0 problems.
 - **Audit:** this entry records the audit of the added claims, and both entries' `proof.audit` now names it. RL-107 remains the audit of their earlier claims.
+
+### RL-127 · VERIFIED · First-match entry: a third algorithm, the subset DP with zeta-transformed gains
+- **Entry:** [pairs/first-match-rule-ordering-enumeration-vs-subset-dp](pairs/first-match-rule-ordering-enumeration-vs-subset-dp) (T6 + T8, V2, ✅ Proved). Provenance stays `literature`.
+- **New algorithm:** `implementations/zeta_dp.py`. It runs the subset DP's recurrence but reads every gain from a table:
+  - the costs are grouped by match set, a_r[U];
+  - gain(S, r) = ζa_r[complement of S], where ζ is the zeta transform (sum over subsets), computed with Yates' method;
+  - on every instance it returns exactly the subset DP's optimum and order.
+- **Claims and proofs (PROOFS.md section 11):**
+  - correctness (11.2–11.4);
+  - exact counts on every instance (Theorem 11.5) and on the V2 family: k² + 2k + 2 + (k² + 2k − 2)·2^(k−1) for k ≥ 2, and 0 and 5 at k = 0 and 1 (Corollary 11.6);
+  - Θ(k²·2^k + k·m) time on every input for k ≥ 1, including reading the input, and Θ(k·2^k) memory (11.7);
+  - comparison with the subset DP (11.8):
+    - as k → ∞ (m any function of k), the variant is faster exactly when m/k² → ∞ and slower exactly when m/k² → 0;
+    - for bounded k both are Θ(m), and the speed-up in counted operations approaches the interval [2^k/k + 3/2, 5·2^(k−1)/k + 3];
+    - on the V2 family (m = k) the variant is slower: it counts more than the subset DP for every k ≥ 6, and the quotient grows like k/7.
+- **Counting:** the tables start from the 0 of the costs' number type, so every executed transform addition is counted.
+- **Literature:**
+  - Koivisto & Sood, JMLR 5 (2004): §4, Propositions 6 and 7, Figure 2 and Theorem 8 (where the transform is called the Möbius transform, p. 557); §5, Theorem 11 (p. 561).
+  - The fast transform is Yates (1937); Koivisto & Sood cite Kennes & Smets (1991) for it. Both are cited as credit.
+  - The min-plus recurrence and the reading at the complement are routine adaptations and are not claimed as new.
+- **Checks:**
+  - [experiments/2026-10-13_first_match_zeta_checks.py](experiments/2026-10-13_first_match_zeta_checks.py): the V2 counts for k = 2..17, Theorem 11.5 on 270 seeded instances, 250 agreement runs, line counts on 300 instances, and negative controls (one of them starts the tables from a plain 0);
+  - [tests/test_proofs_first_match_zeta.py](tests/test_proofs_first_match_zeta.py): 14 tests.
+  - Both are in `proof.checks`.
+  - `tools/validate.py --scaling`: V1 runs 60 instances and 168 implementation runs; three exact-count fits at α = 1.000; 11 of 11 rivals rejected; the shape diagnostic gives MATCH for both DPs.
+  - `tools/replay_proofs.py` for this entry: 9 of 9 commands pass.
+  - The experiment gives byte-identical output on a second run.
+- **Audit:** this entry records the claim-by-claim audit of the third algorithm, and `proof.audit` names it. RL-107 remains the audit of the earlier claims.

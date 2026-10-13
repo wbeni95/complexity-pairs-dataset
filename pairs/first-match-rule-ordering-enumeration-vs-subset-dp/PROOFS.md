@@ -1,19 +1,22 @@
-# Proofs: first-match rule ordering, enumeration vs subset DP
+# Proofs: first-match rule ordering, enumeration vs subset DP (and the subset DP with zeta-transformed gains)
 
-This file proves the claims that this entry makes about its problem and its two algorithms (in `entry.json`,
+This file proves the claims that this entry makes about its problem and its three algorithms (in `entry.json`,
 `README.md` and the docstrings of the code). Sections 1 and 2 prove the exact operation counts of the V2 family,
 for every size of their domain, from the code in this folder. Sections 3 to 10 prove the other claims: correctness
 of both algorithms, the time and space bounds on every input, the NP-hardness reduction, the equivalence with the
-linear ordering problem, the facts used by the V1 oracle and the statements about uncounted operations. Each proof
+linear ordering problem, the facts used by the V1 oracle and the statements about uncounted operations. Section 11
+proves every claim about the third algorithm, the subset DP with zeta-transformed gains (`zeta_dp.py`): its
+correctness, its exact counts (on every instance and on the V2 family), its executed operations, time and space on
+every input, and its comparison with the subset DP. Each proof
 is followed by the deterministic scripts that check it and the sizes they check it on. A check covers only those
 sizes; the proofs cover the whole domain. `entry.json` already outlines both counts in the `time_complexity`
 fields; the proofs below give the steps that the outline leaves out.
 
 The statements listed under `background` in `entry.json` are cited, not proved here: the NP-completeness of FEEDBACK
 ARC SET and of the linear ordering problem, and the descriptions of the literature (Yee et al., Schmitt & Martignon,
-MaxDL, CORELS, Held & Karp, Bodlaender et al.). The NP-hardness of this entry's problem is claimed *relative to*
-the first of them: the reduction and the membership in NP are proved in section 7, and the NP-completeness of
-FEEDBACK ARC SET is cited.
+MaxDL, CORELS, Held & Karp, Bodlaender et al., Koivisto & Sood). The NP-hardness of this entry's problem is claimed
+*relative to* the first of them: the reduction and the membership in NP are proved in section 7, and the
+NP-completeness of FEEDBACK ARC SET is cited.
 
 ## Counting convention
 
@@ -27,7 +30,8 @@ An operation with at least one `CountingInt` operand counts exactly 1 (if only t
 method returns `NotImplemented` and Python calls the reflected method), and its result is a `CountingInt`; an
 operation on two plain ints counts nothing. `sum(...)` starts from the plain int 0. Plain: `total = 0`,
 `gain = [0] * k`, `best[0] = 0`, `base = 0`, the subset arithmetic `s & bit`, `s | bit`, the identity tests
-`best is None`, `best[t] is None`, and the truth of a Python list (`if not rules[i]`).
+`best is None`, `best[t] is None`, and the truth of a Python list (`if not rules[i]`). For `zeta_dp.py` the plain
+values are listed in section 11.5.
 
 **The V2 family.** `generate_scaling(n, rng)` sets k = n and builds m = k items with `cyclic_items(k)`: item i is
 matched by rules i and (i + 1) mod k. The match flags, the costs (random in 1..9) and the defaults are
@@ -192,7 +196,7 @@ instances with k = 0..8).
 The enumeration keeps the permutation generator (O(k) words under the machine-model assumption, Lemma 0.1 of
 `pairs/permanent-naive-vs-ryser/PROOFS.md`), the current order, `total`, `best` and `best_order`: Θ(k) besides the
 input. The DP keeps `best` and `last` (2^k entries each), one gain list of k entries, and `rules` and `masks`
-(O(km)): Θ(2^k) table entries.
+(O(km)): Θ(2^k) table entries. The zeta variant keeps Θ(k·2^k) table entries (section 11.7).
 
 **Check.** `tests/test_proofs_first_match.py`, class `WorkingMemory`: the DP's tracemalloc peak lies between 16·2^k
 and 160·2^k bytes for k = 8..15; the enumeration's peak stays below 4096 + 64k bytes for k = 2..8 (no growth with
@@ -286,5 +290,217 @@ optimum on 40 seeded instances with k = 0..7); the oracle controls of `experimen
   forms `s | bit` for the k − |S| transitions (k·2^(k−1)); the counted total on the V2 family is
   3k^2 + (7k − 2)·2^(k−1) + 2 (section 2). Both are Θ(k·2^k), so on the V2 family the uncounted bookkeeping is of the
   same order as the counted operations.
+- *The zeta variant.* Its tables start from a counted zero, so its counts include every transform addition
+  (section 11.5); only its plain subset arithmetic is uncounted, as here.
 - *Sizes.* Every total and every best value is a sum of at most m input numbers (one cost or default per item), so
-  unit-cost arithmetic is a polynomial-factor simplification of bit complexity.
+  unit-cost arithmetic is a polynomial-factor simplification of bit complexity. In the zeta variant every table
+  entry is a sum of at most m input costs as well.
+
+## 11. The third algorithm: subset DP with zeta-transformed gains (`zeta_dp.py`)
+
+This section proves every claim about `implementations/zeta_dp.py`: its correctness (11.2–11.4), its exact counts
+in the counting convention on every instance and on the V2 family (11.5, 11.6), its executed operations, time and
+space on every input (11.7), and the comparison with the subset DP (11.8).
+
+**Credit (background).** Koivisto & Sood (2004) compute, for every variable i of a Bayesian network,
+α_i(S) = Σ_{T ⊆ S} β_i(T), a sum over subsets that they call the Möbius transform (§4, p. 557). They evaluate it with
+a fast transform over the subset lattice (Figure 2 and Proposition 7, pp. 558–559, a truncated form of the standard
+fast transform, for which they cite Kennes & Smets 1991 on pp. 557–558), and they sum over all orders of the
+variables with the recursion g(S) = Σ_{i ∈ S} q_i(S − {i}) α_i(S − {i}) g(S − {i}) over the subset lattice, in which
+only the unordered set of predecessors matters (Proposition 6, pp. 556–557; Theorem 8, p. 559). Their §5 states the
+max-product counterpart (Theorem 11, p. 561) and omits the algorithmic details. The algorithm of this section uses
+the same technique, a transform over the subset lattice whose values feed a dynamic program over the sets of elements
+placed so far, with a sum transform read at the complement of the placed set and a min-plus recurrence. These
+adaptations are routine and are not claimed as new. The fast transform is Yates' method (Yates 1937), as in
+`pairs/subset-sum-zeta-transform-naive-vs-yates`. Everything below is proved here; the citations are credit.
+
+**11.1 The algorithm.** Notation of section 3; t_i = |M_i|, L = Σ_i t_i (the matching (item, rule) pairs) and m₀ the
+number of items with M_i = ∅. For a set W of rules, W^c is its complement (`full ^ s` in the code) and A_b = {b + 1,
+…, k − 1} the bits above b (A_{−1} = all rules). For every rule r and set U of rules, a_r[U] = Σ_{i : M_i = U}
+cost[i][r] if r ∈ U, and a_r[U] = 0 if r ∉ U; ζa_r[W] = Σ_{U ⊆ W} a_r[U]. The code (1) builds `rules` as
+`subset_dp.py` does; (2) creates the tables, every entry starting as the 0 of the costs' number type (11.5), for each
+item with M_i ≠ ∅ forms the bit mask u of M_i from the plain rule indices and adds cost[i][r] into `a[r][u]` for every
+r ∈ M_i, and for each item with M_i = ∅ adds default[i] into `base`; (3) for each rule r runs Yates' passes b = 0, …,
+k − 1: for w = 0, …, 2^k − 1 with b ∈ w, `a[r][w] = a[r][w] + a[r][w − 2^b]`; (4) runs the recurrence of section 4
+over s = 0, …, 2^k − 1 in increasing order, with `value = best[s] + a[r][s^c]` for every r ∉ s, storing the first
+arrival at t = s ∪ {r} and replacing it only by a strictly smaller value; (5) returns `best[all] + base` and the order
+rebuilt from `last`.
+
+**11.2 Lemma (gain identity).** For every set S and every rule r ∉ S, gain(S, r) = ζa_r[S^c].
+
+*Proof.* Item i contributes cost[i][r] to gain(S, r) iff r ∈ M_i and M_i ∩ S = ∅ (4.1), that is iff r ∈ M_i ⊆ S^c.
+Grouping the items by U = M_i, Σ_{U ⊆ S^c} a_r[U] = Σ_{U ⊆ S^c, r ∈ U} Σ_{i : M_i = U} cost[i][r] = gain(S, r),
+because a_r[U] = 0 when r ∉ U. ∎
+
+**11.3 Lemma (Yates' passes).** After step 2, a[r][U] = a_r[U] for every r and U. For b = −1, 0, …, k − 1, after the
+passes for the bits 0, …, b (no pass for b = −1),
+
+  a[r][W] = Σ {a_r[U] : U ⊆ W and U ∩ A_b = W ∩ A_b}   for every set W.
+
+In particular (b = k − 1, A_b = ∅) a[r][W] = ζa_r[W] when step 3 ends.
+
+*Proof.* Step 2 adds cost[i][r] into a[r][M_i] exactly for the items with r ∈ M_i, so a[r][U] = a_r[U]; this is the
+claim for b = −1. Induction on b: pass b changes only entries a[r][w] with b ∈ w, and the entry it reads,
+a[r][w − 2^b], has b ∉ w − 2^b, so it still holds its value after pass b − 1 (the update in place reads only entries
+that the pass does not change). For b ∈ W the new value is the old value at W plus the old value at W − {b}; by the
+induction hypothesis these are the sums over the sets U ⊆ W that agree with W on A_{b−1} (so b ∈ U) and over the sets
+U ⊆ W − {b} that agree with W − {b} on A_{b−1} (so b ∉ U); together these are exactly the sets U ⊆ W with
+U ∩ A_b = W ∩ A_b. For b ∉ W the entry is unchanged, and every U ⊆ W agrees with W at b (b ∉ U), so the two ranges
+coincide. ∎
+
+**11.4 Theorem (correctness).** On every instance `first_match_order_zeta_dp` returns exactly the pair that
+`first_match_order_subset_dp` returns: the minimum price and an optimal order.
+
+*Proof.* The recurrence starts after step 3 and does not write into `a`, so at every pair (s, r ∉ s) it reads
+a[r][s^c] = ζa_r[s^c] = gain(s, r) (11.3, 11.2). `subset_dp.py` processes the same pairs in the same order (s
+increasing, r increasing) and adds the same integer gain(s, r), collected by its pass over the items (4.2). Both apply
+the same rule (store the first arrival, replace only by a strictly smaller value), so by induction over this common
+sequence of steps their tables `best` and `last` are equal after every step; hence they return the same best[all]
+and rebuild the same order. Both add exactly the defaults of the items with M_i = ∅ (step 2 here). By section 4 (4.2,
+4.3) this pair is the optimum with an optimal order. At k = 0 both return (Σ_i default[i], ()). ∎
+
+**Checks.** `tests/test_proofs_first_match_zeta.py`: class `Correctness` (the minimum over all k! orders and an
+attaining order on 56 seeded instances with k = 0..6; the same pair as the subset DP on 60 seeded instances with
+k = 0..9); class `Transform` (the tables before every pass and after the last one, read from the unchanged code by a
+tracer, against 11.3, and the gain identity 11.2 for every S and r ∉ S, on 36 seeded instances with k = 0..5).
+`experiments/2026-10-13_first_match_zeta_checks.py` §3 (250 seeded instances with k = 0..12: the same pair as the
+subset DP in all 250; the brute-force optimum with an attaining order in all 218 with k ≤ 7; `check` accepts all 248
+outputs it can decide and leaves 2 undecided at k ≥ 8) and §5 (negative controls: copies of the code that read the
+gain at s instead of s^c, leave out one pass or leave out the defaults give wrong costs on 149, 101 and 76 of the 218
+instances with k ≤ 7; a copy that resolves ties by ≤ stays optimal but returns a different order from the subset DP
+on 129 of 250).
+
+**11.5 Theorem (counted operations on every instance).** The tables start from `zero = type(cost[0][0])(0)`, the 0 of
+the costs' number type, which on a counted instance is a `CountingInt` (constructing it is not an operation of the
+convention). Every addition into a table entry then has a counted operand, so the counts record all of the
+transform's additions; tables started from the plain 0 would leave the additions of two plain zeros uncounted. Plain
+here, besides the list under "Counting convention": `zero` when k = 0 or m = 0, the masks u and all subset arithmetic
+(`u |= 1 << r`, `w & bit`, `w ^ bit`, `full ^ s`, `s & bit`, `s | bit`), and the truth of the list `rules[i]`.
+
+On every instance whose entries are all `CountingInt`, with k ≥ 1 and m ≥ 1, `first_match_order_zeta_dp` makes exactly
+k·m truth tests, no bit operation, L + m₀ + k²·2^(k−1) + k·2^(k−1) + 1 additions and k·2^(k−1) − 2^k + 1 comparisons,
+in total
+
+  k·m + L + m₀ + k²·2^(k−1) + k·2^k − 2^k + 2
+
+counted operations. With m = 0 it makes none; with k = 0 and m ≥ 1 it makes m + 1 additions and nothing else.
+
+*Proof.* *Truth tests and bit operations.* The comprehension evaluates `if match[i][r]` for the k·m pairs (one
+`__bool__` each). No other truth test or bit operation involves a `CountingInt`: `if rules[i]` tests a list,
+`best[t] is None` is an identity test, and the masks and sets are plain.
+
+*Table entries.* Every entry starts as the `CountingInt` zero and changes only by additions with a `CountingInt`
+operand, so it is a `CountingInt` at all times.
+
+*Additions.* For each item with M_i ≠ ∅ and each r ∈ M_i, `a[r][u] + cost[i][r]` counts: L additions. For each item
+with M_i = ∅, `base + default[i]` counts: m₀. Step 3 executes `z[w] + z[w ^ bit]` once for each rule r, each pass b
+and each of the 2^(k−1) sets w containing b, every time on two table entries: k²·2^(k−1) additions. The recurrence
+executes `best_s + a[r][rest]` for the Σ_s (k − |s|) = k·2^(k−1) pairs (s, r ∉ s), each with the operand a[r][rest]:
+k·2^(k−1) additions, and every value it stores is a `CountingInt`. `best[full] + base` counts 1, as best[full] is a
+stored value (k ≥ 1).
+
+*Comparisons.* A set t ≠ ∅ is reached |t| times; the first arrival short-circuits at `best[t] is None`, and each of
+the other Σ_{t ≠ ∅} (|t| − 1) = k·2^(k−1) − 2^k + 1 arrivals evaluates `value < best[t]` on two `CountingInt` values.
+The reconstruction works on plain ints.
+
+*m = 0 or k = 0.* With m = 0 there is no entry: `zero` is the plain 0, every table entry, gain and stored value is a
+plain int, and nothing counts. With k = 0 and m ≥ 1 there is no rule and no table; every item adds its default into
+`base` (m counted additions), and `best[0] + base` counts 1 because `base` is a `CountingInt`. ∎
+
+**11.6 Corollary (the V2 family).** On the V2 family with k ≥ 2, `first_match_order_zeta_dp` makes exactly k² truth
+tests, 2k + 1 + (k² + k)·2^(k−1) additions (2k table additions, k²·2^(k−1) transform additions, k·2^(k−1) transition
+additions and 1 final addition) and k·2^(k−1) − 2^k + 1 comparisons, in total
+
+  k² + 2k + 2 + (k² + 2k − 2)·2^(k−1)
+
+counted operations. At k = 0 and k = 1 it makes 0 and 5.
+
+*Proof.* m = k, m₀ = 0 and k·m = k²; for k ≥ 2 every item is matched by two rules, so L = 2k, and 11.5 gives
+k² + 2k + k²·2^(k−1) + k·2^k − 2^k + 2 = k² + 2k + 2 + (k² + 2k − 2)·2^(k−1). At k = 1 the single item is matched by
+the single rule (L = 1): 1 + 1 + 1 + 2 − 2 + 2 = 5. At k = 0 there is no item: 0. ∎
+
+*Against the subset DP (section 2).* The difference of the two V2 counts is
+(k² + 2k + 2 + (k² + 2k − 2)·2^(k−1)) − (3k² + (7k − 2)·2^(k−1) + 2) = (k² − 5k)·2^(k−1) − 2k² + 2k. For 2 ≤ k ≤ 5 it
+is negative (22, 69, 202, 565 counted operations against 38, 105, 258, 605). For k ≥ 6 it is positive: it equals
+2k((k − 5)·2^(k−2) − (k − 1)), and (k − 5)·2^(k−2) − (k − 1) is 11 at k = 6 and increases with k. The quotient of
+the two counts tends to infinity like k/7: both counts divided by 2^(k−1) are (k² + 2k − 2) + o(1) and (7k − 2) + o(1).
+So on the V2 family the variant makes more counted operations than the subset DP for every k ≥ 6.
+
+**Checks.** `experiments/2026-10-13_first_match_zeta_checks.py` §1 (the closed form and the split by kind for
+k = 2..17, which include the V2 sizes k = 6..14; 0 and 5 at k = 0, 1; the same counts for other drawn costs) and §2
+(Theorem 11.5 on 270 seeded instances of all six generator kinds with k = 0..8: exact counts on the 229 with
+k, m ≥ 1, none on the 18 with m = 0, m + 1 additions on the 23 with k = 0 and m ≥ 1); §5 (a copy with one extra
+counted addition per transition, and a copy whose tables start from the plain 0, each change the V2 count at all 13
+sizes k = 2..14). `tests/test_proofs_first_match_zeta.py`, class `Counts` (Theorem 11.5 on 48 seeded instances with
+k = 0..7; Corollary 11.6 for k = 0..12; the comparison with the subset DP's V2 count for k = 2..40) and class
+`NegativeControls`.
+
+**11.7 Executed operations, time and space on every input.** The code executes: k·m match tests (the comprehension);
+the mask line `u |= 1 << r` and the table addition L times each; the default addition m₀ times; in step 3, k·k·2^k
+bit tests `w & bit` and exactly k·k·2^(k−1) transform additions (k rules, k passes, 2^(k−1) sets containing the pass's
+bit); the transition line and the comparison line k·2^(k−1) times each (section 4: Σ_s (k − |s|)), of which
+k·2^(k−1) − 2^k + 1 evaluate `value < best[t]`; one final addition; besides the allocation of the k tables of 2^k
+entries, `best` and `last` (2^k entries each), and a reconstruction of k steps. By 11.5 the counted operations are
+exactly these match tests, additions and comparisons; as in the subset DP (section 10), only the plain subset
+arithmetic is not counted (the k²·2^k bit tests, the masks and the sets), which is of the same order. Every executed
+line is O(1) in the unit-cost model of this entry, so for k ≥ 1 the time is Θ(k²·2^k + k·m) on every input: the
+transform alone executes k²·2^(k−1) additions and the comprehension k·m match tests, and everything else is
+O(k·2^k + k·m) (L ≤ k·m, m₀ ≤ m). The k·m term is reading the match flags: the bound includes reading the input. The
+working memory is Θ(k·2^k) table entries (the k tables, `best` and `last`), besides the rule lists (O(k·m)).
+
+**Checks.** `experiments/2026-10-13_first_match_zeta_checks.py` §4 (line-execution counts of the unchanged code on
+300 seeded instances with k = 0..9: the mask and table lines L times, the default line m₀ times, k²·2^k bit tests,
+k²·2^(k−1) transform additions, k·2^(k−1) transitions and comparison lines). `tests/test_proofs_first_match_zeta.py`,
+class `Work` (the same line counts on 36 seeded instances with k = 0..8) and class `WorkingMemory` (the tracemalloc
+peak lies between 8k·2^k and 16(k + 2)·2^k bytes for k = 8..14).
+
+**11.8 Comparison with the subset DP.**
+
+*(a) As k → ∞.* Measure both algorithms in executed operations (time in the unit-cost model). By 5.2 and 11.7 there
+are absolute constants c₁, …, c₄ > 0 with c₁·2^k(k + m) ≤ T_DP ≤ c₂·2^k(k + m) and
+c₃(k²·2^k + k·m) ≤ T_ζ ≤ c₄(k²·2^k + k·m) on every instance with k ≥ 1. Hence T_DP/T_ζ lies within constant factors
+of ρ = 2^k(k + m)/(k²·2^k + k·m) = (k + m)/(k² + k·m/2^k). Let m = m(k) be any function of k.
+- If m/k² → ∞: k·m/2^k = o(m) and k² = o(m), so the denominator is o(m), and ρ → ∞.
+- If m/k² → 0: ρ ≤ (k + m)/k² → 0.
+- If m/k² does not tend to ∞, then m ≤ Ck² for some C and infinitely many k, and there ρ ≤ (k + Ck²)/k² ≤ C + 1. If
+  m/k² does not tend to 0, then m ≥ εk² for some ε > 0 and infinitely many k, and there
+  ρ ≥ m/(k² + k·m/2^k) = 1/(k²/m + k/2^k) ≥ 1/(1/ε + k/2^k), which is at least ε/2 once k/2^k ≤ 1/ε.
+
+So, as k → ∞ with m any function of k, the variant is asymptotically faster than the subset DP (T_DP/T_ζ → ∞) exactly
+when m/k² → ∞, and slower (T_DP/T_ζ → 0) exactly when m/k² → 0, that is m = o(k²); when m = Θ(k²) the two are within
+constant factors of each other. Both bounds include reading the input (the k·m match tests).
+
+*(b) Bounded k.* Fix k ≥ 1 and let m → ∞. By 5.2 and 11.7 both algorithms take Θ(m) time, so only the constant
+factor can differ. In the counting convention (every entry a `CountingInt`) it is of order 2^k/k:
+- The subset DP makes, on every instance, k·m + m·2^k truth tests (k per item for `rules`, one per item and set for
+  the capture test), k·m + m·2^k bit operations (k shifts per item for `masks`, one `&` per item and set; `masks[i]`
+  is a `CountingInt` since k ≥ 1), k·m + G + m₀ + R additions with G = Σ_{i : t_i ≥ 1} t_i·2^(k−t_i) (k per item in
+  `sum`, which starts from the plain 0; the gain additions of 5.2, each with the operand cost[i][r]; one per default)
+  and 0 ≤ R ≤ k·2^(k−1) + 1 (transitions and the final addition), and at most k·2^(k−1) − 2^k + 1 comparisons. (If
+  every rule matches an item, every gain at s = ∅ is a `CountingInt`, so by induction on |s| every stored value is
+  one; then R = k·2^(k−1) + 1 and the comparisons are exactly k·2^(k−1) − 2^k + 1.)
+- The variant makes k·m truth tests, L + m₀ table additions and, by 11.5 (m ≥ 1), exactly
+  k²·2^(k−1) + k·2^k − 2^k + 2 further counted operations, which do not depend on m.
+
+So the subset DP counts Σ_i d(t_i) + R₁ and the variant Σ_i v(t_i) + R₂, with d(t) = 3k + 2^(k+1) + t·2^(k−t) and
+v(t) = k + t for t ≥ 1, d(0) = 3k + 2^(k+1) + 1 and v(0) = k + 1, 0 ≤ R₁ ≤ k·2^k − 2^k + 2 and
+R₂ = k²·2^(k−1) + k·2^k − 2^k + 2. Every quotient f(t) = d(t)/v(t) lies in
+[2^k/k + 3/2, 5·2^(k−1)/k + 3]: d(t) ≥ 3k + 2^(k+1) and v(t) ≤ 2k; d(t) ≤ 3k + 2^(k+1) + 2^(k−1) (t·2^(k−t) ≤ 2^(k−1)
+for t ≥ 1, section 5.2, and 1 ≤ 2^(k−1)) and v(t) ≥ k. The quotient Σ_i d(t_i)/Σ_i v(t_i) lies between the smallest
+and the largest f(t_i), Σ_i v(t_i) ≥ k·m → ∞, and R₁, R₂ are bounded. Hence, as m → ∞, every limit point of (counted
+operations of the subset DP)/(counted operations of the variant) lies in [2^k/k + 3/2, 5·2^(k−1)/k + 3]; if every
+item has the same number t ≥ 1 of matching rules, the quotient tends to f(t), for example f(2) = 2590/12 ≈ 215.8 at
+k = 10. The constant is stated in the entry's counting convention, in which a capture test of the subset DP is two
+operations (an `&` and a truth test) and building its rule lists and masks is 3k operations per item.
+
+*(c) The V2 family* has m = k = o(k²), and there the variant is the slower algorithm: by 11.6 it makes more counted
+operations than the subset DP for every k ≥ 6, the quotient growing like k/7, and in executed operations it makes
+k²·2^(k−1) transform additions against Θ(k·2^k) operations of the subset DP (5.2).
+
+**Checks.** `tests/test_proofs_first_match_zeta.py`, class `Counts`, `test_subset_dp_per_item_counts` (the subset
+DP's counts per kind on 42 seeded instances with k = 1..7: exact truth tests and bit operations, additions and
+comparisons exact when every rule matches an item and within the bounds otherwise); class `Comparison` (every f(t)
+in the interval for k = 1..40 and t = 0..k, exactly in rational arithmetic; on a family with k = 6 and every item
+matched by two rules, the counted totals equal m·d(2) + R₁ and m·v(2) + R₂ exactly, and their quotient approaches
+f(2) = 89/4 for m = 12, 192, 3072). Part (a) rests on the bounds of 5.2 and 11.7, whose computable facts are checked
+there.

@@ -1854,7 +1854,7 @@
     },
     {
       "id": "first-match-rule-ordering-enumeration-vs-subset-dp",
-      "title": "Ordering a first-match rule list: enumeration of all k! orders vs dynamic programming over subsets of rules",
+      "title": "Ordering a first-match rule list: enumeration of all k! orders vs dynamic programming over subsets of rules (and the same DP with zeta-transformed gains)",
       "path": "pairs/first-match-rule-ordering-enumeration-vs-subset-dp",
       "location": "pairs",
       "pair_type": "T6",
@@ -1877,14 +1877,21 @@
           "model": "classical-deterministic",
           "time_complexity": "Theta(2^k (k + m)) on every input (PROOFS.md section 5.2): per subset m capture tests and k - |S| transitions; an item matched by t >= 1 rules is uncaptured for 2^(k-t) subsets and then adds t costs, and t 2^(k-t) <= 2^(k-1). Exactly 3k^2 + (7k - 2) 2^(k-1) + 2 counted operations on the V2 family (k >= 2): 3km = 3k^2 for building the rule lists (k truth tests per item) and the masks (k shifts and k additions per item); 2k 2^k for the capture tests (an & and a truth test per item and subset); k 2^(k-1) gain additions (each item is uncaptured for the 2^(k-2) subsets avoiding its two rules and then adds 2 costs); k 2^(k-1) transition additions; k 2^(k-1) - 2^k + 1 comparisons (a subset T is reached |T| times, the first arrival is stored without comparison); 1 final addition.",
           "implemented": true
+        },
+        {
+          "name": "dynamic programming over subsets with zeta-transformed gains (Koivisto-Sood)",
+          "model": "classical-deterministic",
+          "time_complexity": "Theta(k^2 2^k + k m) on every input for k >= 1, including reading the input (PROOFS.md section 11.7): k m match tests, one addition per matching (item, rule) pair or unmatched item, exactly k^2 2^(k-1) transform additions (k rules, k passes, 2^(k-1) sets per pass) and k 2^(k-1) transitions. As k -> infinity (m any function of k) it is faster than the subset DP's Theta(2^k (k + m)) exactly when m/k^2 -> infinity and slower exactly when m/k^2 -> 0; for bounded k both are Theta(m), and as m grows the speed-up in counted operations approaches the interval [2^k/k + 3/2, 5 2^(k-1)/k + 3], of order 2^k/k (PROOFS.md section 11.8). The tables start from the 0 of the costs' number type, so every transform addition is counted (PROOFS.md section 11.5). On the V2 family (k >= 2) exactly k^2 + 2k + 2 + (k^2 + 2k - 2) 2^(k-1) counted operations: k^2 truth tests, 2k + 1 + (k^2 + k) 2^(k-1) additions (2k table additions, k^2 2^(k-1) transform additions, k 2^(k-1) transition additions, 1 final addition) and k 2^(k-1) - 2^k + 1 comparisons. On this family (m = k) the variant is slower than the subset DP: it makes more counted operations for every k >= 6, and the quotient grows like k/7 (PROOFS.md sections 11.6 and 11.8).",
+          "implemented": true
         }
       ],
-      "sources": 9,
+      "sources": 12,
       "provenance": {
         "class": "literature",
         "bases": [
           "Yee, Dahan, Hauser, Orlin 2007 (Marketing Science)",
-          "Schmitt, Martignon 2006 (JMLR)"
+          "Schmitt, Martignon 2006 (JMLR)",
+          "Koivisto, Sood 2004 (JMLR)"
         ]
       },
       "proved": true

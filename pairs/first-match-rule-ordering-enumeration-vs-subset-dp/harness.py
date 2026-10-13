@@ -18,7 +18,7 @@ generate(n, rng) with n = k rules mixes six kinds (m varies independently of k):
   5  random items over few rules with large costs.
 For k = 0 every item matches no rule and the answer is (sum of defaults, ()).
 
-check(instance, output) is independent of both implementations:
+check(instance, output) is independent of all three implementations:
   - the output must be a pair (int, tuple) and the tuple a permutation of range(k);
   - the order's cost is recomputed from rule positions (for each item the matching rule of smallest position) and
     must equal the claimed cost;
@@ -36,6 +36,8 @@ every truth test, comparison, +, -, <<, &, | on an entry or a value computed fro
 in entry.json, checked in experiments/2026-10-07_first_match_checks.py):
   enumeration   k! (k+1)(k+3)/3 - 1      = k! k(k+1)/3 truth tests + k! k additions + (k! - 1) comparisons
   subset DP     3k^2 + (7k - 2) 2^(k-1) + 2
+  zeta DP       k^2 + 2k + 2 + (k^2 + 2k - 2) 2^(k-1)   (k >= 2; zeta_dp.py, PROOFS.md section 11.6, checked in
+                                           experiments/2026-10-13_first_match_zeta_checks.py)
 No counted operation happens inside a CPython built-in such as sorted, min or max (sum() adds CountingInt values;
 each addition goes through CountingInt.__add__/__radd__ and is counted).
 """
