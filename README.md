@@ -12,12 +12,12 @@ asymptotically) and theorem notes. It is built for engineers who implement, rese
 data.
 
 > [!NOTE]
-> **What's new: v0.4.0, 8 October 2026.** Five theorem notes on the balanced tripartitioning tensor P₂ (15 × 15 × 15),
-> which links the asymptotic rank conjecture to algorithms for set cover and the permanent. In characteristic 0,
-> 26 ≤ border rank ≤ rank ≤ 29; the published bounds were 15 and 31. Also: a general bound for unbalanced
-> tripartitions that extends Flavi–Jelisiejew–Michałek, a corrected group construction from a preprint, exact small
-> cases, this front page, and CI that checks what a change can affect.
-> [doi:10.5281/zenodo.23240382](https://doi.org/10.5281/zenodo.23240382)
+> **What's new: v0.5.0, 13 October 2026.** The balanced tripartitioning tensor P₃ (84 × 84 × 84) has border rank at
+> least 150, over ℂ and in characteristic 0 or ≤ 31; the best published lower bound was 84. With the published upper
+> bound, 150 ≤ border rank ≤ rank ≤ 247 over ℂ. Also: R(T_{1,1,c}) = C(c+2,2)+1 in characteristic ≠ 2 and bounds for
+> the remaining small tripartitioning tensors, a lower bound on the group size in Pratt's construction for affine maps, nine GF(2)
+> matrix multiplication schemes inequivalent to the 33 public ones we compared, the Jerrum–Snir lower bound behind
+> both Held–Karp entries, and a third algorithm for first-match rule ordering.
 
 ## Notable results
 
