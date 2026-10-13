@@ -12,6 +12,9 @@
 
 The fields for which each entry is proved are stated in the Theorem below.
 
+**Update (RL-124).** The note [tripartition-tensors-small-cases-extension](../tripartition-tensors-small-cases-extension/)
+proves R(T_{1,1,3}) = 11 over every field of characteristic ≠ 2, and more generally R(T_{1,1,c}) = C(c+2, 2) + 1.
+
 ## Definitions
 
 - **Tensors.** For a, b, c ≥ 0 and n = a + b + c, T_{a,b,c} = Σ x_A y_B z_C over all ordered partitions (A, B, C) of

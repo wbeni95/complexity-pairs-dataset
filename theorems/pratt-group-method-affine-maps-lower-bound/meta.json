@@ -1,0 +1,69 @@
+{
+  "id": "pratt-group-method-affine-maps-lower-bound",
+  "title": "Pratt's group construction for T_k: affine maps over ℤ₂ need a group of order at least 2^{3k−1}",
+  "statement": "Let T_k = Σ x_S y_T z_U over the ordered partitions (S, T, U) of [3k] into k-sets. A quadruple (f₁, f₂, f₃, x), f_i from k-subsets to a finite abelian group G and x ∈ G, is valid if f₁(S) + f₂(T) + f₃(U) = x holds exactly for the ordered partitions; for G = 𝔽₂^m a valid quadruple gives R(T_k) ≤ 2^m over every field of characteristic ≠ 2 (Theorem 1; the principle of Pratt's arXiv:2311.02774v1, §1.2, item 4, extended to three maps). (1) For every k, the vectors 1 + 1_S + 1_T + 1_U over all triples of k-subsets of [3k] are exactly the even-weight vectors of 𝔽₂^{3k}. (2) For G = 𝔽₂^m and affine maps f_i(S) = L_i(1_S) + b_i, the quadruple is valid if and only if L₁, L₂, L₃ agree on the even-weight code E, L₁ is injective on E, and x = f₁(S₀) + f₂(T₀) + f₃(U₀) for one fixed ordered partition (S₀, T₀, U₀); hence m ≥ 3k − 1, and for m = 3k − 1 the quadruple is valid if and only if the maps agree on E, x is as stated, and the kernel of L₁ is spanned by a single vector of odd weight (the coordinate-deletion map is such a construction). So no affine instantiation of the method, with one map or three different maps, uses a group of order below 2^{3k−1}. (3) For arbitrary maps into any finite abelian group, |G| ≥ 2·C(3k, k) − C(2k, k); for G = ℤ₂^m this gives m ≥ 3k − 1 exactly when k ≤ 3, and the bound is below 2^{3k−2} for every k ≥ 4.",
+  "provenance": {
+    "class": "own-extension",
+    "bases": [
+      "Pratt 2023, arXiv:2311.02774v1, §1.2, item 4 of the comments after Corollary 1.12 (the group construction for R(T_k) ≤ 2^{3k−1})",
+      "theorems/pratt-remark-4-construction-even-k (the principle and the deletion map)"
+    ]
+  },
+  "sources": [
+    {
+      "authors": "Pratt, K.",
+      "year": 2023,
+      "title": "A stronger connection between the asymptotic rank conjecture and the set cover conjecture",
+      "venue": "arXiv preprint (v1, 5 November 2023)",
+      "arxiv": "2311.02774",
+      "url": "https://arxiv.org/abs/2311.02774v1",
+      "note": "Base of the note. Version v1 read in full; §1.2, item 4 after Corollary 1.12 instantiates the principle with G = ℤ₂^{3k} and then ℤ₂^{3k−1}; it makes no optimality claim."
+    },
+    {
+      "authors": "Pratt, K.",
+      "year": 2024,
+      "title": "A stronger connection between the asymptotic rank conjecture and the set cover conjecture",
+      "venue": "Proceedings of the 56th Annual ACM Symposium on Theory of Computing (STOC 2024), 871-874",
+      "doi": "10.1145/3618260.3649620",
+      "note": "Published version; the item with the group construction (arXiv v1, item 4) is not in it. Background."
+    },
+    {
+      "authors": "Flavi, C.; Jelisiejew, J.; Michałek, M.",
+      "year": 2025,
+      "title": "Symmetric powers: structure, smoothability, and applications",
+      "venue": "International Mathematics Research Notices 2025, rnaf277",
+      "doi": "10.1093/imrn/rnaf277",
+      "arxiv": "2408.02754",
+      "note": "Listed to document the literature search; arXiv v2 §6 read. Proposition 6.18 gives R(P_d) ≤ Σ_k C(3d, 2k), below 2^{3k−1}, by another method; nothing on the group construction."
+    },
+    {
+      "authors": "Björklund, A.; Kaski, P.; Koana, T.; Nederlof, J.",
+      "year": 2026,
+      "title": "Kronecker Scaling of Tensors with Applications to Arithmetic Circuits and Algorithms",
+      "venue": "53rd International Colloquium on Automata, Languages, and Programming (ICALP 2026), LIPIcs, paper 36",
+      "doi": "10.4230/LIPIcs.ICALP.2026.36",
+      "arxiv": "2504.05772",
+      "note": "Listed to document the literature search; full text read. Nothing on lower bounds for the group construction."
+    },
+    {
+      "authors": "Alman, J.; Li, B.",
+      "year": 2026,
+      "title": "Asymptotic Rank Speedup Theorems, Revisited",
+      "venue": "arXiv preprint (v2)",
+      "arxiv": "2605.21738",
+      "note": "Listed to document the literature search; full text read. Nothing on lower bounds for the group construction."
+    }
+  ],
+  "verify": "python theorems/pratt-group-method-affine-maps-lower-bound/verify.py",
+  "proof": {
+    "documents": [
+      "README.md",
+      "../pratt-remark-4-construction-even-k/README.md"
+    ],
+    "checks": [
+      "verify.py",
+      "../pratt-remark-4-construction-even-k/verify.py"
+    ],
+    "audit": "RL-124"
+  }
+}

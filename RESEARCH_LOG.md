@@ -1669,3 +1669,47 @@ under PYTHONHASHSEED 0 and 12345. Every tamper copy (13) exits 1 with a [FAIL] l
 - **Also:** the same sentence was added to the README of the separate repository [mertens-function-bounds](https://github.com/wbeni95/mertens-function-bounds).
 
 **Checks:** the front-page tests and `tools/build_index.py --check` pass.
+
+## 2026-10-13
+
+### RL-122 · VERIFIED · The rank-47 class of RL-071 is not in the collection Kauers shared
+
+**Context:** RL-071 showed that the new rank-47 class of RL-072 is inequivalent to all 99 129 published 4×4×4 rank-47 GF(2) schemes we could obtain. It also noted that Kauers and Moosbauer report more than 100 000 rank-47 schemes. RL-077 prepared an e-mail to Kauers and Moosbauer asking whether the scheme is in their collection.
+
+**What happened:** Manuel Kauers kindly shared their collection of 4×4×4 rank-47 schemes, and agreed that we mention this here.
+
+**Check:**
+- **Acceptance:** the collection holds 99 101 scheme files. All are accepted by the repository's exact verifier (`search/gf2mm.py`), in exactly one of the two index conventions, as in RL-071.
+- **Term sets:** the files contain 4 distinct term sets, with 52 319, 26 413, 18 601 and 1 768 files. These are the same counts as for the four term sets of the public `x47/` directory compared in RL-071.
+- **Classes:** the 4 term sets form 2 equivalence classes under the group used in RL-071 (Kauers and Moosbauer, ISSAC 2023 §2).
+- **Positive controls:** 20 of our own earlier rank-47 term sets lie in these two classes (11 in one, 9 in the other). The exact test returned a checked equivalence certificate for each of them against both term sets of its class: 40 certificates.
+- **Our class:** it has the factor-rank profile 111:1, 112:3, 113:9, 123:12, 133:9, 222:6, 223:6, 333:1. This invariant differs from both classes, which proves that the class is inequivalent to every scheme in the collection.
+- **Tools:** `experiments/2026-10-06c_collect.py` (parser and acceptance check) and `search/equivalence.py`, as in RL-071.
+- **Steps:** 99 101 files parsed and verified; 148 invariant comparisons; 40 exact equivalence tests.
+- **Reproducibility:** this comparison cannot be repeated from the repository alone, because the collection is not redistributed here.
+
+**Statement:** the rank-47 class of RL-071 is inequivalent to every scheme in the collection Kauers shared, and to all other published schemes we could obtain (RL-071). We know of no publication containing it. This is still not a claim of absolute novelty, since collections we have not seen may contain it. It has the same rank as the known schemes, so it changes no exponent. Its scheme file is in the repository: `search/schemes/rust-2026-10-06c/4x4x4_rank47_seed618.exp`.
+
+**Thanks:** to Manuel Kauers for sharing the collection, and to him and Jakob Moosbauer for building it.
+
+### RL-123 · LITERATURE + DECISION · Prior work and provenance of three further notes on tripartitioning tensors
+
+**Search.** We searched before classifying the notes of RL-124, using known titles, identifiers and generic keywords only.
+- **Citing works, read in full text:** the works citing Pratt (arXiv:2311.02774), Björklund–Kaski–Koana–Nederlof (ICALP 2026) and Flavi–Jelisiejew–Michałek (IMRN 2025), as listed by Semantic Scholar and OpenAlex. These are arXiv:2608.08328, 2607.25973v2, 2608.12224, 2601.05044, 2602.12762, 2605.21738v2, 2609.39062 and 2602.11975.
+- **Other citers, checked by keyword search:** these cite the papers for conditional or algorithmic results only.
+- **Ye–Lim:** arXiv:1601.00292v2, §§14–15, read for the rank of T_{1,1,c}.
+
+**Findings:**
+- **P₃.** The only published lower bound found is the flattening bound R(P₃) ≥ 84 (Björklund–Kaski–Koana–Nederlof, arXiv v1, footnote 3).
+  - Lovitz (arXiv:2610.08504v1, Corollary 1.3) shows that for 84 × 84 × 84 tensors the linear flattening method cannot certify border rank above 167. The new bound 150 is below this barrier.
+  - Alman–Li (arXiv:2605.21738v2, Remark 6.1) repeats the upper bound 247 of Flavi–Jelisiejew–Michałek. It gives no lower bound.
+- **Small tensors.** No value or bound was found for T_{1,2,3}, T_{1,2,4}, T_{1,3,3}, T_{2,2,3}, or for T_{1,1,c} with c ≥ 3.
+  - T_{1,1,c} is the structure tensor of the product of a zero-diagonal symmetric matrix and a vector. Ye–Lim treat the symmetric case with the diagonal (Theorem 14.1, rank n(n+1)/2) and the skew-symmetric case (bounds only), not this case.
+  - The bound R ≥ (dimension of a factor) + 1 uses a standard lemma on concise tensors whose rank equals a factor dimension. The note includes its two-line proof and credits it as standard.
+- **Pratt's group construction.** Pratt's arXiv v1 item 4 instantiates the method with ℤ₂^{3k} and ℤ₂^{3k−1}, and makes no optimality claim. No source read gives a lower bound on the group size the method needs.
+
+**Classification:**
+- **Own:** border rank(P₃) ≥ 150, and the bounds for the small tensors including R(T_{1,1,c}) = C(c+2,2)+1. These are statements about this search, not claims of priority.
+- **Own extension:** the affine lower bound for Pratt's construction. The base is Pratt's item 4 and the note pratt-remark-4-construction-even-k.
+
+**Front page:** P₃ is added to "Notable results" (RL-120 criterion), because 150 improves the best published lower bound, 84.

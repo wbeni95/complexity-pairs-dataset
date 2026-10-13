@@ -1,0 +1,84 @@
+{
+  "id": "tripartition-tensor-p3-border-rank-at-least-150",
+  "title": "The balanced tripartitioning tensor P₃ has border rank at least 150",
+  "statement": "Let P₃ = T_{3,3,3} = Σ x_S y_T z_U over all ordered partitions (S, T, U) of [9] into 3-sets, an 84 × 84 × 84 tensor. Project its first factor by the explicit 9 × 84 integer matrix Φ with entries −1, 0, 1 printed in the README and take the Koszul–Young flattening with p = 4: M = K₄((Φ ⊗ 1 ⊗ 1)P₃) is a 10 584 × 10 584 integer matrix whose rank is 10 498 modulo 2 and 10 500 modulo every odd prime q ≤ 31. Since 10 498 > 10 430 = 149 · C(8, 4), the border rank of P₃ is at least 150 over ℂ and over every field of characteristic 0 or of prime characteristic q ≤ 31. With the upper bound R(P₃) ≤ 247 of Flavi, Jelisiejew and Michałek (Proposition 6.18; over every field of characteristic ≠ 2 by the partial-Fourier note), 150 ≤ border rank(P₃) ≤ R(P₃) ≤ 247 over ℂ and in characteristic 0 or 3 ≤ q ≤ 31. The previous lower bound found in the literature is the flattening bound 84.",
+  "provenance": {
+    "class": "own",
+    "bases": []
+  },
+  "sources": [
+    {
+      "authors": "Pratt, K.",
+      "year": 2023,
+      "title": "A stronger connection between the asymptotic rank conjecture and the set cover conjecture",
+      "venue": "arXiv preprint (v1, 5 November 2023)",
+      "arxiv": "2311.02774",
+      "url": "https://arxiv.org/abs/2311.02774v1",
+      "note": "Listed to document the literature search; full text of v1 read. Defines T_k (= P_k); the flattening bound R ≥ n for concise tensors (§1.1); no lower bound above C(3k, k) for k = 3."
+    },
+    {
+      "authors": "Björklund, A.; Kaski, P.; Koana, T.; Nederlof, J.",
+      "year": 2026,
+      "title": "Kronecker Scaling of Tensors with Applications to Arithmetic Circuits and Algorithms",
+      "venue": "53rd International Colloquium on Automata, Languages, and Programming (ICALP 2026), LIPIcs, paper 36",
+      "doi": "10.4230/LIPIcs.ICALP.2026.36",
+      "arxiv": "2504.05772",
+      "note": "Listed to document the literature search; full text read. The flattening bound R(P_d) ≥ C(3d, d) (§1.1, footnote 3 of arXiv v1), 84 for d = 3; no larger lower bound."
+    },
+    {
+      "authors": "Flavi, C.; Jelisiejew, J.; Michałek, M.",
+      "year": 2025,
+      "title": "Symmetric powers: structure, smoothability, and applications",
+      "venue": "International Mathematics Research Notices 2025, rnaf277",
+      "doi": "10.1093/imrn/rnaf277",
+      "arxiv": "2408.02754",
+      "note": "Proposition 6.18 (arXiv:2408.02754v2, §6): R(P_d) ≤ Σ_{k≤d} C(3d, 2k), 247 for d = 3, stated over algebraically closed fields of characteristic 0; over every field of characteristic ≠ 2 by theorems/partial-fourier-bound-tripartition-tensors (Corollary 1). Cited for the upper bound."
+    },
+    {
+      "authors": "Landsberg, J. M.; Ottaviani, G.",
+      "year": 2015,
+      "title": "New lower bounds for the border rank of matrix multiplication",
+      "venue": "Theory of Computing 11(1), 285-298",
+      "doi": "10.4086/toc.2015.v011a011",
+      "arxiv": "1112.6007",
+      "note": "Credit for the Koszul flattening bound (Theorem 2.1 of arXiv:1112.6007v3, p. 3), proved in theorems/tripartition-tensor-p2-border-rank-at-least-26 (Lemma 3); not used as evidence."
+    },
+    {
+      "authors": "Lovitz, B.",
+      "year": 2026,
+      "title": "Explicit tensors beyond the linear flattening barrier",
+      "venue": "arXiv preprint (v1)",
+      "arxiv": "2610.08504",
+      "note": "Corollary 1.3: for n × n × n tensors over ℂ the linear flattening method certifies border rank at most 2n − 1, which is 167 for P₃; context only."
+    },
+    {
+      "authors": "Doležálek, M.; Michałek, M.",
+      "year": 2026,
+      "title": "Nonlinear methods for tensors: determinantal equations for secant varieties beyond cactus",
+      "venue": "arXiv preprint (v1)",
+      "arxiv": "2602.12762",
+      "note": "Listed to document the literature search; full text read. §6.3 lists matching tensors among examples on which the new equations were not checked; nothing on P₃."
+    },
+    {
+      "authors": "Alman, J.; Li, B.",
+      "year": 2026,
+      "title": "Asymptotic Rank Speedup Theorems, Revisited",
+      "venue": "arXiv preprint (v2)",
+      "arxiv": "2605.21738",
+      "note": "Listed to document the literature search; full text read. Remark 6.1 repeats the upper bound of Flavi–Jelisiejew–Michałek; no lower bound."
+    }
+  ],
+  "verify": "python theorems/tripartition-tensor-p3-border-rank-at-least-150/verify.py",
+  "proof": {
+    "documents": [
+      "README.md",
+      "../tripartition-tensor-p2-border-rank-at-least-26/README.md",
+      "../partial-fourier-bound-tripartition-tensors/README.md"
+    ],
+    "checks": [
+      "verify.py",
+      "../partial-fourier-bound-tripartition-tensors/verify.py"
+    ],
+    "audit": "RL-124"
+  }
+}
