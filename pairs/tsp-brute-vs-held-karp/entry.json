@@ -123,6 +123,6 @@
     "checks": [
       "../../tests/test_proofs_tsp.py"
     ],
-    "audit": "RL-107"
+    "audit": "RL-126"
   }
 }

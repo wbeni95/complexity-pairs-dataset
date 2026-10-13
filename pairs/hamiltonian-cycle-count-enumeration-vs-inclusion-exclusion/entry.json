@@ -227,6 +227,6 @@
       "../../tests/test_proofs_hamiltonian.py",
       "../../tests/test_proofs_permutations.py"
     ],
-    "audit": "RL-107"
+    "audit": "RL-126"
   }
 }

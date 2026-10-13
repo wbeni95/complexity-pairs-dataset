@@ -1713,3 +1713,94 @@ under PYTHONHASHSEED 0 and 12345. Every tamper copy (13) exits 1 with a [FAIL] l
 - **Own extension:** the affine lower bound for Pratt's construction. The base is Pratt's item 4 and the note pratt-remark-4-construction-even-k.
 
 **Front page:** P₃ is added to "Notable results" (RL-120 criterion), because 150 improves the best published lower bound, 84.
+
+### RL-124 · VERIFIED · Three further theorem notes on tripartitioning tensors, with the check mark
+**New notes:**
+- [tripartition-tensor-p3-border-rank-at-least-150](theorems/tripartition-tensor-p3-border-rank-at-least-150) (own).
+  - Statement: border rank(P₃) ≥ 150 over ℂ and in characteristic 0 or ≤ 31, by a Koszul–Young flattening (p = 4) with an explicit 9 × 84 integer projection.
+  - Ranks: 10 498 mod 2 and 10 500 mod every odd prime ≤ 31, against the threshold 10 430.
+  - With the upper bound of Flavi–Jelisiejew–Michałek, 150 ≤ border rank ≤ rank ≤ 247.
+- [tripartition-tensors-small-cases-extension](theorems/tripartition-tensors-small-cases-extension) (own).
+  - Bounds for T_{1,2,3}, T_{1,2,4}, T_{1,3,3} and T_{2,2,3}.
+  - R(T_{a,b,c}) ≥ C(n,c) + 1 over every field.
+  - Hence R(T_{1,1,c}) = C(c+2,2) + 1 in characteristic ≠ 2. For c = 3 this settles the interval 10 ≤ R ≤ 11 of [tripartition-tensors-small-cases](theorems/tripartition-tensors-small-cases), which now points to it.
+- [pratt-group-method-affine-maps-lower-bound](theorems/pratt-group-method-affine-maps-lower-bound) (own extension, RL-123).
+  - Every affine instantiation over ℤ₂ of Pratt's group construction for T_k needs a group of order at least 2^{3k−1}, with an exact criterion for 2^{3k−1}.
+  - For arbitrary maps the bound is |G| ≥ 2C(3k,k) − C(2k,k).
+
+**Review:** an independent referee checked every claim with code of its own that does not import the notes' code.
+- It rebuilt every flattening matrix from the README text with its own construction and its own parser of the printed projections.
+- It computed every rank at all 11 primes ≤ 31 with three engines, after reproducing the public P₂ values 502 and 504.
+- It re-derived every proof.
+- Corrections before publication:
+  - the field scope of the upper bound 247;
+  - the wording of Lovitz's linear-flattening barrier;
+  - fields in the open question;
+  - a docstring;
+  - the Pratt note's title ("affine", not "linear") and its definitions.
+- The referee also supplied a proof that R(T_{a,b,c}) ≥ C(n,c) + 1. The maintainer checked it step by step, and it replaces what the draft had left as an open question about R(T_{1,1,c}).
+- A final check of the published form is recorded below.
+
+**Checks:**
+- The three `verify.py` scripts print 20, 21 and 7 [PASS] lines and exit 0.
+- The two flattening ranks behind the main claims were also recomputed by the referee's independent code at all 11 primes.
+
+### RL-125 · VERIFIED · Nine GF(2) schemes for ⟨2,5,6⟩ and ⟨3,5,5⟩, inequivalent to the 33 public representations we compared
+
+**Files.** [search/schemes/gf2-2x5x6-3x5x5/](search/schemes/gf2-2x5x6-3x5x5/) holds three rank-47 schemes for ⟨2,5,6⟩ and six rank-58 schemes for ⟨3,5,5⟩. Each file has only format, field, rank, convention, terms and products. Each passes both exact verifiers of `search/gf2mm.py`.
+
+**Group and invariant** ([report](research/2026-10-13_gf2_scheme_classes.md), sections 2 and 4):
+- **G** is the group of RL-071: term permutations, sandwiches, and the format maps that fix the format.
+  - A non-trivial format self-map exists iff two of n, m, p are equal.
+  - ⟨2,5,6⟩ has none; ⟨3,5,5⟩ has exactly one, (U, V, W) ↦ (Wᵀ, Vᵀ, Uᵀ).
+- **κ** is the multiset of per-term GF(2) factor ranks. For ⟨3,5,5⟩ the ranks of the 3×5 and 5×3 factors are sorted. The report proves that G preserves κ.
+
+**Public schemes compared.** 33 representations, each pinned by commit or SHA-256 and never copied into the repository:
+- 16 files of dronperminov/FastMatrixMultiplication;
+- 14 of the Matrix Multiplication Catalog;
+- AlphaTensor's two .npz members (decoded statically; nothing is unpickled);
+- AlphaEvolve's notebook.
+
+The Lille catalogue's two files and the flips repository's file are byte-identical to pinned files. After reduction mod 2 and orientation, the 33 are 3 distinct GF(2) schemes for ⟨2,5,6⟩ and 7 for ⟨3,5,5⟩, one per κ value.
+
+**Result.** The nine κ values are pairwise different, and none equals a public one (3×3 and 6×7 comparisons). So under G each of the nine schemes is inequivalent to every compared public representation and to the other schemes of its format.
+- This is relative to G, which is not claimed to be the full isotropy group, and to the collections listed. It is not a claim of absolute novelty.
+- The ranks are the known ones, so no exponent changes.
+
+**Checks.** [experiments/2026-10-13_gf2_scheme_classes.py](experiments/2026-10-13_gf2_scheme_classes.py):
+- offline: 27 [PASS], with the public invariants marked as recorded;
+- with `--cache`: 100 [PASS], including 36 SHA-256 checks, 59 exact tensor builds over ℚ, 413 `verify` calls, 83 `verify_explicit` calls and 270 random sandwich images;
+- negative controls: a one-bit change, a non-symmetry, the unsymmetrised multiset, a planted coincidence, a corrupted copy, and the GF(2)-only files checked over ℚ;
+- each mode gave byte-identical output on two runs. Console copy: `search/runs/2026-10-13_gf2_scheme_classes.console.txt`.
+
+### RL-126 · LITERATURE + VERIFIED · Both Held–Karp DPs meet the Jerrum–Snir lower bound exactly
+
+**Background (cited).** Jerrum and Snir, J. ACM 29 (1982) 874–897, §4.4 (display on p. 890), consider straight-line programs over the non-negative reals that use + and × with non-negative constants, and programs over (min, +) with constants.
+- Every such program that computes the Hamiltonian-circuit polynomial needs at least (n−1)[(n−2)2^(n−3) + 1] multiplications, resp. additions (n ≥ 3).
+- A path recursion attains this (pp. 890–891).
+
+**Hamiltonian-cycle counting** ([entry](pairs/hamiltonian-cycle-count-enumeration-vs-inclusion-exclusion)):
+- The Held–Karp count of PROOFS.md §3 equals the bound (§11.1).
+- New Lemma 11.2: a monotone program computes the polynomial iff it is correct for all non-negative integer arc weights.
+- So the DP is multiplication-optimal among these programs.
+  - Nothing is claimed for programs correct only on 0/1 matrices (the entry's input domain), or for programs that subtract, divide or branch.
+  - Inclusion–exclusion subtracts, and it uses more multiplications than the bound anyway.
+
+**Travelling salesman** ([entry](pairs/tsp-brute-vs-held-karp)):
+- New Theorem 5: Held–Karp makes exactly m(m−1)2^(m−2) + m additions of weights (m = n−1), which equals the bound.
+- New Lemma 6 (own): in a (min, +) program correct on all non-negative integer matrices, setting its finite constants to 0 gives a program correct on all non-negative real weights (and +∞), with the same number of additions.
+- Corollary 7: Held–Karp is addition-optimal among (min, +) straight-line programs correct on the entry's domain.
+- Not covered: branching, which can help exponentially over (min, +) (§5.2), and symmetric inputs.
+
+**Credit.** The lower bound and its attainment are Jerrum and Snir's. The exact count match, Lemma 11.2 and Lemma 6 are ours.
+
+**Checks:**
+- [tests/test_proofs_hamiltonian.py](tests/test_proofs_hamiltonian.py), class `JerrumSnirBackground`:
+  - the multiplication tally equals the bound on 40 inputs (n = 3..12);
+  - the DP on symbolic entries returns exactly HC_{n×n} (n = 3..6);
+  - the identities hold for n ≤ 400.
+- [tests/test_proofs_tsp.py](tests/test_proofs_tsp.py), `test_held_karp_additions`:
+  - the relaxation line runs m(m−1)2^(m−2) times, and m(m−1)2^(m−2) + m additions are counted, on 24 matrices (n = 2..9);
+  - the identity holds for n ≤ 400.
+- `tools/replay_proofs.py` for both entries: 9/9 commands pass. `tools/validate.py`: both OK. `tools/check_sources.py`: 11 identifiers, 0 problems.
+- **Audit:** this entry records the audit of the added claims, and both entries' `proof.audit` now names it. RL-107 remains the audit of their earlier claims.
