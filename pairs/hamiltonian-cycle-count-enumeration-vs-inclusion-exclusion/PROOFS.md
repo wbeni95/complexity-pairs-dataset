@@ -293,7 +293,7 @@ multiplication-optimal among them.
 **Check.** `tests/test_proofs_hamiltonian.py`, class `JerrumSnirBackground`:
 - the multiplication tally (`CountingInt`) of the Held–Karp DP equals the paper's count, computed term by term, and
   the factored bound. This holds on K_n (`generate_scaling`) and on 3 random 0/1 digraphs per n (fixed random
-  generators), n = 3..12; the bound plus one is never met (control);
+  generators), n = 3..12;
 - on symbolic entries (a small polynomial type), the DP returns exactly HC_{n×n}, n = 3..6: the (n − 1)! cycle
   monomials, each with coefficient 1;
 - the identities of 11.1 and the positive difference of 11.3 hold for n = 3..400.

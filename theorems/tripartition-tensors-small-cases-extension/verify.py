@@ -396,7 +396,8 @@ def main():
                        for ln in blk.splitlines() if "[" in ln])
     S73 = ksubsets(7, 3)
     labels = ["{" + ",".join(str(e) for e in range(1, 8) if s >> (e - 1) & 1) + "}" for s in S73]
-    lab_printed = [re.search(r"\{[0-9,]+\}", ln).group(0) for ln in (blocks[5] if ok else "").splitlines() if "[" in ln]
+    lab_printed = [(lambda mt: mt.group(0) if mt else None)(re.search(r"\{[0-9,]+\}", ln))
+                   for ln in (blocks[5] if ok else "").splitlines() if "[" in ln]
     ok = ok and parsed[0] == PHI_123 and parsed[1] == PHI_133 and parsed[2] == PHI_223_T and lab_printed == labels
     ok = ok and all(x in (-1, 0, 1) for col in PHI_223_T for x in col) and all(any(col) for col in PHI_223_T)
     check("projections: the three matrices printed in the README equal the constants used here", ok,

@@ -7,8 +7,8 @@ Extension of the note [tripartition-tensors-small-cases](../tripartition-tensors
 > standard lemma on tensors whose rank equals a factor dimension (proof included); the upper bounds are Theorem 1 and
 > Corollaries 2–3 of the public note
 > [partial-fourier-bound-tripartition-tensors](../partial-fourier-bound-tripartition-tensors/). The literature
-> checked (see [Literature checked](#literature-checked)) states no value or bound for these tensors. This is a
-> statement about that search, not a claim of priority.
+> checked (see [Literature checked](#literature-checked)) states no value or bound for these tensors other than
+> T_{1,1,1} (see Background). This is a statement about that search, not a claim of priority.
 
 | Tensor | Size | Lower bound | Upper bound | Consequence |
 |---|---|---|---|---|

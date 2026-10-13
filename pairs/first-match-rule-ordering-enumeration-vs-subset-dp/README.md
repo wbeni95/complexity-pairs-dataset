@@ -49,8 +49,8 @@ step by step, so this version returns exactly the subset DP's optimum and order 
   function of k) it beats the subset DP's Θ(2^k·(k + m)) exactly when m/k² → ∞, and loses exactly when m/k² → 0.
   For a fixed k both take Θ(m) time; as m grows, the speed-up in the entry's counting convention approaches the
   interval from 2^k/k + 3/2 to 5·2^(k−1)/k + 3, so it is of order 2^k/k (PROOFS.md, section 11.8).
-- *What the counts show.* Its tables start from the 0 of the costs' number type, so every transform addition is
-  counted (PROOFS.md, section 11.5). On the V2 family (m = k items) it is the slower of the two DPs: its count,
+- *What the counts show.* Its tables start from the 0 of the costs' number type, so on every instance with at least
+  one item every transform addition is counted (PROOFS.md, section 11.5). On the V2 family (m = k items) it is the slower of the two DPs: its count,
   k² + 2k + 2 + (k² + 2k − 2)·2^(k−1), exceeds the subset DP's for every k ≥ 6, and the ratio grows like k/7.
 - *Credit.* The technique, a transform over the subset lattice whose values feed a dynamic program over the sets
   placed so far, is that of Koivisto & Sood (JMLR 2004, section 4: Propositions 6 and 7 and Theorem 8, where the
@@ -112,7 +112,8 @@ directions are proved in PROOFS.md, section 8; its NP-hardness is also stated by
 **Caveats.** O(k!·k·m) is the enumeration's worst case. An item that every rule matches costs one test per order. In
 the DP, additions and comparisons between two plain integers are not counted, nor is subset bookkeeping on plain
 integers (entry.json and PROOFS.md section 10 give the details). The DP with zeta-transformed gains builds its tables
-from the 0 of the costs' number type, so that every addition of its transform is counted (PROOFS.md section 11.5).
+from the 0 of the costs' number type, so that, on every instance with at least one item, every addition of its
+transform is counted (PROOFS.md section 11.5).
 Above k = 7 the V1 oracle is exact only when the lower bound is attained or the branch and bound finishes within its
 budget. The entry makes no claim about the fastest known algorithm for this problem.
 

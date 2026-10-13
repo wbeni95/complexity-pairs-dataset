@@ -10,11 +10,11 @@ What it checks, in order (exact integer / bit arithmetic):
      ONE + 1_S + 1_T + 1_U is exactly E, and the zero vector arises exactly from the (3k)!/(k!)^3 ordered partitions;
      for k = 1, ..., 8 the explicit triple of the proof (Lemma 2.2) gives ONE + w for one vector w of every even
      weight 2t <= 3k, with three sets of size k;
-  2. Theorem 3, single map, by brute force over all ordered triples, for k = 1, 2: a linear map with kernel K is
+  2. Corollary 4, single map, by brute force over all ordered triples, for k = 1, 2: a linear map with kernel K is
      valid (with x = L(ONE)) iff K contains no nonzero even-weight vector; every 1-dimensional kernel <a> is valid
      iff |a| is odd, and every 2-dimensional kernel fails (all 7 + 651 of them);
   3. Theorem 3, three affine maps, for k = 1, 2: on a fixed list of structured and pseudo-random triples of affine
-     maps (m = 3k - 1 and m = 3k), validity by brute force agrees with the criterion (i)-(iii) of the theorem;
+     maps (m = 3k - 1 and m = 3k), validity by brute force agrees with conditions 1-3 of Theorem 3;
   4. negative and positive controls: the deletion map is valid and the kernel <e_1 + e_2> is not (with the explicit
      false positive of the proof) for k = 1, ..., 4; the kernel <ONE> (the reading R1 of the companion note) is valid
      exactly for odd k, k = 1, ..., 4;
@@ -179,7 +179,7 @@ def main():
           f"steps = {cases} witnesses")
     timed(t0)
 
-    # 2. Theorem 3, single map, all kernels of dimension 1 and 2, k = 1, 2
+    # 2. Corollary 4, single map, all kernels of dimension 1 and 2, k = 1, 2
     t0 = time.perf_counter()
     ok, steps, counts = True, 0, {}
     for k in (1, 2):
@@ -224,7 +224,7 @@ def main():
             steps += st
             expect = len(K) == 1 and weight(K[0]) % 2 == 1
             ok &= val == expect
-    check("Theorem 3 (single map): kernel <a> valid iff |a| odd; no 2-dimensional kernel valid (k = 1, 2)", ok,
+    check("Corollary 4 (single map): kernel <a> valid iff |a| odd; no 2-dimensional kernel valid (k = 1, 2)", ok,
           f"(valid 1-dim, 2-dim kernels, valid 2-dim) = {counts}, steps = {steps}")
     timed(t0)
 
@@ -275,7 +275,7 @@ def main():
                 ok &= val == crit
                 cases += 1
                 nvalid += val
-    check("Theorem 3 (three affine maps): brute-force validity = criterion (i)-(iii) (k = 1, 2; m = 3k-1, 3k)",
+    check("Theorem 3 (three affine maps): brute-force validity = conditions 1-3 (k = 1, 2; m = 3k-1, 3k)",
           ok and 0 < nvalid < cases, f"{cases} cases, {nvalid} valid, steps = {steps} triples")
     timed(t0)
 

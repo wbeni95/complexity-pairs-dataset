@@ -281,7 +281,6 @@ class JerrumSnirBackground(unittest.TestCase):
                 mul = H._ops["mul"]
                 self.assertEqual(mul, js82_count(n), n)
                 self.assertEqual(mul, js82_bound(n), n)
-                self.assertNotEqual(mul, js82_bound(n) + 1, n)            # control
 
     def test_symbolic_entries_give_the_hamiltonian_circuit_polynomial(self):
         for n in range(3, 7):

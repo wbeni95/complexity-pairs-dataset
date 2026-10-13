@@ -164,7 +164,8 @@ written out in the script.)
    Mathematica lists; Kauers–Moosbauer `.exp`; the AlphaEvolve notebook; and the AlphaTensor `.npz`.
    * The `.npz` members are object arrays in pickle format. They are decoded statically: `pickletools.genops` lists
      the opcodes and only literal arguments are read. Nothing is unpickled.
-3. Each third factor is tried in two readings, as W[k][i] and as the output entry (i, k). A representation is
+3. Each third factor is tried in every reading its file format allows: as W[k][i] and as the output entry (i, k)
+   where the format leaves both open (59 readings for the 33 files). A representation is
    accepted only if exactly one reading validates: exactly over ℚ, or over GF(2) for the two GF(2)-only
    representations pub23 and pub32. In all 33 cases the valid reading is W[k][i]. Both GF(2)-only representations
    fail the exact check over ℚ in both readings (a control).

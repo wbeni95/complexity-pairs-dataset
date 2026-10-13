@@ -27,7 +27,7 @@ reviewed yet.
 
 | Date | Result | Best published before | Where |
 |---|---|---|---|
-| 2026-10-13 | Balanced tripartitioning tensor P₃ (84 × 84 × 84): border rank ≥ 150 over ℂ and in characteristic 0 or ≤ 31; with the published upper bound, 150 ≤ border rank ≤ rank ≤ 247 | 84 (flattening; Björklund–Kaski–Koana–Nederlof, 2026) | [border rank ≥ 150](theorems/tripartition-tensor-p3-border-rank-at-least-150) |
+| 2026-10-13 | Balanced tripartitioning tensor P₃ (84 × 84 × 84): border rank ≥ 150 over ℂ and in characteristic 0 or ≤ 31; with the published upper bound, 150 ≤ border rank ≤ rank ≤ 247 over ℂ | 84 (flattening; Björklund–Kaski–Koana–Nederlof, 2026) | [border rank ≥ 150](theorems/tripartition-tensor-p3-border-rank-at-least-150) |
 | 2026-10-11 | Mertens function: lim sup M(x)/√x > 1.92036 and lim inf M(x)/√x < −1.92053, unconditionally | 1.826054 and −1.837625 (Hurst, 2018) | separate repository [mertens-function-bounds](https://github.com/wbeni95/mertens-function-bounds), [doi:10.5281/zenodo.23298194](https://doi.org/10.5281/zenodo.23298194) |
 | 2026-10-08 | Balanced tripartitioning tensor P₂ (15 × 15 × 15): 26 ≤ border rank ≤ rank ≤ 29 in characteristic 0 | 15 (conciseness) and 31 (Flavi–Jelisiejew–Michałek, 2025) | [rank ≤ 29](theorems/tripartition-tensor-p2-rank-at-most-29), [border rank ≥ 26](theorems/tripartition-tensor-p2-border-rank-at-least-26), [doi:10.5281/zenodo.23240382](https://doi.org/10.5281/zenodo.23240382) |
 

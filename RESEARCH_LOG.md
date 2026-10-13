@@ -1703,7 +1703,7 @@ under PYTHONHASHSEED 0 and 12345. Every tamper copy (13) exits 1 with a [FAIL] l
 - **P₃.** The only published lower bound found is the flattening bound R(P₃) ≥ 84 (Björklund–Kaski–Koana–Nederlof, arXiv v1, footnote 3).
   - Lovitz (arXiv:2610.08504v1, Corollary 1.3) shows that for 84 × 84 × 84 tensors the linear flattening method cannot certify border rank above 167. The new bound 150 is below this barrier.
   - Alman–Li (arXiv:2605.21738v2, Remark 6.1) repeats the upper bound 247 of Flavi–Jelisiejew–Michałek. It gives no lower bound.
-- **Small tensors.** No value or bound was found for T_{1,2,3}, T_{1,2,4}, T_{1,3,3}, T_{2,2,3}, or for T_{1,1,c} with c ≥ 3.
+- **Small tensors.** No value or bound was found for T_{1,2,3}, T_{1,2,4}, T_{1,3,3}, T_{2,2,3}, or for T_{1,1,c} with c ≥ 2.
   - T_{1,1,c} is the structure tensor of the product of a zero-diagonal symmetric matrix and a vector. Ye–Lim treat the symmetric case with the diagonal (Theorem 14.1, rank n(n+1)/2) and the skew-symmetric case (bounds only), not this case.
   - The bound R ≥ (dimension of a factor) + 1 uses a standard lemma on concise tensors whose rank equals a factor dimension. The note includes its two-line proof and credits it as standard.
 - **Pratt's group construction.** Pratt's arXiv v1 item 4 instantiates the method with ℤ₂^{3k} and ℤ₂^{3k−1}, and makes no optimality claim. No source read gives a lower bound on the group size the method needs.
@@ -1719,10 +1719,10 @@ under PYTHONHASHSEED 0 and 12345. Every tamper copy (13) exits 1 with a [FAIL] l
 - [tripartition-tensor-p3-border-rank-at-least-150](theorems/tripartition-tensor-p3-border-rank-at-least-150) (own).
   - Statement: border rank(P₃) ≥ 150 over ℂ and in characteristic 0 or ≤ 31, by a Koszul–Young flattening (p = 4) with an explicit 9 × 84 integer projection.
   - Ranks: 10 498 mod 2 and 10 500 mod every odd prime ≤ 31, against the threshold 10 430.
-  - With the upper bound of Flavi–Jelisiejew–Michałek, 150 ≤ border rank ≤ rank ≤ 247.
+  - With the upper bound of Flavi–Jelisiejew–Michałek, 150 ≤ border rank ≤ rank ≤ 247 over ℂ and in characteristic 0 or 3 ≤ q ≤ 31.
 - [tripartition-tensors-small-cases-extension](theorems/tripartition-tensors-small-cases-extension) (own).
   - Bounds for T_{1,2,3}, T_{1,2,4}, T_{1,3,3} and T_{2,2,3}.
-  - R(T_{a,b,c}) ≥ C(n,c) + 1 over every field.
+  - R(T_{a,b,c}) ≥ C(n,c) + 1 for a, b, c ≥ 1, over every field.
   - Hence R(T_{1,1,c}) = C(c+2,2) + 1 in characteristic ≠ 2. For c = 3 this settles the interval 10 ≤ R ≤ 11 of [tripartition-tensors-small-cases](theorems/tripartition-tensors-small-cases), which now points to it.
 - [pratt-group-method-affine-maps-lower-bound](theorems/pratt-group-method-affine-maps-lower-bound) (own extension, RL-123).
   - Every affine instantiation over ℤ₂ of Pratt's group construction for T_k needs a group of order at least 2^{3k−1}, with an exact criterion for 2^{3k−1}.
@@ -1730,7 +1730,7 @@ under PYTHONHASHSEED 0 and 12345. Every tamper copy (13) exits 1 with a [FAIL] l
 
 **Review:** an independent referee checked every claim with code of its own that does not import the notes' code.
 - It rebuilt every flattening matrix from the README text with its own construction and its own parser of the printed projections.
-- It computed every rank at all 11 primes ≤ 31 with three engines, after reproducing the public P₂ values 502 and 504.
+- It computed every rank at all 11 primes ≤ 31 with python-flint, and selected ranks with two engines of its own, after reproducing the public P₂ values 502 and 504.
 - It re-derived every proof.
 - Corrections before publication:
   - the field scope of the upper bound 247;
@@ -1738,8 +1738,8 @@ under PYTHONHASHSEED 0 and 12345. Every tamper copy (13) exits 1 with a [FAIL] l
   - fields in the open question;
   - a docstring;
   - the Pratt note's title ("affine", not "linear") and its definitions.
-- The referee also supplied a proof that R(T_{a,b,c}) ≥ C(n,c) + 1. The maintainer checked it step by step, and it replaces what the draft had left as an open question about R(T_{1,1,c}).
-- A final check of the published form is recorded below.
+- The referee also supplied a proof that R(T_{a,b,c}) ≥ C(n,c) + 1 for a, b, c ≥ 1. The maintainer checked it step by step, and it replaces what the draft had left as an open question about R(T_{1,1,c}).
+- A final check of the published form, by a further independent referee, is recorded in RL-128.
 
 **Checks:**
 - The three `verify.py` scripts print 20, 21 and 7 [PASS] lines and exit 0.
@@ -1819,7 +1819,7 @@ The Lille catalogue's two files and the flips repository's file are byte-identic
     - as k → ∞ (m any function of k), the variant is faster exactly when m/k² → ∞ and slower exactly when m/k² → 0;
     - for bounded k both are Θ(m), and the speed-up in counted operations approaches the interval [2^k/k + 3/2, 5·2^(k−1)/k + 3];
     - on the V2 family (m = k) the variant is slower: it counts more than the subset DP for every k ≥ 6, and the quotient grows like k/7.
-- **Counting:** the tables start from the 0 of the costs' number type, so every executed transform addition is counted.
+- **Counting:** the tables start from the 0 of the costs' number type, so on every instance with m ≥ 1 every executed transform addition is counted (with m = 0 nothing is counted, PROOFS.md 11.5).
 - **Literature:**
   - Koivisto & Sood, JMLR 5 (2004): §4, Propositions 6 and 7, Figure 2 and Theorem 8 (where the transform is called the Möbius transform, p. 557); §5, Theorem 11 (p. 561).
   - The fast transform is Yates (1937); Koivisto & Sood cite Kennes & Smets (1991) for it. Both are cited as credit.
@@ -1832,3 +1832,40 @@ The Lille catalogue's two files and the flips repository's file are byte-identic
   - `tools/replay_proofs.py` for this entry: 9 of 9 commands pass.
   - The experiment gives byte-identical output on a second run.
 - **Audit:** this entry records the claim-by-claim audit of the third algorithm, and `proof.audit` names it. RL-107 remains the audit of the earlier claims.
+
+### RL-128 · VERIFIED · Final check of the published form of RL-122 to RL-127
+A further independent referee checked the final files of this batch with code of its own.
+
+**What it checked:**
+- **Verifiers.** The three new notes' `verify.py` scripts were run in full under PYTHONHASHSEED 0 and 12345. They print 20, 21 and 7 [PASS] lines, and the outputs are identical apart from wall-clock lines.
+- **Ranks.** The flattening ranks were recomputed with the referee's own construction and its own elimination over 𝔽₂ and 𝔽₃. Every value matches the notes:
+  - P₂, as a control: 502 / 504;
+  - T_{1,2,3}: 121 / 121;
+  - T_{1,3,3}: 242 / 248;
+  - T_{2,2,3}: 9 646 / 9 702;
+  - P₃: 10 498 / 10 500.
+- **Proofs and citations.**
+  - It re-derived the new theorem R(T_{a,b,c}) ≥ C(n,c) + 1, the lemmas and corollaries of RL-125 to RL-127, and Lemma 11.2, Theorem 5, Lemma 6 and Corollary 7 of RL-126.
+  - It checked the page citations against the sources: Jerrum–Snir pp. 876–894; Koivisto–Sood pp. 555–561.
+- **Tamper tests.** 20 copies of the verifiers each had one changed fact: a printed projection entry, an expected rank, a decomposition coefficient, a control value. 19 exited 1 with a [FAIL] line naming the fact.
+  - The 20th, a removed coordinate label, ended with a traceback instead of a [FAIL] line. The extension's verifier now reports it as a [FAIL] line.
+- **Data and counts.**
+  - The nine scheme files of RL-125 were checked with independent code, and the report's table against the script's constants.
+  - The counts of RL-127 were recounted with an independent counter on 400 instances.
+- **Repository checks:**
+  - `tools/validate.py` for the three touched entries: OK;
+  - `tools/replay_proofs.py` for the seven touched items: 21 of 21 commands pass;
+  - `tools/build_index.py --check` and `tools/make_charts.py --check`: OK;
+  - the unit suite: 918 tests OK.
+
+**Corrections made before publication:**
+- Summary lines in this log, the theorems table and the front page stated R(T_{a,b,c}) ≥ C(n,c) + 1 without the hypothesis a, b, c ≥ 1. It is needed: T_{0,b,c} has rank exactly C(n,c).
+- The same summaries stated 150 ≤ border rank(P₃) ≤ rank ≤ 247 without a field. The upper bound is proved only in characteristic ≠ 2.
+- RL-124 overstated the earlier referee's recomputation; it now says python-flint at all primes, plus two engines of its own at selected primes.
+- A pointer in RL-124 named a record that did not exist yet; this entry is that record.
+- Minor corrections:
+  - the provenance box of the extension note now excepts T_{1,1,1};
+  - check labels in the Pratt verifier now follow the README's numbering;
+  - "two readings" in the GF(2) report is now exact;
+  - a test assertion that could not fail is no longer called a control;
+  - "every transform addition is counted" now says "when m ≥ 1".
