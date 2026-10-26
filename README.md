@@ -28,8 +28,9 @@ reviewed yet.
 
 | Date | Result | Best published before | Where |
 |---|---|---|---|
+| 2026-10-26 | Zeros of the Riemann zeta function: no integer relation among the first n zeros with coefficients up to M, for n = 100, 200, 300, 400, 500, 700 (log₁₀ M = 94.42, 45.41, 28.64, 19.97, 12.89; M = 257 742 for n = 700) | log₁₀ M = 86.26, 39.06, 21.79, 12.37, 5.74 for n = 100 … 500; none for n > 500 (Best–Trudgian, 2015) | separate repository [zeta-zeros-linear-independence](https://github.com/wbeni95/zeta-zeros-linear-independence), [doi:10.5281/zenodo.23652325](https://doi.org/10.5281/zenodo.23652325) |
+| 2026-10-25 | Mertens function: lim sup M(x)/√x > 2.06175 and lim inf M(x)/√x < −2.06471, unconditionally; so \|M(x)\| ≤ 2√x fails for arbitrarily large x | 1.826054 and −1.837625 (Hurst, 2018) | separate repository [mertens-function-bounds](https://github.com/wbeni95/mertens-function-bounds), [doi:10.5281/zenodo.23298194](https://doi.org/10.5281/zenodo.23298194) |
 | 2026-10-13 | Balanced tripartitioning tensor P₃ (84 × 84 × 84): border rank ≥ 150 over ℂ and in characteristic 0 or ≤ 31; with the published upper bound, 150 ≤ border rank ≤ rank ≤ 247 over ℂ | 84 (flattening; Björklund–Kaski–Koana–Nederlof, 2026) | [border rank ≥ 150](theorems/tripartition-tensor-p3-border-rank-at-least-150), [doi:10.5281/zenodo.23330577](https://doi.org/10.5281/zenodo.23330577) |
-| 2026-10-11 | Mertens function: lim sup M(x)/√x > 1.92036 and lim inf M(x)/√x < −1.92053, unconditionally | 1.826054 and −1.837625 (Hurst, 2018) | separate repository [mertens-function-bounds](https://github.com/wbeni95/mertens-function-bounds), [doi:10.5281/zenodo.23298194](https://doi.org/10.5281/zenodo.23298194) |
 | 2026-10-08 | Balanced tripartitioning tensor P₂ (15 × 15 × 15): 26 ≤ border rank ≤ rank ≤ 29 in characteristic 0 | 15 (conciseness) and 31 (Flavi–Jelisiejew–Michałek, 2025) | [rank ≤ 29](theorems/tripartition-tensor-p2-rank-at-most-29), [border rank ≥ 26](theorems/tripartition-tensor-p2-border-rank-at-least-26), [doi:10.5281/zenodo.23240382](https://doi.org/10.5281/zenodo.23240382) |
 
 ## At a glance

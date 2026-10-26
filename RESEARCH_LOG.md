@@ -1869,3 +1869,9 @@ A further independent referee checked the final files of this batch with code of
   - "two readings" in the GF(2) report is now exact;
   - a test assertion that could not fail is no longer called a control;
   - "every transform addition is counted" now says "when m ≥ 1".
+
+### RL-129 · DECISION · Notable results: Mertens bounds above 2; new entry for the zeta-zero independence table
+Owner's decision (2026-10-26): update the front page's list of notable results.
+- **Mertens function (replaces the 2026-10-11 row).** Version 2.0.0 of the separate repository mertens-function-bounds proves lim sup M(x)/√x > 2.0617536514585282 and lim inf M(x)/√x < −2.0647155435291726. Both bounds exceed 2, so |M(x)| ≤ 2√x fails for arbitrarily large x. Version 1.0.0 (1.92036 / −1.92053) stays available at its tag and Zenodo version.
+- **Zeros of the zeta function (new row).** The separate repository zeta-zeros-linear-independence certifies that the first n zeros admit no integer relation with 0 < max_{j≥1} |m_j| ≤ M, for n = 100, 200, 300, 400, 500 and 700. This improves Table 2 of Best and Trudgian (2015) by 6 to 8 orders of magnitude, and extends it to n = 700. Zenodo: doi:10.5281/zenodo.23652325.
+- Both results have written proofs and public verifiers, and both were re-run on our machine before publication. Neither has been peer reviewed. Their files are not part of this dataset.
